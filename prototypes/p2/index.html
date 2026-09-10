@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRUI / Direction B: The Gallery</title>
+<style>
+  :root{
+    --paper:#faf8f4; --ink:#1c1a17; --dim:#6d675e; --line:#e5e0d6;
+    --accent:#8a5a2b; --serif:'Georgia','Times New Roman',serif;
+    --sans:'Helvetica Neue',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6}
+  .variant-tag{position:fixed;top:0;right:0;background:var(--ink);color:var(--paper);font:600 11px var(--sans);padding:5px 12px;border-radius:0 0 0 6px;z-index:99;letter-spacing:.4px}
+  header{padding:26px 6vw;display:flex;align-items:baseline;gap:34px;border-bottom:1px solid var(--line)}
+  .logo{font:400 22px var(--serif);letter-spacing:.01em}
+  .logo i{font-style:italic;color:var(--accent)}
+  nav{display:flex;gap:26px;font-size:13.5px;letter-spacing:.02em}
+  nav a{color:var(--dim);text-decoration:none}
+  nav a:hover{color:var(--ink)}
+  .masthead{padding:96px 6vw 72px;max-width:1200px}
+  .kicker{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:22px}
+  h1{font:400 clamp(36px,5.4vw,64px)/1.08 var(--serif);letter-spacing:-.015em;max-width:20ch}
+  h1 em{font-style:italic}
+  .lede{margin:28px 0 0;font-size:17.5px;color:var(--dim);max-width:56ch}
+  .exhibit{margin:72px 6vw;border-top:1px solid var(--ink);padding-top:14px}
+  .exhibit-label{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+  .exhibit-label span:last-child{color:var(--dim)}
+  .plinth{margin-top:40px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:64px 40px;display:flex;gap:28px;align-items:flex-end;justify-content:center;flex-wrap:wrap;box-shadow:0 1px 2px rgba(28,26,23,.04)}
+  .gbtn{font:500 14px var(--sans);padding:10px 22px;border-radius:3px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer}
+  .gbtn.quiet{background:transparent;color:var(--ink)}
+  .gbtn.text{border:none;background:none;color:var(--accent);text-decoration:underline;text-underline-offset:3px;padding:10px 4px}
+  .ginput{border:none;border-bottom:1px solid var(--ink);padding:10px 2px;font:15px var(--sans);background:transparent;width:220px;color:var(--ink)}
+  .ginput:focus{outline:none;border-bottom-color:var(--accent)}
+  .gcard{border:1px solid var(--line);border-radius:4px;padding:20px 24px;background:var(--paper);min-width:240px}
+  .gcard h4{font:400 17px var(--serif);margin-bottom:6px}
+  .gcard p{font-size:13px;color:var(--dim)}
+  .gtabs{display:flex;gap:2px}
+  .gtabs span{font:500 13px var(--sans);padding:8px 16px;color:var(--dim)}
+  .gtabs span.on{color:var(--ink);border-bottom:2px solid var(--accent)}
+  .cols{margin:64px 6vw;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0;border-top:1px solid var(--line)}
+  .col{padding:34px 28px 34px 0;border-bottom:1px solid var(--line)}
+  .col h3{font:400 21px var(--serif);margin-bottom:10px}
+  .col p{font-size:14px;color:var(--dim)}
+  .colnum{font:italic 400 13px var(--serif);color:var(--accent);display:block;margin-bottom:8px}
+  .collection{margin:64px 6vw;display:flex;gap:14px;flex-wrap:wrap}
+  .frame{flex:1 1 150px;border:1px solid var(--line);background:#fff;border-radius:4px;padding:22px 16px;text-align:center}
+  .frame b{font:400 16px var(--serif);display:block;margin-bottom:4px}
+  .frame span{font-size:11.5px;color:var(--dim);letter-spacing:.04em}
+  .cta{margin:88px 6vw 0;padding:0 0 88px;display:flex;gap:40px;align-items:center;justify-content:space-between;flex-wrap:wrap;border-top:1px solid var(--ink);padding-top:44px}
+  .cta h2{font:400 34px var(--serif);max-width:22ch}
+  .cta h2 em{font-style:italic;color:var(--accent)}
+  .get{font:15px var(--sans);border:1px solid var(--ink);border-radius:4px;padding:12px 20px;background:var(--ink);color:var(--paper)}
+  footer{padding:26px 6vw;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:12.5px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="variant-tag">DIRECTION B: THE GALLERY</div>
+<header>
+  <div class="logo">prui<i>.</i></div>
+  <nav><a href="#collection">Collection</a><a href="#principles">Principles</a><a href="#layouts">Layouts</a><a href="#start">Begin</a></nav>
+</header>
+
+<div class="masthead">
+  <div class="kicker">A component collection</div>
+  <h1>One interface, kept by hand, <em>shared by four.</em></h1>
+  <p class="lede">PRUI gathers the interface your production apps already agree on: the same shells, the same primitives, the same tokens. Installed as a dependency, versioned like software, documented like a collection.</p>
+</div>
+
+<div class="exhibit">
+  <div class="exhibit-label"><span>Exhibit 01</span><span>Primitives, live</span></div>
+  <div class="plinth">
+    <button class="gbtn">Save changes</button>
+    <button class="gbtn quiet">Cancel</button>
+    <button class="gbtn text">Learn more</button>
+    <input class="ginput" placeholder="Name">
+    <div class="gtabs"><span class="on">Details</span><span>Activity</span><span>Files</span></div>
+  </div>
+</div>
+
+<div class="exhibit" id="collection">
+  <div class="exhibit-label"><span>Exhibit 02</span><span>The collection</span></div>
+  <div class="collection">
+    <div class="frame"><b>AppShell</b><span>sidebar, header, layout</span></div>
+    <div class="frame"><b>DataTable</b><span>filters, pagination</span></div>
+    <div class="frame"><b>Forms</b><span>fields, validation</span></div>
+    <div class="frame"><b>Theme</b><span>tokens, light, dark</span></div>
+    <div class="frame"><b>Utilities</b><span>stat, status, phone</span></div>
+    <div class="frame"><b>Primitives</b><span>button, card, input</span></div>
+  </div>
+</div>
+
+<div class="cols" id="principles">
+  <div class="col"><span class="colnum">i.</span><h3>Drawn from practice</h3><p>Not a template bought from a marketplace. Every component earned its place in HRLabs, jianpms, icanhelp, or t4xlabs first.</p></div>
+  <div class="col"><span class="colnum">ii.</span><h3>Versioned, not forked</h3><p>One package, semantic versions. An improvement lands everywhere with a bump, and drift stops being a maintenance tax.</p></div>
+  <div class="col"><span class="colnum">iii.</span><h3>Quiet by design</h3><p>The system stays out of the way. Tokens carry identity; components carry structure; neither shouts.</p></div>
+</div>
+
+<div class="exhibit" id="layouts">
+  <div class="exhibit-label"><span>Exhibit 03</span><span>Layout studies</span></div>
+  <div class="cols">
+    <div class="col"><span class="colnum">study a.</span><h3>The dashboard</h3><p>Sidebar with grouped navigation, header with search, content on a calm grid. The HRLabs shape.</p></div>
+    <div class="col"><span class="colnum">study b.</span><h3>The listing</h3><p>DataTable with faceted filters and cursor pagination. The icanhelp shape.</p></div>
+    <div class="col"><span class="colnum">study c.</span><h3>The themed shell</h3><p>Same layout, different weather: named themes from the t4xlabs pass, switchable at runtime.</p></div>
+  </div>
+</div>
+
+<div class="cta" id="start">
+  <h2>Begin the collection. <em>One install.</em></h2>
+  <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+    <code style="font:14px ui-monospace,monospace;border:1px solid var(--line);padding:12px 18px;border-radius:4px;background:#fff">pnpm add @skiddph/prui</code>
+    <span class="get">Read the guide</span>
+  </div>
+</div>
+
+<footer>
+  <span>prui, the progressive UI collection</span>
+  <span>direction b: the gallery</span>
+</footer>
+</body>
+</html>
