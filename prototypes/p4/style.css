@@ -37,6 +37,11 @@ a.navitem:hover,.navtoggle:hover{background:var(--raise);color:var(--fg)}
 .navsec.open > .navtoggle{color:var(--fg)}
 .navchildren{display:none;padding:2px 0 6px 12px;border-left:1px solid var(--line);margin-left:17px;flex-direction:column;gap:1px}
 .navsec.open .navchildren{display:flex}
+.navchildren .subgroup{font:600 10px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:#5b5b64;padding:9px 11px 3px}
+.navchildren .subitem{font-size:12.5px;line-height:1.4;padding:5px 11px;border-radius:6px;color:var(--dim);text-decoration:none;display:block;background:none;border:none;text-align:left;font-family:var(--sans);cursor:pointer}
+.navchildren .subitem:hover{color:var(--fg);background:var(--raise)}
+.navchildren .subitem.on{color:var(--fg);background:var(--raise)}
+.navchildren .subitem.on::before{content:'';display:inline-block;width:5px;height:5px;border-radius:2px;background:var(--brand);margin-right:8px;vertical-align:1px}
 main{display:flex;flex-direction:column;min-width:0}
 .topbar{display:flex;align-items:center;gap:16px;padding:12px 26px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.85);position:sticky;top:0;backdrop-filter:blur(10px);z-index:5}
 .search{flex:1;max-width:420px;display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 16px;color:var(--dim);font-size:13px}
