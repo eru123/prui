@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Button / PRUI Components</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20viewBox=%220%200%2032%2032%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20rx=%227%22%20fill=%22%237c9cff%22/%3E%3Crect%20x=%229%22%20y=%227.5%22%20width=%224.6%22%20height=%2217%22%20rx=%222.3%22%20fill=%22%230a0f24%22/%3E%3Crect%20x=%2215.2%22%20y=%227.5%22%20width=%228.3%22%20height=%227.2%22%20rx=%222.2%22%20fill=%22%230a0f24%22/%3E%3Crect%20x=%2215.2%22%20y=%2216.3%22%20width=%226.1%22%20height=%227.2%22%20rx=%222.2%22%20fill=%22%230a0f24%22%20opacity=%22.55%22/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -95,11 +95,16 @@
   </aside>
   <main>
     <div class="topbar">
-      <button class="menubtn" aria-label="Open navigation" aria-controls="sidenav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       <a class="topbrand" href="../index.html"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--brand)"/><rect x="9" y="7.5" width="4.6" height="17" rx="2.3" fill="#0a0f24"/><rect x="15.2" y="7.5" width="8.3" height="7.2" rx="2.2" fill="#0a0f24"/><rect x="15.2" y="16.3" width="6.1" height="7.2" rx="2.2" fill="#0a0f24" opacity=".55"/></svg><span>prui</span></a>
-      <div class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg> Search the system</div>
-      <div class="spacer"></div>
-      <div class="iconbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></div>
+      <button class="searchtrigger" aria-label="Open search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+        <span class="searchlabel">Search the system</span>
+        <kbd>/</kbd>
+      </button>
+      <div class="topbar-right">
+      <button class="iconbtn searchicon" aria-label="Open search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg></button>
+      <button class="iconbtn" aria-label="Toggle theme"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></button>
+      </div>
     </div>
     <div class="docmain single">
       <div class="doc">
@@ -167,6 +172,31 @@
     </div>
   </main>
 </div>
+
+  <div class="palette" hidden>
+    <div class="palette-panel" role="dialog" aria-label="Search">
+      <div class="palette-input">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+        <input type="text" id="palette-query" placeholder="Search components, guides, tokens..." autocomplete="off">
+        <kbd>esc</kbd>
+      </div>
+      <div class="palette-results">
+        <div class="palette-group">Pages</div>
+        <button class="palette-item" data-href="../index.html"><span class="pi-icon">◱</span><span>Introduction</span><small>landing</small></button>
+        <button class="palette-item" data-href="../components/index.html"><span class="pi-icon">◎</span><span>Components</span><small>catalog</small></button>
+        <button class="palette-item" data-href="../layouts/index.html"><span class="pi-icon">▤</span><span>Layouts</span><small>app shell</small></button>
+        <button class="palette-item" data-href="../theming/index.html"><span class="pi-icon">◑</span><span>Theming</span><small>tokens</small></button>
+        <button class="palette-item" data-href="../guides/index.html"><span class="pi-icon">▷</span><span>Guides</span><small>installation</small></button>
+        <div class="palette-group">Components</div>
+        <button class="palette-item" data-href="../components/index.html"><span class="pi-icon">▭</span><span>Button</span><small>primitives</small></button>
+        <button class="palette-item" data-href="../components/index.html"><span class="pi-icon">▭</span><span>DataTable</span><small>data</small></button>
+        <button class="palette-item" data-href="../components/index.html"><span class="pi-icon">▭</span><span>AppShell</span><small>shell</small></button>
+        <div class="palette-group">Actions</div>
+        <button class="palette-item" data-action="theme"><span class="pi-icon">◑</span><span>Toggle theme</span><small>action</small></button>
+      </div>
+      <div class="palette-foot"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>enter</kbd> open</span><span><kbd>esc</kbd> close</span></div>
+    </div>
+  </div>
 <div class="nav-backdrop"></div>
 <script>
 document.querySelectorAll('.navtoggle').forEach(function(btn){
@@ -190,6 +220,63 @@ if(burger && backdrop){
   document.querySelectorAll('.rail a').forEach(function(a){ a.addEventListener('click', closeNav); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeNav(); });
 }
+
+// command palette
+(function(){
+  var pal = document.querySelector('.palette');
+  var q = document.getElementById('palette-query');
+  function openPal(){ pal.hidden = false; document.body.classList.add('pal-open'); q.value=''; filter(''); setTimeout(function(){ q.focus(); }, 10); }
+  function closePal(){ pal.hidden = true; document.body.classList.remove('pal-open'); }
+  document.querySelectorAll('.searchtrigger, .searchicon').forEach(function(el){ el.addEventListener('click', openPal); });
+  pal.addEventListener('click', function(e){ if(e.target === pal) closePal(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === '/' && !/input|textarea/i.test(document.activeElement.tagName)){ e.preventDefault(); openPal(); }
+    if(e.key === 'Escape' && !pal.hidden) closePal();
+    if(!pal.hidden && (e.key === 'ArrowDown' || e.key === 'ArrowUp')){
+      e.preventDefault();
+      var items = visibleItems();
+      if(!items.length) return;
+      var idx = items.indexOf(document.querySelector('.palette-item.active'));
+      if(document.querySelector('.palette-item.active')) items[idx] && items[idx].classList.remove('active');
+      var next = e.key === 'ArrowDown' ? (idx + 1 + items.length) % items.length : (idx <= 0 ? items.length - 1 : idx - 1);
+      items[next].classList.add('active');
+    }
+    if(!pal.hidden && e.key === 'Enter'){
+      var a = document.querySelector('.palette-item.active');
+      if(a){ a.click(); }
+    }
+  });
+  function visibleItems(){ return Array.prototype.slice.call(document.querySelectorAll('.palette-item')).filter(function(i){ return i.style.display !== 'none'; }); }
+  function filter(text){
+    text = text.toLowerCase();
+    var group = null;
+    document.querySelectorAll('.palette-results .palette-group, .palette-results .palette-item').forEach(function(el){
+      if(el.classList.contains('palette-group')){ group = el; group.style.display = ''; return; }
+      var hit = el.textContent.toLowerCase().indexOf(text) !== -1;
+      el.style.display = hit ? '' : 'none';
+    });
+    // hide groups with no visible items after them
+    var els = Array.prototype.slice.call(document.querySelectorAll('.palette-results .palette-group, .palette-results .palette-item'));
+    for(var i = 0; i < els.length; i++){
+      if(els[i].classList.contains('palette-group')){
+        var any = false, j = i + 1;
+        while(j < els.length && !els[j].classList.contains('palette-group')){ if(els[j].style.display !== 'none') any = true; j++; }
+        els[i].style.display = any ? '' : 'none';
+      }
+    }
+    var first = visibleItems()[0];
+    document.querySelectorAll('.palette-item.active').forEach(function(i){ i.classList.remove('active'); });
+    if(first) first.classList.add('active');
+  }
+  q.addEventListener('input', function(){ filter(q.value); });
+  document.querySelectorAll('.palette-item').forEach(function(item){
+    item.addEventListener('click', function(){
+      if(item.dataset.href){ window.location.href = item.dataset.href; }
+      if(item.dataset.action === 'theme'){ closePal(); }
+    });
+  });
+})();
+
 </script>
 </body>
 </html>
