@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theming / PRUI</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="variant-tag">DIRECTION D: CONTROL ROOM + WORKSHOP</div>
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="../index.html"><div class="mark">P</div><b>prui</b></a>
+    <div class="navgroup">Docs</div>
+    <a class="navitem" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Introduction</a>
+    <a class="navitem" href="../components/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>Components</a>
+    <a class="navitem" href="../layouts/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Layouts</a>
+    <div class="navgroup">System</div>
+    <a class="navitem on" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/></svg>Theming</a>
+    <a class="navitem" href="../guides/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6M12 19h8"/></svg>Guides</a>
+  </aside>
+  <main>
+    <div class="topbar">
+      <div class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg> Search the system</div>
+      <div class="spacer"></div>
+      <div class="iconbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></div>
+      <div class="avatar">J</div>
+    </div>
+    <div class="docmain">
+      <nav class="docnav">
+        <div class="grp">Theming</div>
+        <a class="on" href="#">Token reference</a>
+        <a href="#">Named themes</a>
+        <a href="#">Dark mode</a>
+        <a href="#">Custom brand</a>
+        <a href="#">Runtime switching</a>
+      </nav>
+      <div class="doc">
+        <div class="breadcrumb"><a href="../index.html">prui</a> / <a href="index.html">theming</a> / <span>tokens</span></div>
+        <h1>Theming</h1>
+        <p class="desc">One set of CSS-variable tokens carries every prui component. Apps override tokens, not component source. The t4xlabs multi-theme pass, productized.</p>
+
+        <h2>Token reference</h2>
+        <div class="tokencode">
+          <div class="token"><div class="dot" style="background:#7c9cff"></div><div><b>--brand</b><span>7c9cff</span></div></div>
+          <div class="token"><div class="dot" style="background:#ff7c9c"></div><div><b>--brand-2</b><span>ff7c9c</span></div></div>
+          <div class="token"><div class="dot" style="background:#3ddc97"></div><div><b>--ok</b><span>3ddc97</span></div></div>
+          <div class="token"><div class="dot" style="background:#ffc15e"></div><div><b>--warn</b><span>ffc15e</span></div></div>
+          <div class="token"><div class="dot" style="background:#000"></div><div><b>--bg</b><span>000000</span></div></div>
+          <div class="token"><div class="dot" style="background:#0f0f10"></div><div><b>--surface</b><span>0f0f10</span></div></div>
+          <div class="token"><div class="dot" style="background:#1a1a1c"></div><div><b>--raise</b><span>1a1a1c</span></div></div>
+          <div class="token"><div class="dot" style="background:#2a2a2e"></div><div><b>--line</b><span>2a2a2e</span></div></div>
+        </div>
+
+        <h2>Usage</h2>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i><span>brand.css</span></div>
+          <pre><span class="c-c">/* your app, not prui source */</span>
+<span class="c-k">:root</span> {
+  <span class="c-f">--brand</span>: <span class="c-s">#e5673f</span>;      <span class="c-c">/* warm t4xlabs-style brand */</span>
+  <span class="c-f">--bg</span>: <span class="c-s">#0c0b09</span>;
+  <span class="c-f">--surface</span>: <span class="c-s">#15130f</span>;
+}
+<span class="c-c">/* every prui component now renders in your brand.
+   no component file is touched. */</span></pre>
+        </div>
+
+        <h2>Named themes</h2>
+        <table class="data">
+          <thead><tr><th>Theme</th><th>Mood</th><th>Used by</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>control</td><td>Near-black, blue-pink accent</td><td>this site, fleet default</td><td><span class="pill ok">stable</span></td></tr>
+            <tr><td>workshop</td><td>Graphite, green accent</td><td>engineering surfaces</td><td><span class="pill ok">stable</span></td></tr>
+            <tr><td>ember</td><td>Warm dark, orange brand</td><td>t4xlabs derivative</td><td><span class="pill info">new</span></td></tr>
+            <tr><td>daylight</td><td>Paper light</td><td>docs, exports, print</td><td><span class="pill warn">beta</span></td></tr>
+          </tbody>
+        </table>
+
+        <div class="note warn">Keep contrast on tokens, not on components. A component that hardcodes a color breaks theming for every app downstream; the audit fails any PR that adds one.</div>
+
+        <h2>Runtime switching</h2>
+        <div class="live">
+          <div class="live-head"><span>theme / applyTheme()</span><span>no reload</span></div>
+          <div class="live-body">
+            <span class="badge">control</span>
+            <span class="badge blue">workshop</span>
+            <span class="badge green">ember</span>
+            <button class="pbtn" onclick="document.documentElement.style.filter='hue-rotate(140deg)'">Try a switch</button>
+          </div>
+        </div>
+
+        <div class="pager">
+          <a href="../layouts/index.html"><small>previous</small><b>AppShell</b></a>
+          <a class="next" href="../guides/index.html"><small>next</small><b>Guides</b></a>
+        </div>
+        <footer class="docfoot"><span>prui docs</span><span>theming / tokens</span></footer>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

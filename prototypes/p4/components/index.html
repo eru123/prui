@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Button / PRUI Components</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="variant-tag">DIRECTION D: CONTROL ROOM + WORKSHOP</div>
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="../index.html"><div class="mark">P</div><b>prui</b></a>
+    <div class="navgroup">Docs</div>
+    <a class="navitem" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Introduction</a>
+    <a class="navitem on" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>Components</a>
+    <a class="navitem" href="../layouts/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Layouts</a>
+    <div class="navgroup">System</div>
+    <a class="navitem" href="../theming/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/></svg>Theming</a>
+    <a class="navitem" href="../guides/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6M12 19h8"/></svg>Guides</a>
+  </aside>
+  <main>
+    <div class="topbar">
+      <div class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg> Search the system</div>
+      <div class="spacer"></div>
+      <div class="iconbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></div>
+      <div class="avatar">J</div>
+    </div>
+    <div class="docmain">
+      <nav class="docnav">
+        <div class="grp">Primitives</div>
+        <a class="on" href="#">Button</a>
+        <a href="#">Input</a>
+        <a href="#">Select</a>
+        <a href="#">Switch</a>
+        <a href="#">Tabs</a>
+        <a href="#">Badge</a>
+        <a href="#">Card</a>
+        <div class="grp">Shell</div>
+        <a href="#">AppShell</a>
+        <a href="#">Sidebar</a>
+        <a href="#">Header</a>
+        <div class="grp">Data</div>
+        <a href="#">DataTable</a>
+        <a href="#">Toolbar</a>
+        <a href="#">Pagination</a>
+        <div class="grp">Utilities</div>
+        <a href="#">StatCard</a>
+        <a href="#">StatusBadge</a>
+        <a href="#">PhoneInput</a>
+      </nav>
+      <div class="doc">
+        <div class="breadcrumb"><a href="../index.html">prui</a> / <a href="index.html">components</a> / <span>button</span></div>
+        <h1>Button</h1>
+        <p class="desc">Triggers an action or event. The one component every app in the fleet renders, unified from four nearly-identical copies.</p>
+
+        <h2>Live</h2>
+        <div class="live">
+          <div class="live-head"><span>button / variants + sizes</span><span>react 19</span></div>
+          <div class="live-body">
+            <button class="pbtn primary">Save changes</button>
+            <button class="pbtn">Cancel</button>
+            <button class="pbtn ghost">Ghost</button>
+            <button class="pbtn danger">Delete</button>
+            <span class="badge">v1.2.0</span>
+          </div>
+        </div>
+
+        <h2>Usage</h2>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i><span>dashboard.tsx</span></div>
+          <pre><span class="c-f">import</span> { Button } <span class="c-f">from</span> <span class="c-s">'@skiddph/prui'</span>
+
+<span class="c-f">export function</span> <span class="c-f">SaveBar</span>() {
+  <span class="c-f">return</span> (
+    <span class="c-p">&lt;</span><span class="c-k">Button</span> variant=<span class="c-s">"primary"</span> size=<span class="c-s">"md"</span> onClick={save}<span class="c-p">&gt;</span>
+      Save changes
+    <span class="c-p">&lt;/</span><span class="c-k">Button</span><span class="c-p">&gt;</span>
+  )
+}</pre>
+        </div>
+
+        <h2>Props</h2>
+        <table class="props">
+          <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>variant</td><td>'primary' | 'default' | 'ghost' | 'danger'</td><td>'default'</td><td>Visual weight. primary carries the accent gradient.</td></tr>
+            <tr><td>size</td><td>'sm' | 'md' | 'lg'</td><td>'md'</td><td>Height and padding scale.</td></tr>
+            <tr><td>asChild</td><td>boolean</td><td>false</td><td>Merge props onto the child element instead of rendering a button. Unified from the icanhelp fork.</td></tr>
+            <tr><td>loading</td><td>boolean</td><td>false</td><td>Shows a spinner and disables interaction.</td></tr>
+            <tr><td>onClick</td><td>() =&gt; void</td><td>-</td><td>Fires on activate (click or keyboard Space/Enter).</td></tr>
+          </tbody>
+        </table>
+
+        <div class="note">The <code>asChild</code> prop is the reason this component exists twice in production today. HRLabs ships without it, icanhelp ships with it; prui ships the superset.</div>
+
+        <h2>Where it comes from</h2>
+        <table class="data">
+          <thead><tr><th>App</th><th>File</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>HRLabs</td><td>src/components/ui/button.tsx</td><td><span class="pill ok">extracted</span></td></tr>
+            <tr><td>jianpms</td><td>packages/ui/src/components/button.tsx</td><td><span class="pill ok">extracted</span></td></tr>
+            <tr><td>icanhelp</td><td>src/components/ui/button.tsx</td><td><span class="pill ok">canonical</span></td></tr>
+            <tr><td>t4xlabs</td><td>hand-rolled</td><td><span class="pill warn">maps to variants</span></td></tr>
+          </tbody>
+        </table>
+
+        <div class="pager">
+          <a href="../index.html"><small>previous</small><b>Introduction</b></a>
+          <a class="next" href="../layouts/index.html"><small>next</small><b>AppShell</b></a>
+        </div>
+        <footer class="docfoot"><span>prui docs</span><span>button / 1.2.0</span></footer>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

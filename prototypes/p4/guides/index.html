@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guides / PRUI</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="variant-tag">DIRECTION D: CONTROL ROOM + WORKSHOP</div>
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="../index.html"><div class="mark">P</div><b>prui</b></a>
+    <div class="navgroup">Docs</div>
+    <a class="navitem" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Introduction</a>
+    <a class="navitem" href="../components/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>Components</a>
+    <a class="navitem" href="../layouts/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Layouts</a>
+    <div class="navgroup">System</div>
+    <a class="navitem" href="../theming/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/></svg>Theming</a>
+    <a class="navitem on" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6M12 19h8"/></svg>Guides</a>
+  </aside>
+  <main>
+    <div class="topbar">
+      <div class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg> Search the system</div>
+      <div class="spacer"></div>
+      <div class="iconbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></div>
+      <div class="avatar">J</div>
+    </div>
+    <div class="docmain">
+      <nav class="docnav">
+        <div class="grp">Guides</div>
+        <a class="on" href="#">Installation</a>
+        <a href="#">Progressive adoption</a>
+        <a href="#">Migrating HRLabs</a>
+        <a href="#">Migrating icanhelp</a>
+        <a href="#">Publishing</a>
+      </nav>
+      <div class="doc">
+        <div class="breadcrumb"><a href="../index.html">prui</a> / <a href="index.html">guides</a> / <span>installation</span></div>
+        <h1>Installation</h1>
+        <p class="desc">From zero to a themed app shell in under five minutes. Private registry, one dependency, no global CSS reset forced on you.</p>
+
+        <h2>1. Registry access</h2>
+        <p>Add the GitHub Packages auth to your project or user <code>.npmrc</code>. One token covers every fleet app.</p>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i><span>.npmrc</span></div>
+          <pre>@skiddph:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}</pre>
+        </div>
+
+        <h2>2. Install</h2>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i><span>sh</span></div>
+          <pre>pnpm add @skiddph/prui @skiddph/prui-theme
+<span class="c-c"># peers you likely already have</span>
+pnpm add react react-dom lucide-react react-router-dom</pre>
+        </div>
+
+        <h2>3. Wire the shell</h2>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i><span>main.tsx</span></div>
+          <pre><span class="c-f">import</span> <span class="c-s">'@skiddph/prui-theme/control'</span>  <span class="c-c">// token theme, one line</span>
+<span class="c-f">import</span> { AppShell } <span class="c-f">from</span> <span class="c-s">'@skiddph/prui/shell'</span>
+<span class="c-f">import</span> { nav } <span class="c-f">from</span> <span class="c-s">'./nav'</span>
+
+createRoot(root).render(
+  <span class="c-p">&lt;</span><span class="c-k">AppShell</span> nav={nav}<span class="c-p">&gt;</span>{routes}<span class="c-p">&lt;/</span><span class="c-k">AppShell</span><span class="c-p">&gt;</span>
+)</pre>
+        </div>
+
+        <h2>4. Adopt progressively</h2>
+        <div class="grid2">
+          <div class="cardx"><h4>week 1</h4><p>Theme tokens + AppShell. Existing components pick up colors instantly; layout standardizes.</p></div>
+          <div class="cardx"><h4>week 2</h4><p>Swap primitives one import at a time. Delete local copies as prui versions land.</p></div>
+          <div class="cardx"><h4>week 3</h4><p>DataTable family for listings. Toolbar and filters replace bespoke filter bars.</p></div>
+          <div class="cardx"><h4>week 4</h4><p>Delete the app's own UI folder. Updates arrive via pnpm from here on.</p></div>
+        </div>
+
+        <div class="note">Nothing in prui forces a migration. Import paths are preset-scoped (<code>prui/shell</code>, <code>prui/data-table</code>) so partial adoption ships partial bytes. AC-7 in CI keeps it that way.</div>
+
+        <h2>Updating</h2>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i><span>sh</span></div>
+          <pre>pnpm update @skiddph/prui        <span class="c-c"># semver-compatible updates</span>
+pnpm why @skiddph/prui           <span class="c-c"># verify what depends on it</span></pre>
+        </div>
+
+        <div class="pager">
+          <a href="../theming/index.html"><small>previous</small><b>Theming</b></a>
+          <a class="next" href="../index.html"><small>next</small><b>Introduction</b></a>
+        </div>
+        <footer class="docfoot"><span>prui docs</span><span>guides / installation</span></footer>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

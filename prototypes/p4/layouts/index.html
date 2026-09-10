@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Layouts / PRUI</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="variant-tag">DIRECTION D: CONTROL ROOM + WORKSHOP</div>
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="../index.html"><div class="mark">P</div><b>prui</b></a>
+    <div class="navgroup">Docs</div>
+    <a class="navitem" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Introduction</a>
+    <a class="navitem" href="../components/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>Components</a>
+    <a class="navitem on" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Layouts</a>
+    <div class="navgroup">System</div>
+    <a class="navitem" href="../theming/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/></svg>Theming</a>
+    <a class="navitem" href="../guides/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6M12 19h8"/></svg>Guides</a>
+  </aside>
+  <main>
+    <div class="topbar">
+      <div class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg> Search the system</div>
+      <div class="spacer"></div>
+      <div class="iconbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></div>
+      <div class="avatar">J</div>
+    </div>
+    <div class="docmain">
+      <nav class="docnav">
+        <div class="grp">Layouts</div>
+        <a class="on" href="#">AppShell</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Listing</a>
+        <a href="#">Settings</a>
+        <a href="#">Auth</a>
+        <div class="grp">Patterns</div>
+        <a href="#">Filter bar</a>
+        <a href="#">Detail page</a>
+        <a href="#">Empty states</a>
+      </nav>
+      <div class="doc">
+        <div class="breadcrumb"><a href="../index.html">prui</a> / <a href="index.html">layouts</a> / <span>app-shell</span></div>
+        <h1>AppShell</h1>
+        <p class="desc">Sidebar, header, and content area driven by one nav config object. The exact shell HRLabs, jianpms, and icanhelp render today, with t4xlabs' theming hooks built in.</p>
+
+        <h2>Live</h2>
+        <div class="note">You are inside the AppShell right now. This documentation site renders with the layout it documents.</div>
+        <div class="live">
+          <div class="live-head"><span>app-shell / nav config preview</span><span>react 19</span></div>
+          <div class="live-body" style="display:block">
+            <table class="data">
+              <thead><tr><th>Slot</th><th>What renders</th><th>Driven by</th></tr></thead>
+              <tbody>
+                <tr><td>sidebar</td><td>Grouped nav, collapsible groups, active-route highlight</td><td><code>nav</code> config</td></tr>
+                <tr><td>header</td><td>Search, theme toggle, notifications, avatar menu</td><td><code>header</code> slots</td></tr>
+                <tr><td>content</td><td>Your routes; centered max-width column by default</td><td>children</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h2>Usage</h2>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i><span>app.tsx</span></div>
+          <pre><span class="c-f">import</span> { AppShell } <span class="c-f">from</span> <span class="c-s">'@skiddph/prui/shell'</span>
+
+<span class="c-f">const</span> nav = [
+  { group: <span class="c-s">'Docs'</span>, items: [
+    { name: <span class="c-s">'Introduction'</span>, href: <span class="c-s">'/'</span>, icon: Home },
+    { name: <span class="c-s">'Components'</span>, href: <span class="c-s">'/components'</span>, icon: Search },
+  ]},
+  { group: <span class="c-s">'System'</span>, items: [
+    { name: <span class="c-s">'Theming'</span>, href: <span class="c-s">'/theming'</span>, icon: Theme },
+  ]},
+]
+
+<span class="c-f">export function</span> <span class="c-f">App</span>() {
+  <span class="c-f">return</span> (
+    <span class="c-p">&lt;</span><span class="c-k">AppShell</span> nav={nav} header={<span class="c-p">&lt;</span><span class="c-k">SearchBar</span> <span class="c-p">/&gt;</span>}<span class="c-p">&gt;</span>
+      {routes}
+    <span class="c-p">&lt;/</span><span class="c-k">AppShell</span><span class="c-p">&gt;</span>
+  )
+}</pre>
+        </div>
+
+        <h2>Layout studies</h2>
+        <div class="grid2">
+          <div class="cardx"><h4>dashboard</h4><p>KPI row, panel stack, recent-activity table. The HRLabs shape.</p></div>
+          <div class="cardx"><h4>listing</h4><p>DataTable with toolbar, faceted filters, cursor pagination. The icanhelp shape.</p></div>
+          <div class="cardx"><h4>settings</h4><p>Two-column settings with section sidebar. The jianpms shape.</p></div>
+          <div class="cardx"><h4>themed shell</h4><p>Same layout, named themes switched at runtime. The t4xlabs shape.</p></div>
+        </div>
+
+        <h2>Props</h2>
+        <table class="props">
+          <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>nav</td><td>NavGroup[]</td><td>required</td><td>Groups of items; each item is name, href, icon. Groups render collapsed or expanded.</td></tr>
+            <tr><td>header</td><td>ReactNode</td><td>-</td><td>Slot rendered in the sticky top bar; search and avatar compose freely.</td></tr>
+            <tr><td>theme</td><td>'light' | 'dark' | string</td><td>'dark'</td><td>Named theme key from the theme registry.</td></tr>
+            <tr><td>collapsed</td><td>boolean</td><td>false</td><td>Icon-rail mode for the sidebar.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="pager">
+          <a href="../components/index.html"><small>previous</small><b>Button</b></a>
+          <a class="next" href="../theming/index.html"><small>next</small><b>Theming</b></a>
+        </div>
+        <footer class="docfoot"><span>prui docs</span><span>layouts / app-shell</span></footer>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
