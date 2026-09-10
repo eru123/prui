@@ -4,12 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Button / PRUI Components</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20viewBox=%220%200%2032%2032%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20rx=%227%22%20fill=%22%237c9cff%22/%3E%3Crect%20x=%229%22%20y=%227.5%22%20width=%224.6%22%20height=%2217%22%20rx=%222.3%22%20fill=%22%230a0f24%22/%3E%3Crect%20x=%2215.2%22%20y=%227.5%22%20width=%228.3%22%20height=%227.2%22%20rx=%222.2%22%20fill=%22%230a0f24%22/%3E%3Crect%20x=%2215.2%22%20y=%2216.3%22%20width=%226.1%22%20height=%227.2%22%20rx=%222.2%22%20fill=%22%230a0f24%22%20opacity=%22.55%22/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div class="variant-tag">DIRECTION D: CONTROL ROOM + WORKSHOP</div>
 <div class="shell">
-  <aside class="rail">
+  <aside class="rail" id="sidenav">
     <div class="rail-scroll">
       <div class="navgroup">Docs</div>
       <a class="navitem" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span class="navlabel">Introduction</span></a>
@@ -94,7 +95,8 @@
   </aside>
   <main>
     <div class="topbar">
-      <a class="topbrand" href="../index.html"><div class="mark">P</div><span>prui</span></a>
+      <button class="menubtn" aria-label="Open navigation" aria-controls="sidenav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <a class="topbrand" href="../index.html"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--brand)"/><rect x="9" y="7.5" width="4.6" height="17" rx="2.3" fill="#0a0f24"/><rect x="15.2" y="7.5" width="8.3" height="7.2" rx="2.2" fill="#0a0f24"/><rect x="15.2" y="16.3" width="6.1" height="7.2" rx="2.2" fill="#0a0f24" opacity=".55"/></svg><span>prui</span></a>
       <div class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg> Search the system</div>
       <div class="spacer"></div>
       <div class="iconbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></div>
@@ -146,7 +148,7 @@
         <div class="note">The <code>asChild</code> prop is the reason this component exists twice in production today. HRLabs ships without it, icanhelp ships with it; prui ships the superset.</div>
 
         <h2>Where it comes from</h2>
-        <table class="data">
+        <div class="tablewrap"><table class="data">
           <thead><tr><th>App</th><th>File</th><th>Status</th></tr></thead>
           <tbody>
             <tr><td>HRLabs</td><td>src/components/ui/button.tsx</td><td><span class="pill ok">extracted</span></td></tr>
@@ -154,7 +156,7 @@
             <tr><td>icanhelp</td><td>src/components/ui/button.tsx</td><td><span class="pill ok">canonical</span></td></tr>
             <tr><td>t4xlabs</td><td>hand-rolled</td><td><span class="pill warn">maps to variants</span></td></tr>
           </tbody>
-        </table>
+        </table></div>
 
         <div class="pager">
           <a href="../index.html"><small>previous</small><b>Introduction</b></a>
@@ -165,6 +167,29 @@
     </div>
   </main>
 </div>
-  <script src="../nav.js"></script>
+<div class="nav-backdrop"></div>
+<script>
+document.querySelectorAll('.navtoggle').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var sec = btn.closest('.navsec');
+    var open = sec.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+});
+
+// mobile drawer
+var burger = document.querySelector('.menubtn');
+var backdrop = document.querySelector('.nav-backdrop');
+function closeNav(){ document.body.classList.remove('nav-open'); if(burger) burger.setAttribute('aria-expanded','false'); }
+if(burger && backdrop){
+  burger.addEventListener('click', function(){
+    var open = document.body.classList.toggle('nav-open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  backdrop.addEventListener('click', closeNav);
+  document.querySelectorAll('.rail a').forEach(function(a){ a.addEventListener('click', closeNav); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeNav(); });
+}
+</script>
 </body>
 </html>
