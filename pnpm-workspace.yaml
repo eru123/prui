@@ -3,3 +3,4 @@ packages:
   - "site"
 allowBuilds:
   esbuild: true
+  "@parcel/watcher": true

@@ -7,6 +7,7 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs"
 import { resolve, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
+import { execFileSync } from "node:child_process"
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const src = (...p) => resolve(root, "src", "theme", ...p)
@@ -18,12 +19,21 @@ function inline(path) {
   })
 }
 
+// Compile the tailwind utilities prui's own class strings use. Consumers
+// need no tailwind setup at all (AC-1); apps with their own tailwind simply
+// load these utilities twice, which is harmless.
+const utilitiesFile = resolve(root, "dist", "prui-utilities.css")
+const cliEntry = resolve(root, "node_modules", "@tailwindcss", "cli", "dist", "index.mjs")
+execFileSync(process.execPath, [cliEntry, "-i", resolve(root, "scripts", "tw-input.css"), "-o", utilitiesFile, "--minify"], { stdio: "inherit" })
+const utilitiesCss = readFileSync(utilitiesFile, "utf8")
+
 const out = [
   inline(src("base.css")),
   inline(src("control.css")),
   inline(src("workshop.css")),
   inline(src("ember.css")),
   inline(src("daylight.css")),
+  utilitiesCss,
 ].join("\n")
 
 mkdirSync(resolve(root, "dist"), { recursive: true })

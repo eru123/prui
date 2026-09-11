@@ -14,6 +14,15 @@ cd my-admin
 pnpm install
 ```
 
+Vite 8 bundles with rolldown, which can load two copies of React when a dependency also ships React-based dist code. Add the dedupe guard to `vite.config.ts` (step 1 of the checklist in [verification.md](verification.md) catches the symptom: a blank page with an "Invalid hook call" error):
+
+```ts
+export default defineConfig({
+  plugins: [react()],
+  resolve: { dedupe: ['react', 'react-dom'] },
+})
+```
+
 ## 2. Install prui
 
 ```bash
