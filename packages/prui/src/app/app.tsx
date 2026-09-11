@@ -15,6 +15,8 @@ import { Button } from "../core/button"
 import { applyTheme, readPersistedTheme, PRUI_THEMES } from "../theme"
 import type { AppliedTheme, ThemeName } from "../theme"
 import type { PropsMeta } from "../core/props-meta"
+import { AutoPages } from "./auto-pages"
+import type { PageSetName } from "./auto-pages"
 
 /**
  * <App> is the whole shell: responsive sidebar with collapsible nav groups and
@@ -31,6 +33,8 @@ export interface NavItem {
   icon?: NavIconType
   /** Nest under a group heading. Items with children become groups. */
   items?: NavItem[]
+  /** Group headings render as passive labels when href is absent and this is set. */
+  heading?: boolean
 }
 
 export interface BrandConfig {
@@ -71,6 +75,15 @@ export interface AppProps {
   header?: React.ReactNode
   /** Router initial entries for memory mode. */
   initialEntries?: string[]
+  /**
+   * Auto-route the pre-made page set. "auth" wires /login, /register,
+   * /forgot-password, /reset-password, /otp, /logout; "utility" adds
+   * /404, /error, /profile, /settings, /admin-setup. Page props come
+   * from `pagesConfig`.
+   */
+  pages?: "auth" | "utility" | "auth+utility"
+  /** Props passed to the auto-routed pre-made pages (per page name). */
+  pagesConfig?: Partial<Record<PageSetName, Record<string, unknown>>>
   children?: React.ReactNode
 }
 
@@ -134,7 +147,9 @@ function isActivePath(pathname: string, href: string): boolean {
 
 function NavGroup({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
   const { pathname } = useLocation()
-  const active = (item.items ?? []).some((child) => child.href && isActivePath(pathname, child.href))
+  const active = (item.items ?? []).some((child) =>
+    child.href ? isActivePath(pathname, child.href) : (child.items ?? []).some((gc) => gc.href && isActivePath(pathname, gc.href)),
+  )
   const [open, setOpen] = React.useState(active)
 
   React.useEffect(() => {
@@ -168,8 +183,17 @@ function NavGroup({ item, onNavigate }: { item: NavItem; onNavigate?: () => void
   )
 }
 
+function NavSubgroupLabel({ label }: { label: string }) {
+  return (
+    <li className="px-2.5 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--prui-dim)]" data-testid="nav-subgroup">
+      {label}
+    </li>
+  )
+}
+
 function NavItemLink({ item, onNavigate, nested }: { item: NavItem; onNavigate?: () => void; nested?: boolean }) {
   if (item.items && item.items.length > 0) return <NavGroup item={item} onNavigate={onNavigate} />
+  if (item.heading || (!item.href && !item.items)) return <NavSubgroupLabel label={item.label} />
   if (!item.href) return null
   return (
     <li>
@@ -348,6 +372,8 @@ export function AppShell(props: AppProps) {
     theme = true,
     sidebar: sidebarCfg = {},
     header,
+    pages,
+    pagesConfig,
     children,
   } = props
 
@@ -491,7 +517,13 @@ export function AppShell(props: AppProps) {
           </div>
         </header>
         <main className="flex-1 p-4 md:p-6">
-          {children ?? <Outlet />}
+          {pages ? (
+            <AutoPages mode={pages} config={pagesConfig}>
+              {children}
+            </AutoPages>
+          ) : (
+            (children ?? <Outlet />)
+          )}
         </main>
       </div>
 

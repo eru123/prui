@@ -3,8 +3,20 @@ import react from "@vitejs/plugin-react"
 import dts from "vite-plugin-dts"
 import { resolve } from "node:path"
 import { fileURLToPath } from "node:url"
+import { readdirSync } from "node:fs"
 
 const r = (p: string) => resolve(fileURLToPath(new URL(".", import.meta.url)), p)
+
+// per-primitive entries: src/core/button.tsx -> entry "core/button"
+const coreDir = r("src/core")
+const coreEntries = Object.fromEntries(
+  readdirSync(coreDir)
+    .filter((f) => /^(?!index|core\.test|test).*\.(ts|tsx)$/.test(f))
+    .map((f) => {
+      const name = f.replace(/\.(ts|tsx)$/, "")
+      return [`core/${name}`, resolve(coreDir, f)]
+    }),
+)
 
 export default defineConfig({
   plugins: [
@@ -20,6 +32,7 @@ export default defineConfig({
       entry: {
         index: r("src/index.ts"),
         core: r("src/core/index.ts"),
+        ...coreEntries,
         app: r("src/app/index.ts"),
         pages: r("src/pages/index.ts"),
         "data-table": r("src/data-table/index.ts"),

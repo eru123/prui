@@ -1,4 +1,7 @@
 /** PRUI App layer: config-driven super-components. */
+export { AutoPages } from "./auto-pages"
+export type { PagesMode, PagesConfig, PageSetName } from "./auto-pages"
+
 export {
   App,
   AppShell,

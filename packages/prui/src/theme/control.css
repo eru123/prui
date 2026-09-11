@@ -1,16 +1,16 @@
-/* Theme: control. Dark operations room, cool blue accent. Default theme. */
+/* Theme: control. Direction D "Control Room" — pure black, periwinkle accent. Default theme. */
 .prui-theme-control {
   color-scheme: dark;
-  --prui-background: #0b0f14;
-  --prui-surface: #11161d;
-  --prui-raise: #1a212b;
-  --prui-line: #263041;
-  --prui-fg: #e7edf5;
-  --prui-dim: #94a3b8;
-  --prui-brand: #3b82f6;
-  --prui-brand-fg: #ffffff;
-  --prui-ok: #22c55e;
-  --prui-warn: #f59e0b;
-  --prui-danger: #ef4444;
+  --prui-background: #000000;
+  --prui-surface: #0f0f10;
+  --prui-raise: #1a1a1c;
+  --prui-line: #2a2a2e;
+  --prui-fg: #f4f4f5;
+  --prui-dim: #9b9ba4;
+  --prui-brand: #7c9cff;
+  --prui-brand-fg: #0a0f24;
+  --prui-ok: #3ddc97;
+  --prui-warn: #ffc15e;
+  --prui-danger: #f87171;
   --prui-radius: 6px;
 }

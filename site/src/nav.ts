@@ -1,16 +1,58 @@
 import type { NavItem } from "prui/app"
-import { Home, Layers, BookOpen, Palette, Table2 } from "lucide-react"
+import { BookOpen, Palette, Layers, LayoutTemplate, PenTool } from "lucide-react"
 
 export const nav: NavItem[] = [
-  { label: "Home", href: "/", icon: Home },
-  { label: "Components", href: "/components", icon: Layers },
-  { label: "Resources", href: "/resources", icon: Table2 },
+  { label: "Introduction", href: "/", icon: BookOpen },
+  {
+    label: "Components",
+    icon: Layers,
+    items: [
+      { label: "Primitives", heading: true },
+      { label: "Button", href: "/components#button" },
+      { label: "Input & Textarea", href: "/components#input" },
+      { label: "Select", href: "/components#select" },
+      { label: "Switch", href: "/components#switch" },
+      { label: "Tabs", href: "/components#tabs" },
+      { label: "Badge", href: "/components#badge" },
+      { label: "Dialog", href: "/components#dialog" },
+      { label: "Shell", heading: true },
+      { label: "App", href: "/components#app" },
+      { label: "Data", heading: true },
+      { label: "DataTable", href: "/components#data-table" },
+      { label: "Resource", href: "/components#resource" },
+      { label: "Utilities", heading: true },
+      { label: "StatRow", href: "/components#stat-row" },
+      { label: "Form", href: "/components#form" },
+    ],
+  },
+  {
+    label: "Layouts",
+    icon: LayoutTemplate,
+    items: [
+      { label: "Layouts", heading: true },
+      { label: "Dashboard", href: "/layouts#dashboard" },
+      { label: "Listing", href: "/layouts#listing" },
+      { label: "Settings", href: "/layouts#settings" },
+      { label: "Auth", href: "/layouts#auth" },
+    ],
+  },
+  {
+    label: "Theming",
+    icon: Palette,
+    items: [
+      { label: "Token reference", href: "/theming#tokens" },
+      { label: "Named themes", href: "/theming#themes" },
+      { label: "Runtime switching", href: "/theming#switching" },
+    ],
+  },
   {
     label: "Guides",
     icon: BookOpen,
     items: [
-      { label: "Getting started", href: "/getting-started" },
-      { label: "Theming", href: "/theming" },
+      { label: "Installation", href: "/guides#install" },
+      { label: "Progressive adoption", href: "/guides#adoption" },
+      { label: "Agents", href: "/agents" },
     ],
   },
+  { label: "Designer", href: "/designer", icon: PenTool },
 ]

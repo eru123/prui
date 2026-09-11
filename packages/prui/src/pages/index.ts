@@ -67,3 +67,35 @@ export type {
   OAuthProvider,
   PageSubmitState,
 } from "./shared"
+
+/* ---------------- PagesRegistry (for <App pages="..."> auto-routing) ---------------- */
+
+import type { ComponentType } from "react"
+import type { PageSetName } from "../app/auto-pages"
+import { LoginPage } from "./login"
+import { RegisterPage } from "./register"
+import { ForgotPasswordPage } from "./forgot-password"
+import { ResetPasswordPage } from "./reset-password"
+import { OtpPage } from "./otp"
+import { LogoutPage } from "./logout"
+import { NotFoundPage, ErrorPage } from "./status"
+import { ProfilePage, SettingsPage, AdminSetup } from "./profile-settings"
+
+/**
+ * Registry of pre-made pages keyed by PageSetName; consumed by AutoPages.
+ * Assembled here (not in app/) so the app layer never statically imports
+ * the pages bundle.
+ */
+export const PagesRegistry: Record<PageSetName, ComponentType<Record<string, unknown>>> = {
+  login: LoginPage as never,
+  register: RegisterPage as never,
+  forgotPassword: ForgotPasswordPage as never,
+  resetPassword: ResetPasswordPage as never,
+  otp: OtpPage as never,
+  logout: LogoutPage as never,
+  notFound: NotFoundPage as never,
+  error: ErrorPage as never,
+  profile: ProfilePage as never,
+  settings: SettingsPage as never,
+  adminSetup: AdminSetup as never,
+}
