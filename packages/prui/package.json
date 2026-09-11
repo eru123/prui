@@ -69,7 +69,6 @@
     "typescript": "^5.9.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4",
-    "vitest": "^3.2.4",
-    "@changesets/cli": "^2.29.0"
+    "vitest": "^3.2.4"
   }
 }
