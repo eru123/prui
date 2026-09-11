@@ -221,3 +221,12 @@ body.pal-open{overflow:hidden}
   html{scroll-behavior:smooth}
 }
 @media(max-width:1079px){.toc{display:none}}
+
+/* landing component showcase */
+.showcase{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:22px}
+.show-case{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.show-label{font:600 10.5px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:#5b5b64;margin-bottom:12px}
+.show-body{display:flex;gap:10px;flex-wrap:wrap;align-items:center;min-height:38px}
+.install-note{margin-top:14px;font-size:13px;color:var(--dim)}
+.install-note a{color:var(--brand);text-decoration:none}
+.install-note a:hover{text-decoration:underline}

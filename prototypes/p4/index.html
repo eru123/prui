@@ -114,11 +114,38 @@
         <a class="btn" href="components/index.html">Browse components</a>
         <a class="btn primary" href="guides/index.html">pnpm add @skiddph/prui</a>
       </div>
-      <div class="kpis">
-        <div class="kpi"><b>36</b><span>components</span></div>
-        <div class="kpi up"><b>6px</b><span>radius system</span></div>
-        <div class="kpi"><b>100%</b><span>tree-shakeable</span></div>
-        <div class="kpi"><b>semver</b><span>update channel</span></div>
+      <div class="showcase">
+        <div class="show-case" id="sc-buttons">
+          <div class="show-label">buttons</div>
+          <div class="show-body">
+            <button class="pbtn primary" id="sb-demo">Save changes</button>
+            <button class="pbtn ghost">Cancel</button>
+            <button class="pbtn danger">Delete</button>
+          </div>
+        </div>
+        <div class="show-case">
+          <div class="show-label">inputs</div>
+          <div class="show-body">
+            <input class="pin" placeholder="Search employees" id="sc-input">
+            <span class="badge">stable</span>
+            <span class="badge blue">new</span>
+          </div>
+        </div>
+        <div class="show-case">
+          <div class="show-label">controls</div>
+          <div class="show-body">
+            <div class="ptabs" id="sc-tabs"><span class="on">Details</span><span>Activity</span><span>Files</span></div>
+            <div class="pswitch on" id="sc-switch" role="switch" aria-checked="true" tabindex="0"></div>
+          </div>
+        </div>
+        <div class="show-case">
+          <div class="show-label">feedback</div>
+          <div class="show-body">
+            <span class="pill ok">active</span>
+            <span class="pill warn">beta</span>
+            <span class="pill info">new</span>
+          </div>
+        </div>
       </div>
       <div class="panel">
         <div class="panel-head"><span>data-table / live demo</span><span>seeded data</span></div>
@@ -138,12 +165,16 @@
         <div class="panel-head"><span>install</span><span>one dependency</span></div>
         <div class="panel-body">
           <div class="term" style="margin:0">
-            <div class="term-bar"><i></i><i></i><i></i><span>sh</span></div>
-            <pre>pnpm add @skiddph/prui</pre>
+            <div class="term-bar"><i></i><i></i><i></i><span>terminal</span></div>
+            <pre><span class="c-c"># install</span>
+pnpm add @skiddph/prui
+
+<span class="c-c"># wire the shell and theme</span>
+<span class="c-k">index.tsx</span>
+<span class="c-f">import</span> <span class="c-s">'@skiddph/prui/theme/control'</span>
+<span class="c-f">import</span> { AppShell } <span class="c-f">from</span> <span class="c-s">'@skiddph/prui/shell'</span></pre>
           </div>
-          <div class="swatchrow" style="margin-top:16px">
-            <div class="swatch" style="background:#7c9cff"></div><div class="swatch" style="background:#ff7c9c"></div><div class="swatch" style="background:#3ddc97"></div><div class="swatch" style="background:#ffc15e"></div><div class="swatch" style="background:#1a1a1c"></div>
-          </div>
+          <div class="install-note">Three lines and your app has the shell, the theme, and every primitive. <a href="guides/index.html">Full installation guide</a></div>
         </div>
       </div>
     </div>
@@ -251,6 +282,25 @@ if(burger && backdrop){
       if(item.dataset.href){ window.location.href = item.dataset.href; }
       if(item.dataset.action === 'theme'){ closePal(); }
     });
+  });
+})();
+
+
+// landing showcase interactions
+(function(){
+  var b = document.getElementById('sb-demo');
+  if(b) b.addEventListener('click', function(){
+    b.textContent = 'Saved'; setTimeout(function(){ b.textContent = 'Save changes'; }, 1200);
+  });
+  var sw = document.getElementById('sc-switch');
+  if(sw){
+    function tog(){ sw.classList.toggle('on'); sw.setAttribute('aria-checked', sw.classList.contains('on') ? 'true' : 'false'); }
+    sw.addEventListener('click', tog);
+    sw.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); tog(); } });
+  }
+  var tabs = document.getElementById('sc-tabs');
+  if(tabs) tabs.addEventListener('click', function(e){
+    if(e.target.tagName === 'SPAN'){ tabs.querySelectorAll('span').forEach(function(s){ s.classList.remove('on'); }); e.target.classList.add('on'); }
   });
 })();
 
