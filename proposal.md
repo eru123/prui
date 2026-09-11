@@ -103,7 +103,7 @@ The skill means an agent never has to browse the docs to be productive; the docs
 In:
 
 - pnpm monorepo: `packages/prui` (library), `site` (docs), `skill/` (agent skill)
-- Library: primitives layer, App layer (`App`, `Resource`, `Form`, `StatRow`, `Settings`, `AuthShell`), theme system, `cn()`
+- Library: primitives layer, App layer (`App`, `Resource`, `Form`, `StatRow`, `Settings`), pre-made page components (login, register, forgot/reset password, OTP, 404, error, profile, settings, admin setup), theme system, `cn()`
 - Progressive adoption: preset import paths (`prui/app`, `prui/data-table`, `prui/core`), tree-shakeable, apps keep their own tailwind config
 - Versioning: changesets, private GitHub Packages registry, semver
 - `skill/` agent skill living in the repo (SKILL.md + references)
@@ -129,10 +129,11 @@ The docs site is static (Workers assets), no database. The package has no data m
 The npm package surface:
 
 - `prui/core`: primitives, `cn`
-- `prui/app`: `App`, `Resource`, `Form`, `StatRow`, `Settings`, `AuthShell`
+- `prui/app`: `App`, `Resource`, `Form`, `StatRow`, `Settings`
+- `prui/pages`: the pre-made page components (`LoginPage`, `RegisterPage`, `ForgotPasswordPage`, `ResetPasswordPage`, `OtpPage`, `NotFoundPage`, `ErrorPage`, `ProfilePage`, `AdminSetup`, ...)
 - `prui/data-table`: the DataTable family for direct composition
 - `prui/theme`: token CSS, named themes, `applyTheme()`
-- Peer deps: react, react-dom, lucide-react, react-router-dom (`App` routing only)
+- Dependencies: react, react-dom, lucide-react, and **react-router-dom as a required dependency** (the App layer owns routing: `<App>` wires the Router, nav-to-route binding, and active-state detection itself, so consumers never wire routing manually)
 
 ## Pages and flows (docs site)
 
@@ -150,7 +151,7 @@ A single page at `/designer` with two halves:
 
 - **Canvas (left/main)**: a live `<App>` preview rendering the user's current config in an iframe-isolated frame. Every change in the tools reflects immediately.
 - **Developer tools (floating panel, right)**: toggle-driven and form-driven controls:
-  - **Structure**: enable/disable sidebar, topbar, command palette; sidebar width, collapsible mode
+  - **Structure**: enable/disable sidebar, topbar, command palette; sidebar width, collapsible mode; include/exclude the pre-made page set (login/register/forgot/404...)
   - **Navigation**: add/edit/reorder nav items and groups (label, href, icon picker), import/export nav JSON
   - **Branding**: app name, logo upload or mark picker, favicon
   - **Design**: theme picker (named themes), token overrides (brand color, radius, density), light/dark
@@ -160,8 +161,9 @@ The Designer is the human counterpart to `skill/`: point a colleague at /designe
 
 ## Acceptance criteria
 
-- AC-1: `pnpm add prui` in a fresh Vite React app; `<App nav={...}>` renders a working shell (sidebar groups, mobile drawer, theme switch) with no other setup
+- AC-1: `pnpm add prui` in a fresh Vite React app (react-router-dom arrives with it); `<App nav={...}>` renders a working shell (sidebar groups, mobile drawer, theme switch, active-route highlight) with no other setup
 - AC-2: a `<Resource>` with 5 columns and 2 filter types renders a complete listing (toolbar, filters, pagination, sort, create/edit modal, delete confirm) driven only by props and API functions
+- AC-2b: `<App pages="auth">` auto-routes the pre-made page set; `LoginPage` with `fields={{username: true, remember: false}}` renders without the remember-me input and with it under `true`, verified for at least three field toggles across two pages
 - AC-3: an agent following only `prui-skill` builds a working two-resource admin app in one session; verified by a recorded agent run
 - AC-4: every catalog component (both layers) has a live demo, props table, copyable snippet
 - AC-5: theme tokens overridable by one CSS file, no prui source edits; light/dark + named themes switch at runtime
@@ -179,6 +181,7 @@ The Designer is the human counterpart to `skill/`: point a colleague at /designe
 - vitest + testing-library: primitives render/variant/controlled tests; super-components render correct structure from config (nav -> sidebar tree, columns -> filter bar)
 - `<App>`: nav config to rendered tree, active-route highlight, drawer open/close/lock, palette hotkey
 - `<Resource>`: pagination math, filter combinations, optimistic states, error states
+- Pages: field show/hide matrix per page, links matrix, oauth on/off, submit wiring, loading/error states
 - Bundle-size regression (AC-7)
 - Browser proof: docs site flows, theme switching, 390px/1440px screenshots
 - Agent proof: scripted run with only the skill loaded (AC-3)
@@ -194,7 +197,7 @@ Cloudflare Workers (static assets) via wrangler, `prui.skiddph.com`. Review prot
 - React 19 + Vite 8 + pnpm workspace monorepo
 - icanhelp-tracker's component set is the canonical baseline; HRLabs/jianpms divergences fold in as props or variants
 - t4xlabs' theming becomes the multi-theme mechanism
-- `<App>` integrates react-router (the pattern all four apps use); a router-less mode ships for embedded/demo use
+- react-router-dom is a hard dependency, matching the pattern all four apps use; a `memory` router mode ships for embedded/demo use so `<App>` still works outside a URL context
 - Docs site is static; no accounts, no uploads, no D1
 - Direction D (Control Room + Workshop) is the approved site design, with the landing revisions already applied
 - First-adopter migration (HRLabs) is follow-up work after prui ships
