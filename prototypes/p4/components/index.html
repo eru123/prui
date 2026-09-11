@@ -107,12 +107,19 @@
       </div>
     </div>
     <div class="docmain single">
+      <nav class="toc" aria-label="On this page">
+        <div class="toc-title">On this page</div>
+        <a href="#live" data-target="live">Live</a>
+        <a href="#usage" data-target="usage">Usage</a>
+        <a href="#props" data-target="props">Props</a>
+        <a href="#variants" data-target="variants">Variants</a>
+      </nav>
       <div class="doc">
         <div class="breadcrumb"><a href="../index.html">prui</a> / <a href="index.html">components</a> / <span>button</span></div>
         <h1>Button</h1>
         <p class="desc">Triggers an action or event. One button, every variant your product needs, consistent behavior included.</p>
 
-        <h2>Live</h2>
+        <h2 id="live">Live</h2>
         <div class="live">
           <div class="live-head"><span>button / variants + sizes</span><span>react 19</span></div>
           <div class="live-body">
@@ -124,7 +131,7 @@
           </div>
         </div>
 
-        <h2>Usage</h2>
+        <h2 id="usage">Usage</h2>
         <div class="term">
           <div class="term-bar"><i></i><i></i><i></i><span>dashboard.tsx</span></div>
           <pre><span class="c-f">import</span> { Button } <span class="c-f">from</span> <span class="c-s">'@skiddph/prui'</span>
@@ -138,7 +145,7 @@
 }</pre>
         </div>
 
-        <h2>Props</h2>
+        <h2 id="props">Props</h2>
         <table class="props">
           <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
@@ -152,7 +159,7 @@
 
         <div class="note"><code>asChild</code> lets a Button render as a link, a router entry, or any single child, keeping variant styling intact.</div>
 
-        <h2>Variants</h2>
+        <h2 id="variants">Variants</h2>
         <div class="tablewrap"><table class="data">
           <thead><tr><th>Variant</th><th>Use</th><th>Status</th></tr></thead>
           <tbody>
@@ -275,6 +282,33 @@ if(burger && backdrop){
       if(item.dataset.action === 'theme'){ closePal(); }
     });
   });
+})();
+
+
+// toc scroll spy
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[data-target]'));
+  if(!links.length) return;
+  var sections = links.map(function(l){ return document.getElementById(l.dataset.target); }).filter(Boolean);
+  function setActive(id){
+    links.forEach(function(l){ l.classList.toggle('on', l.dataset.target === id); });
+  }
+  function spy(){
+    var pos = window.scrollY + 120;
+    var current = sections[0];
+    sections.forEach(function(s){ if(s.getBoundingClientRect().top + window.scrollY <= pos) current = s; });
+    setActive(current && current.id);
+  }
+  window.addEventListener('scroll', spy, {passive: true});
+  window.addEventListener('resize', spy, {passive: true});
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting) setActive(e.target.id); });
+    }, {rootMargin: '-15% 0px -70% 0px'});
+    sections.forEach(function(s){ io.observe(s); });
+  }
+  links.forEach(function(l){ l.addEventListener('click', function(){ setTimeout(spy, 400); setTimeout(spy, 900); }); });
+  spy();
 })();
 
 </script>

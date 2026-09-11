@@ -107,12 +107,19 @@
       </div>
     </div>
     <div class="docmain single">
+      <nav class="toc" aria-label="On this page">
+        <div class="toc-title">On this page</div>
+        <a href="#token-reference" data-target="token-reference">Token reference</a>
+        <a href="#usage" data-target="usage">Usage</a>
+        <a href="#named-themes" data-target="named-themes">Named themes</a>
+        <a href="#runtime-switching" data-target="runtime-switching">Runtime switching</a>
+      </nav>
       <div class="doc">
         <div class="breadcrumb"><a href="../index.html">prui</a> / <a href="index.html">theming</a> / <span>tokens</span></div>
         <h1>Theming</h1>
         <p class="desc">One set of CSS-variable tokens carries every prui component. Apps override tokens, not component source.</p>
 
-        <h2>Token reference</h2>
+        <h2 id="token-reference">Token reference</h2>
         <div class="tokencode">
           <div class="token"><div class="dot" style="background:#7c9cff"></div><div><b>--brand</b><span>7c9cff</span></div></div>
           <div class="token"><div class="dot" style="background:#ff7c9c"></div><div><b>--brand-2</b><span>ff7c9c</span></div></div>
@@ -124,7 +131,7 @@
           <div class="token"><div class="dot" style="background:#2a2a2e"></div><div><b>--line</b><span>2a2a2e</span></div></div>
         </div>
 
-        <h2>Usage</h2>
+        <h2 id="usage">Usage</h2>
         <div class="term">
           <div class="term-bar"><i></i><i></i><i></i><span>brand.css</span></div>
           <pre><span class="c-c">/* your app, not prui source */</span>
@@ -137,7 +144,7 @@
    no component file is touched. */</span></pre>
         </div>
 
-        <h2>Named themes</h2>
+        <h2 id="named-themes">Named themes</h2>
         <table class="data">
           <thead><tr><th>Theme</th><th>Mood</th><th>Used by</th><th>Status</th></tr></thead>
           <tbody>
@@ -150,7 +157,7 @@
 
         <div class="note warn">Keep contrast on tokens, not on components. A component that hardcodes a color breaks theming for every app downstream; the audit fails any PR that adds one.</div>
 
-        <h2>Runtime switching</h2>
+        <h2 id="runtime-switching">Runtime switching</h2>
         <div class="live">
           <div class="live-head"><span>theme / applyTheme()</span><span>no reload</span></div>
           <div class="live-body">
@@ -273,6 +280,33 @@ if(burger && backdrop){
       if(item.dataset.action === 'theme'){ closePal(); }
     });
   });
+})();
+
+
+// toc scroll spy
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[data-target]'));
+  if(!links.length) return;
+  var sections = links.map(function(l){ return document.getElementById(l.dataset.target); }).filter(Boolean);
+  function setActive(id){
+    links.forEach(function(l){ l.classList.toggle('on', l.dataset.target === id); });
+  }
+  function spy(){
+    var pos = window.scrollY + 120;
+    var current = sections[0];
+    sections.forEach(function(s){ if(s.getBoundingClientRect().top + window.scrollY <= pos) current = s; });
+    setActive(current && current.id);
+  }
+  window.addEventListener('scroll', spy, {passive: true});
+  window.addEventListener('resize', spy, {passive: true});
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting) setActive(e.target.id); });
+    }, {rootMargin: '-15% 0px -70% 0px'});
+    sections.forEach(function(s){ io.observe(s); });
+  }
+  links.forEach(function(l){ l.addEventListener('click', function(){ setTimeout(spy, 400); setTimeout(spy, 900); }); });
+  spy();
 })();
 
 </script>

@@ -107,12 +107,19 @@
       </div>
     </div>
     <div class="docmain single">
+      <nav class="toc" aria-label="On this page">
+        <div class="toc-title">On this page</div>
+        <a href="#live" data-target="live">Live</a>
+        <a href="#usage" data-target="usage">Usage</a>
+        <a href="#layout-studies" data-target="layout-studies">Layout studies</a>
+        <a href="#props" data-target="props">Props</a>
+      </nav>
       <div class="doc">
         <div class="breadcrumb"><a href="../index.html">prui</a> / <a href="index.html">layouts</a> / <span>app-shell</span></div>
         <h1>AppShell</h1>
         <p class="desc">Sidebar, header, and content area driven by one nav config object. Collapsible sections, active-route highlighting, and theming come built in.</p>
 
-        <h2>Live</h2>
+        <h2 id="live">Live</h2>
         <div class="note">You are inside the AppShell right now. This documentation site renders with the layout it documents.</div>
         <div class="live">
           <div class="live-head"><span>app-shell / nav config preview</span><span>react 19</span></div>
@@ -128,7 +135,7 @@
           </div>
         </div>
 
-        <h2>Usage</h2>
+        <h2 id="usage">Usage</h2>
         <div class="term">
           <div class="term-bar"><i></i><i></i><i></i><span>app.tsx</span></div>
           <pre><span class="c-f">import</span> { AppShell } <span class="c-f">from</span> <span class="c-s">'@skiddph/prui/shell'</span>
@@ -152,7 +159,7 @@
 }</pre>
         </div>
 
-        <h2>Layout studies</h2>
+        <h2 id="layout-studies">Layout studies</h2>
         <div class="grid2">
           <div class="cardx"><h4>dashboard</h4><p>KPI row, panel stack, recent-activity table.</p></div>
           <div class="cardx"><h4>listing</h4><p>DataTable with toolbar, faceted filters, cursor pagination.</p></div>
@@ -160,7 +167,7 @@
           <div class="cardx"><h4>themed shell</h4><p>Same layout, named themes switched at runtime.</p></div>
         </div>
 
-        <h2>Props</h2>
+        <h2 id="props">Props</h2>
         <table class="props">
           <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
@@ -283,6 +290,33 @@ if(burger && backdrop){
       if(item.dataset.action === 'theme'){ closePal(); }
     });
   });
+})();
+
+
+// toc scroll spy
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[data-target]'));
+  if(!links.length) return;
+  var sections = links.map(function(l){ return document.getElementById(l.dataset.target); }).filter(Boolean);
+  function setActive(id){
+    links.forEach(function(l){ l.classList.toggle('on', l.dataset.target === id); });
+  }
+  function spy(){
+    var pos = window.scrollY + 120;
+    var current = sections[0];
+    sections.forEach(function(s){ if(s.getBoundingClientRect().top + window.scrollY <= pos) current = s; });
+    setActive(current && current.id);
+  }
+  window.addEventListener('scroll', spy, {passive: true});
+  window.addEventListener('resize', spy, {passive: true});
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting) setActive(e.target.id); });
+    }, {rootMargin: '-15% 0px -70% 0px'});
+    sections.forEach(function(s){ io.observe(s); });
+  }
+  links.forEach(function(l){ l.addEventListener('click', function(){ setTimeout(spy, 400); setTimeout(spy, 900); }); });
+  spy();
 })();
 
 </script>
