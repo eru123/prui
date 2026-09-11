@@ -43,8 +43,8 @@ jobs:
           pnpm changeset version
           git diff --quiet || (git config user.name "prui-bot" && git config user.email "bot@skiddph.com" && git add -A && git commit -m "chore(release): version packages" && git push)
       - name: Build package for publish
-        run: pnpm --filter @eru123/prui build
+        run: pnpm --filter @skiddph/prui build
       - name: Publish to npm (public)
-        run: pnpm --filter @eru123/prui publish --access public --no-git-checks
+        run: pnpm --filter @skiddph/prui publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

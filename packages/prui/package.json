@@ -1,5 +1,5 @@
 {
-  "name": "@eru123/prui",
+  "name": "@skiddph/prui",
   "version": "0.1.0",
   "description": "PRUI component system: primitives, app-layer super-components, pages, and themes",
   "type": "module",

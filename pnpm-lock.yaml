@@ -75,7 +75,7 @@ importers:
 
   site:
     dependencies:
-      '@eru123/prui':
+      '@skiddph/prui':
         specifier: workspace:*
         version: link:../packages/prui
       lucide-react:
