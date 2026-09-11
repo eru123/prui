@@ -53,7 +53,7 @@ while (queue.length) {
 }
 
 const kb = (n) => `${(n / 1024).toFixed(1)} KB`
-console.log(`landing-budget: ${seen.size} chunks, raw ${kb(raw)} | gzip ${kb(gz)} | brotli ${kb(br)}`)
+console.log(`landing-budget: ${seen.size} chunks [${[...seen].join(", ")}], raw ${kb(raw)} | gzip ${kb(gz)} | brotli ${kb(br)}`)
 
 if (br > BUDGET_BYTES) {
   console.error(`landing-budget FAILED (AC-6): landing JS brotli ${kb(br)} exceeds the ${kb(BUDGET_BYTES)} budget`)

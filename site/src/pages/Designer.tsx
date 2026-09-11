@@ -6,7 +6,8 @@ import { CopyButton } from "../components/CopyButton"
 import { CodeView } from "../components/CodeView"
 import { Undo2, Redo2, Plus, Upload } from "lucide-react"
 import { DesignerPreview } from "./designer/Preview"
-import { NavEditor } from "./designer/NavEditor"
+/* lazy: keeps dnd-kit out of any static import graph regardless of chunker */
+const NavEditor = React.lazy(() => import("./designer/NavEditor").then((m) => ({ default: m.NavEditor })))
 import {
   DEFAULT_STATE,
   decodeState,
@@ -277,11 +278,13 @@ export function DesignerPage() {
               <Separator />
 
               {/* navigation */}
-              <NavEditor
-                flat={flattenNav(state.nav)}
-                onChange={(flat) => setNav(unflattenNav(flat), true)}
-                monacoReady={monacoReady}
-              />
+              <React.Suspense fallback={<div className="h-40 animate-pulse rounded-[var(--prui-radius)] bg-[var(--prui-raise)]" />}>
+                <NavEditor
+                  flat={flattenNav(state.nav)}
+                  onChange={(flat) => setNav(unflattenNav(flat), true)}
+                  monacoReady={monacoReady}
+                />
+              </React.Suspense>
               <Button variant="ghost" size="sm" className="self-start"
                 onClick={() => setNav([...state.nav, { label: "New item", href: "/new" }], true)}
                 data-testid="designer-add-nav">
