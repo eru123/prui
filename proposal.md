@@ -109,7 +109,7 @@ In:
 - `skill/` agent skill living in the repo (SKILL.md + references)
 - Docs site: landing (direction D), live catalog (both layers), layout examples, theming guide, /designer visual builder, agent quickstart, installation/adoption guides
 - CI: build, typecheck, tests (vitest + testing-library), bundle-size guard (super-components tree-shake), package publish workflow
-- Site built with prui itself (dogfooding)
+- Site built with prui itself (dogfooding); Monaco editor (`@monaco-editor/react`) for all code display and editing on the site — loaded lazily on the designer and component pages so it never lands in the landing-page bundle (AC-6 budget protected)
 
 Out (agreed now, the only exclusions):
 
@@ -138,7 +138,7 @@ The npm package surface:
 ## Pages and flows (docs site)
 
 - **Landing**: the chosen direction D design, live component showcase, install snippet
-- **Components**: catalog for both layers (primitives and super-components), live demos, props tables, copyable code
+- **Components**: catalog for both layers (primitives and super-components), live demos, props tables, code examples rendered in Monaco (read-only, copy button)
 - **Layouts**: full-page demos (dashboard, listing, settings, auth)
 - **Theming**: token reference, named themes, override guide
 - **Designer**: visual app builder (details below)
@@ -155,7 +155,7 @@ A single page at `/designer` with two halves:
   - **Navigation**: add/edit/reorder nav items and groups (label, href, icon picker), import/export nav JSON
   - **Branding**: app name, logo upload or mark picker, favicon
   - **Design**: theme picker (named themes), token overrides (brand color, radius, density), light/dark
-  - **Generate**: produces copy-pastable code, the complete `<App ...>` invocation with nav config, plus the token override CSS. Tabs for "paste into my app" and "hand to my agent" (the latter wrapped in a prompt that references the `skill/` folder)
+  - **Generate**: produces copy-pastable code, the complete `<App ...>` invocation with nav config, plus the token override CSS. The code view is a **Monaco editor** (the VS Code engine): syntax highlighting, folding, search, and one-click copy. Tabs for "paste into my app" and "hand to my agent" (the latter wrapped in a prompt that references the `skill/` folder). The nav-config editor in the tools panel is also Monaco-backed (JSON with schema validation), so power users can edit config as code with the visual editor beside it
 
 The Designer is the human counterpart to `skill/`: point a colleague at /designer, they configure visually, and the output is the same config an agent would have written. No backend, no save: state lives in the URL (shareable config links) and localStorage; export is the artifact.
 
@@ -186,6 +186,7 @@ The Designer is the human counterpart to `skill/`: point a colleague at /designe
 - Browser proof: docs site flows, theme switching, 390px/1440px screenshots
 - Agent proof: scripted run with only the skill loaded (AC-3)
 - Designer proof: generate code from a non-trivial config, paste into a fresh Vite app, verify the rendered app matches the Designer canvas (AC-12); URL round-trip (AC-13)
+- Monaco proof: editor loads on designer + component pages (lazy), copy button yields runnable code, landing bundle stays under the AC-6 budget with Monaco excluded
 
 ## Deployment target
 
