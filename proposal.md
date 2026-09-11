@@ -85,9 +85,9 @@ Renders toolbar + faceted filters + DataTable + cursor pagination + create/edit 
 
 An agent building an admin app composes `<App>` + a few `<Resource>`s + a dashboard page. That is the entire surface it needs.
 
-## The `prui-skill` agent skill
+## The `skill/` agent skill
 
-Shipped in the repo at `skill/` and installable to `~/.hermes/skills/`, `~/.claude/skills/`, or `~/.agents/skills/`. Structure per the shared-skills convention (SKILL.md entry + references):
+Lives in the repo at `skill/` (versioned with prui, referenced by URL or by cloning; NOT installed into the prui team's own agent skill directories). Users point their agent at the repo folder or copy it wherever their agent reads skills from.
 
 - **When to use**: user asks to build/prototype an app, admin panel, dashboard, or internal tool with React
 - **The fast path**: `<App>` + `<Resource>` recipes with copy-paste configs (the minutes-to-app flow)
@@ -106,8 +106,8 @@ In:
 - Library: primitives layer, App layer (`App`, `Resource`, `Form`, `StatRow`, `Settings`, `AuthShell`), theme system, `cn()`
 - Progressive adoption: preset import paths (`prui/app`, `prui/data-table`, `prui/core`), tree-shakeable, apps keep their own tailwind config
 - Versioning: changesets, private GitHub Packages registry, semver
-- `prui-skill` agent skill as above
-- Docs site: landing (chosen direction D), live component catalog (both layers), layout examples, theming guide, agent quickstart, installation/adoption guides
+- `skill/` agent skill living in the repo (SKILL.md + references)
+- Docs site: landing (direction D), live catalog (both layers), layout examples, theming guide, /designer visual builder, agent quickstart, installation/adoption guides
 - CI: build, typecheck, tests (vitest + testing-library), bundle-size guard (super-components tree-shake), package publish workflow
 - Site built with prui itself (dogfooding)
 
@@ -140,8 +140,23 @@ The npm package surface:
 - **Components**: catalog for both layers (primitives and super-components), live demos, props tables, copyable code
 - **Layouts**: full-page demos (dashboard, listing, settings, auth)
 - **Theming**: token reference, named themes, override guide
-- **Agents**: the quickstart an agent follows; link to install the skill
+- **Designer**: visual app builder (details below)
+- **Agents**: the quickstart an agent follows; points to `skill/` in the repo
 - **Guides**: installation, progressive adoption, migrating an existing app
+
+## The Designer: visual app builder page
+
+A single page at `/designer` with two halves:
+
+- **Canvas (left/main)**: a live `<App>` preview rendering the user's current config in an iframe-isolated frame. Every change in the tools reflects immediately.
+- **Developer tools (floating panel, right)**: toggle-driven and form-driven controls:
+  - **Structure**: enable/disable sidebar, topbar, command palette; sidebar width, collapsible mode
+  - **Navigation**: add/edit/reorder nav items and groups (label, href, icon picker), import/export nav JSON
+  - **Branding**: app name, logo upload or mark picker, favicon
+  - **Design**: theme picker (named themes), token overrides (brand color, radius, density), light/dark
+  - **Generate**: produces copy-pastable code, the complete `<App ...>` invocation with nav config, plus the token override CSS. Tabs for "paste into my app" and "hand to my agent" (the latter wrapped in a prompt that references the `skill/` folder)
+
+The Designer is the human counterpart to `skill/`: point a colleague at /designer, they configure visually, and the output is the same config an agent would have written. No backend, no save: state lives in the URL (shareable config links) and localStorage; export is the artifact.
 
 ## Acceptance criteria
 
@@ -155,7 +170,9 @@ The npm package surface:
 - AC-8: changeset -> version bump -> GitHub Packages release from CI on main
 - AC-9: each shared component from the four source apps traces to a prui export (docs page "Where it comes from", internal-only link)
 - AC-10: all pages pass keyboard navigation and visible focus checks
-- AC-11: `prui-skill` installs to `~/.hermes/skills/` and `~/.claude/skills/` and passes the agent-run test in AC-3 from each host
+- AC-12: /designer renders a live `<App>` preview reflecting every tool change (nav edits, toggles, branding, theme) without reload, and generates correct, runnable `<App>` code plus token CSS that pastes into a fresh Vite app and renders identically
+- AC-13: /designer state round-trips through the URL (a shared link reproduces the exact configuration)
+- AC-11: `skill/` works when an agent loads it straight from the repo checkout; the agent-run test (AC-3) passes from a fresh clone without any installation step
 
 ## Test plan
 
@@ -165,6 +182,7 @@ The npm package surface:
 - Bundle-size regression (AC-7)
 - Browser proof: docs site flows, theme switching, 390px/1440px screenshots
 - Agent proof: scripted run with only the skill loaded (AC-3)
+- Designer proof: generate code from a non-trivial config, paste into a fresh Vite app, verify the rendered app matches the Designer canvas (AC-12); URL round-trip (AC-13)
 
 ## Deployment target
 
