@@ -20,6 +20,14 @@ if (!existsSync(manifestPath)) {
 }
 
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"))
+
+// debug: which source keys map to each JS chunk (chunk-assignment forensics)
+const byChunk = {}
+for (const [key, chunk] of Object.entries(manifest)) {
+  if (!chunk.file.endsWith(".js")) continue
+  byChunk[chunk.file] = byChunk[chunk.file] ?? []
+  byChunk[chunk.file].push(key)
+}
 const entryKey = Object.keys(manifest).find((k) => k === "index.html")
 if (!entryKey) {
   console.error("landing-budget: no index.html entry in manifest")
@@ -54,6 +62,10 @@ while (queue.length) {
 
 const kb = (n) => `${(n / 1024).toFixed(1)} KB`
 console.log(`landing-budget: ${seen.size} chunks [${[...seen].join(", ")}], raw ${kb(raw)} | gzip ${kb(gz)} | brotli ${kb(br)}`)
+for (const file of seen) {
+  const keys = (byChunk[file] ?? []).filter((k) => !k.startsWith("_"))
+  if (keys.length) console.log(`  ${file}: ${keys.slice(0, 40).join(", ")}${keys.length > 40 ? ` (+${keys.length - 40} more)` : ""}`)
+}
 
 if (br > BUDGET_BYTES) {
   console.error(`landing-budget FAILED (AC-6): landing JS brotli ${kb(br)} exceeds the ${kb(BUDGET_BYTES)} budget`)
