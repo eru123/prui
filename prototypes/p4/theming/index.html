@@ -86,8 +86,8 @@
         <div class="navchildren">
           <a class="subitem" href="#">Installation</a>
           <a class="subitem" href="#">Progressive adoption</a>
-          <a class="subitem" href="#">Migrating HRLabs</a>
-          <a class="subitem" href="#">Migrating icanhelp</a>
+          <a class="subitem" href="#">Migrating an existing app</a>
+          <a class="subitem" href="#">Publishing</a>
           <a class="subitem" href="#">Publishing</a>
         </div>
       </div>
@@ -110,7 +110,7 @@
       <div class="doc">
         <div class="breadcrumb"><a href="../index.html">prui</a> / <a href="index.html">theming</a> / <span>tokens</span></div>
         <h1>Theming</h1>
-        <p class="desc">One set of CSS-variable tokens carries every prui component. Apps override tokens, not component source. The t4xlabs multi-theme pass, productized.</p>
+        <p class="desc">One set of CSS-variable tokens carries every prui component. Apps override tokens, not component source.</p>
 
         <h2>Token reference</h2>
         <div class="tokencode">
@@ -129,7 +129,7 @@
           <div class="term-bar"><i></i><i></i><i></i><span>brand.css</span></div>
           <pre><span class="c-c">/* your app, not prui source */</span>
 <span class="c-k">:root</span> {
-  <span class="c-f">--brand</span>: <span class="c-s">#e5673f</span>;      <span class="c-c">/* warm t4xlabs-style brand */</span>
+  <span class="c-f">--brand</span>: <span class="c-s">#e5673f</span>;      <span class="c-c">/* your brand, your tokens */</span>
   <span class="c-f">--bg</span>: <span class="c-s">#0c0b09</span>;
   <span class="c-f">--surface</span>: <span class="c-s">#15130f</span>;
 }
@@ -141,9 +141,9 @@
         <table class="data">
           <thead><tr><th>Theme</th><th>Mood</th><th>Used by</th><th>Status</th></tr></thead>
           <tbody>
-            <tr><td>control</td><td>Near-black, blue-pink accent</td><td>this site, fleet default</td><td><span class="pill ok">stable</span></td></tr>
+            <tr><td>control</td><td>Near-black, blue accent</td><td>default</td><td><span class="pill ok">stable</span></td></tr>
             <tr><td>workshop</td><td>Graphite, green accent</td><td>engineering surfaces</td><td><span class="pill ok">stable</span></td></tr>
-            <tr><td>ember</td><td>Warm dark, orange brand</td><td>t4xlabs derivative</td><td><span class="pill info">new</span></td></tr>
+            <tr><td>ember</td><td>Warm dark, orange brand</td><td>consumer products</td><td><span class="pill info">new</span></td></tr>
             <tr><td>daylight</td><td>Paper light</td><td>docs, exports, print</td><td><span class="pill warn">beta</span></td></tr>
           </tbody>
         </table>

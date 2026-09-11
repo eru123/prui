@@ -48,7 +48,7 @@ main{display:flex;flex-direction:column;min-width:0}
 .searchtrigger{display:flex;align-items:center;gap:10px;width:min(420px,34vw);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 14px;color:var(--dim);font:13px var(--sans);cursor:pointer}
 .searchtrigger:hover{border-color:#44454c;color:var(--fg)}
 .searchtrigger kbd{margin-left:auto;font:11px var(--mono);border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:#6b6b74;background:var(--code)}
-.searchicon{display:none}
+.iconbtn.searchicon{display:none}
 .logo-mark{width:28px;height:28px;border-radius:7px;display:block}
 .menubtn{display:none;width:36px;height:36px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;place-items:center;padding:0}
 .menubtn svg{width:18px;height:18px}
@@ -207,5 +207,5 @@ body.pal-open{overflow:hidden}
   .topbar > .topbrand{grid-column:1}
   .topbar > .topbar-right{grid-column:3}
   .searchtrigger{display:none}
-  .searchicon{display:grid}
+  .iconbtn.searchicon{display:grid}
 }
