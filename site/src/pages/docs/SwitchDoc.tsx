@@ -6,7 +6,7 @@ export function SwitchDoc() {
   return (
     <ComponentDoc
       name="Switch"
-      importPath="prui/core"
+      importPath="@skiddph/prui/core"
       description="Binary toggle with immediate effect — no submit required. role=switch with full keyboard support; controlled or uncontrolled."
       when={[
         "Settings and preferences that apply instantly",

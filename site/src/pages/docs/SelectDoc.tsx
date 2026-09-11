@@ -6,7 +6,7 @@ export function SelectDoc() {
   return (
     <ComponentDoc
       name="Select"
-      importPath="prui/core"
+      importPath="@skiddph/prui/core"
       description="Single-select from options. Two modes: simple (options prop) and composable (Trigger/Value/Content/Item parts for custom content). Controlled via value/onChange or uncontrolled via defaultValue."
       when={[
         "Choosing one value from a known set (3-20 options)",
@@ -53,7 +53,7 @@ export function SelectDoc() {
               </Select>
             </div>
           ),
-          code: `import { Select } from 'prui/core'
+          code: `import { Select } from '@skiddph/prui/core'
 
 <Select value={v} onChange={setV}>
   <SelectTrigger aria-label="Role">

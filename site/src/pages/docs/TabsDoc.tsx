@@ -4,7 +4,7 @@ export function TabsDoc() {
   return (
     <ComponentDoc
       name="Tabs"
-      importPath="prui/core"
+      importPath="@skiddph/prui/core"
       description="Alternate between peer views within the same context. Controlled (value/onChange) or uncontrolled (defaultValue)."
       when={[
         "Detail/Activity/Files style peer views under one entity",

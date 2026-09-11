@@ -20,7 +20,7 @@ export function LandingPage() {
       <div className="mt-7 mb-10 flex flex-wrap gap-2.5">
         <Link to="/guides"><Button variant="primary">Get started</Button></Link>
         <Link to="/components"><Button variant="default">Browse components</Button></Link>
-        <a href="#install"><Button variant="default">pnpm add prui</Button></a>
+        <a href="#install"><Button variant="default">pnpm add @skiddph/prui</Button></a>
       </div>
 
       {/* live showcase grid */}
@@ -108,15 +108,15 @@ export function LandingPage() {
             <div className="flex items-center gap-1.5 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-3 py-2">
               <i className="h-2.5 w-2.5 rounded-full bg-[var(--prui-line)]" /><i className="h-2.5 w-2.5 rounded-full bg-[var(--prui-line)]" /><i className="h-2.5 w-2.5 rounded-full bg-[var(--prui-line)]" />
               <span className="ml-2 font-mono text-[10.5px] text-[var(--prui-dim)]">terminal</span>
-              <span className="ml-auto"><CopyButton text={"pnpm add prui\n\nimport 'prui/styles.css'\nimport { App } from 'prui/app'"} /></span>
+              <span className="ml-auto"><CopyButton text={"pnpm add @skiddph/prui\n\nimport '@skiddph/prui/styles.css'\nimport { App } from '@skiddph/prui/app'"} /></span>
             </div>
             <pre className="overflow-x-auto px-4 py-4 font-mono text-[12.5px] leading-7 text-[var(--prui-fg)]">
 {`# install
-pnpm add prui
+pnpm add @skiddph/prui
 
 # wire the shell and theme
-import 'prui/styles.css'
-import { App } from 'prui/app'`}
+import '@skiddph/prui/styles.css'
+import { App } from '@skiddph/prui/app'`}
             </pre>
           </div>
           <p className="mt-3.5 text-[13px] text-[var(--prui-dim)]">

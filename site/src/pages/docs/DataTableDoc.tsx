@@ -25,7 +25,7 @@ export function DataTableDoc() {
   return (
     <ComponentDoc
       name="DataTable"
-      importPath="prui/data-table"
+      importPath="@skiddph/prui/data-table"
       description="Column-configured table with sorting, loading/empty states, and the whole filter family: toolbar search, faceted select, date-range, number-range, plus cursor pagination — the same parts <Resource> orchestrates."
       when={[
         "Any listing screen; usually reach for <Resource> first",

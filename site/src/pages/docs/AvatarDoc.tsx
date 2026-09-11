@@ -4,7 +4,7 @@ export function AvatarDoc() {
   return (
     <ComponentDoc
       name="Avatar"
-      importPath="prui/core"
+      importPath="@skiddph/prui/core"
       description="User/entity thumbnail with automatic initials fallback (from alt) and image error fallback. Three sizes."
       when={["User identity in headers, tables, comment lists"]}
       demos={[

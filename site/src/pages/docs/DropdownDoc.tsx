@@ -5,7 +5,7 @@ export function DropdownDoc() {
   return (
     <ComponentDoc
       name="Dropdown"
-      importPath="prui/core"
+      importPath="@skiddph/prui/core"
       description="Lightweight action menu anchored to a trigger. Item list mode or custom children; closes on outside click and Escape."
       when={[
         "Row/card overflow actions (Edit, Duplicate, Delete…)",

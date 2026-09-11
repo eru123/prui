@@ -95,8 +95,8 @@ mark{background:rgba(124,156,255,.15);color:#7c9cff;border-radius:4px;padding:2p
 
 function generateCode(state: DesignerState): string {
   const navLiteral = JSON.stringify(state.nav, null, 2).replace(/^/gm, "").replace(/\n/g, "\n  ")
-  return `import { App } from 'prui/app'
-import 'prui/styles.css'
+  return `import { App } from '@skiddph/prui/app'
+import '@skiddph/prui/styles.css'
 
 <App
   brand={{ name: '${state.name}'${state.mark ? `, mark: '${state.mark}'` : ""} }}

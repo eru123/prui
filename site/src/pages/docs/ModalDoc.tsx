@@ -10,7 +10,7 @@ export function ModalDoc() {
   return (
     <ComponentDoc
       name="Modal"
-      importPath="prui/core"
+      importPath="@skiddph/prui/core"
       description="The production modal from icanhelp-tracker, ported to PRUI tokens: size scale (xs-xl), open/close animation, shake feedback when a close is blocked, overlay blur, body scroll lock, and an imperative confirmModal() that returns a Promise."
       when={[
         "Dialogs that need the full size scale and controlled padding",
@@ -61,7 +61,7 @@ export function ModalDoc() {
               confirmModal()
             </Button>
           ),
-          code: `import { confirmModal } from 'prui/core'
+          code: `import { confirmModal } from '@skiddph/prui/core'
 
 const ok = await confirmModal({
   title: 'Delete employee?',

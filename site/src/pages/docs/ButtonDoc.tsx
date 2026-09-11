@@ -6,7 +6,7 @@ export function ButtonDoc() {
   return (
     <ComponentDoc
       name="Button"
-      importPath="prui/core"
+      importPath="@skiddph/prui/core"
       description="The action trigger. Four variants cover the whole hierarchy: primary (one per view), default, ghost, and danger. Sizes sm/md/lg plus icon for square icon-only buttons."
       when={[
         "Triggering actions: save, submit, navigate, delete",

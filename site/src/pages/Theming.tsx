@@ -63,15 +63,15 @@ export function ThemingPage() {
           ))}
         </div>
         <p className="mt-3 text-sm text-[var(--prui-dim)]">
-          Import individually: <code className="rounded bg-[var(--prui-raise)] px-1">prui/theme/control.css</code> — or all at once via{" "}
-          <code className="rounded bg-[var(--prui-raise)] px-1">prui/styles.css</code>.
+          Import individually: <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui/theme/control.css</code> — or all at once via{" "}
+          <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui/styles.css</code>.
         </p>
       </section>
 
       <section id="switching" className="scroll-mt-20">
         <h2 className="mb-3 text-base font-semibold text-[var(--prui-fg)]">Runtime switching</h2>
         <div className="mb-4 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
-          <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{`import { applyTheme } from 'prui/theme'
+          <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{`import { applyTheme } from '@skiddph/prui/theme'
 
 applyTheme({ theme: 'workshop' })      // sets classes + persists
 applyTheme({ theme: 'daylight' })      // light mode`}</pre>

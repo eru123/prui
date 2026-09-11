@@ -4,7 +4,7 @@ export function BadgeDoc() {
   return (
     <ComponentDoc
       name="Badge"
-      importPath="prui/core"
+      importPath="@skiddph/prui/core"
       description="Compact status labels and counts. Six variants: default, brand, ok, warn, danger, outline."
       when={[
         "Entity status: active/leave/onboarding",

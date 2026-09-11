@@ -27,11 +27,11 @@ export function GuidesPage() {
 
       <Section id="install" title="Installation">
         <p>PRUI ships react-router-dom, lucide-react, and React 19 as dependencies — one install, no peer wiring:</p>
-        <Code>{`pnpm add prui
+        <Code>{`pnpm add @skiddph/prui
 
 # main.tsx — theme tokens + shell
-import 'prui/styles.css'
-import { App } from 'prui/app'
+import '@skiddph/prui/styles.css'
+import { App } from '@skiddph/prui/app'
 
 <App brand={{ name: 'My App' }} nav={nav} theme={{ default: 'control' }}>
   {routes}
@@ -105,7 +105,7 @@ skill/
           <CardDescription>What an agent following the skill produces</CardDescription>
         </CardHeader>
         <CardContent>
-          <Code>{`import { App, Resource, StatRow } from 'prui/app'
+          <Code>{`import { App, Resource, StatRow } from '@skiddph/prui/app'
 
 <App brand={{ name: 'Ops' }} nav={nav} pages="auth">
   <Resource name="employees" columns={cols} list={api.list}

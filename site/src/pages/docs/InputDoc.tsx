@@ -6,7 +6,7 @@ export function InputDoc() {
   return (
     <ComponentDoc
       name="Input"
-      importPath="prui/core"
+      importPath="@skiddph/prui/core"
       description="Text entry for single-line and multi-line values. Native input/textarea under the hood — all native props pass through, so type=email/number/search, autoComplete, pattern all work."
       when={[
         "Single-line text, email, number, password, search entry",
