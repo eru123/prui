@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -36,13 +36,15 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-          registry-url: https://npm.pkg.github.com
+          registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
       - name: Apply changesets (version + tag)
         run: |
           pnpm changeset version
           git diff --quiet || (git config user.name "prui-bot" && git config user.email "bot@skiddph.com" && git add -A && git commit -m "chore(release): version packages" && git push)
-      - name: Publish to GitHub Packages
-        run: pnpm --filter prui publish --access restricted --no-git-checks
+      - name: Build package for publish
+        run: pnpm --filter @eru123/prui build
+      - name: Publish to npm (public)
+        run: pnpm --filter @eru123/prui publish --access public --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

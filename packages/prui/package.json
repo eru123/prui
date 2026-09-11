@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "PRUI component system: primitives, app-layer super-components, pages, and themes",
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "sideEffects": [
     "**/*.css"
   ],
@@ -75,6 +75,7 @@
     "url": "git+https://github.com/eru123/prui.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   }
 }
