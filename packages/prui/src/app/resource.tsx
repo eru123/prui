@@ -1,14 +1,8 @@
 import * as React from "react"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 import { Button } from "../core/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "../core/dialog"
+import { Modal } from "../core/modal"
+import { confirmModal } from "../core/modal"
 import { cn } from "../core/cn"
 import type { PropsMeta } from "../core/props-meta"
 import { DataTable, type Column } from "../data-table/data-table"
@@ -126,8 +120,6 @@ export function Resource<T extends ResourceRow>({
 
   const [editing, setEditing] = React.useState<T | null>(null)
   const [modalOpen, setModalOpen] = React.useState(false)
-  const [deleting, setDeleting] = React.useState<T | null>(null)
-  const [deleteOpen, setDeleteOpen] = React.useState(false)
   const [deleteBusy, setDeleteBusy] = React.useState(false)
 
   const currentCursor = cursorStack[page - 1] ?? null
@@ -182,18 +174,18 @@ export function Resource<T extends ResourceRow>({
     setModalOpen(true)
   }
 
-  const openDelete = (row: T) => {
-    setDeleting(row)
-    setDeleteOpen(true)
-  }
-
-  const confirmDelete = async () => {
-    if (!deleting || !remove) return
+  const openDelete = async (row: T) => {
+    const confirmed = await confirmModal({
+      title: `Delete ${singular}?`,
+      message: "This action cannot be undone.",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      type: "danger",
+    })
+    if (!confirmed || !remove) return
     setDeleteBusy(true)
     try {
-      await remove(deleting)
-      setDeleteOpen(false)
-      setDeleting(null)
+      await remove(row)
       await load()
     } finally {
       setDeleteBusy(false)
@@ -228,7 +220,7 @@ export function Resource<T extends ResourceRow>({
                   </Button>
                 ) : null}
                 {can("delete") ? (
-                  <Button variant="ghost" size="icon" aria-label="Delete" onClick={() => openDelete(row)} data-testid="resource-delete">
+                  <Button variant="ghost" size="icon" aria-label="Delete" disabled={deleteBusy} onClick={() => void openDelete(row)} data-testid="resource-delete">
                     <Trash2 className="h-3.5 w-3.5 text-[var(--prui-danger)]" aria-hidden />
                   </Button>
                 ) : null}
@@ -288,12 +280,11 @@ export function Resource<T extends ResourceRow>({
         onPageSizeChange={(s) => setPageSize(s)}
       />
 
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent ariaLabel={editing ? `Edit ${singular}` : `New ${singular}`}>
-          <DialogHeader>
-            <DialogTitle>{editing ? `Edit ${singular}` : `New ${singular}`}</DialogTitle>
-          </DialogHeader>
-          <div className="px-4 pb-2">
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="sm" ariaLabel={editing ? `Edit ${singular}` : `New ${singular}`} noPadding>
+          <div className="px-8 pt-8 pb-2">
+            <h2 className="text-lg font-semibold" style={{ color: "var(--prui-fg)" }}>{editing ? `Edit ${singular}` : `New ${singular}`}</h2>
+          </div>
+          <div className="px-8 pb-8">
             {form ?? (
               <Form
                 schema={effectiveSchema}
@@ -308,27 +299,8 @@ export function Resource<T extends ResourceRow>({
               />
             )}
           </div>
-        </DialogContent>
-      </Dialog>
+      </Modal>
 
-      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <DialogContent ariaLabel={`Delete ${singular}`} className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Delete {singular}?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setDeleteOpen(false)} disabled={deleteBusy}>
-              Cancel
-            </Button>
-            <Button variant="danger" onClick={confirmDelete} loading={deleteBusy} data-testid="resource-confirm-delete">
-              Delete
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

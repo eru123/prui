@@ -254,14 +254,17 @@ describe("Resource", () => {
     expect(screen.getAllByTestId("resource-delete").length).toBe(3)
   })
 
-  it("delete confirm dialog calls remove()", async () => {
+  it("delete confirm modal (confirmModal) calls remove()", async () => {
     const user = userEvent.setup()
     const remove = vi.fn(async () => {})
     renderResource({ remove })
     await waitFor(() => expect(screen.getByText("Ada")).toBeInTheDocument())
     await user.click(screen.getAllByTestId("resource-delete")[0]!)
-    expect(screen.getByRole("dialog", { name: "Delete employee" })).toBeInTheDocument()
-    await user.click(screen.getByTestId("resource-confirm-delete"))
+    // imperative confirmModal renders an alertdialog
+    const dialog = await screen.findByRole("alertdialog", { name: "Delete employee?" })
+    expect(dialog).toBeInTheDocument()
+    const confirmBtn = [...dialog.querySelectorAll("button")].find((b) => b.textContent === "Delete")!
+    await user.click(confirmBtn)
     await waitFor(() => expect(remove).toHaveBeenCalledOnce())
   })
 

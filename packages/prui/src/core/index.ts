@@ -87,3 +87,14 @@ export {
 } from "./dropdown"
 
 export { ScrollArea, scrollAreaPropsMeta, type ScrollAreaProps } from "./scroll-area"
+
+export {
+  Modal,
+  confirmModal,
+  modalPropsMeta,
+  confirmModalPropsMeta,
+  type ModalProps,
+  type ModalSize,
+  type ConfirmModalOptions,
+  type ConfirmModalType,
+} from "./modal"

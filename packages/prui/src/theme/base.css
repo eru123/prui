@@ -14,3 +14,12 @@ ever reference the variables, so a single override file re-skins everything.
 
 /* control (dark, blue accent) is the default theme */
 @import "./control.css";
+
+/* Modal shake feedback (blocked close), from icanhelp modal */
+@keyframes prui-modal-shake {
+  0%, 100% { transform: scale(1) translateY(0) translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: scale(1) translateY(0) translateX(-8px); }
+  20%, 40%, 60%, 80% { transform: scale(1) translateY(0) translateX(8px); }
+}
+.prui-modal-shake { animation: prui-modal-shake 0.5s ease-in-out; }
+body.modal-open { overflow: hidden; }
