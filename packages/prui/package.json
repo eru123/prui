@@ -43,10 +43,11 @@
     "./styles.css": "./dist/prui.css"
   },
   "scripts": {
-    "build": "vite build && node scripts/bundle-css.mjs && mkdir -p dist/theme && cp src/theme/*.css dist/theme/",
+    "build": "vite build && node scripts/bundle-css.mjs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "node -e \"fs.rmSync('dist',{recursive:true,force:true})\"",
+    "lint": "eslint ."
   },
   "dependencies": {
     "clsx": "^2.1.1",

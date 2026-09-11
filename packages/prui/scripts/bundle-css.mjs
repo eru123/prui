@@ -4,7 +4,7 @@
  * with intra-theme @import lines inlined so the output has no external
  * references (a flattened file cannot resolve relative imports).
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs"
 import { resolve, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -29,3 +29,10 @@ const out = [
 mkdirSync(resolve(root, "dist"), { recursive: true })
 writeFileSync(resolve(root, "dist", "prui.css"), out + "\n")
 console.log(`wrote dist/prui.css (${out.length} bytes)`)
+
+// Ship each named theme as @skiddph/prui/theme/<name>.css (cross-platform: no shell cp)
+mkdirSync(resolve(root, "dist", "theme"), { recursive: true })
+for (const f of readdirSync(src())) {
+  if (f.endsWith(".css")) copyFileSync(src(f), resolve(root, "dist", "theme", f))
+}
+console.log("copied theme css to dist/theme/")
