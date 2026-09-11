@@ -436,16 +436,13 @@ export function AppShell(props: AppProps) {
 
   return (
     <div className="prui-app flex min-h-screen bg-[var(--prui-background)] text-[var(--prui-fg)]">
-      {/* desktop sidebar */}
+      {/* desktop sidebar: fixed rail with its own scroll, no brand row (p4) */}
       <aside
         data-testid="sidebar"
-        className="hidden md:flex md:flex-col shrink-0 border-r border-[var(--prui-line)] bg-[var(--prui-surface)]"
-        style={{ width }}
+        className="hidden md:block md:fixed md:inset-y-0 md:left-0 md:z-30 md:w-[var(--prui-sidebar-width)] md:border-r md:border-[var(--prui-line)] md:bg-[var(--prui-surface)]"
+        style={{ ["--prui-sidebar-width" as string]: `${width}px` }}
       >
-        <div className="flex h-14 items-center border-b border-[var(--prui-line)] px-3">
-          <BrandMark brand={brand} />
-        </div>
-        <div className="flex-1 overflow-y-auto p-2">
+        <div className="h-full overflow-y-auto p-2 pt-4 scrollbar-thin">
           <SidebarNav nav={nav} />
         </div>
       </aside>
@@ -460,13 +457,12 @@ export function AppShell(props: AppProps) {
             data-testid="drawer-backdrop"
           />
           <aside
-            className="absolute left-0 top-0 h-full w-64 border-r border-[var(--prui-line)] bg-[var(--prui-surface)] p-2"
+            className="absolute left-0 top-0 h-full w-64 overflow-y-auto border-r border-[var(--prui-line)] bg-[var(--prui-surface)] p-2"
             role="dialog"
             aria-modal="true"
             aria-label="Navigation"
           >
-            <div className="mb-2 flex h-10 items-center justify-between px-1">
-              <BrandMark brand={brand} />
+            <div className="mb-2 flex h-10 items-center justify-end px-1">
               <button
                 type="button"
                 aria-label="Close navigation"
@@ -481,10 +477,10 @@ export function AppShell(props: AppProps) {
         </div>
       ) : null}
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col md:ml-[var(--prui-sidebar-width)]" style={{ ["--prui-sidebar-width" as string]: `${width}px` }}>
         <header
           data-testid="app-header"
-          className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-3"
+          className="sticky top-0 z-30 grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:px-6"
         >
           <Button
             variant="ghost"
@@ -496,7 +492,7 @@ export function AppShell(props: AppProps) {
           >
             <Menu className="h-4 w-4" aria-hidden />
           </Button>
-          <div className="md:hidden">
+          <div className="min-w-0 justify-self-start">
             <BrandMark brand={brand} />
           </div>
           {searchEnabled ? (
@@ -504,14 +500,14 @@ export function AppShell(props: AppProps) {
               type="button"
               onClick={() => setPaletteOpen(true)}
               data-testid="search-trigger"
-              className="mx-auto hidden h-8 w-full max-w-sm items-center gap-2 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] px-3 text-sm text-[var(--prui-dim)] hover:border-[var(--prui-dim)] cursor-pointer md:flex"
+              className="hidden h-8 w-[min(420px,34vw)] items-center gap-2 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] px-3.5 text-sm text-[var(--prui-dim)] hover:border-[var(--prui-dim)] cursor-pointer md:flex"
             >
               <Search className="h-4 w-4" aria-hidden />
               <span className="flex-1 text-left">{searchCfg.placeholder ?? "Search..."}</span>
-              <kbd className="rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] px-1.5 py-0.5 text-xs">{hotkey}</kbd>
+              <kbd className="ml-auto rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] bg-[var(--prui-raise)] px-1.5 py-0.5 text-xs">{hotkey}</kbd>
             </button>
           ) : null}
-          <div className="ml-auto flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-self-end">
             {header}
             <ThemeToggle config={theme} />
           </div>

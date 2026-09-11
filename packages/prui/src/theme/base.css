@@ -23,3 +23,14 @@ ever reference the variables, so a single override file re-skins everything.
 }
 .prui-modal-shake { animation: prui-modal-shake 0.5s ease-in-out; }
 body.modal-open { overflow: hidden; }
+
+/* p4 rail scrollbar: thin, surfaces matching */
+.prui-app aside ::-webkit-scrollbar,
+.prui-app aside::-webkit-scrollbar { width: 8px; }
+.prui-app aside ::-webkit-scrollbar-track,
+.prui-app aside::-webkit-scrollbar-track { background: transparent; }
+.prui-app aside ::-webkit-scrollbar-thumb,
+.prui-app aside::-webkit-scrollbar-thumb { background: var(--prui-raise); border-radius: 4px; }
+.prui-app aside ::-webkit-scrollbar-thumb:hover,
+.prui-app aside::-webkit-scrollbar-thumb:hover { background: var(--prui-line); }
+.prui-app aside { scrollbar-width: thin; scrollbar-color: var(--prui-raise) transparent; }
