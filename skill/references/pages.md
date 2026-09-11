@@ -119,7 +119,7 @@ Auto-routing accepts the same props you would pass by hand, via `pagesConfig` ke
 Import and route the pages yourself when you want custom paths or a different router mode:
 
 ```tsx
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route } from '@skiddph/prui/app'
 import { LoginPage, OtpPage } from '@skiddph/prui/pages'
 import Dashboard from './routes'
 

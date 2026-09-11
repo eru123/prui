@@ -1,4 +1,9 @@
 /** PRUI App layer: config-driven super-components. */
+
+// Route-authoring helpers re-exported so consumer code never imports
+// react-router-dom directly — the App layer owns routing.
+export { Routes, Route, Outlet, Link, NavLink, Navigate } from "react-router-dom"
+
 export { AutoPages } from "./auto-pages"
 export type { PagesMode, PagesConfig, PageSetName } from "./auto-pages"
 

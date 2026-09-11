@@ -12,7 +12,7 @@ PRUI is progressively adoptable: start with super-components, drop toward primit
 | `prui/data-table` | the DataTable family for direct composition |
 | `prui/theme` | token CSS, named themes, `applyTheme()` |
 
-Bundled dependencies: `react`, `react-dom`, `lucide-react`, and `react-router-dom` (required dependency of prui; the App layer owns routing, so it arrives with the package).
+Dependencies: `react`, `react-dom`, and `react-router-dom` arrive with the package (the App layer owns routing; `Routes`/`Route` are re-exported from `@skiddph/prui/app`). `lucide-react` is a peer dependency — install it in the app (`pnpm add lucide-react`).
 
 ## Tree-shaking
 

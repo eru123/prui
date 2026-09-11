@@ -29,8 +29,7 @@ A two-resource admin app is `<App>` + a dashboard route + one `<Resource>` per e
 
 ```tsx
 import { createRoot } from 'react-dom/client'
-import { App } from '@skiddph/prui/app'
-import { Routes, Route } from 'react-router-dom'
+import { App, Routes, Route } from '@skiddph/prui/app'
 import { LayoutDashboard, Users, CalendarDays } from 'lucide-react'
 import Dashboard from './pages/Dashboard'
 import EmployeesPage from './pages/EmployeesPage'
@@ -63,6 +62,12 @@ createRoot(document.getElementById('root')!).render(
     </Routes>
   </App>,
 )
+```
+
+Install lucide-react alongside the package (it is a peer dependency):
+
+```bash
+pnpm add lucide-react
 ```
 
 **src/pages/EmployeesPage.tsx**

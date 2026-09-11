@@ -1,6 +1,6 @@
 # App layer: super-components reference
 
-All imports come from `prui/app`:
+All imports come from `@skiddph/prui/app` (route helpers `Routes`/`Route`/`Outlet`/`Link`/`NavLink`/`Navigate` are re-exported here too — never import react-router-dom directly):
 
 ```tsx
 import { App, Resource, Form, StatRow, Settings } from '@skiddph/prui/app'
@@ -45,8 +45,7 @@ A leaf has `href`; a group has `items`. Do not set both.
 ### Example: the HRLabs two-resource shell
 
 ```tsx
-import { App } from '@skiddph/prui/app'
-import { Routes, Route } from 'react-router-dom'
+import { App, Routes, Route } from '@skiddph/prui/app'
 import { LayoutDashboard, Users, CalendarDays } from 'lucide-react'
 
 <App

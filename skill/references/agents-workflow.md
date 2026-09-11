@@ -20,7 +20,11 @@ pnpm install
 pnpm add @skiddph/prui
 ```
 
-`react-router-dom` and `lucide-react` arrive with it (dependencies of the package; the App layer owns routing, so there is no router wiring for you).
+`react-router-dom` arrives with it (required dependency; the App layer owns routing — import `Routes`/`Route` from `@skiddph/prui/app`, never from react-router directly). `lucide-react` is a peer dependency, so add it to the app:
+
+```bash
+pnpm add lucide-react
+```
 
 ## 3. Import theme tokens
 
@@ -37,8 +41,7 @@ import './theme.css' // your overrides, see references/theming.md
 ```tsx
 // src/main.tsx
 import { createRoot } from 'react-dom/client'
-import { App } from '@skiddph/prui/app'
-import { Routes, Route } from 'react-router-dom'
+import { App, Routes, Route } from '@skiddph/prui/app'
 import { LayoutDashboard, Users, CalendarDays } from 'lucide-react'
 import '@skiddph/prui/styles.css'
 import './theme.css'

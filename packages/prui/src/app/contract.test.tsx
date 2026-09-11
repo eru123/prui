@@ -348,6 +348,13 @@ describe("docs-contract: skill API surface", () => {
     expect(missing).toEqual([])
   })
 
+  it("re-exports the route helpers the skill imports from prui/app", async () => {
+    const mod = await import("./index")
+    for (const name of ["Routes", "Route", "Outlet", "Link", "NavLink", "Navigate"]) {
+      expect(name in mod).toBe(true)
+    }
+  })
+
   it("the documented filter type names are all supported", () => {
     const doc = readSkill("references/app-layer.md")
     const m = doc.match(/filter\?:\s*'([^']+)'/)

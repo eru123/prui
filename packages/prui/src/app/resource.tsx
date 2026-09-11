@@ -60,12 +60,13 @@ export interface ResourceProps<T extends ResourceRow> {
   columns: ResourceColumn<T>[]
   /** (query) => Promise<{rows, cursor}> */
   list: (query: ListQuery) => Promise<ListResult<T>>
-  create?: (values: Record<string, unknown>) => Promise<void> | void
-  update?: (row: T, values: Record<string, unknown>) => Promise<void> | void
+  /** Return values are ignored — resolve or reject to signal outcome. */
+  create?: (values: Record<string, unknown>) => unknown
+  update?: (row: T, values: Partial<T>) => unknown
   /** Deletes a row; `delete` is an alias. */
-  remove?: (row: T) => Promise<void> | void
+  remove?: (row: T) => unknown
   /** Alias of remove. */
-  delete?: (row: T) => Promise<void> | void
+  delete?: (row: T) => unknown
   /** Enabled actions, default all three when the functions are provided. */
   actions?: ResourceAction[]
   /** Custom form node; receives the editing row (null on create). */
@@ -312,7 +313,7 @@ export function Resource<T extends ResourceRow>({
                 initialValues={initialValues}
                 onCancel={() => setModalOpen(false)}
                 onSubmit={async (values) => {
-                  if (editing) await update?.(editing, values)
+                  if (editing) await update?.(editing, values as Partial<T>)
                   else await create?.(values)
                   setModalOpen(false)
                   await load()
