@@ -5,8 +5,8 @@
  * static import graph (chunks included) must not contain the app-layer
  * markers (sidebar shell, Resource CRUD strings).
  */
-import { readFileSync, readdirSync, existsSync } from "node:fs"
-import { resolve, dirname } from "node:path"
+import { readFileSync, existsSync } from "node:fs"
+import { resolve, dirname, relative } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const dist = resolve(dirname(fileURLToPath(import.meta.url)), "../packages/prui/dist")
@@ -39,9 +39,8 @@ while (queue.length) {
   for (const marker of APP_MARKERS) {
     if (code.includes(marker)) violations.push(`${rel} contains "${marker}"`)
   }
-  for (const m of code.matchAll(/from\s*"(\.[^"]+\.js)"/g)) {
-    const target = new URL(m[1], "file://" + file).pathname.replace(/^\/+/, "")
-    queue.push(resolve(dist, target).slice(dist.length + 1))
+  for (const m of code.matchAll(/(?:from|import)\s*"(\.[^"]+\.js)"/g)) {
+    queue.push(relative(dist, resolve(dirname(file), m[1])))
   }
 }
 

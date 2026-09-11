@@ -17,7 +17,8 @@ import { cn } from "./cn"
 describe("cn", () => {
   it("merges class names with tailwind awareness", () => {
     expect(cn("px-2", "px-4")).toBe("px-4")
-    expect(cn("text-sm", false && "hidden", "font-medium")).toBe("text-sm font-medium")
+    // false is the fixture: clsx must skip falsy args
+    expect(cn("text-sm", false && "hidden", "font-medium")).toBe("text-sm font-medium") // eslint-disable-line no-constant-binary-expression
   })
 })
 

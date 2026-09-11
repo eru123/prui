@@ -185,7 +185,7 @@ describe("Resource", () => {
 
   it("renders filter controls for filter columns", async () => {
     renderResource()
-    expect(screen.getByTestId("faceted-filter")).toBeInTheDocument()
+    await screen.findByTestId("faceted-filter")
     expect(screen.getByTestId("numberrange-filter")).toBeInTheDocument()
   })
 

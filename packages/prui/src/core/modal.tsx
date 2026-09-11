@@ -289,7 +289,20 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
         return () => clearTimeout(t)
       }, [])
 
-      // focus trap: confirm default, Tab cycles confirm/cancel, Escape cancels
+      const finish = (result: boolean) => {
+        setIsPending(true)
+        setAnimating(false)
+        document.body.classList.remove("modal-open")
+        setTimeout(() => {
+          cleanup()
+          resolve(result)
+        }, 300)
+      }
+
+      // focus trap: confirm default, Tab cycles confirm/cancel, Escape cancels.
+      // ConfirmComponent is a real component; the linter cannot see it through
+      // the promise-callback nesting of the imperative confirmModal.
+      // eslint-disable-next-line react-hooks/rules-of-hooks -- see note above
       React.useEffect(() => {
         if (!show || isPending) return
         confirmRef.current?.focus()
@@ -319,17 +332,8 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
         }
         document.addEventListener("keydown", onKey)
         return () => document.removeEventListener("keydown", onKey)
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- inner component scope
       }, [show, isPending])
-
-      const finish = (result: boolean) => {
-        setIsPending(true)
-        setAnimating(false)
-        document.body.classList.remove("modal-open")
-        setTimeout(() => {
-          cleanup()
-          resolve(result)
-        }, 300)
-      }
 
       if (!show) return null
       const dims = sizeWidths[size]
@@ -399,6 +403,8 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
 
     root.render(<ConfirmComponent />)
   })
+
+
 }
 
 /* ---------------- meta ---------------- */
