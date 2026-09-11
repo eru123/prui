@@ -45,6 +45,13 @@ jobs:
       - name: Build package for publish
         run: pnpm --filter @skiddph/prui build
       - name: Publish to npm (public)
-        run: pnpm --filter @skiddph/prui publish --access public --no-git-checks
+        # skip cleanly when this version is already published (no changeset on the push)
+        run: |
+          PKG_VERSION=$(node -p "require('./packages/prui/package.json').version")
+          if npm view @skiddph/prui@${PKG_VERSION} version >/dev/null 2>&1; then
+            echo "@skiddph/prui@${PKG_VERSION} already published — skipping"
+          else
+            pnpm --filter @skiddph/prui publish --access public --no-git-checks
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
