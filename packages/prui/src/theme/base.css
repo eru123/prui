@@ -1,0 +1,16 @@
+/*
+PRUI base tokens. Every theme defines these CSS variables; components only
+ever reference the variables, so a single override file re-skins everything.
+6px radius system, dark-first, no gradient text.
+*/
+.prui-root,
+:root {
+  --prui-radius-1: 3px;
+  --prui-radius-2: 6px;
+  --prui-radius-3: 10px;
+  --prui-radius-full: 9999px;
+  --prui-dim-op: 0.62;
+}
+
+/* control (dark, blue accent) is the default theme */
+@import "./control.css";

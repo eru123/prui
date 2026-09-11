@@ -1,0 +1,16 @@
+/* Theme: workshop. Dark warm neutral, amber accent. */
+.prui-theme-workshop {
+  color-scheme: dark;
+  --prui-background: #14120e;
+  --prui-surface: #1c1915;
+  --prui-raise: #26221c;
+  --prui-line: #362f26;
+  --prui-fg: #f0e9dd;
+  --prui-dim: #a89c88;
+  --prui-brand: #d97706;
+  --prui-brand-fg: #ffffff;
+  --prui-ok: #4ade80;
+  --prui-warn: #fbbf24;
+  --prui-danger: #f87171;
+  --prui-radius: 6px;
+}

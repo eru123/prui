@@ -1,0 +1,16 @@
+/* Theme: ember. Deep dark red-black, ember accent. */
+.prui-theme-ember {
+  color-scheme: dark;
+  --prui-background: #120c0c;
+  --prui-surface: #1a1112;
+  --prui-raise: #251719;
+  --prui-line: #3a2124;
+  --prui-fg: #f3e4e4;
+  --prui-dim: #b09090;
+  --prui-brand: #f05252;
+  --prui-brand-fg: #ffffff;
+  --prui-ok: #34d399;
+  --prui-warn: #fb923c;
+  --prui-danger: #ef4444;
+  --prui-radius: 6px;
+}

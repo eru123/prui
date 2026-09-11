@@ -1,0 +1,16 @@
+/* Theme: daylight. Light theme, indigo accent. */
+.prui-theme-daylight {
+  color-scheme: light;
+  --prui-background: #f7f8fa;
+  --prui-surface: #ffffff;
+  --prui-raise: #f1f3f6;
+  --prui-line: #e2e6ec;
+  --prui-fg: #171b21;
+  --prui-dim: #5c6673;
+  --prui-brand: #4f46e5;
+  --prui-brand-fg: #ffffff;
+  --prui-ok: #16a34a;
+  --prui-warn: #d97706;
+  --prui-danger: #dc2626;
+  --prui-radius: 6px;
+}

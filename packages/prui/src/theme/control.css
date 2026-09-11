@@ -1,0 +1,16 @@
+/* Theme: control. Dark operations room, cool blue accent. Default theme. */
+.prui-theme-control {
+  color-scheme: dark;
+  --prui-background: #0b0f14;
+  --prui-surface: #11161d;
+  --prui-raise: #1a212b;
+  --prui-line: #263041;
+  --prui-fg: #e7edf5;
+  --prui-dim: #94a3b8;
+  --prui-brand: #3b82f6;
+  --prui-brand-fg: #ffffff;
+  --prui-ok: #22c55e;
+  --prui-warn: #f59e0b;
+  --prui-danger: #ef4444;
+  --prui-radius: 6px;
+}
