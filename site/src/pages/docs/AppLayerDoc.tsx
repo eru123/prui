@@ -1,4 +1,3 @@
-import { MemoryRouter } from "react-router-dom"
 import { LayoutDashboard, Users, CalendarDays, TrendingUp } from "lucide-react"
 import { App, Form, Settings, appPropsMeta, resourcePropsMeta, formPropsMeta, settingsPropsMeta, authShellPropsMeta, sessionTimeoutPropsMeta, type NavItem } from "prui/app"
 import type { PropsMeta } from "prui/core"
@@ -57,18 +56,16 @@ export function AppLayerDoc() {
                 body.style.margin = "0"
                 body.style.background = "var(--prui-background)"
                 return (
-                  <MemoryRouter initialEntries={["/"]}>
-                    <App
-                      router="memory"
-                      brand={{ name: "HRLabs" }}
-                      nav={DEMO_NAV}
-                      search={{ enabled: true, hotkey: "/" }}
-                      theme={false}
-                      sidebar={{ width: 220 }}
-                    >
-                      <DemoHome />
-                    </App>
-                  </MemoryRouter>
+                  <App
+                    router="memory"
+                    brand={{ name: "HRLabs" }}
+                    nav={DEMO_NAV}
+                    search={{ enabled: true, hotkey: "/" }}
+                    theme={false}
+                    sidebar={{ width: 220 }}
+                  >
+                    <DemoHome />
+                  </App>
                 )
               }}
             </IframePortal>

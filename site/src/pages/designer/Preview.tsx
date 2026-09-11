@@ -1,5 +1,4 @@
 import * as React from "react"
-import { MemoryRouter } from "react-router-dom"
 import { App, type NavItem } from "prui/app"
 import type { DesignerState } from "./state"
 import { IframePortal } from "../../components/IframePortal"
@@ -47,16 +46,16 @@ export function DesignerPreview({ state }: { state: DesignerState }) {
     <IframePortal title="App preview" testId="designer-canvas" height={560}>
       {(doc) => {
         applyFrame(doc)
+        // <App router="memory"> brings its own MemoryRouter — no outer router
         return (
-          <MemoryRouter initialEntries={["/"]}>
-            <App
-              router="memory"
-              brand={{ name: state.name, mark: state.mark || undefined }}
-              nav={nav}
-              search={{ enabled: state.palette, hotkey: "/" }}
-              theme={false}
-              sidebar={{ width: state.sidebarWidth, collapsible: state.sidebarCollapsible }}
-            >
+          <App
+            router="memory"
+            brand={{ name: state.name, mark: state.mark || undefined }}
+            nav={nav}
+            search={{ enabled: state.palette, hotkey: "/" }}
+            theme={false}
+            sidebar={{ width: state.sidebarWidth, collapsible: state.sidebarCollapsible }}
+          >
               <div style={{ padding: 24 }}>
                 <p style={{ color: "var(--prui-dim)", fontSize: 13, margin: "0 0 12px" }}>
                   Content outlet — your routes render here.
@@ -76,8 +75,7 @@ export function DesignerPreview({ state }: { state: DesignerState }) {
                   ))}
                 </div>
               </div>
-            </App>
-          </MemoryRouter>
+          </App>
         )
       }}
     </IframePortal>
