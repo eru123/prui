@@ -23,6 +23,28 @@ const pruiAliases = [
   { find: /^prui\/app$/, replacement: pruiSrc("app/index.ts") },
 ]
 
+/**
+ * Group vendor code by the REAL package directory (the segment right after
+ * the last node_modules/). Substring checks on the full id are unsafe here:
+ * pnpm's virtual-store directory names embed peer suffixes like
+ * "_react-dom@19.3.0", so "@dnd-kit/core/..." can contain "react-dom" and
+ * get hijacked into the wrong chunk — differently per platform.
+ */
+function vendorPackage(id: string): string | undefined {
+  const marker = id.lastIndexOf("node_modules/")
+  if (marker === -1) return
+  const rest = id.slice(marker + "node_modules/".length)
+  const m = rest.match(/^(@[^/]+\/[^/]+|[^/]+)/)
+  const pkg = m?.[1]
+  if (!pkg) return
+  if (pkg === "react" || pkg === "react-dom" || pkg === "scheduler") return "vendor-react-dom"
+  if (pkg === "react-router-dom" || pkg === "@remix-run/router") return "vendor-react-dom"
+  if (pkg === "lucide-react") return "vendor-icons"
+  if (pkg.startsWith("@dnd-kit/")) return "vendor-dnd"
+  if (pkg.startsWith("@monaco-editor/")) return "vendor-monaco"
+  return "vendor-misc"
+}
+
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
@@ -32,17 +54,8 @@ export default defineConfig({
     manifest: true,
     rollupOptions: {
       output: {
-        // Vendor code is grouped per family so the landing never downloads
-        // designer/editor-only deps (AC-6); prui source splits naturally.
         manualChunks(id) {
-          if (id.includes("node_modules")) {
-            if (id.includes("react-dom") || id.includes("scheduler")) return "vendor-react-dom"
-            if (id.includes("/react/")) return "vendor-react"
-            if (id.includes("react-router") || id.includes("@remix-run")) return "vendor-react-dom"
-            if (id.includes("@dnd-kit")) return "vendor-dnd"
-            if (id.includes("@monaco-editor") || id.includes("monaco-editor")) return "vendor-monaco"
-            return "vendor-misc"
-          }
+          return vendorPackage(id)
         },
       },
     },

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * AC-6 landing budget: walk the built site's module graph from the index
- * entry (the landing) through STATIC imports only, and size every JS chunk
- * the landing downloads. Gates at 100KB compressed (brotli — what Cloudflare
- * serves and Lighthouse counts); gzip is printed for reference.
+ * AC-6 landing budget: measure what the BROWSER actually loads for the
+ * landing — the entry script from dist/index.html, its modulepreload links,
+ * and the static import graph behind them — and gate the compressed total
+ * at 100KB (brotli, what Cloudflare serves; gzip printed for reference).
  */
 import { readFileSync, existsSync } from "node:fs"
 import { resolve, dirname, join } from "node:path"
@@ -20,18 +20,21 @@ if (!existsSync(manifestPath)) {
 }
 
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"))
+const html = readFileSync(join(dist, "index.html"), "utf8")
 
-// debug: which source keys map to each JS chunk (chunk-assignment forensics)
-const byChunk = {}
-for (const [key, chunk] of Object.entries(manifest)) {
-  if (!chunk.file.endsWith(".js")) continue
-  byChunk[chunk.file] = byChunk[chunk.file] ?? []
-  byChunk[chunk.file].push(key)
+// browser-truth seeds: the module script + every modulepreload link in index.html
+const seeds = new Set()
+for (const m of html.matchAll(/\/assets\/[^"']+\.js/g)) {
+  seeds.add(m[0].replace(/^\/assets\//, ""))
 }
-const entryKey = Object.keys(manifest).find((k) => k === "index.html")
-if (!entryKey) {
-  console.error("landing-budget: no index.html entry in manifest")
+if (seeds.size === 0) {
+  console.error("landing-budget: no entry script found in dist/index.html")
   process.exit(1)
+}
+
+const byFile = new Map()
+for (const chunk of Object.values(manifest)) {
+  if (chunk.file?.endsWith(".js")) byFile.set(chunk.file, chunk)
 }
 
 const BUDGET_BYTES = 100 * 1024
@@ -40,32 +43,26 @@ const seen = new Set()
 let raw = 0
 let gz = 0
 let br = 0
-const queue = [entryKey]
+const queue = [...seeds]
 
 while (queue.length) {
-  const key = queue.pop()
-  if (!key || seen.has(key)) continue
-  seen.add(key)
-  const chunk = manifest[key]
-  if (!chunk) continue
-  if (chunk.isEntry || chunk.file.endsWith(".js")) {
-    if (chunk.file.endsWith(".js")) {
-      const buf = readFileSync(join(dist, chunk.file))
-      raw += buf.length
-      gz += gzipSync(buf).length
-      br += brotliCompressSync(buf, { params: { [0x06]: 11 } }).length // 0x06 = brotli param quality
-    }
+  const file = queue.pop()
+  if (!file || seen.has(file)) continue
+  seen.add(file)
+  const buf = readFileSync(join(dist, "assets", file))
+  raw += buf.length
+  gz += gzipSync(buf).length
+  br += brotliCompressSync(buf).length
+  // follow static imports only; dynamic imports stream on demand
+  const chunk = byFile.get(file)
+  for (const imp of chunk?.imports ?? []) {
+    const impFile = manifest[imp]?.file
+    if (impFile) queue.push(impFile)
   }
-  for (const imp of chunk.imports ?? []) queue.push(imp)
-  // dynamic imports are excluded: they stream on demand and never load on the landing
 }
 
 const kb = (n) => `${(n / 1024).toFixed(1)} KB`
 console.log(`landing-budget: ${seen.size} chunks [${[...seen].join(", ")}], raw ${kb(raw)} | gzip ${kb(gz)} | brotli ${kb(br)}`)
-for (const file of seen) {
-  const keys = (byChunk[file] ?? []).filter((k) => !k.startsWith("_"))
-  if (keys.length) console.log(`  ${file}: ${keys.slice(0, 40).join(", ")}${keys.length > 40 ? ` (+${keys.length - 40} more)` : ""}`)
-}
 
 if (br > BUDGET_BYTES) {
   console.error(`landing-budget FAILED (AC-6): landing JS brotli ${kb(br)} exceeds the ${kb(BUDGET_BYTES)} budget`)
