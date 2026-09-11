@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react"
 import { Routes, Route } from "react-router-dom"
-import { App } from "prui/app"
+import { App } from "prui/app-shell"
 import { nav } from "./nav"
 import { LandingPage } from "./pages/Landing"
 
@@ -25,6 +25,14 @@ const BadgeDoc = lazy(() => import("./pages/docs/BadgeDoc").then((m) => ({ defau
 const DropdownDoc = lazy(() => import("./pages/docs/DropdownDoc").then((m) => ({ default: m.DropdownDoc })))
 const AvatarDoc = lazy(() => import("./pages/docs/AvatarDoc").then((m) => ({ default: m.AvatarDoc })))
 const DataTableDoc = lazy(() => import("./pages/docs/DataTableDoc").then((m) => ({ default: m.DataTableDoc })))
+const CardDoc = lazy(() => import("./pages/docs/CardDoc").then((m) => ({ default: m.CardDoc })))
+const DialogDoc = lazy(() => import("./pages/docs/DialogDoc").then((m) => ({ default: m.DialogDoc })))
+const LabelDoc = lazy(() => import("./pages/docs/LabelDoc").then((m) => ({ default: m.LabelDoc })))
+const SeparatorDoc = lazy(() => import("./pages/docs/SeparatorDoc").then((m) => ({ default: m.SeparatorDoc })))
+const TextareaDoc = lazy(() => import("./pages/docs/TextareaDoc").then((m) => ({ default: m.TextareaDoc })))
+const ScrollAreaDoc = lazy(() => import("./pages/docs/ScrollAreaDoc").then((m) => ({ default: m.ScrollAreaDoc })))
+const AppLayerDoc = lazy(() => import("./pages/docs/AppLayerDoc").then((m) => ({ default: m.AppLayerDoc })))
+const PagesDoc = lazy(() => import("./pages/docs/PagesDoc").then((m) => ({ default: m.PagesDoc })))
 
 function Loading() {
   return (
@@ -55,6 +63,14 @@ export function SiteApp() {
           <Route path="/components/dropdown" element={<DropdownDoc />} />
           <Route path="/components/avatar" element={<AvatarDoc />} />
           <Route path="/components/data-table" element={<DataTableDoc />} />
+          <Route path="/components/card" element={<CardDoc />} />
+          <Route path="/components/dialog" element={<DialogDoc />} />
+          <Route path="/components/label" element={<LabelDoc />} />
+          <Route path="/components/separator" element={<SeparatorDoc />} />
+          <Route path="/components/textarea" element={<TextareaDoc />} />
+          <Route path="/components/scroll-area" element={<ScrollAreaDoc />} />
+          <Route path="/app-layer" element={<AppLayerDoc />} />
+          <Route path="/pages-doc" element={<PagesDoc />} />
           <Route path="/layouts" element={<LayoutsPage />} />
           <Route path="/theming" element={<ThemingPage />} />
           <Route path="/guides" element={<GuidesPage />} />
@@ -62,7 +78,7 @@ export function SiteApp() {
           <Route path="/resources" element={<ResourcesDemoPage />} />
           <Route path="/designer" element={<DesignerPage />} />
           <Route path="/internal/provenance" element={<ProvenancePage />} />
-          <Route path="*" element={<NotFoundPage brand={{ name: "prui" }} />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </App>

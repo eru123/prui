@@ -1,5 +1,13 @@
 import { PRUI_THEMES, applyTheme } from "prui/theme"
 import { Card, CardHeader, CardTitle, CardDescription, Badge } from "prui/core"
+import { CodeView } from "../components/CodeView"
+import { TocRail } from "../components/TocRail"
+
+const THEMING_TOC = [
+  { id: "tokens", label: "Token reference" },
+  { id: "themes", label: "Named themes" },
+  { id: "switching", label: "Runtime switching" },
+]
 
 const TOKENS = [
   { name: "--prui-background", value: "page background", color: "#000000" },
@@ -23,8 +31,9 @@ const THEME_DESC: Record<string, string> = {
 
 export function ThemingPage() {
   return (
-    <div className="mx-auto w-full max-w-[780px] px-4 pb-20 pt-8 md:px-6">
-      <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">theming / tokens</div>
+    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-[780px] flex-1">
+        <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">theming / tokens</div>
       <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Theming</h1>
       <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
         Components reference CSS variables only — override one file, re-skin everything. Switch live from the header.
@@ -70,12 +79,14 @@ export function ThemingPage() {
 
       <section id="switching" className="scroll-mt-20">
         <h2 className="mb-3 text-base font-semibold text-[var(--prui-fg)]">Runtime switching</h2>
-        <div className="mb-4 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
-          <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{`import { applyTheme } from '@skiddph/prui/theme'
+        <CodeView
+          code={`import { applyTheme } from '@skiddph/prui/theme'
 
 applyTheme({ theme: 'workshop' })      // sets classes + persists
-applyTheme({ theme: 'daylight' })      // light mode`}</pre>
-        </div>
+applyTheme({ theme: 'daylight' })      // light mode`}
+          title="theme.ts"
+          className="mb-4 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]"
+        />
         <div className="flex flex-wrap gap-2">
           {PRUI_THEMES.map((t) => (
             <button
@@ -92,6 +103,9 @@ applyTheme({ theme: 'daylight' })      // light mode`}</pre>
           <Badge variant="ok">live</Badge> these buttons call applyTheme() right now — check the header toggle state.
         </p>
       </section>
+      </div>
+
+      <TocRail items={THEMING_TOC} />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, Badge } from "prui/core"
-import { CopyButton } from "../components/Playground"
+import { CodeView } from "../components/CodeView"
+import { TocRail } from "../components/TocRail"
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
@@ -10,20 +11,30 @@ function Section({ id, title, children }: { id: string; title: string; children:
   )
 }
 
+const GUIDE_TOC = [
+  { id: "install", label: "Installation" },
+  { id: "adoption", label: "Progressive adoption" },
+  { id: "pages", label: "Pre-made pages" },
+]
+
+const AGENT_TOC = [{ id: "agents", label: "Agent quickstart" }]
+
 function Code({ children }: { children: string }) {
   return (
-    <div className="relative mb-4 mt-2 overflow-x-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
-      <div className="absolute right-2 top-2"><CopyButton text={children} /></div>
-      <pre className="px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{children}</pre>
-    </div>
+    <CodeView
+      code={children}
+      title="tsx"
+      className="relative mb-4 mt-2 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]"
+    />
   )
 }
 
 export function GuidesPage() {
   return (
-    <div className="mx-auto w-full max-w-[780px] px-4 pb-20 pt-8 md:px-6">
-      <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">guides / installation</div>
-      <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Guides</h1>
+    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-[780px] flex-1">
+        <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">guides / installation</div>
+        <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Guides</h1>
 
       <Section id="install" title="Installation">
         <p>PRUI ships react-router-dom, lucide-react, and React 19 as dependencies — one install, no peer wiring:</p>
@@ -67,14 +78,18 @@ import { App } from '@skiddph/prui/app'
         <p>Routes /login, /register, /forgot-password, /reset-password, /otp, /logout — each page takes
           <code> onSubmit</code>, <code>fields</code> (per-field show/hide), <code>links</code>, <code>oauth</code>, <code>brand</code>.</p>
       </Section>
+      </div>
+
+      <TocRail items={GUIDE_TOC} />
     </div>
   )
 }
 
 export function AgentsPage() {
   return (
-    <div className="mx-auto w-full max-w-[780px] px-4 pb-20 pt-8 md:px-6">
-      <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">guides / agents</div>
+    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-[780px] flex-1">
+        <div id="agents" className="mb-2 scroll-mt-20 font-mono text-xs text-[var(--prui-dim)]">guides / agents</div>
       <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Agent quickstart</h1>
       <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
         The whole PRUI vocabulary, packed as a skill folder in this repo. An agent with it builds a working admin app
@@ -113,6 +128,9 @@ skill/
 </App>`}</Code>
         </CardContent>
       </Card>
+      </div>
+
+      <TocRail items={AGENT_TOC} />
     </div>
   )
 }

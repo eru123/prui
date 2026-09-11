@@ -1,12 +1,15 @@
 import * as React from "react"
 import type { PropsMeta, PropMeta } from "prui/core"
 import { Input, Switch, Select } from "prui/core"
+import { CodeView } from "./CodeView"
 
 /**
  * Playground engine: controls are generated from the component's propsMeta
  * (single source, AC-4/AC-15), the demo re-renders live, and the snippet
  * below stays in sync with the current prop values.
  */
+
+export { CopyButton } from "./CopyButton"
 
 export type PropValues = Record<string, unknown>
 
@@ -146,36 +149,11 @@ export function Playground({
           {panel}
         </div>
         <div className="border-t border-[var(--prui-line)] bg-[var(--prui-background)]">
-          <div className="flex items-center justify-between px-4 pt-2 font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">
-            <span>snippet</span>
-            <CopyButton text={snippet} />
-          </div>
-          <pre className="overflow-x-auto px-4 pb-3 pt-1 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{snippet}</pre>
+          <CodeView code={snippet} title="snippet" className="overflow-hidden" />
         </div>
       </div>
       <PropsTable meta={meta} />
     </section>
-  )
-}
-
-export function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = React.useState(false)
-  return (
-    <button
-      type="button"
-      onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(text)
-          setCopied(true)
-          setTimeout(() => setCopied(false), 1200)
-        } catch {
-          /* clipboard unavailable */
-        }
-      }}
-      className="cursor-pointer rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] px-2 py-0.5 font-mono text-[10px] text-[var(--prui-dim)] hover:text-[var(--prui-fg)]"
-    >
-      {copied ? "copied" : "copy"}
-    </button>
   )
 }
 

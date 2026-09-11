@@ -1,4 +1,3 @@
-import * as React from "react"
 import { ComponentDoc, Dropdown, Button } from "../../components/ComponentDoc"
 
 export function DropdownDoc() {

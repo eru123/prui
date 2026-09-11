@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Button, Badge, Switch, Tabs, TabsList, TabsTrigger, Input } from "prui/core"
-import { CopyButton } from "../components/Playground"
+import { CopyButton } from "../components/CopyButton"
 
 export function LandingPage() {
   const [saved, setSaved] = useState(false)

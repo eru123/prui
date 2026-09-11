@@ -13,11 +13,14 @@ const pruiSrc = (...p: string[]) => resolve(here, "../packages/prui/src", ...p)
 const pruiAliases = [
   { find: /^prui\/styles\.css$/, replacement: resolve(here, "../packages/prui/dist/prui.css") },
   { find: /^prui\/theme$/, replacement: pruiSrc("theme/index.ts") },
-  { find: /^prui\/app$/, replacement: pruiSrc("app/index.ts") },
   { find: /^prui\/pages$/, replacement: pruiSrc("pages/index.ts") },
   { find: /^prui\/data-table$/, replacement: pruiSrc("data-table/index.ts") },
   { find: /^prui\/core$/, replacement: pruiSrc("core/index.ts") },
   { find: /^prui$/, replacement: pruiSrc("index.ts") },
+  // The site chrome only needs the shell; importing the app-layer barrel
+  // would drag Resource/DataTable into the landing chunk (AC-6).
+  { find: /^prui\/app-shell$/, replacement: pruiSrc("app/app.tsx") },
+  { find: /^prui\/app$/, replacement: pruiSrc("app/index.ts") },
 ]
 
 export default defineConfig({
@@ -26,20 +29,19 @@ export default defineConfig({
     alias: pruiAliases,
   },
   build: {
+    manifest: true,
     rollupOptions: {
       output: {
+        // Vendor code is grouped per family so the landing never downloads
+        // designer/editor-only deps (AC-6); prui source splits naturally.
         manualChunks(id) {
           if (id.includes("node_modules")) {
             if (id.includes("react-dom") || id.includes("scheduler")) return "vendor-react-dom"
-            if (id.includes("/react/") || id.includes("react-router") || id.includes("@remix-run")) return "vendor-react"
-            if (id.includes("lucide-react")) return "vendor-icons"
+            if (id.includes("/react/")) return "vendor-react"
+            if (id.includes("react-router") || id.includes("@remix-run")) return "vendor-react-dom"
+            if (id.includes("@dnd-kit")) return "vendor-dnd"
+            if (id.includes("@monaco-editor") || id.includes("monaco-editor")) return "vendor-monaco"
             return "vendor-misc"
-          }
-          if (id.includes("packages/prui/src")) {
-            if (id.includes("/src/app/") || id.includes("/src/data-table/")) return "prui-app"
-            if (id.includes("/src/pages/")) return "prui-pages"
-            if (id.includes("/src/core/") || id.includes("/src/theme/")) return "prui-core"
-            return "prui-misc"
           }
         },
       },

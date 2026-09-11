@@ -1,10 +1,10 @@
 import * as React from "react"
-import { ComponentDoc, Modal, confirmModal, Button } from "../../components/ComponentDoc"
+import { ComponentDoc, confirmModal, Button } from "../../components/ComponentDoc"
 
 export function ModalDoc() {
-  const [basic, setBasic] = React.useState(false)
-  const [blocked, setBlocked] = React.useState(false)
-  const [noPad, setNoPad] = React.useState(false)
+  const [, setBasic] = React.useState(false)
+  const [, setBlocked] = React.useState(false)
+  const [, setNoPad] = React.useState(false)
   const [confirmResult, setConfirmResult] = React.useState<boolean | null>(null)
 
   return (

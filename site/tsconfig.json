@@ -13,6 +13,9 @@
       ],
       "prui/*": [
         "../packages/prui/src/*/index.ts"
+      ],
+      "prui/app-shell": [
+        "../packages/prui/src/app/app.tsx"
       ]
     }
   },

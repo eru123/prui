@@ -35,7 +35,8 @@ import {
   Modal,
   confirmModal,
 } from "prui/core"
-import { CopyButton } from "../components/Playground"
+import { CodeView } from "./CodeView"
+import { TocRail } from "./TocRail"
 import { DataTable, DataTablePagination, DataTableToolbar, FacetedFilter, DateRangeFilter, NumberRangeFilter } from "prui/data-table"
 
 /** In-depth per-component documentation page scaffold. */
@@ -62,50 +63,60 @@ export function ComponentDoc({
   dos: string[]
   donts: string[]
 }) {
+  const toc = [
+    { id: "when-to-use", label: "When to use" },
+    ...(anatomy ? [{ id: "anatomy", label: "Anatomy" }] : []),
+    { id: "demos", label: "Demos" },
+    ...(api ? [{ id: "api", label: "API" }] : []),
+    { id: "examples", label: "Examples" },
+    { id: "do-dont", label: "Do / Don't" },
+  ]
+
   return (
-    <div className="mx-auto w-full max-w-[780px] px-4 pb-20 pt-8 md:px-6">
-      <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">
-        <Link to="/components" className="hover:text-[var(--prui-fg)]">components</Link> / {name.toLowerCase()}
-      </div>
-      <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">{name}</h1>
-      <p className="mb-6 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">{description}</p>
+    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-[780px] flex-1">
+        <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">
+          <Link to="/components" className="hover:text-[var(--prui-fg)]">components</Link> / {name.toLowerCase()}
+        </div>
+        <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">{name}</h1>
+        <p className="mb-6 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">{description}</p>
 
-      <CodeBlock title="import" code={`import { ${name} } from '${importPath}'`} />
+        <CodeBlock title="import" code={`import { ${name} } from '${importPath}'`} />
 
-      <Section title="When to use">
-        <ul className="list-disc pl-5">
-          {when.map((w) => <li key={w}>{w}</li>)}
-        </ul>
-      </Section>
+        <Section id="when-to-use" title="When to use">
+          <ul className="list-disc pl-5">
+            {when.map((w) => <li key={w}>{w}</li>)}
+          </ul>
+        </Section>
 
-      {anatomy ? <Section title="Anatomy">{anatomy}</Section> : null}
+        {anatomy ? <Section id="anatomy" title="Anatomy">{anatomy}</Section> : null}
 
-      <Section title="Demos">
-        {demos.map((d) => (
-          <div key={d.title} className="mb-5">
-            <div className="mb-1 text-sm font-semibold text-[var(--prui-fg)]">{d.title}</div>
-            {d.desc ? <p className="mb-2 text-xs text-[var(--prui-dim)]">{d.desc}</p> : null}
-            <div className="mb-2 flex min-h-16 flex-wrap items-center gap-3 rounded-[var(--prui-radius)] border border-dashed border-[var(--prui-line)] p-4">
-              {d.render}
+        <Section id="demos" title="Demos">
+          {demos.map((d) => (
+            <div key={d.title} className="mb-5">
+              <div className="mb-1 text-sm font-semibold text-[var(--prui-fg)]">{d.title}</div>
+              {d.desc ? <p className="mb-2 text-xs text-[var(--prui-dim)]">{d.desc}</p> : null}
+              <div className="mb-2 flex min-h-16 flex-wrap items-center gap-3 rounded-[var(--prui-radius)] border border-dashed border-[var(--prui-line)] p-4">
+                {d.render}
+              </div>
+              {d.code ? <CodeBlock code={d.code} /> : null}
             </div>
-            {d.code ? <CodeBlock code={d.code} /> : null}
-          </div>
-        ))}
-      </Section>
+          ))}
+        </Section>
 
-      {api ? <Section title="API">{api}</Section> : null}
+        {api ? <Section id="api" title="API">{api}</Section> : null}
 
-      <Section title="Examples">
-        {examples.map((e) => (
-          <div key={e.title} className="mb-4">
-            <div className="mb-1 text-sm font-semibold text-[var(--prui-fg)]">{e.title}</div>
-            {e.render}
-            <CodeBlock code={e.code} />
-          </div>
-        ))}
-      </Section>
+        <Section id="examples" title="Examples">
+          {examples.map((e) => (
+            <div key={e.title} className="mb-4">
+              <div className="mb-1 text-sm font-semibold text-[var(--prui-fg)]">{e.title}</div>
+              {e.render}
+              <CodeBlock code={e.code} />
+            </div>
+          ))}
+        </Section>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+        <div id="do-dont" className="grid scroll-mt-20 gap-3 sm:grid-cols-2">
         <Card>
           <CardHeader><CardTitle className="text-sm text-[var(--prui-ok)]">Do</CardTitle></CardHeader>
           <CardContent>
@@ -120,16 +131,19 @@ export function ComponentDoc({
         </Card>
       </div>
 
-      <p className="mt-8 text-center font-mono text-xs text-[var(--prui-dim)]">
-        <Link to="/components" className="hover:text-[var(--prui-fg)]">← all components</Link>
-      </p>
+        <p className="mt-8 text-center font-mono text-xs text-[var(--prui-dim)]">
+          <Link to="/components" className="hover:text-[var(--prui-fg)]">← all components</Link>
+        </p>
+      </div>
+
+      <TocRail items={toc} />
     </div>
   )
 }
 
-export function Section({ title, children }: { title: string; children: React.ReactNode }) {
+export function Section({ id, title, children }: { id?: string; title: string; children: React.ReactNode }) {
   return (
-    <section className="mb-8">
+    <section id={id} className="mb-8 scroll-mt-20">
       <h2 className="mb-3 text-base font-semibold text-[var(--prui-fg)]">{title}</h2>
       <div className="text-sm text-[var(--prui-dim)]">{children}</div>
     </section>
@@ -137,15 +151,7 @@ export function Section({ title, children }: { title: string; children: React.Re
 }
 
 export function CodeBlock({ code, title }: { code: string; title?: string }) {
-  return (
-    <div className="relative mb-4 mt-2 overflow-x-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
-      <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">
-        <span>{title ?? "tsx"}</span>
-        <CopyButton text={code} />
-      </div>
-      <pre className="px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{code}</pre>
-    </div>
-  )
+  return <CodeView code={code} title={title ?? "tsx"} className="mb-4 mt-2 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]" />
 }
 
 /* re-exports for doc pages */

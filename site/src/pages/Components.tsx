@@ -40,12 +40,11 @@ export function ComponentsPage() {
       <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Components</h1>
       <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
         Both layers, live. Every demo has a control panel generated from the same propsMeta that renders the props
-        table and the snippet — configure it, copy it.
+        table and the snippet — configure it, copy it. In-depth pages live under each component in the sidebar; the
+        super-components are documented in the <a href="/app-layer" className="text-[var(--prui-brand)] hover:underline">app layer</a>{" "}
+        and <a href="/pages-doc" className="text-[var(--prui-brand)] hover:underline">pre-made pages</a> catalogs.
       </p>
 
-      <div className="mb-2 text-right">
-          <a href="/components/button" className="font-mono text-xs text-[var(--prui-brand)] hover:underline">in-depth docs →</a>
-        </div>
       <Playground title="Button" meta={buttonPropsMeta} render={(v) => (
         <Button variant={v.variant as never} size={v.size as never} loading={Boolean(v.loading)} disabled={Boolean(v.disabled)}>
           {String(v.children || "Save changes")}
