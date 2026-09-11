@@ -22,15 +22,77 @@ jobs:
       - name: Bundle guard (AC-7) — prui/core/button must not ship App or Resource code
         run: node scripts/bundle-guard.mjs
 
-  release:
+  changesets:
+    # Auto-version: when packages/prui changed since the last release tag, generate a
+    # version bump (patch default; "feat:" commits bump minor; "BREAKING CHANGE"/"!" major).
+    # Hand-written .changeset/*.md files take precedence. Release only runs if a new
+    # version was actually cut; site-only or workflow-only pushes never release.
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: ci
     runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.result.outputs.released }}
     permissions:
       contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Did packages/prui change?
+        id: changed
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 --match 'prui@*' 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          elif git diff --quiet "$LAST_TAG" HEAD -- packages/prui; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate changeset from commits (auto patch/minor/major)
+        if: steps.changed.outputs.changed == 'true'
+        run: node scripts/auto-changeset.mjs
+
+      - name: Consume changesets (version bump + commit + tag)
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          git config user.name "prui-bot"
+          git config user.email "bot@skiddph.com"
+          pnpm changeset version
+          if git diff --quiet; then
+            echo "released=false" >> "$GITHUB_ENV"
+          else
+            VERSION=$(node -p "require('./packages/prui/package.json').version")
+            git add -A
+            git commit -m "chore(release): @skiddph/prui@${VERSION}"
+            git tag "prui@${VERSION}"
+            git push origin main --tags
+            echo "released=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: Result
+        id: result
+        run: echo "released=${{ env.released || 'false' }}" >> "$GITHUB_OUTPUT"
+
+  release:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.changesets.outputs.released == 'true'
+    needs: changesets
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: main # includes the version-bump commit just pushed
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:
@@ -38,20 +100,9 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
-      - name: Apply changesets (version + tag)
-        run: |
-          pnpm changeset version
-          git diff --quiet || (git config user.name "prui-bot" && git config user.email "bot@skiddph.com" && git add -A && git commit -m "chore(release): version packages" && git push)
       - name: Build package for publish
         run: pnpm --filter @skiddph/prui build
       - name: Publish to npm (public)
-        # skip cleanly when this version is already published (no changeset on the push)
-        run: |
-          PKG_VERSION=$(node -p "require('./packages/prui/package.json').version")
-          if npm view @skiddph/prui@${PKG_VERSION} version >/dev/null 2>&1; then
-            echo "@skiddph/prui@${PKG_VERSION} already published — skipping"
-          else
-            pnpm --filter @skiddph/prui publish --access public --no-git-checks
-          fi
+        run: pnpm --filter @skiddph/prui publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
