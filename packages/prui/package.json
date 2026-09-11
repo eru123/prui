@@ -40,7 +40,7 @@
     "./styles.css": "./dist/prui.css"
   },
   "scripts": {
-    "build": "vite build && cp src/styles/prui.css dist/prui.css && mkdir -p dist/theme && cp src/theme/*.css dist/theme/",
+    "build": "vite build && node scripts/bundle-css.mjs && mkdir -p dist/theme && cp src/theme/*.css dist/theme/",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"

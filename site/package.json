@@ -1,9 +1,25 @@
 {
   "name": "prui-site",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "echo \"site placeholder: no build yet\"",
-    "typecheck": "echo \"site placeholder: no typecheck yet\""
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "echo \"site: no separate typecheck (built with vite)\""
+  },
+  "dependencies": {
+    "lucide-react": "^0.525.0",
+    "prui": "workspace:*",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.10",
+    "@vitejs/plugin-react": "^4.5.0",
+    "tailwindcss": "^4.1.10",
+    "vite": "^6.3.5"
   }
 }
