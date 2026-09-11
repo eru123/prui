@@ -108,8 +108,9 @@ In:
 - Versioning: changesets, private GitHub Packages registry, semver
 - `skill/` agent skill living in the repo (SKILL.md + references)
 - Docs site: landing (direction D), live catalog (both layers), layout examples, theming guide, /designer visual builder, agent quickstart, installation/adoption guides
+- Prop metadata system: every component's props, types, defaults, and control hints declared once in code; the props table, playground controls, and generated snippets on the site all render from that single source
 - CI: build, typecheck, tests (vitest + testing-library), bundle-size guard (super-components tree-shake), package publish workflow
-- Site built with prui itself (dogfooding); Monaco editor (`@monaco-editor/react`) for all code display and editing on the site — loaded lazily on the designer and component pages so it never lands in the landing-page bundle (AC-6 budget protected)
+- Site built with prui itself (dogfooding); Monaco editor (`@monaco-editor/react`) for all code display and editing, dnd-kit for designer drag interactions; both lazy-loaded away from the landing bundle — loaded lazily on the designer and component pages so it never lands in the landing-page bundle (AC-6 budget protected)
 
 Out (agreed now, the only exclusions):
 
@@ -138,7 +139,7 @@ The npm package surface:
 ## Pages and flows (docs site)
 
 - **Landing**: the chosen direction D design, live component showcase, install snippet
-- **Components**: catalog for both layers (primitives and super-components), live demos, props tables, code examples rendered in Monaco (read-only, copy button)
+- **Components**: catalog for both layers (primitives and super-components), props tables, code examples rendered in Monaco (read-only, copy button), and a **live playground** per component: the demo sits beside a control panel where every prop is a real control (variant picker, size slider, toggles for loading/disabled/asChild, text inputs for labels), and the component re-renders instantly as controls change; the Monaco snippet below stays in sync, so what you configure is what you copy
 - **Layouts**: full-page demos (dashboard, listing, settings, auth)
 - **Theming**: token reference, named themes, override guide
 - **Designer**: visual app builder (details below)
@@ -149,7 +150,7 @@ The npm package surface:
 
 A single page at `/designer` with two halves:
 
-- **Canvas (left/main)**: a live `<App>` preview rendering the user's current config in an iframe-isolated frame. Every change in the tools reflects immediately.
+- **Canvas (left/main)**: a live `<App>` preview rendering the user's current config in an iframe-isolated frame, with **direct manipulation**: nav items and groups are draggable to reorder (dnd-kit), hover to highlight, click to select and edit inline in the tools panel; drag a nav item into another group to nest it. The canvas is not a picture of the config, it is the editor.
 - **Developer tools (floating panel, right)**: toggle-driven and form-driven controls:
   - **Structure**: enable/disable sidebar, topbar, command palette; sidebar width, collapsible mode; include/exclude the pre-made page set (login/register/forgot/404...)
   - **Navigation**: add/edit/reorder nav items and groups (label, href, icon picker), import/export nav JSON
@@ -165,7 +166,7 @@ The Designer is the human counterpart to `skill/`: point a colleague at /designe
 - AC-2: a `<Resource>` with 5 columns and 2 filter types renders a complete listing (toolbar, filters, pagination, sort, create/edit modal, delete confirm) driven only by props and API functions
 - AC-2b: `<App pages="auth">` auto-routes the pre-made page set; `LoginPage` with `fields={{username: true, remember: false}}` renders without the remember-me input and with it under `true`, verified for at least three field toggles across two pages
 - AC-3: an agent following only `prui-skill` builds a working two-resource admin app in one session; verified by a recorded agent run
-- AC-4: every catalog component (both layers) has a live demo, props table, copyable snippet
+- AC-4: every catalog component (both layers) has a live demo, props table, copyable snippet, and a working prop control panel; changing a control updates the demo and the generated snippet in the same frame
 - AC-5: theme tokens overridable by one CSS file, no prui source edits; light/dark + named themes switch at runtime
 - AC-6: docs site landing under 100KB JS, Lighthouse 90+, responsive 390px/1440px
 - AC-7: importing only `prui/core/button` ships no `App` or `Resource` code (CI bundle check)
@@ -174,6 +175,8 @@ The Designer is the human counterpart to `skill/`: point a colleague at /designe
 - AC-10: all pages pass keyboard navigation and visible focus checks
 - AC-12: /designer renders a live `<App>` preview reflecting every tool change (nav edits, toggles, branding, theme) without reload, and generates correct, runnable `<App>` code plus token CSS that pastes into a fresh Vite app and renders identically
 - AC-13: /designer state round-trips through the URL (a shared link reproduces the exact configuration)
+- AC-14: designer canvas supports drag-to-reorder and drag-to-nest nav items, select-to-edit, and undo/redo of structural edits; every drag gesture ends in a valid config
+- AC-15: component playground controls are generated from the same prop metadata as the props table (single source), so a new prop appears in demo, table, and snippet together
 - AC-11: `skill/` works when an agent loads it straight from the repo checkout; the agent-run test (AC-3) passes from a fresh clone without any installation step
 
 ## Test plan
@@ -187,6 +190,8 @@ The Designer is the human counterpart to `skill/`: point a colleague at /designe
 - Agent proof: scripted run with only the skill loaded (AC-3)
 - Designer proof: generate code from a non-trivial config, paste into a fresh Vite app, verify the rendered app matches the Designer canvas (AC-12); URL round-trip (AC-13)
 - Monaco proof: editor loads on designer + component pages (lazy), copy button yields runnable code, landing bundle stays under the AC-6 budget with Monaco excluded
+- Playground proof: control-panel change reflects in demo within one frame; snippet matches rendered props for Button and two other components
+- Drag proof: scripted dnd sequence (reorder, nest, undo) produces the expected config tree; invalid drops are rejected
 
 ## Deployment target
 
