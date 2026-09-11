@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.3.0
+
+### Minor Changes
+
+- - ship compiled tailwind utilities in styles.css; record AC-3 agent run; document vite8 dedupe
+
 ## 0.2.1
 
 ### Patch Changes
