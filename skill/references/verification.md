@@ -7,7 +7,7 @@ Run every item before declaring a PRUI app done. Each item is checkable in a bro
 - At a mobile viewport (390px), the sidebar is hidden and a menu button opens the drawer.
 - The drawer has a backdrop; clicking the backdrop closes it.
 - While the drawer is open, the body does not scroll (scroll lock).
-- At desktop width, the sidebar is inline; collapse (if `sidebar={{ collapsible: true }}`) toggles and stays usable.
+- At desktop width, the sidebar is inline; `sidebar={{ collapsible: false }}` hides the mobile menu button entirely.
 
 ## 2. Keyboard navigation works
 
@@ -18,7 +18,7 @@ Run every item before declaring a PRUI app done. Each item is checkable in a bro
 ## 3. Focus is visible
 
 - Tabbing shows a visible focus ring on every focusable element, in both light and dark mode.
-- No element relies on `outline: none` without a replacement ring (token `--ring`).
+- No element relies on `outline: none` without a replacement `focus-visible` ring.
 
 ## 4. Empty, error, and loading states are present
 

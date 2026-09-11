@@ -17,37 +17,19 @@ pnpm install
 ## 2. Install prui
 
 ```bash
-pnpm add prui
+pnpm add @skiddph/prui
 ```
 
-`react-router-dom` arrives with it (required dependency; the App layer owns routing). `lucide-react` is a peer dependency:
-
-```bash
-pnpm add lucide-react
-```
-
-For the private registry, `.npmrc` in the project root (adjust per registry instructions if the user has not configured it):
-
-```ini
-@your-org:registry=https://npm.pkg.github.com
-```
-
-If `pnpm add prui` fails on registry auth, report the blocker and ask the user for registry credentials; do not substitute a different package.
+`react-router-dom` and `lucide-react` arrive with it (dependencies of the package; the App layer owns routing, so there is no router wiring for you).
 
 ## 3. Import theme tokens
 
-Create `src/theme.css` with brand overrides (optional but recommended):
+Import the theme tokens and add brand overrides (optional):
 
-```css
-:root {
-  --primary: 160 84% 30%;
-  --primary-foreground: 0 0% 100%;
-  --radius: 0.5rem;
-}
-.dark {
-  --background: 160 20% 7%;
-  --card: 160 18% 10%;
-}
+```tsx
+// src/main.tsx, before anything renders
+import '@skiddph/prui/styles.css'
+import './theme.css' // your overrides, see references/theming.md
 ```
 
 ## 4. Wire main.tsx: the `<App>` shell
@@ -55,10 +37,10 @@ Create `src/theme.css` with brand overrides (optional but recommended):
 ```tsx
 // src/main.tsx
 import { createRoot } from 'react-dom/client'
-import { App } from 'prui/app'
+import { App } from '@skiddph/prui/app'
 import { Routes, Route } from 'react-router-dom'
 import { LayoutDashboard, Users, CalendarDays } from 'lucide-react'
-import 'prui/theme/tokens.css'
+import '@skiddph/prui/styles.css'
 import './theme.css'
 import Dashboard from './pages/Dashboard'
 import EmployeesPage from './pages/EmployeesPage'
@@ -110,18 +92,27 @@ export const api = {
     const res = await fetch('/api/employees?' + new URLSearchParams(query))
     return res.json() as Promise<{ rows: Employee[]; cursor?: string }>
   },
-  createEmployee: (values: Partial<Employee>) =>
-    fetch('/api/employees', { method: 'POST', body: JSON.stringify(values) }).then((r) => r.json()),
-  updateEmployee: (id: string, values: Partial<Employee>) =>
-    fetch(`/api/employees/${id}`, { method: 'PATCH', body: JSON.stringify(values) }).then((r) => r.json()),
-  deleteEmployee: (id: string) => fetch(`/api/employees/${id}`, { method: 'DELETE' }),
+  createEmployee: async (values: Record<string, unknown>) => {
+    const res = await fetch('/api/employees', { method: 'POST', body: JSON.stringify(values) })
+    return res.json()
+  },
+  // Resource calls update(row, values) and remove(row); use row.id for the URL
+  updateEmployee: async (row: Employee, values: Partial<Employee>) => {
+    const res = await fetch(`/api/employees/${row.id}`, { method: 'PATCH', body: JSON.stringify(values) })
+    return res.json()
+  },
+  deleteEmployee: async (row: Employee) => {
+    await fetch(`/api/employees/${row.id}`, { method: 'DELETE' })
+  },
 
   listLeaveRequests: async (query: any) => {
     const res = await fetch('/api/leave-requests?' + new URLSearchParams(query))
     return res.json() as Promise<{ rows: LeaveRequest[]; cursor?: string }>
   },
-  updateLeaveRequest: (id: string, values: Partial<LeaveRequest>) =>
-    fetch(`/api/leave-requests/${id}`, { method: 'PATCH', body: JSON.stringify(values) }).then((r) => r.json()),
+  updateLeaveRequest: async (row: LeaveRequest, values: Partial<LeaveRequest>) => {
+    const res = await fetch(`/api/leave-requests/${row.id}`, { method: 'PATCH', body: JSON.stringify(values) })
+    return res.json()
+  },
 }
 ```
 
@@ -131,7 +122,7 @@ For a prototype with no backend yet, return fixture data from the same function 
 
 ```tsx
 // src/pages/EmployeesPage.tsx
-import { Resource } from 'prui/app'
+import { Resource } from '@skiddph/prui/app'
 import { api } from '../api'
 
 const statuses = ['active', 'on-leave', 'offboarded']
@@ -157,7 +148,7 @@ export default function EmployeesPage() {
 
 ```tsx
 // src/pages/LeaveRequestsPage.tsx
-import { Resource } from 'prui/app'
+import { Resource } from '@skiddph/prui/app'
 import { api } from '../api'
 
 export default function LeaveRequestsPage() {
@@ -185,7 +176,7 @@ Each `<Resource>` renders toolbar, filters, table, cursor pagination, create/edi
 
 ```tsx
 // src/pages/Dashboard.tsx
-import { StatRow } from 'prui/app'
+import { StatRow } from '@skiddph/prui/app'
 
 export default function Dashboard() {
   return (
@@ -236,7 +227,6 @@ Run the full checklist in [verification.md](verification.md). The short version:
 
 ## Failure modes to watch for
 
-- `pnpm add prui` registry auth failure: report, ask for credentials, do not substitute packages.
 - Nav `href` without a matching `<Route>`: blank outlet; keep them in lockstep.
 - `filter: 'select'` without `options`: invalid config; always include options.
 - Custom fonts or tailwind conflicts: PRUI keeps its own tokens; scope your font CSS, do not fight `--radius` globally unless intended.

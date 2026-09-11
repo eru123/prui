@@ -29,7 +29,7 @@ A two-resource admin app is `<App>` + a dashboard route + one `<Resource>` per e
 
 ```tsx
 import { createRoot } from 'react-dom/client'
-import { App } from 'prui/app'
+import { App } from '@skiddph/prui/app'
 import { Routes, Route } from 'react-router-dom'
 import { LayoutDashboard, Users, CalendarDays } from 'lucide-react'
 import Dashboard from './pages/Dashboard'
@@ -68,7 +68,7 @@ createRoot(document.getElementById('root')!).render(
 **src/pages/EmployeesPage.tsx**
 
 ```tsx
-import { Resource } from 'prui/app'
+import { Resource } from '@skiddph/prui/app'
 import { api } from '../api'
 
 const statuses = ['active', 'on-leave', 'offboarded']

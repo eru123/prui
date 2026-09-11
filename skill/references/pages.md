@@ -3,7 +3,7 @@
 Import from `prui/pages`:
 
 ```tsx
-import { LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, OtpPage, NotFoundPage, ErrorPage, ProfilePage, AdminSetup } from 'prui/pages'
+import { LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, OtpPage, NotFoundPage, ErrorPage, ProfilePage, AdminSetup } from '@skiddph/prui/pages'
 ```
 
 The set: `LoginPage`, `RegisterPage`, `ForgotPasswordPage`, `ResetPasswordPage`, `OtpPage`, `NotFoundPage`, `ErrorPage`, `ProfilePage`, `AdminSetup`, and more being added over time.
@@ -17,14 +17,15 @@ Every page shares the same three prop shapes. Pages render their own layout, so 
 A map of input name to boolean. A field present with `true` renders; present with `false` is hidden; omitted falls back to the page default.
 
 ```tsx
-// no remember-me input, password field shown
+// no remember-me input, email and password shown
+// `username` is an accepted alias of the email field
 <LoginPage fields={{ username: true, remember: false }} />
 
-// remember-me shown (default is true, so this is redundant but explicit)
+// remember-me shown (default is hidden, so this is the explicit toggle)
 <LoginPage fields={{ remember: true }} />
 
-// register form without the company input
-<RegisterPage fields={{ company: false }} />
+// register form with the confirm-password field
+<RegisterPage fields={{ confirm: true }} />
 ```
 
 ### `links`: control navigation links
@@ -59,7 +60,7 @@ Each auth page accepts `onSubmit`, called with the form values after validation:
 ```tsx
 <LoginPage
   onSubmit={async (values) => {
-    await api.login(values.username, values.password)
+    await api.login(values.email, values.password)
   }}
 />
 ```
@@ -92,24 +93,23 @@ What `pages="auth"` generates:
 | `/reset-password` | `ResetPasswordPage` |
 | `/otp` | `OtpPage` |
 
-Utility pages (`404`, error) are always wired by `<App>` automatically; you do not need `pages` for them.
+Utility routes (`/404`, `/error`, `/profile`, `/settings`, `/admin-setup`) wire with `pages="utility"`, or `pages="auth+utility"` for both sets.
 
 ### Customizing auto-routed pages
 
-Auto-routing accepts the same props you would pass by hand, via a config object:
+Auto-routing accepts the same props you would pass by hand, via `pagesConfig` keyed by page name:
 
 ```tsx
 <App
-  pages={{
-    auth: {
-      login: {
-        fields: { username: true, remember: false },
-        links: { register: '/register', forgot: '/forgot-password' },
-        oauth: ['google', 'github'],
-        onSubmit: (values) => api.login(values.username, values.password),
-      },
-      register: { oauth: ['google'] },
+  pages="auth"
+  pagesConfig={{
+    login: {
+      fields: { username: true, remember: false },
+      links: { register: '/register', forgot: '/forgot-password' },
+      oauth: ['google', 'github'],
+      onSubmit: (values) => api.login(values.email, values.password),
     },
+    register: { oauth: ['google'] },
   }}
 >
 ```
@@ -119,15 +119,14 @@ Auto-routing accepts the same props you would pass by hand, via a config object:
 Import and route the pages yourself when you want custom paths or a different router mode:
 
 ```tsx
-import { App } from 'prui/app'
 import { Routes, Route } from 'react-router-dom'
-import { LoginPage, OtpPage, Dashboard } from './routes'
+import { LoginPage, OtpPage } from '@skiddph/prui/pages'
+import Dashboard from './routes'
 
-<App brand={{ name: 'HRLabs' }} nav={[...]} router="memory">
+<App brand={{ name: 'HRLabs' }} nav={[...]} pages="auth">
   <Routes>
-    <Route path="/login" element={<LoginPage fields={{ remember: false }} oauth={['google']} />} />
-    <Route path="/otp" element={<OtpPage />} />
     <Route path="/" element={<Dashboard />} />
+    {/* /login and /otp are already routed by pages="auth" */}
   </Routes>
 </App>
 ```
@@ -138,15 +137,17 @@ Common toggles per page (defaults in bold; check the rendered output when in dou
 
 | Page | `fields` keys | `links` keys | `oauth` |
 |---|---|---|---|
-| `LoginPage` | **username**, **password**, **remember** | **register**, **forgot** | supported |
-| `RegisterPage` | **name**, **email**, **password**, **company** | **login** | supported |
-| `ForgotPasswordPage` | **email** | **login** | - |
+| `LoginPage` | **email** (`username` alias), **password**, remember (default hidden) | **register**, **forgot** | supported |
+| `RegisterPage` | **name**, **email**, **password**, confirm (default hidden) | **login** | supported |
+| `ForgotPasswordPage` | **email** | **login**, **register** | - |
 | `ResetPasswordPage` | **password**, **confirm** | **login** | - |
-| `OtpPage` | **code** | - | - |
-| `ProfilePage` | **name**, **email**, **avatar** | - | - |
-| `AdminSetup` | **name**, **email**, **password** | - | - |
+| `OtpPage` | fixed-length code input | - | - |
+| `ProfilePage` | **name**, **email**, **bio** | - | - |
+| `AdminSetup` | **name**, **email**, **password** (fixed shape) | - | - |
 
-`NotFoundPage` and `ErrorPage` take no config props beyond optional `message`.
+`NotFoundPage` and `ErrorPage` take `title`, `description` and `homeHref`.
+
+Links accept either a plain href string or a `{ label, href }` object; `false` hides the link. OAuth accepts plain provider ids (`'google'`, `'github'`, `'microsoft'`) or `{ id, label, icon? }` objects.
 
 ## Verification hooks
 

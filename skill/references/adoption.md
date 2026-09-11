@@ -12,7 +12,7 @@ PRUI is progressively adoptable: start with super-components, drop toward primit
 | `prui/data-table` | the DataTable family for direct composition |
 | `prui/theme` | token CSS, named themes, `applyTheme()` |
 
-Peer/runtime dependencies: `react`, `react-dom`, `lucide-react` (peer), and `react-router-dom` (required dependency of prui; the App layer owns routing, so it arrives with the package).
+Bundled dependencies: `react`, `react-dom`, `lucide-react`, and `react-router-dom` (required dependency of prui; the App layer owns routing, so it arrives with the package).
 
 ## Tree-shaking
 
@@ -29,7 +29,7 @@ Every super-component is a thin orchestration over exported primitives, and the 
 For new apps and prototypes. The whole UI is `<App>` + `<Resource>` + pre-made pages. Fastest path, least code, consistent by construction.
 
 ```tsx
-import { App, Resource, StatRow } from 'prui/app'
+import { App, Resource, StatRow } from '@skiddph/prui/app'
 ```
 
 Use when: greenfield admin panel, dashboard, internal tool, or any "build me an app" request. This is the default; see [agents-workflow.md](agents-workflow.md) for the end-to-end path.
@@ -39,9 +39,9 @@ Use when: greenfield admin panel, dashboard, internal tool, or any "build me an 
 Super-components for structure, primitives for the custom corners. Typical: `<App>` + `<Resource>` for standard screens, hand-composed `prui/core` + `prui/data-table` screens for the one weird page config cannot express, `<Resource form={...}>` slot for custom forms.
 
 ```tsx
-import { App, Resource } from 'prui/app'
-import { Button, Card } from 'prui/core'
-import { DataTable } from 'prui/data-table'
+import { App, Resource } from '@skiddph/prui/app'
+import { Button, Card } from '@skiddph/prui/core'
+import { DataTable } from '@skiddph/prui/data-table'
 ```
 
 Use when: an existing React app adopts PRUI screen by screen, or a super-component almost fits and only one part needs hand-rolling.
@@ -51,8 +51,8 @@ Use when: an existing React app adopts PRUI screen by screen, or a super-compone
 No App layer at all: `<App>` replaced by your own shell, PRUI used as a component kit.
 
 ```tsx
-import { Button, Input, Select, Tabs } from 'prui/core'
-import { cn } from 'prui/core'
+import { Button, Input, Select, Tabs } from '@skiddph/prui/core'
+import { cn } from '@skiddph/prui/core'
 ```
 
 Use when: the app already has routing, layout, and theme infra and only wants consistent styled primitives. Note that with no `<App>`, you own routing, nav active-state, and the theme toggle yourself (`applyTheme` from `prui/theme` is still available).

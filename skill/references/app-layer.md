@@ -3,7 +3,7 @@
 All imports come from `prui/app`:
 
 ```tsx
-import { App, Resource, Form, StatRow, Settings } from 'prui/app'
+import { App, Resource, Form, StatRow, Settings } from '@skiddph/prui/app'
 ```
 
 The App layer owns routing: `<App>` wires the router, binds nav items to routes, and highlights the active route. You supply the routes as children and nav as a config array; you never touch router setup yourself. `lucide-react` is a peer dependency, so import icons from `lucide-react` yourself.
@@ -23,7 +23,7 @@ One component, the whole shell: responsive sidebar (collapsible groups, active-r
 | `search` | `{ enabled: boolean; hotkey?: string }` | - | Command palette config; hotkey is a single-key trigger such as `'/'` |
 | `theme` | `{ default: 'light' \| 'dark'; persist?: boolean }` | - | Theme default and localStorage persistence |
 | `auth` | `{ sessionTimeout?: number }` | - | Session timeout in minutes; renders the timeout flow |
-| `header` | `ReactNode` | - | Slot replacing the default header content |
+| `header` | `ReactNode` | - | Extra content rendered in the header's right cluster |
 | `sidebar` | `{ collapsible?: boolean; width?: number; defaultOpen?: boolean }` | - | Sidebar behavior and dimensions |
 | `router` | `'react-router' \| 'memory'` | `'react-router'` | `memory` for embedded or demo use (works outside a URL context) |
 | `pages` | `string` (e.g. `'auth'`) | - | Auto-route the pre-made page set; see [pages.md](pages.md) |
@@ -45,7 +45,7 @@ A leaf has `href`; a group has `items`. Do not set both.
 ### Example: the HRLabs two-resource shell
 
 ```tsx
-import { App } from 'prui/app'
+import { App } from '@skiddph/prui/app'
 import { Routes, Route } from 'react-router-dom'
 import { LayoutDashboard, Users, CalendarDays } from 'lucide-react'
 
@@ -90,9 +90,10 @@ A complete CRUD screen from a schema: toolbar + faceted filters + DataTable + cu
 | `name` | `string` | required | Resource identifier; used in labels and modal titles |
 | `columns` | `Column[]` | required | Column and filter definitions |
 | `list` | `(query) => Promise<{ rows: T[]; cursor?: string }>` | required | Fetch a page; receives current query (filters, sort, cursor) |
-| `create` | `(values: Partial<T>) => Promise<T>` | - | Enables the create action |
-| `update` | `(id: string, values: Partial<T>) => Promise<T>` | - | Enables the edit action |
-| `delete` | `(id: string) => Promise<void>` | - | Enables the delete action (confirm dialog is automatic) |
+| `create` | `(values) => void \| Promise<void>` | - | Enables the create action |
+| `update` | `(row: T, values) => void \| Promise<void>` | - | Enables the edit action; receives the row |
+| `remove` | `(row: T) => void \| Promise<void>` | - | Enables delete (confirm dialog is automatic); `delete` is an alias |
+| `pageSize` | `number` | `20` | Rows per page |
 | `form` | `ReactNode` | - | Optional custom form for create/edit; omit to auto-generate from columns |
 | `actions` | `('create' \| 'edit' \| 'delete')[]` | all | Which row/toolbar actions to show |
 
@@ -103,7 +104,7 @@ type Column = {
   key: string                      // row field to display
   label: string                    // column heading
   sortable?: boolean               // click-to-sort
-  filter?: 'select' | 'daterange' | 'number' | 'price' | 'time'
+  filter?: 'select' | 'date' | 'daterange' | 'number' | 'price' | 'time'
   options?: (string | number)[]    // choices, required when filter is 'select'
 }
 ```
@@ -113,7 +114,7 @@ Filter type names map to the prui DataTable filter family; `filter: 'select'` re
 ### Example: employees
 
 ```tsx
-import { Resource } from 'prui/app'
+import { Resource } from '@skiddph/prui/app'
 import { api } from '../api'
 
 const statuses = ['active', 'on-leave', 'offboarded']
@@ -136,7 +137,7 @@ const statuses = ['active', 'on-leave', 'offboarded']
 ### Example: leave requests (second resource)
 
 ```tsx
-import { Resource } from 'prui/app'
+import { Resource } from '@skiddph/prui/app'
 import { api } from '../api'
 
 const leaveStatuses = ['pending', 'approved', 'rejected']
@@ -164,15 +165,17 @@ Notes:
 
 ## `<Form>`
 
-A react-hook-form wrapper: zero-boilerplate fields from a schema, validation display included.
+A schema-driven form: zero-boilerplate fields, required-markers and inline validation display included. The schema may be a bare field array or `{ fields, submitLabel }`; `defaultValues` is an alias of `initialValues`.
 
 ### Props
 
 | Prop | Type | Description |
 |---|---|---|
-| `schema` | `FieldSchema[]` | Field definitions (below) |
+| `schema` | `FieldSchema[] \| { fields, submitLabel?, columns? }` | Field definitions (below) |
 | `onSubmit` | `(values) => Promise<void> \| void` | Called with validated values |
-| `defaultValues` | `Partial<Record<string, unknown>>` | Initial values, for edit mode |
+| `defaultValues` | `Partial<Record<string, unknown>>` | Initial values, for edit mode (alias of `initialValues`) |
+| `onCancel` | `() => void` | Shows a cancel button when set |
+| `error` | `string \| null` | Renders an error banner above the actions |
 
 ### FieldSchema
 
@@ -180,16 +183,18 @@ A react-hook-form wrapper: zero-boilerplate fields from a schema, validation dis
 type FieldSchema = {
   name: string
   label: string
-  type?: 'text' | 'email' | 'password' | 'number' | 'select' | 'date' | 'textarea'
-  options?: (string | number)[]   // for type 'select'
+  type?: 'text' | 'email' | 'password' | 'number' | 'select' | 'date' | 'textarea' | 'boolean'
+  options?: (string | number)[]   // for type 'select'; label/value pairs also accepted
   required?: boolean
+  disabled?: boolean
+  validate?: (value, values) => string | null
 }
 ```
 
 ### Example: employee create/edit form
 
 ```tsx
-import { Form } from 'prui/app'
+import { Form } from '@skiddph/prui/app'
 import { api } from '../api'
 
 const employeeSchema = [
@@ -238,7 +243,7 @@ type Stat = {
 ### Example
 
 ```tsx
-import { StatRow } from 'prui/app'
+import { StatRow } from '@skiddph/prui/app'
 
 <StatRow
   items={[
@@ -262,21 +267,25 @@ A two-column settings page from a section list.
 ```ts
 type SettingsSection = {
   id: string
-  label: string
+  label?: string            // or title
+  description?: string
   fields: {
     name: string
     label: string
     type?: 'text' | 'select' | 'switch' | 'number'
-    options?: (string | number)[]
-    value?: unknown
+    options?: (string | number)[]   // for type 'select'
+    value?: string | number | boolean
+    onChange?: (value) => void      // omit + pass `control` for a custom node
+    description?: string
   }[]
+  content?: ReactNode       // fully custom section body
 }
 ```
 
 ### Example
 
 ```tsx
-import { Settings } from 'prui/app'
+import { Settings } from '@skiddph/prui/app'
 
 <Settings
   sections={[
@@ -306,7 +315,7 @@ An admin app is `<App>` + a dashboard route (often just `<StatRow>` + content) +
 
 ```tsx
 // pages/Dashboard.tsx
-import { StatRow } from 'prui/app'
+import { StatRow } from '@skiddph/prui/app'
 
 export default function Dashboard() {
   return (
