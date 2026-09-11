@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.2.1
+
+### Patch Changes
+
+- - react/react-dom/lucide as peer dependencies, re-export route helpers from prui/app, widen Resource mutator return types
+
 ## 0.2.0
 
 ### Minor Changes
