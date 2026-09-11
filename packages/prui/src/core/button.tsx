@@ -1,0 +1,87 @@
+import * as React from "react"
+import { Loader2 } from "lucide-react"
+import { cn } from "./cn"
+import type { PropsMeta } from "./props-meta"
+
+export type ButtonVariant = "primary" | "default" | "ghost" | "danger"
+export type ButtonSize = "sm" | "md" | "lg" | "icon"
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant
+  size?: ButtonSize
+  /** Render the single child instead of a button element. */
+  asChild?: boolean
+  /** Show a spinner and disable the button. */
+  loading?: boolean
+}
+
+const variantClasses: Record<ButtonVariant, string> = {
+  primary:
+    "bg-[var(--prui-brand)] text-[var(--prui-brand-fg)] hover:brightness-110 active:brightness-95",
+  default:
+    "bg-[var(--prui-raise)] text-[var(--prui-fg)] border border-[var(--prui-line)] hover:border-[var(--prui-dim)]",
+  ghost:
+    "bg-transparent text-[var(--prui-fg)] hover:bg-[var(--prui-raise)]",
+  danger:
+    "bg-[var(--prui-danger)] text-white hover:brightness-110 active:brightness-95",
+}
+
+const sizeClasses: Record<ButtonSize, string> = {
+  sm: "h-7 px-2.5 text-xs gap-1.5",
+  md: "h-9 px-3.5 text-sm gap-2",
+  lg: "h-11 px-5 text-base gap-2",
+  icon: "h-9 w-9 p-0",
+}
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = "default", size = "md", asChild = false, loading = false, disabled, children, ...props }, ref) => {
+    const classes = cn(
+      "prui-button inline-flex items-center justify-center whitespace-nowrap font-medium select-none",
+      "transition-[filter,background-color,border-color] duration-150 outline-none cursor-pointer",
+      "focus-visible:ring-2 focus-visible:ring-[var(--prui-brand)] focus-visible:ring-offset-1",
+      "disabled:pointer-events-none disabled:opacity-50",
+      variantClasses[variant],
+      sizeClasses[size],
+      className,
+    )
+
+    if (asChild && React.isValidElement(children)) {
+      const child = children as React.ReactElement<Record<string, unknown>>
+      return React.cloneElement(child, {
+        className: cn(classes, child.props.className as string | undefined),
+        ...props,
+        children: loading ? <Spinner /> : child.props.children,
+      })
+    }
+
+    return (
+      <button ref={ref} className={classes} disabled={disabled || loading} data-loading={loading || undefined} {...props}>
+        {loading ? (
+          <>
+            <Spinner />
+            {children}
+          </>
+        ) : (
+          children
+        )}
+      </button>
+    )
+  },
+)
+Button.displayName = "Button"
+
+function Spinner() {
+  return <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+}
+
+export const buttonPropsMeta: PropsMeta = {
+  name: "Button",
+  props: [
+    { name: "variant", type: "'primary' | 'default' | 'ghost' | 'danger'", default: "'default'", control: "select", options: ["primary", "default", "ghost", "danger"] },
+    { name: "size", type: "'sm' | 'md' | 'lg' | 'icon'", default: "'md'", control: "select", options: ["sm", "md", "lg", "icon"] },
+    { name: "asChild", type: "boolean", default: "false", control: "boolean" },
+    { name: "loading", type: "boolean", default: "false", control: "boolean" },
+    { name: "disabled", type: "boolean", default: "false", control: "boolean" },
+    { name: "children", type: "ReactNode", default: null, control: "text" },
+  ],
+}
