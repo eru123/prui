@@ -1,2 +1,5 @@
 export * from "./core"
+export * from "./data-table"
+export * from "./app"
+export * from "./pages"
 export * from "./theme"
