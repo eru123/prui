@@ -10,9 +10,19 @@ import type { PropsMeta } from "../core/props-meta"
 /**
  * Schema-driven Form: fields from a schema, validation display included.
  * Each field: name, label, type, placeholder, required, options, defaultValue.
+ * The schema may be a bare field array or an object `{ fields, submitLabel }`;
+ * `defaultValues` is an alias of `initialValues`.
  */
 
-export type FormFieldType = "text" | "password" | "email" | "number" | "textarea" | "select" | "boolean"
+export type FormFieldType =
+  | "text"
+  | "password"
+  | "email"
+  | "number"
+  | "date"
+  | "textarea"
+  | "select"
+  | "boolean"
 
 export interface FormFieldSchema {
   name: string
@@ -20,8 +30,8 @@ export interface FormFieldSchema {
   type?: FormFieldType
   placeholder?: string
   required?: boolean
-  /** select options: label/value pairs. */
-  options?: { label: string; value: string }[]
+  /** select options: label/value pairs; plain strings and numbers are accepted. */
+  options?: (string | number | { label: string; value: string })[]
   defaultValue?: string | number | boolean
   disabled?: boolean
   /** Optional inline validation: return an error message or null. */
@@ -37,9 +47,23 @@ export interface FormSchema {
   columns?: 1 | 2
 }
 
+/** A schema is either the fields array itself or the full object. */
+export type FormSchemaInput = FormFieldSchema[] | FormSchema
+
+function normalizeSchema(schema: FormSchemaInput): FormSchema {
+  return Array.isArray(schema) ? { fields: schema } : schema
+}
+
+function normalizeOptions(opts: FormFieldSchema["options"]): { label: string; value: string }[] | undefined {
+  if (!opts) return undefined
+  return opts.map((o) => (typeof o === "string" || typeof o === "number" ? { label: String(o), value: String(o) } : o))
+}
+
 export interface FormProps {
-  schema: FormSchema
+  schema: FormSchemaInput
   initialValues?: Record<string, unknown>
+  /** Alias of initialValues. */
+  defaultValues?: Record<string, unknown>
   onSubmit?: (values: Record<string, unknown>) => void | Promise<void>
   onCancel?: () => void
   cancelLabel?: string
@@ -55,15 +79,15 @@ function defaultsFor(schema: FormSchema, initialValues?: Record<string, unknown>
     if (initialValues && f.name in initialValues) values[f.name] = initialValues[f.name]
     else if (f.defaultValue !== undefined) values[f.name] = f.defaultValue
     else if (f.type === "boolean") values[f.name] = false
-    else if (f.type === "number") values[f.name] = ""
     else values[f.name] = ""
   }
   return values
 }
 
 export function Form({
-  schema,
+  schema: schemaInput,
   initialValues,
+  defaultValues,
   onSubmit,
   onCancel,
   cancelLabel = "Cancel",
@@ -71,15 +95,17 @@ export function Form({
   error,
   className,
 }: FormProps) {
-  const [values, setValues] = React.useState<Record<string, unknown>>(() => defaultsFor(schema, initialValues))
+  const schema = React.useMemo(() => normalizeSchema(schemaInput), [schemaInput])
+  const mergedInitials = initialValues ?? defaultValues
+  const [values, setValues] = React.useState<Record<string, unknown>>(() => defaultsFor(schema, mergedInitials))
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const [internalError, setInternalError] = React.useState<string | null>(null)
   const [busy, setBusy] = React.useState(false)
 
   React.useEffect(() => {
-    setValues(defaultsFor(schema, initialValues))
+    setValues(defaultsFor(schema, mergedInitials))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(schema), JSON.stringify(initialValues ?? {})])
+  }, [JSON.stringify(schema), JSON.stringify(mergedInitials ?? {})])
 
   const setField = (name: string, value: unknown) => {
     setValues((v) => ({ ...v, [name]: value }))
@@ -148,11 +174,20 @@ export function Form({
               ) : f.type === "select" ? (
                 <Select
                   {...common}
-                  options={f.options}
+                  options={normalizeOptions(f.options)}
                   placeholder={f.placeholder}
                   disabled={f.disabled || loading}
                   value={String(values[f.name] ?? "")}
                   onChange={(v) => setField(f.name, v)}
+                />
+              ) : f.type === "date" ? (
+                <Input
+                  {...common}
+                  type="date"
+                  placeholder={f.placeholder}
+                  disabled={f.disabled || loading}
+                  value={String(values[f.name] ?? "")}
+                  onChange={(e) => setField(f.name, e.target.value)}
                 />
               ) : f.type === "boolean" ? (
                 <Switch

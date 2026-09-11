@@ -9,25 +9,27 @@ import {
   LoadingButtonLabel,
   OAuthButtons,
   defaultLoginFields,
+  linkHref,
+  linkLabel,
   type PageField,
-  type PageLink,
-  type OAuthProvider,
+  type PageLinkInput,
+  type OAuthProviderInput,
 } from "./shared"
 import type { BrandConfig } from "../app/app"
 
 export interface LoginLinks {
-  forgot?: PageLink | false
-  register?: PageLink | false
+  forgot?: PageLinkInput | false
+  register?: PageLinkInput | false
 }
 
 export interface LoginPageProps {
   onSubmit?: (values: Record<string, string>) => void | Promise<void>
   /** Per-field show/hide: keys match field names, true renders the field. */
-  fields?: Partial<Record<"email" | "password" | "remember", boolean>>
+  fields?: Partial<Record<"username" | "email" | "password" | "remember", boolean>>
   /** Extra fields appended to the defaults. */
   extraFields?: PageField[]
   links?: LoginLinks
-  oauth?: OAuthProvider[]
+  oauth?: OAuthProviderInput[]
   brand?: BrandConfig
   submitLabel?: string
   loading?: boolean
@@ -47,7 +49,14 @@ export function LoginPage({
   error,
   className,
 }: LoginPageProps) {
-  const show = { email: true, password: true, remember: false, ...fields }
+  // `username` is an accepted alias of the email field (AC-2b wording)
+  const show = {
+    email: true,
+    password: true,
+    remember: false,
+    ...fields,
+    ...(fields?.username !== undefined && fields?.email === undefined ? { email: fields.username } : {}),
+  }
   const visible = [
     ...(show.email !== false ? [defaultLoginFields[0]!] : []),
     ...(show.password !== false ? [defaultLoginFields[1]!] : []),
@@ -107,16 +116,16 @@ export function LoginPage({
       <OAuthButtons providers={oauth} />
       {links?.forgot !== false && links?.forgot ? (
         <div className="mt-3 text-center">
-          <a href={links.forgot.href} className="text-sm text-[var(--prui-brand)] hover:underline">
-            {links.forgot.label ?? "Forgot password?"}
+          <a href={linkHref(links.forgot)} className="text-sm text-[var(--prui-brand)] hover:underline">
+            {linkLabel(links.forgot, "Forgot password?")}
           </a>
         </div>
       ) : null}
       {(links?.register !== false && links?.register) ? (
         <div className="mt-1 text-center text-sm text-[var(--prui-dim)]">
           No account?{" "}
-          <a href={links.register.href} className="text-[var(--prui-brand)] hover:underline">
-            {links.register.label ?? "Register"}
+          <a href={linkHref(links.register)} className="text-[var(--prui-brand)] hover:underline">
+            {linkLabel(links.register, "Register")}
           </a>
         </div>
       ) : null}

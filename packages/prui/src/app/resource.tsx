@@ -31,16 +31,23 @@ export interface ListQuery {
 
 export interface ListResult<T> {
   rows: T[]
+  /** Next-page cursor. `cursor` is accepted as an alias. */
   nextCursor?: string | null
+  cursor?: string | null
 }
 
 export type ResourceRow = Record<string, unknown>
 
+/** Select choices: plain strings/numbers or label/value pairs. */
+export type ResourceFilterOptions = (string | number | { label: string; value: string; count?: number })[]
+
 export interface ResourceColumn<T extends ResourceRow> extends Column<T> {
   /** Filter type rendered in the toolbar. */
-  filter?: "select" | "daterange" | "numberrange"
-  /** Options for filter select. */
-  filterOptions?: { label: string; value: string; count?: number }[]
+  filter?: "select" | "date" | "daterange" | "number" | "numberrange" | "price" | "time"
+  /** Select filter choices: strings/numbers or {label, value} pairs. */
+  options?: ResourceFilterOptions
+  /** Select filter choices; `options` is an alias of this. */
+  filterOptions?: ResourceFilterOptions
   /** Field name for the form; defaults to key. */
   formField?: boolean
 }
@@ -55,7 +62,10 @@ export interface ResourceProps<T extends ResourceRow> {
   list: (query: ListQuery) => Promise<ListResult<T>>
   create?: (values: Record<string, unknown>) => Promise<void> | void
   update?: (row: T, values: Record<string, unknown>) => Promise<void> | void
+  /** Deletes a row; `delete` is an alias. */
   remove?: (row: T) => Promise<void> | void
+  /** Alias of remove. */
+  delete?: (row: T) => Promise<void> | void
   /** Enabled actions, default all three when the functions are provided. */
   actions?: ResourceAction[]
   /** Custom form node; receives the editing row (null on create). */
@@ -69,6 +79,11 @@ export interface ResourceProps<T extends ResourceRow> {
   className?: string
 }
 
+function normalizeFilterOptions(opts?: ResourceFilterOptions): { label: string; value: string; count?: number }[] | undefined {
+  if (!opts) return undefined
+  return opts.map((o) => (typeof o === "string" || typeof o === "number" ? { label: String(o), value: String(o) } : o))
+}
+
 function schemaFromColumns<T extends ResourceRow>(columns: ResourceColumn<T>[], row?: T | null): FormSchema {
   const fields = columns
     .filter((c) => c.formField !== false && !c.hidden)
@@ -77,15 +92,18 @@ function schemaFromColumns<T extends ResourceRow>(columns: ResourceColumn<T>[], 
       name: c.key,
       label: typeof c.label === "string" ? c.label : c.key,
       type: inferFieldType(c, row),
+      options: normalizeFilterOptions(c.filterOptions ?? c.options)?.map((o) => ({ label: o.label, value: o.value })),
       required: false,
     }))
   return { fields, submitLabel: row ? "Save" : "Create" }
 }
 
-function inferFieldType<T extends ResourceRow>(col: ResourceColumn<T>, row?: T | null): "text" | "number" | "select" | "textarea" {
+function inferFieldType<T extends ResourceRow>(col: ResourceColumn<T>, row?: T | null): "text" | "number" | "select" | "textarea" | "date" {
   if (col.filter === "select") return "select"
   const sample = row?.[col.key]
   if (typeof sample === "number") return "number"
+  if (col.filter === "number" || col.filter === "numberrange" || col.filter === "price") return "number"
+  if (col.filter === "date" || col.filter === "daterange") return "date"
   return "text"
 }
 
@@ -96,6 +114,7 @@ export function Resource<T extends ResourceRow>({
   create,
   update,
   remove,
+  delete: deleteAlias,
   actions,
   form,
   formSchema,
@@ -104,8 +123,9 @@ export function Resource<T extends ResourceRow>({
   pageSize: initialPageSize = 20,
   className,
 }: ResourceProps<T>) {
+  const doRemove = remove ?? deleteAlias
   const enabled = actions ?? (["create", "edit", "delete"] as ResourceAction[])
-  const can = (a: ResourceAction) => enabled.includes(a) && (a === "create" ? !!create : a === "edit" ? !!update : !!remove)
+  const can = (a: ResourceAction) => enabled.includes(a) && (a === "create" ? !!create : a === "edit" ? !!update : !!doRemove)
 
   const [rows, setRows] = React.useState<T[]>([])
   const [nextCursor, setNextCursor] = React.useState<string | null>(null)
@@ -124,13 +144,14 @@ export function Resource<T extends ResourceRow>({
 
   const currentCursor = cursorStack[page - 1] ?? null
 
+  const filtersKey = JSON.stringify(filters)
   const load = React.useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
       const result = await list({ search, cursor: currentCursor, pageSize, sort, filters })
       setRows(result.rows)
-      setNextCursor(result.nextCursor ?? null)
+      setNextCursor(result.nextCursor ?? result.cursor ?? null)
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
       setRows([])
@@ -139,7 +160,7 @@ export function Resource<T extends ResourceRow>({
       setLoading(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, currentCursor, pageSize, sort, JSON.stringify(filters), list])
+  }, [search, currentCursor, pageSize, sort, filtersKey, list])
 
   React.useEffect(() => {
     void load()
@@ -149,15 +170,15 @@ export function Resource<T extends ResourceRow>({
   React.useEffect(() => {
     setPage(1)
     setCursorStack([null])
-  }, [search, pageSize, JSON.stringify(filters)])
+  }, [search, pageSize, filtersKey])
 
   const toolbarFilters: ToolbarFilterConfig[] = columns
     .filter((c) => c.filter)
     .map((c) => ({
       key: c.key,
       label: typeof c.label === "string" ? c.label : c.key,
-      type: c.filter as ToolbarFilterConfig["type"],
-      options: c.filterOptions,
+      type: (c.filter === "numberrange" ? "number" : c.filter) as ToolbarFilterConfig["type"],
+      options: normalizeFilterOptions(c.filterOptions ?? c.options),
     }))
 
   const onFilterChange = (key: string, value: ToolbarFilterValue) => {
@@ -182,10 +203,10 @@ export function Resource<T extends ResourceRow>({
       cancelText: "Cancel",
       type: "danger",
     })
-    if (!confirmed || !remove) return
+    if (!confirmed || !doRemove) return
     setDeleteBusy(true)
     try {
-      await remove(row)
+      await doRemove(row)
       await load()
     } finally {
       setDeleteBusy(false)
@@ -310,10 +331,11 @@ export const resourcePropsMeta: PropsMeta = {
   props: [
     { name: "name", type: "string", default: null, control: "text" },
     { name: "columns", type: "ResourceColumn<T>[]", default: null, control: "object" },
-    { name: "list", type: "(query) => Promise<{rows, nextCursor}>", default: null, control: "none" },
+    { name: "list", type: "(query) => Promise<{rows, cursor}>", default: null, control: "none" },
     { name: "create", type: "(values) => Promise<void>", default: null, control: "none" },
     { name: "update", type: "(row, values) => Promise<void>", default: null, control: "none" },
     { name: "remove", type: "(row) => Promise<void>", default: null, control: "none" },
+    { name: "delete", type: "(row) => Promise<void>", default: "alias of remove", control: "none" },
     { name: "actions", type: "('create' | 'edit' | 'delete')[]", default: "all provided", control: "multiselect", options: ["create", "edit", "delete"] },
     { name: "form", type: "ReactNode", default: "built-in schema form", control: "none" },
     { name: "formSchema", type: "FormSchema", default: "derived from columns", control: "object" },

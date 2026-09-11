@@ -8,9 +8,11 @@ import {
   ErrorBanner,
   OAuthButtons,
   defaultRegisterFields,
+  linkHref,
+  linkLabel,
   type PageField,
-  type PageLink,
-  type OAuthProvider,
+  type PageLinkInput,
+  type OAuthProviderInput,
 } from "./shared"
 import type { BrandConfig } from "../app/app"
 
@@ -18,8 +20,8 @@ export interface RegisterPageProps {
   onSubmit?: (values: Record<string, string>) => void | Promise<void>
   fields?: Partial<Record<"name" | "email" | "password" | "confirm", boolean>>
   extraFields?: PageField[]
-  links?: { login?: PageLink | false }
-  oauth?: OAuthProvider[]
+  links?: { login?: PageLinkInput | false }
+  oauth?: OAuthProviderInput[]
   brand?: BrandConfig
   submitLabel?: string
   loading?: boolean
@@ -103,8 +105,8 @@ export function RegisterPage({
       {links?.login ? (
         <div className="mt-3 text-center text-sm text-[var(--prui-dim)]" data-testid="register-login-link">
           Already have an account?{" "}
-          <a href={links.login.href} className="text-[var(--prui-brand)] hover:underline">
-            {links.login.label ?? "Sign in"}
+          <a href={linkHref(links.login)} className="text-[var(--prui-brand)] hover:underline">
+            {linkLabel(links.login, "Sign in")}
           </a>
         </div>
       ) : null}

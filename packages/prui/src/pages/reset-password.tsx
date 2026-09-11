@@ -3,13 +3,13 @@ import { Button } from "../core/button"
 import { Input } from "../core/input"
 import { Label } from "../core/label"
 import type { PropsMeta } from "../core/props-meta"
-import { PageShell, ErrorBanner, type PageLink } from "./shared"
+import { PageShell, ErrorBanner, linkHref, linkLabel, type PageLinkInput } from "./shared"
 import type { BrandConfig } from "../app/app"
 
 export interface ResetPasswordPageProps {
   onSubmit?: (values: { password: string; confirm: string }) => void | Promise<void>
   fields?: Partial<Record<"password" | "confirm", boolean>>
-  links?: { login?: PageLink | false }
+  links?: { login?: PageLinkInput | false }
   brand?: BrandConfig
   submitLabel?: string
   loading?: boolean
@@ -84,8 +84,8 @@ export function ResetPasswordPage({
       </form>
       {links?.login !== false && links?.login ? (
         <div className="mt-3 text-center text-sm">
-          <a href={links.login.href} className="text-[var(--prui-brand)] hover:underline">
-            {links.login.label ?? "Back to sign in"}
+          <a href={linkHref(links.login)} className="text-[var(--prui-brand)] hover:underline">
+            {linkLabel(links.login, "Back to sign in")}
           </a>
         </div>
       ) : null}

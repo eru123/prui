@@ -3,12 +3,12 @@ import { Button } from "../core/button"
 import { Input } from "../core/input"
 import { Label } from "../core/label"
 import type { PropsMeta } from "../core/props-meta"
-import { PageShell, ErrorBanner, type PageLink } from "./shared"
+import { PageShell, ErrorBanner, linkHref, linkLabel, type PageLinkInput } from "./shared"
 import type { BrandConfig } from "../app/app"
 
 export interface ForgotPasswordPageProps {
   onSubmit?: (values: { email: string }) => void | Promise<void>
-  links?: { login?: PageLink | false; register?: PageLink | false }
+  links?: { login?: PageLinkInput | false; register?: PageLinkInput | false }
   brand?: BrandConfig
   submitLabel?: string
   loading?: boolean
@@ -73,8 +73,8 @@ export function ForgotPasswordPage({
       )}
       {links?.login !== false && links?.login ? (
         <div className="mt-3 text-center text-sm">
-          <a href={links.login.href} className="text-[var(--prui-brand)] hover:underline">
-            {links.login.label ?? "Back to sign in"}
+          <a href={linkHref(links.login)} className="text-[var(--prui-brand)] hover:underline">
+            {linkLabel(links.login, "Back to sign in")}
           </a>
         </div>
       ) : null}

@@ -6,15 +6,20 @@ import type { PropsMeta } from "../core/props-meta"
 import { FacetedFilter } from "./data-table-faceted-filter"
 import type { FacetOption } from "./data-table-faceted-filter"
 import { DateRangeFilter } from "./data-table-daterange-filter"
+import { DateFilter } from "./data-table-date-filter"
 import { NumberRangeFilter } from "./data-table-number-range-filter"
+import { PriceFilter } from "./data-table-price-filter"
+import { TimeRangeFilter } from "./data-table-time-range-filter"
 
 /**
  * Toolbar: search input plus declarative filters.
  * Filter config entries are column keys with a type; the toolbar renders the
  * matching filter control and reports values through onFilterChange.
+ * Type names mirror the icanhelp filter family: faceted select, date,
+ * daterange, number, price, time.
  */
 
-export type ToolbarFilterType = "select" | "daterange" | "numberrange"
+export type ToolbarFilterType = "select" | "date" | "daterange" | "number" | "numberrange" | "price" | "time"
 
 export interface ToolbarFilterConfig {
   key: string
@@ -26,7 +31,9 @@ export interface ToolbarFilterConfig {
 
 export type ToolbarFilterValue =
   | string[]
+  | string
   | { from?: string; to?: string }
+  | { date?: string }
   | { min?: number; max?: number }
   | undefined
 
@@ -44,13 +51,6 @@ export interface DataTableToolbarProps {
   actions?: React.ReactNode
   className?: string
 }
-
-function isFilterActive(value: ToolbarFilterValue): boolean {
-  if (value == null) return false
-  if (Array.isArray(value)) return value.length > 0
-  return Object.values(value).some((v) => v !== undefined && v !== "")
-}
-void isFilterActive
 
 export function DataTableToolbar({
   searchPlaceholder = "Search...",
@@ -99,6 +99,36 @@ export function DataTableToolbar({
         if (f.type === "daterange") {
           return (
             <DateRangeFilter
+              key={f.key}
+              label={f.label}
+              value={(current as { from?: string; to?: string } | undefined) ?? {}}
+              onChange={(v) => onFilterChange?.(f.key, v)}
+            />
+          )
+        }
+        if (f.type === "date") {
+          return (
+            <DateFilter
+              key={f.key}
+              label={f.label}
+              value={(current as { date?: string } | undefined) ?? {}}
+              onChange={(v) => onFilterChange?.(f.key, v)}
+            />
+          )
+        }
+        if (f.type === "price") {
+          return (
+            <PriceFilter
+              key={f.key}
+              label={f.label}
+              value={(current as { min?: number; max?: number } | undefined) ?? {}}
+              onChange={(v) => onFilterChange?.(f.key, v)}
+            />
+          )
+        }
+        if (f.type === "time") {
+          return (
+            <TimeRangeFilter
               key={f.key}
               label={f.label}
               value={(current as { from?: string; to?: string } | undefined) ?? {}}

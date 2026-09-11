@@ -1,23 +1,41 @@
 import * as React from "react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../core/card"
+import { Input } from "../core/input"
+import { Select } from "../core/select"
+import { Switch } from "../core/switch"
 import { cn } from "../core/cn"
 import type { PropsMeta } from "../core/props-meta"
 
 /**
  * Settings: a two-column settings page from a section list.
  * Left: section nav (in-page anchors). Right: section cards with fields.
+ * Fields are either fully typed (`name` + `type` + `value`/`onChange`, which
+ * render the matching primitive) or a free `control` node.
  */
+
+export type SettingsFieldType = "text" | "number" | "select" | "switch"
 
 export interface SettingsField {
   label: string
   description?: string
-  /** Controlled content: any node (input, switch, custom). */
+  /** Field key; required when type is set. */
+  name?: string
+  type?: SettingsFieldType
+  /** Choices for type select: strings/numbers or label/value pairs. */
+  options?: (string | number | { label: string; value: string })[]
+  /** Current value for typed fields. */
+  value?: string | number | boolean
+  /** Change handler for typed fields. */
+  onChange?: (value: string | number | boolean) => void
+  /** Controlled content: any node (input, switch, custom). Overrides type. */
   control?: React.ReactNode
 }
 
 export interface SettingsSection {
   id: string
-  title: string
+  title?: string
+  /** Alias of title. */
+  label?: string
   description?: string
   fields?: SettingsField[]
   /** Fully custom section body. */
@@ -28,6 +46,51 @@ export interface SettingsProps {
   title?: string
   sections: SettingsSection[]
   className?: string
+}
+
+function normalizeSelectOptions(opts: SettingsField["options"]): { label: string; value: string }[] | undefined {
+  if (!opts) return undefined
+  return opts.map((o) => (typeof o === "string" || typeof o === "number" ? { label: String(o), value: String(o) } : o))
+}
+
+function TypedField({ field }: { field: SettingsField }) {
+  const { name, type, value, onChange } = field
+  if (!type || !name) return null
+  const id = `prui-settings-${name}`
+  if (type === "switch") {
+    return (
+      <label className="flex items-center gap-2" htmlFor={id}>
+        <Switch
+          id={id}
+          checked={Boolean(value)}
+          onChange={(c) => onChange?.(c)}
+          aria-label={field.label}
+        />
+      </label>
+    )
+  }
+  if (type === "select") {
+    return (
+      <Select
+        id={id}
+        className="w-56"
+        options={normalizeSelectOptions(field.options) ?? []}
+        value={String(value ?? "")}
+        onChange={(v) => onChange?.(v)}
+        aria-label={field.label}
+      />
+    )
+  }
+  return (
+    <Input
+      id={id}
+      type={type === "number" ? "number" : "text"}
+      className="h-8 w-56"
+      value={String(value ?? "")}
+      onChange={(e) => onChange?.(type === "number" ? (e.target.value === "" ? "" : Number(e.target.value)) : e.target.value)}
+      aria-label={field.label}
+    />
+  )
 }
 
 export function Settings({ title = "Settings", sections, className }: SettingsProps) {
@@ -43,7 +106,7 @@ export function Settings({ title = "Settings", sections, className }: SettingsPr
                   href={`#settings-${s.id}`}
                   className="block rounded-[var(--prui-radius)] px-2.5 py-1.5 text-sm text-[var(--prui-dim)] hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)]"
                 >
-                  {s.title}
+                  {s.title ?? s.label ?? s.id}
                 </a>
               </li>
             ))}
@@ -53,7 +116,7 @@ export function Settings({ title = "Settings", sections, className }: SettingsPr
           {sections.map((s) => (
             <Card key={s.id} id={`settings-${s.id}`} data-testid="settings-section">
               <CardHeader>
-                <CardTitle>{s.title}</CardTitle>
+                <CardTitle>{s.title ?? s.label ?? s.id}</CardTitle>
                 {s.description ? <CardDescription>{s.description}</CardDescription> : null}
               </CardHeader>
               <CardContent>
@@ -65,7 +128,9 @@ export function Settings({ title = "Settings", sections, className }: SettingsPr
                           <dt className="text-sm font-medium text-[var(--prui-fg)]">{f.label}</dt>
                           {f.description ? <dd className="text-xs text-[var(--prui-dim)]">{f.description}</dd> : null}
                         </div>
-                        {f.control ? <div className="shrink-0">{f.control}</div> : null}
+                        <div className="shrink-0">
+                          {f.control ?? <TypedField field={f} />}
+                        </div>
                       </div>
                     ))}
                   </dl>

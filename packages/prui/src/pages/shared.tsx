@@ -31,6 +31,33 @@ export interface OAuthProvider {
   icon?: React.ComponentType<{ className?: string }>
 }
 
+/** Well-known providers may be passed as plain ids. */
+export type OAuthProviderInput = OAuthProvider | "google" | "github" | "microsoft"
+
+const BUILTIN_PROVIDERS: Record<string, OAuthProvider> = {
+  google: { id: "google", label: "Google" },
+  github: { id: "github", label: "GitHub" },
+  microsoft: { id: "microsoft", label: "Microsoft" },
+}
+
+export function normalizeProviders(providers?: OAuthProviderInput[]): OAuthProvider[] {
+  if (!providers?.length) return []
+  return providers.map((p) =>
+    typeof p === "string" ? BUILTIN_PROVIDERS[p] ?? { id: p, label: p.charAt(0).toUpperCase() + p.slice(1) } : p,
+  )
+}
+
+/** Links accept a plain href string or a {label, href} object. */
+export type PageLinkInput = PageLink | string
+
+export function linkHref(link: PageLinkInput): string {
+  return typeof link === "string" ? link : link.href
+}
+
+export function linkLabel(link: PageLinkInput, fallback: string): string {
+  return (typeof link === "string" ? fallback : link.label) ?? fallback
+}
+
 export interface PageSubmitState {
   loading?: boolean
   error?: string | null
@@ -92,8 +119,9 @@ export function LoadingButtonLabel({ loading, children }: { loading?: boolean; c
   )
 }
 
-export function OAuthButtons({ providers }: { providers?: OAuthProvider[] }) {
-  if (!providers || providers.length === 0) return null
+export function OAuthButtons({ providers: rawProviders }: { providers?: OAuthProviderInput[] }) {
+  const providers = normalizeProviders(rawProviders)
+  if (providers.length === 0) return null
   return (
     <div className="mt-4" data-testid="oauth-providers">
       <div className="relative my-3">
