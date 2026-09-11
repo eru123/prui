@@ -15,6 +15,16 @@ const ResourcesDemoPage = lazy(() => import("./pages/ResourcesDemo").then((m) =>
 const DesignerPage = lazy(() => import("./pages/Designer").then((m) => ({ default: m.DesignerPage })))
 const NotFoundPage = lazy(() => import("./NotFound").then((m) => ({ default: m.NotFoundPage })))
 const ProvenancePage = lazy(() => import("./pages/Provenance").then((m) => ({ default: m.ProvenancePage })))
+const ButtonDoc = lazy(() => import("./pages/docs/ButtonDoc").then((m) => ({ default: m.ButtonDoc })))
+const InputDoc = lazy(() => import("./pages/docs/InputDoc").then((m) => ({ default: m.InputDoc })))
+const ModalDoc = lazy(() => import("./pages/docs/ModalDoc").then((m) => ({ default: m.ModalDoc })))
+const SelectDoc = lazy(() => import("./pages/docs/SelectDoc").then((m) => ({ default: m.SelectDoc })))
+const SwitchDoc = lazy(() => import("./pages/docs/SwitchDoc").then((m) => ({ default: m.SwitchDoc })))
+const TabsDoc = lazy(() => import("./pages/docs/TabsDoc").then((m) => ({ default: m.TabsDoc })))
+const BadgeDoc = lazy(() => import("./pages/docs/BadgeDoc").then((m) => ({ default: m.BadgeDoc })))
+const DropdownDoc = lazy(() => import("./pages/docs/DropdownDoc").then((m) => ({ default: m.DropdownDoc })))
+const AvatarDoc = lazy(() => import("./pages/docs/AvatarDoc").then((m) => ({ default: m.AvatarDoc })))
+const DataTableDoc = lazy(() => import("./pages/docs/DataTableDoc").then((m) => ({ default: m.DataTableDoc })))
 
 function Loading() {
   return (
@@ -35,6 +45,16 @@ export function SiteApp() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/components" element={<ComponentsPage />} />
+          <Route path="/components/button" element={<ButtonDoc />} />
+          <Route path="/components/input" element={<InputDoc />} />
+          <Route path="/components/modal" element={<ModalDoc />} />
+          <Route path="/components/select" element={<SelectDoc />} />
+          <Route path="/components/switch" element={<SwitchDoc />} />
+          <Route path="/components/tabs" element={<TabsDoc />} />
+          <Route path="/components/badge" element={<BadgeDoc />} />
+          <Route path="/components/dropdown" element={<DropdownDoc />} />
+          <Route path="/components/avatar" element={<AvatarDoc />} />
+          <Route path="/components/data-table" element={<DataTableDoc />} />
           <Route path="/layouts" element={<LayoutsPage />} />
           <Route path="/theming" element={<ThemingPage />} />
           <Route path="/guides" element={<GuidesPage />} />

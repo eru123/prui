@@ -43,6 +43,9 @@ export function ComponentsPage() {
         table and the snippet — configure it, copy it.
       </p>
 
+      <div className="mb-2 text-right">
+          <a href="/components/button" className="font-mono text-xs text-[var(--prui-brand)] hover:underline">in-depth docs →</a>
+        </div>
       <Playground title="Button" meta={buttonPropsMeta} render={(v) => (
         <Button variant={v.variant as never} size={v.size as never} loading={Boolean(v.loading)} disabled={Boolean(v.disabled)}>
           {String(v.children || "Save changes")}

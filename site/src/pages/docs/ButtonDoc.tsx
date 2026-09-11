@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ComponentDoc, Button } from "../components/ComponentDoc"
+import { ComponentDoc, Button } from "../../components/ComponentDoc"
 
 export function ButtonDoc() {
   const [loading, setLoading] = React.useState(false)

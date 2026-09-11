@@ -36,6 +36,7 @@ import {
   confirmModal,
 } from "prui/core"
 import { CopyButton } from "../components/Playground"
+import { DataTable, DataTablePagination, DataTableToolbar, FacetedFilter, DateRangeFilter, NumberRangeFilter } from "prui/data-table"
 
 /** In-depth per-component documentation page scaffold. */
 export function ComponentDoc({
@@ -153,4 +154,5 @@ export {
   Switch, Tabs, TabsList, TabsTrigger, TabsContent, Badge, Card, CardHeader, CardTitle,
   CardDescription, CardContent, CardFooter, Avatar, Separator, Dropdown, Dialog, DialogContent,
   DialogHeader, DialogTitle, DialogDescription, DialogFooter, ScrollArea, Modal, confirmModal,
+  DataTable, DataTablePagination, DataTableToolbar, FacetedFilter, DateRangeFilter, NumberRangeFilter,
 }

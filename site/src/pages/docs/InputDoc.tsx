@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ComponentDoc, Input, Textarea, Label, Button } from "../components/ComponentDoc"
+import { ComponentDoc, Input, Textarea, Label } from "../../components/ComponentDoc"
 
 export function InputDoc() {
   const [value, setValue] = React.useState("")
