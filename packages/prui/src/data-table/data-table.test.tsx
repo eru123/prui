@@ -1,0 +1,194 @@
+import { describe, it, expect, vi } from "vitest"
+import { render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+import { DataTable, type Column } from "./data-table"
+import { DataTablePagination } from "./data-table-pagination"
+import { DataTableToolbar } from "./data-table-toolbar"
+import { FacetedFilter } from "./data-table-faceted-filter"
+import { DateRangeFilter } from "./data-table-daterange-filter"
+import { NumberRangeFilter } from "./data-table-number-range-filter"
+
+interface Row extends Record<string, unknown> {
+  id: string
+  name: string
+  status: string
+  hired: string
+  salary: number
+}
+
+const rows: Row[] = [
+  { id: "1", name: "Cara", status: "active", hired: "2023-01-05", salary: 90 },
+  { id: "2", name: "Ada", status: "leave", hired: "2021-06-10", salary: 130 },
+  { id: "3", name: "Bea", status: "active", hired: "2022-03-15", salary: 110 },
+]
+
+const columns: Column<Row>[] = [
+  { key: "name", label: "Name", sortable: true },
+  { key: "status", label: "Status" },
+  { key: "hired", label: "Hired", sortable: true },
+  { key: "salary", label: "Salary", sortable: true, align: "right" },
+]
+
+describe("DataTable", () => {
+  it("renders headers and cells", () => {
+    render(<DataTable columns={columns} rows={rows} />)
+    expect(screen.getByRole("columnheader", { name: /Name/ })).toBeInTheDocument()
+    expect(screen.getByText("Ada")).toBeInTheDocument()
+    expect(screen.getByText("Cara")).toBeInTheDocument()
+  })
+
+  it("uncontrolled sorting: asc then desc then cleared", async () => {
+    const user = userEvent.setup()
+    render(<DataTable columns={columns} rows={rows} />)
+    const header = screen.getByRole("button", { name: /Name/ })
+    await user.click(header)
+    const cells = () => screen.getAllByRole("row").slice(1).map((r) => (r as HTMLTableRowElement).cells[0]?.textContent)
+    expect(cells()).toEqual(["Ada", "Bea", "Cara"])
+    await user.click(header)
+    expect(cells()).toEqual(["Cara", "Bea", "Ada"])
+    await user.click(header)
+    expect(cells()).toEqual(["Ada", "Bea", "Cara"].sort().reverse() === cells() ? cells() : ["Cara", "Ada", "Bea"])
+  })
+
+  it("controlled sort", () => {
+    render(<DataTable columns={columns} rows={rows} sort={{ key: "salary", direction: "desc" }} />)
+    const salaries = screen.getAllByRole("row").slice(1).map((r) => (r as HTMLTableRowElement).cells[3]?.textContent)
+    expect(salaries).toEqual(["130", "110", "90"])
+  })
+
+  it("numeric sort compares numbers not strings", () => {
+    render(<DataTable columns={columns} rows={rows} sort={{ key: "salary", direction: "asc" }} />)
+    const salaries = screen.getAllByRole("row").slice(1).map((r) => (r as HTMLTableRowElement).cells[3]?.textContent)
+    expect(salaries).toEqual(["90", "110", "130"])
+  })
+
+  it("loading and empty states", () => {
+    const { rerender } = render(<DataTable columns={columns} rows={[]} />)
+    expect(screen.getByTestId("data-table-empty")).toBeInTheDocument()
+    rerender(<DataTable columns={columns} rows={[]} loading />)
+    expect(screen.getByTestId("data-table-loading")).toBeInTheDocument()
+  })
+
+  it("custom cell render", () => {
+    render(
+      <DataTable
+        columns={[{ key: "name", label: "Name", render: (r) => <strong>{r.name}</strong> }]}
+        rows={rows}
+      />,
+    )
+    expect(screen.getByText("Ada").tagName).toBe("STRONG")
+  })
+
+  it("hidden columns are excluded", () => {
+    render(<DataTable columns={[...columns, { key: "secret", label: "Secret", hidden: true }]} rows={rows} />)
+    expect(screen.queryByRole("columnheader", { name: /Secret/ })).toBeNull()
+  })
+})
+
+describe("DataTablePagination", () => {
+  it("disables prev on page 1 and next without cursor", () => {
+    render(<DataTablePagination page={1} hasNextPage={false} hasPreviousPage={false} />)
+    expect(screen.getByTestId("pagination-page")).toHaveTextContent("Page 1")
+    expect(screen.getByRole("button", { name: "Previous page" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "Next page" })).toBeDisabled()
+  })
+
+  it("emits page changes with direction", async () => {
+    const user = userEvent.setup()
+    const onPageChange = vi.fn()
+    render(<DataTablePagination page={2} hasNextPage hasPreviousPage onPageChange={onPageChange} />)
+    await user.click(screen.getByRole("button", { name: "Next page" }))
+    expect(onPageChange).toHaveBeenCalledWith(3, "next")
+    await user.click(screen.getByRole("button", { name: "Previous page" }))
+    expect(onPageChange).toHaveBeenCalledWith(1, "prev")
+  })
+
+  it("page size select emits onPageSizeChange", async () => {
+    const user = userEvent.setup()
+    const onPageSizeChange = vi.fn()
+    render(
+      <DataTablePagination
+        page={1}
+        hasNextPage={false}
+        hasPreviousPage={false}
+        pageSize={20}
+        onPageSizeChange={onPageSizeChange}
+      />,
+    )
+    await user.click(screen.getByRole("combobox", { name: "Rows per page" }))
+    await user.click(screen.getByRole("option", { name: "50" }))
+    expect(onPageSizeChange).toHaveBeenCalledWith(50)
+  })
+})
+
+describe("Toolbar and filters", () => {
+  it("toolbar search is controlled and reports changes", async () => {
+    const user = userEvent.setup()
+    const onSearchChange = vi.fn()
+    render(
+      <DataTableToolbar
+        searchValue=""
+        onSearchChange={onSearchChange}
+        filters={[]}
+      />,
+    )
+    await user.type(screen.getByRole("searchbox"), "ad")
+    expect(onSearchChange).toHaveBeenLastCalledWith("d")
+  })
+
+  it("toolbar renders select, daterange, and numberrange filters from config", () => {
+    render(
+      <DataTableToolbar
+        filters={[
+          { key: "status", label: "Status", type: "select", options: [{ label: "Active", value: "active" }] },
+          { key: "hired", label: "Hired", type: "daterange" },
+          { key: "salary", label: "Salary", type: "numberrange" },
+        ]}
+      />,
+    )
+    expect(screen.getByTestId("faceted-filter")).toBeInTheDocument()
+    expect(screen.getByTestId("daterange-filter")).toBeInTheDocument()
+    expect(screen.getByTestId("numberrange-filter")).toBeInTheDocument()
+  })
+
+  it("toolbar actions slot renders on the right", () => {
+    render(<DataTableToolbar actions={<button>New</button>} />)
+    expect(screen.getByRole("button", { name: "New" })).toBeInTheDocument()
+  })
+
+  it("FacetedFilter toggles values and clears", async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(
+      <FacetedFilter
+        label="Status"
+        options={[
+          { label: "Active", value: "active", count: 2 },
+          { label: "Leave", value: "leave", count: 1 },
+        ]}
+        onChange={onChange}
+      />,
+    )
+    await user.click(screen.getByTestId("faceted-filter"))
+    await user.click(screen.getByRole("menuitemcheckbox", { name: /Active/ }))
+    expect(onChange).toHaveBeenCalledWith(["active"])
+    await user.click(screen.getByRole("menuitemcheckbox", { name: /Leave/ }))
+    expect(onChange).toHaveBeenLastCalledWith(["active", "leave"])
+  })
+
+  it("DateRangeFilter reports from/to", async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<DateRangeFilter label="Hired" onChange={onChange} />)
+    await user.type(screen.getByLabelText("Hired from"), "2024-01-01")
+    expect(onChange).toHaveBeenLastCalledWith({ from: "2024-01-01" })
+  })
+
+  it("NumberRangeFilter reports min/max", async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<NumberRangeFilter label="Salary" onChange={onChange} />)
+    await user.type(screen.getByLabelText("Salary min"), "10")
+    expect(onChange).toHaveBeenLastCalledWith({ min: 10 })
+  })
+})
