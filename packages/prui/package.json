@@ -1,10 +1,9 @@
 {
-  "name": "prui",
+  "name": "@eru123/prui",
   "version": "0.1.0",
   "description": "PRUI component system: primitives, app-layer super-components, pages, and themes",
   "type": "module",
   "license": "UNLICENSED",
-  "private": true,
   "sideEffects": [
     "**/*.css"
   ],
@@ -70,5 +69,12 @@
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.2.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eru123/prui.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }

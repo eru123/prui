@@ -3,7 +3,21 @@
   "compilerOptions": {
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client"]
+    "types": [
+      "vite/client"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "prui": [
+        "../packages/prui/src/index.ts"
+      ],
+      "prui/*": [
+        "../packages/prui/src/*/index.ts"
+      ]
+    }
   },
-  "include": ["src", "vite.config.ts"]
+  "include": [
+    "src",
+    "vite.config.ts"
+  ]
 }

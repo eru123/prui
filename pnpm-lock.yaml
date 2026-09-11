@@ -75,12 +75,12 @@ importers:
 
   site:
     dependencies:
+      '@eru123/prui':
+        specifier: workspace:*
+        version: link:../packages/prui
       lucide-react:
         specifier: ^0.525.0
         version: 0.525.0(react@19.3.0)
-      prui:
-        specifier: workspace:*
-        version: link:../packages/prui
       react:
         specifier: ^19.1.0
         version: 19.3.0

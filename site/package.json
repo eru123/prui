@@ -10,8 +10,8 @@
     "typecheck": "echo \"site: no separate typecheck (built with vite)\""
   },
   "dependencies": {
+    "@eru123/prui": "workspace:*",
     "lucide-react": "^0.525.0",
-    "prui": "workspace:*",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0"
