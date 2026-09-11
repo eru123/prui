@@ -124,14 +124,14 @@
         <p>Add the GitHub Packages auth to your project or user <code>.npmrc</code>. One token covers every project in your organization.</p>
         <div class="term">
           <div class="term-bar"><i></i><i></i><i></i><span>.npmrc</span></div>
-          <pre>@skiddph:registry=https://npm.pkg.github.com
+          <pre>registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}</pre>
         </div>
 
         <h2 id="install">2. Install</h2>
         <div class="term">
           <div class="term-bar"><i></i><i></i><i></i><span>sh</span></div>
-          <pre>pnpm add @skiddph/prui @skiddph/prui-theme
+          <pre>pnpm add prui
 <span class="c-c"># peers you likely already have</span>
 pnpm add react react-dom lucide-react react-router-dom</pre>
         </div>
@@ -139,8 +139,8 @@ pnpm add react react-dom lucide-react react-router-dom</pre>
         <h2 id="wire-the-shell">3. Wire the shell</h2>
         <div class="term">
           <div class="term-bar"><i></i><i></i><i></i><span>main.tsx</span></div>
-          <pre><span class="c-f">import</span> <span class="c-s">'@skiddph/prui-theme/control'</span>  <span class="c-c">// token theme, one line</span>
-<span class="c-f">import</span> { AppShell } <span class="c-f">from</span> <span class="c-s">'@skiddph/prui/shell'</span>
+          <pre><span class="c-f">import</span> <span class="c-s">'prui/theme/control'</span>  <span class="c-c">// token theme, one line</span>
+<span class="c-f">import</span> { AppShell } <span class="c-f">from</span> <span class="c-s">'prui/shell'</span>
 <span class="c-f">import</span> { nav } <span class="c-f">from</span> <span class="c-s">'./nav'</span>
 
 createRoot(root).render(
@@ -161,8 +161,8 @@ createRoot(root).render(
         <h2 id="updating">Updating</h2>
         <div class="term">
           <div class="term-bar"><i></i><i></i><i></i><span>sh</span></div>
-          <pre>pnpm update @skiddph/prui        <span class="c-c"># semver-compatible updates</span>
-pnpm why @skiddph/prui           <span class="c-c"># verify what depends on it</span></pre>
+          <pre>pnpm update prui        <span class="c-c"># semver-compatible updates</span>
+pnpm why prui           <span class="c-c"># verify what depends on it</span></pre>
         </div>
 
         <div class="pager">
