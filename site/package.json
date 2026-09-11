@@ -1,0 +1,9 @@
+{
+  "name": "prui-site",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"site placeholder: no build yet\"",
+    "typecheck": "echo \"site placeholder: no typecheck yet\""
+  }
+}
