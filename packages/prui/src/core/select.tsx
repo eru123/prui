@@ -46,9 +46,11 @@ export const Select = ({
   placeholder = "Select...",
   disabled,
   name,
+  id,
   onChange,
   onOpenChange,
   children,
+  ...rest
 }: SelectProps) => {
   const [uncontrolled, setUncontrolled] = React.useState(defaultValue ?? "")
   const [open, setOpen] = React.useState(false)
@@ -71,7 +73,7 @@ export const Select = ({
       {name ? <input type="hidden" name={name} value={value} /> : null}
       {children ?? (
         <>
-          <SelectTrigger disabled={disabled}>
+          <SelectTrigger disabled={disabled} id={id} {...rest}>
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>

@@ -12,8 +12,8 @@ import { ChevronDown, Menu, Search, X } from "lucide-react"
 import { cn } from "../core/cn"
 import { Dropdown } from "../core/dropdown"
 import { Button } from "../core/button"
-import { applyTheme, readPersistedTheme, PRUI_THEMES } from "../theme"
-import type { AppliedTheme, ThemeName } from "../theme"
+import { applyTheme, readPersistedTheme, resolveThemeName, themeMode, PRUI_THEMES } from "../theme"
+import type { AppliedTheme, ThemeDefault } from "../theme"
 import type { PropsMeta } from "../core/props-meta"
 import { AutoPages } from "./auto-pages"
 import type { PageSetName } from "./auto-pages"
@@ -21,9 +21,14 @@ import type { PageSetName } from "./auto-pages"
 /**
  * <App> is the whole shell: responsive sidebar with collapsible nav groups and
  * mobile drawer plus scroll lock, sticky header with brand and theme switch,
- * built-in command palette on the "/" hotkey, and router wiring (BrowserRouter
- * by default, memory mode for embedded use).
+ * built-in command palette on the "/" hotkey, optional session-timeout flow,
+ * and router wiring (BrowserRouter by default, memory mode for embedded use).
  */
+
+/* SessionTimeout is opt-in auth flow; keep it out of the shell's static graph */
+const SessionTimeout = React.lazy(() =>
+  import("./session-timeout").then((m) => ({ default: m.SessionTimeout })),
+)
 
 export type NavIconType = React.ComponentType<{ className?: string }>
 
@@ -52,17 +57,32 @@ export interface SearchConfig {
 }
 
 export interface ThemeConfig {
-  default?: ThemeName
+  /** Named theme or the 'dark' / 'light' shorthand. Default 'control'. */
+  default?: ThemeDefault
   persist?: boolean
 }
 
 export interface SidebarConfig {
   /** Width in px, default 240. */
   width?: number
+  /** Whether the mobile hamburger/drawer is available. Default true. */
+  collapsible?: boolean
+  /** Whether the mobile drawer starts open. Default false. */
   defaultOpen?: boolean
 }
 
-export type RouterMode = "browser" | "memory"
+/** Session-timeout flow config (HRLabs extraction). */
+export interface AuthConfig {
+  /** Idle minutes before logout. Default 15. */
+  sessionTimeout?: number
+  /** Idle minutes before the countdown warning. Default 2. */
+  warningTime?: number
+  /** Called on expiry or early logout; default navigates to loginPath. */
+  onTimeout?: () => void
+  loginPath?: string
+}
+
+export type RouterMode = "browser" | "memory" | "react-router"
 
 export interface AppProps {
   brand?: BrandConfig
@@ -70,6 +90,8 @@ export interface AppProps {
   search?: boolean | SearchConfig
   theme?: boolean | ThemeConfig
   sidebar?: SidebarConfig
+  /** Session-timeout flow; omit or false to disable. */
+  auth?: boolean | AuthConfig
   router?: RouterMode
   /** Extra header content. */
   header?: React.ReactNode
@@ -93,10 +115,12 @@ export function useThemeState(config?: boolean | ThemeConfig) {
   const enabled = config !== false
   const cfg: ThemeConfig = typeof config === "object" ? config : {}
   const persist = cfg.persist !== false
+  const defaultTheme = resolveThemeName(cfg.default ?? "control")
+  const defaultMode = themeMode(defaultTheme)
 
   const [state, setState] = React.useState<AppliedTheme>(() => {
     const persisted = persist ? readPersistedTheme() : null
-    return persisted ?? { theme: cfg.default ?? "control", mode: "dark" }
+    return persisted ?? { theme: defaultTheme, mode: defaultMode }
   })
 
   const setTheme = React.useCallback(
@@ -370,6 +394,7 @@ export function AppShell(props: AppProps) {
     nav = [],
     search = true,
     theme = true,
+    auth = false,
     sidebar: sidebarCfg = {},
     header,
     pages,
@@ -381,10 +406,21 @@ export function AppShell(props: AppProps) {
   const searchEnabled = searchCfg.enabled !== false
   const hotkey = searchCfg.hotkey ?? "/"
 
-  const [drawerOpen, setDrawerOpen] = React.useState(false)
+  const collapsible = sidebarCfg.collapsible !== false
+  const [drawerOpen, setDrawerOpen] = React.useState(sidebarCfg.defaultOpen === true)
   const [paletteOpen, setPaletteOpen] = React.useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+
+  // memo keeps the handleTimeout useCallback deps stable across renders
+  const authCfg = React.useMemo<AuthConfig | null>(
+    () => (auth === false ? null : auth === true ? {} : auth),
+    [auth],
+  )
+  const handleTimeout = React.useCallback(() => {
+    if (authCfg?.onTimeout) authCfg.onTimeout()
+    else navigate(authCfg?.loginPath ?? "/login")
+  }, [authCfg, navigate])
 
   const paletteEntries: PaletteEntry[] = React.useMemo(() => {
     const entries: PaletteEntry[] = []
@@ -417,9 +453,13 @@ export function AppShell(props: AppProps) {
     return () => document.removeEventListener("keydown", onKey)
   }, [hotkey, searchEnabled])
 
-  // close the drawer on route change
+  // close the drawer on route change (not on mount — defaultOpen must survive)
+  const prevPath = React.useRef(location.pathname)
   React.useEffect(() => {
-    setDrawerOpen(false)
+    if (prevPath.current !== location.pathname) {
+      prevPath.current = location.pathname
+      setDrawerOpen(false)
+    }
   }, [location.pathname])
 
   // scroll lock while the drawer is open
@@ -476,22 +516,23 @@ export function AppShell(props: AppProps) {
           </aside>
         </div>
       ) : null}
-
       <div className="flex min-w-0 flex-1 flex-col md:ml-[var(--prui-sidebar-width)]" style={{ ["--prui-sidebar-width" as string]: `${width}px` }}>
         <header
           data-testid="app-header"
           className="sticky top-0 z-30 grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:px-6"
         >
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Open navigation"
-            className="md:hidden"
-            onClick={() => setDrawerOpen(true)}
-            data-testid="drawer-toggle"
-          >
-            <Menu className="h-4 w-4" aria-hidden />
-          </Button>
+          {collapsible ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Open navigation"
+              className="md:hidden"
+              onClick={() => setDrawerOpen(true)}
+              data-testid="drawer-toggle"
+            >
+              <Menu className="h-4 w-4" aria-hidden />
+            </Button>
+          ) : null}
           <div className="min-w-0 justify-self-start">
             <BrandMark brand={brand} />
           </div>
@@ -523,6 +564,16 @@ export function AppShell(props: AppProps) {
         </main>
       </div>
 
+      {authCfg ? (
+        <React.Suspense fallback={null}>
+          <SessionTimeout
+            timeout={authCfg.sessionTimeout}
+            warningTime={authCfg.warningTime}
+            onTimeout={handleTimeout}
+          />
+        </React.Suspense>
+      ) : null}
+
       {searchEnabled ? (
         <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} entries={paletteEntries} placeholder={searchCfg.placeholder} onNavigate={navigate} />
       ) : null}
@@ -532,6 +583,7 @@ export function AppShell(props: AppProps) {
 
 export function App(props: AppProps) {
   const { router = "browser", initialEntries } = props
+  // "react-router" is an accepted alias of "browser"
   const Router = router === "memory" ? MemoryRouter : BrowserRouter
   return (
     <Router initialEntries={initialEntries}>
@@ -546,10 +598,12 @@ export const appPropsMeta: PropsMeta = {
     { name: "brand", type: "{ name, mark?, href? }", default: "undefined", control: "object" },
     { name: "nav", type: "NavItem[]", default: "[]", control: "object" },
     { name: "search", type: "boolean | { enabled?, hotkey?, placeholder? }", default: "true", control: "boolean" },
-    { name: "theme", type: "boolean | { default?, persist? }", default: "true", control: "boolean" },
-    { name: "sidebar", type: "{ width?, defaultOpen? }", default: "{}", control: "object" },
-    { name: "router", type: "'browser' | 'memory'", default: "'browser'", control: "select", options: ["browser", "memory"] },
+    { name: "theme", type: "boolean | { default?: ThemeName | 'dark' | 'light', persist? }", default: "true", control: "boolean" },
+    { name: "auth", type: "boolean | { sessionTimeout?, warningTime?, onTimeout?, loginPath? }", default: "false", control: "boolean" },
+    { name: "sidebar", type: "{ width?, collapsible?, defaultOpen? }", default: "{}", control: "object" },
+    { name: "router", type: "'browser' | 'memory'", default: "'browser'", control: "select", options: ["browser", "memory", "react-router"] },
     { name: "initialEntries", type: "string[]", default: "undefined", control: "object" },
+    { name: "pages", type: "'auth' | 'utility' | 'auth+utility'", default: "undefined", control: "select", options: ["auth", "utility", "auth+utility"] },
     { name: "header", type: "ReactNode", default: null, control: "none" },
     { name: "children", type: "ReactNode", default: "Outlet", control: "none" },
   ],

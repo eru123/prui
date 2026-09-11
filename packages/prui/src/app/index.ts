@@ -15,6 +15,7 @@ export {
   type BrandConfig,
   type SearchConfig,
   type ThemeConfig,
+  type AuthConfig,
   type SidebarConfig,
   type RouterMode,
   type PaletteEntry,
@@ -27,6 +28,7 @@ export {
   type ResourceColumn,
   type ResourceRow,
   type ResourceAction,
+  type ResourceFilterOptions,
   type ListQuery,
   type ListResult,
 } from "./resource"
@@ -42,3 +44,15 @@ export {
 
 export { StatRow, statRowPropsMeta, type StatRowProps, type StatItem } from "./stat-row"
 export { Settings, settingsPropsMeta, type SettingsProps, type SettingsSection, type SettingsField } from "./settings"
+
+export {
+  SessionTimeout,
+  sessionTimeoutPropsMeta,
+  type SessionTimeoutProps,
+} from "./session-timeout"
+
+export {
+  AuthShell,
+  authShellPropsMeta,
+  type AuthShellProps,
+} from "./auth-shell"

@@ -10,6 +10,19 @@ export type ThemeName = (typeof PRUI_THEMES)[number]
 
 export type ThemeMode = "light" | "dark"
 
+/**
+ * A theme default may be a named theme or the shorthand 'dark' / 'light',
+ * which resolve to the default dark theme (control) and the default light
+ * theme (daylight).
+ */
+export type ThemeDefault = ThemeName | "dark" | "light"
+
+export function resolveThemeName(name: ThemeDefault): ThemeName {
+  if (name === "dark") return "control"
+  if (name === "light") return "daylight"
+  return name
+}
+
 const DARK_THEMES: readonly ThemeName[] = ["control", "workshop", "ember"]
 const LIGHT_THEMES: readonly ThemeName[] = ["daylight"]
 
@@ -26,8 +39,8 @@ export function themeMode(name: ThemeName): ThemeMode {
 }
 
 export interface ApplyThemeOptions {
-  /** Theme name, defaults to control. */
-  theme?: ThemeName
+  /** Theme name (or 'dark'/'light' shorthand), defaults to control. */
+  theme?: ThemeDefault
   /** Force a mode; omit to use the theme's natural mode. */
   mode?: ThemeMode
   /** Element to class, defaults to document.documentElement. */
@@ -56,7 +69,7 @@ function clearThemeClasses(el: HTMLElement): void {
 }
 
 export function applyTheme(options: ApplyThemeOptions = {}): AppliedTheme {
-  const theme = options.theme ?? "control"
+  const theme = resolveThemeName(options.theme ?? "control")
   const mode = options.mode ?? themeMode(theme)
   const el =
     options.target ??
@@ -103,7 +116,7 @@ export const themeMeta = {
   name: "applyTheme",
   description: "Apply a named PRUI theme and persist the choice.",
   props: [
-    { name: "theme", type: "'control' | 'workshop' | 'ember' | 'daylight'", default: "'control'", control: "select" },
+    { name: "theme", type: "'control' | 'workshop' | 'ember' | 'daylight' | 'dark' | 'light'", default: "'control'", control: "select" },
     { name: "mode", type: "'light' | 'dark'", default: "theme natural mode", control: "select" },
     { name: "target", type: "HTMLElement", default: "document.documentElement", control: "none" },
     { name: "storageKey", type: "string | null", default: "'prui:theme'", control: "text" },
