@@ -1,5 +1,5 @@
 import type { NavItem } from "prui/app"
-import { BookOpenIcon, PaletteIcon, LayersIcon, LayoutTemplateIcon } from "./nav-icons"
+import { BookOpenIcon, PaletteIcon, LayersIcon } from "./nav-icons"
 
 export const nav: NavItem[] = [
   { label: "Introduction", href: "/", icon: BookOpenIcon },
@@ -11,12 +11,12 @@ export const nav: NavItem[] = [
       { label: "Agents", href: "/agents" },
     ],
   },
-  { label: "Layouts", href: "/layouts", icon: LayoutTemplateIcon },
   {
     label: "Appearance",
     icon: PaletteIcon,
     items: [
       { label: "Icons", href: "/icons" },
+      { label: "Layouts", href: "/layouts" },
       { label: "Theming", href: "/theming" },
       { label: "Theme builder", href: "/theme-builder" },
     ],
