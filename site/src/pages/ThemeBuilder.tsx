@@ -171,26 +171,24 @@ function decodeTokens(raw: string | null): BuilderTokens {
 
 function ColorRow({ label, token, value, onChange }: { label: string; token: string; value: string; onChange: (v: string) => void }) {
   return (
-    <div className="flex items-center justify-between gap-2 py-1.5">
-      <div className="min-w-0">
+    <div className="flex items-center gap-2 py-1.5">
+      <input
+        type="color"
+        value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : "#000000"}
+        onChange={(e) => onChange(e.target.value)}
+        aria-label={`${token} color picker`}
+        className="h-7 w-9 shrink-0 cursor-pointer rounded border border-[var(--prui-line)] bg-transparent"
+      />
+      <div className="min-w-0 flex-1">
         <div className="font-mono text-[11px] text-[var(--prui-fg)]">{token}</div>
         <div className="text-[10px] text-[var(--prui-dim)]">{label}</div>
       </div>
-      <div className="flex items-center gap-2">
-        <Input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label={`${token} value`}
-          className="h-7 w-24 font-mono text-[11px]"
-        />
-        <input
-          type="color"
-          value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : "#000000"}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label={`${token} color picker`}
-          className="h-7 w-9 cursor-pointer rounded border border-[var(--prui-line)] bg-transparent"
-        />
-      </div>
+      <Input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        aria-label={`${token} value`}
+        className="h-7 w-24 shrink-0 font-mono text-[11px]"
+      />
     </div>
   )
 }
