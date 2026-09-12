@@ -49,12 +49,18 @@ const toastStyles: Record<ToastVariant, { icon: typeof Info; accent: string }> =
 let nextId = 1
 let entries: ToastEntry[] = []
 const subscribers = new Set<(e: ToastEntry[]) => void>()
+const autoDismiss = new Map<number, ReturnType<typeof setTimeout>>()
 
 function publish(): void {
   for (const s of subscribers) s(entries)
 }
 
 function dismissToast(id: number): void {
+  const timer = autoDismiss.get(id)
+  if (timer) {
+    clearTimeout(timer)
+    autoDismiss.delete(id)
+  }
   const entry = entries.find((e) => e.id === id)
   entries = entries.filter((e) => e.id !== id)
   if (entry) entry.onDismiss?.()
@@ -68,7 +74,13 @@ export function toast(options: ToastOptions): ToastHandle {
   publish()
   const duration = options.duration ?? 5000
   if (duration > 0 && typeof setTimeout === "function") {
-    setTimeout(() => dismissToast(id), duration)
+    autoDismiss.set(
+      id,
+      setTimeout(() => {
+        autoDismiss.delete(id)
+        dismissToast(id)
+      }, duration),
+    )
   }
   return { dismiss: () => dismissToast(id) }
 }
@@ -77,6 +89,8 @@ export function toast(options: ToastOptions): ToastHandle {
 export function dismissAllToasts(): void {
   const prev = entries
   entries = []
+  for (const t of autoDismiss.values()) clearTimeout(t)
+  autoDismiss.clear()
   for (const e of prev) e.onDismiss?.()
   publish()
 }

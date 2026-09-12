@@ -99,11 +99,24 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
   const contentRef = React.useRef<HTMLDivElement>(null)
   const reducedMotion = useReducedMotion()
 
+  // shake timer is tracked and cleared so a blocked-close shake can never
+  // fire after the modal (or the test environment) is gone
+  const shakeTimerRef = React.useRef<number | null>(null)
   const shake = () => {
     if (reducedMotion) return
     setIsShaking(true)
-    setTimeout(() => setIsShaking(false), 500)
+    if (shakeTimerRef.current != null) window.clearTimeout(shakeTimerRef.current)
+    shakeTimerRef.current = window.setTimeout(() => {
+      shakeTimerRef.current = null
+      setIsShaking(false)
+    }, 500)
   }
+  React.useEffect(
+    () => () => {
+      if (shakeTimerRef.current != null) window.clearTimeout(shakeTimerRef.current)
+    },
+    [],
+  )
 
   // open/close with animation, body scroll lock (icanhelp behavior);
   // reduced motion skips the choreography entirely
