@@ -22,17 +22,44 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   size?: InputSize
   /** Visual variant: outlined (default) or filled. */
   variant?: "default" | "filled"
+  /** Icon rendered inside the field's leading edge. */
+  icon?: React.ReactNode
+  /** Icon rendered inside the field's trailing edge. */
+  trailingIcon?: React.ReactNode
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, style, type = "text", size = "md", variant = "default", bg, fg, radius, texture, textureColor, elevation, ...props }, ref) => {
+  ({ className, style, type = "text", size = "md", variant = "default", icon, trailingIcon, bg, fg, radius, texture, textureColor, elevation, ...props }, ref) => {
     const surface = resolveSurface({ bg, fg, radius, texture, textureColor, elevation })
     const merged = withSurface(
-      cn(fieldBase, inputSizeClasses[size], variant === "filled" && "bg-[var(--prui-s-bg,var(--prui-raise))] border-transparent", className),
+      cn(
+        fieldBase,
+        inputSizeClasses[size],
+        variant === "filled" && "bg-[var(--prui-s-bg,var(--prui-raise))] border-transparent",
+        icon && "pl-9",
+        trailingIcon && "pr-9",
+        className,
+      ),
       style,
       surface,
     )
-    return <input ref={ref} type={type} className={merged.className} style={merged.style} {...props} />
+    const input = <input ref={ref} type={type} className={merged.className} style={merged.style} {...props} />
+    if (!icon && !trailingIcon) return input
+    return (
+      <span className="relative inline-flex w-full">
+        {icon ? (
+          <span aria-hidden className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-[var(--prui-dim)] [&>svg]:h-4 [&>svg]:w-4">
+            {icon}
+          </span>
+        ) : null}
+        {input}
+        {trailingIcon ? (
+          <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center text-[var(--prui-dim)] [&>svg]:h-4 [&>svg]:w-4">
+            {trailingIcon}
+          </span>
+        ) : null}
+      </span>
+    )
   },
 )
 Input.displayName = "Input"
@@ -43,6 +70,8 @@ export const inputPropsMeta: PropsMeta = {
     { name: "type", type: "string", default: "'text'", control: "select", options: ["text", "password", "email", "number", "search"] },
     { name: "size", type: "'sm' | 'md' | 'lg'", default: "'md'", control: "select", options: ["sm", "md", "lg"] },
     { name: "variant", type: "'default' | 'filled'", default: "'default'", control: "select", options: ["default", "filled"] },
+    { name: "icon", type: "ReactNode", default: "undefined", control: "none", description: "Icon inside the leading edge (padding adjusts)." },
+    { name: "trailingIcon", type: "ReactNode", default: "undefined", control: "none", description: "Icon inside the trailing edge." },
     { name: "value", type: "string", default: null, control: "text" },
     { name: "placeholder", type: "string", default: "undefined", control: "text" },
     { name: "disabled", type: "boolean", default: "false", control: "boolean" },
@@ -57,7 +86,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     <textarea
       ref={ref}
       style={style}
-      className={cn(fieldBase, "h-auto min-h-20 py-2 resize-y", className)}
+      className={cn(fieldBase, "h-auto min-h-20 resize-y px-3 py-2", className)}
       {...props}
     />
   ),
