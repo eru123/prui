@@ -31,6 +31,10 @@
       "types": "./dist/forms/index.d.ts",
       "import": "./dist/forms.js"
     },
+    "./i18n": {
+      "types": "./dist/i18n/index.d.ts",
+      "import": "./dist/i18n.js"
+    },
     "./pages": {
       "types": "./dist/pages/index.d.ts",
       "import": "./dist/pages.js"
@@ -59,6 +63,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/cli": "^4.3.3",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -67,6 +72,7 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.5.0",
+    "axe-core": "^4.13.0",
     "jsdom": "^26.1.0",
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
@@ -75,7 +81,8 @@
     "typescript": "^5.9.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vitest-axe": "^0.1.0"
   },
   "repository": {
     "type": "git",

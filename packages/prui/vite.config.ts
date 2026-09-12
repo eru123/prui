@@ -11,7 +11,7 @@ const r = (p: string) => resolve(fileURLToPath(new URL(".", import.meta.url)), p
 const coreDir = r("src/core")
 const coreEntries = Object.fromEntries(
   readdirSync(coreDir)
-    .filter((f) => /^(?!index|core\.test|test).*\.(ts|tsx)$/.test(f))
+    .filter((f) => /^(?!index).*\.(ts|tsx)$/.test(f) && !f.includes(".test."))
     .map((f) => {
       const name = f.replace(/\.(ts|tsx)$/, "")
       return [`core/${name}`, resolve(coreDir, f)]
@@ -35,6 +35,7 @@ export default defineConfig({
         ...coreEntries,
         app: r("src/app/index.ts"),
         forms: r("src/forms/index.ts"),
+        i18n: r("src/i18n/index.tsx"),
         pages: r("src/pages/index.ts"),
         "data-table": r("src/data-table/index.ts"),
         theme: r("src/theme/index.ts"),
