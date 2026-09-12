@@ -389,9 +389,9 @@ describe("Shell layouts (layoutType)", () => {
     expect(document.querySelector(".prui-shell-sidebar .prui-nav-mono")).toBeInTheDocument()
   })
 
-  it("a mobile rail toggle is available for A/B/C", () => {
+  it("the header carries no rail toggle: collapse is desktop-only (sidebar footer)", () => {
     shell("A")
-    expect(screen.getByTestId("rail-toggle-mobile")).toBeInTheDocument()
+    expect(screen.queryByTestId("rail-toggle-mobile")).toBeNull()
   })
 
   it("C renders a sidebar header row aligned with the topbar", () => {

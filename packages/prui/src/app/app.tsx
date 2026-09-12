@@ -792,18 +792,6 @@ export function AppShell(props: AppProps) {
             <Menu className="h-4 w-4" aria-hidden />
           </Button>
         ) : null}
-        {collapsible && layoutType !== "D" ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={railCollapsed ? t.expandSidebar : t.collapseSidebar}
-            className="md:hidden"
-            onClick={() => setRailExpanded((r) => !r)}
-            data-testid="rail-toggle-mobile"
-          >
-            {railCollapsed ? <ChevronsRight className="h-4 w-4" aria-hidden /> : <ChevronsLeft className="h-4 w-4" aria-hidden />}
-          </Button>
-        ) : null}
         <div className="min-w-0 justify-self-start">
           <BrandMark brand={brand} />
         </div>
