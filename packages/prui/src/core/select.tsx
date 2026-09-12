@@ -1,7 +1,8 @@
 import * as React from "react"
 import { ChevronDown, Check } from "lucide-react"
 import { cn } from "./cn"
-import { useOverlayStack, useEscapeKey } from "./overlay"
+import { Portal, useOverlayStack, useEscapeKey } from "./overlay"
+import { useAnchoredPosition } from "./anchor"
 import { moveIndex, homeIndex, endIndex, typeaheadIndex } from "./list-nav"
 import type { PropsMeta } from "./props-meta"
 
@@ -35,6 +36,8 @@ interface SelectCtx {
   /** Display label for the current value when the options prop is used. */
   displayValue?: string
   open: boolean
+  /** The rendered trigger element (listbox anchors to it). */
+  triggerEl: HTMLButtonElement | null
   triggerId?: string
   setValue: (v: string) => void
   setOpen: (o: boolean) => void
@@ -101,7 +104,7 @@ export const Select = ({
 
   return (
     <Ctx.Provider
-      value={{ value, displayValue, open, triggerId: triggerEl?.id || undefined, setValue, setOpen: changeOpen, registerTrigger: setTriggerEl, returnFocusToTrigger, registerLabel }}
+      value={{ value, displayValue, open, triggerEl, triggerId: triggerEl?.id || undefined, setValue, setOpen: changeOpen, registerTrigger: setTriggerEl, returnFocusToTrigger, registerLabel }}
     >
       {name ? <input type="hidden" name={name} value={value} /> : null}
       {children ?? (
@@ -201,16 +204,25 @@ export type SelectContentProps = React.HTMLAttributes<HTMLDivElement>
 
 export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
   ({ className, children, id, ...props }, ref) => {
-    const { open, setOpen, triggerId, setValue, returnFocusToTrigger } = useSelect()
+    const { open, setOpen, triggerEl, setValue, returnFocusToTrigger } = useSelect()
     const listRef = React.useRef<HTMLDivElement>(null)
     const [activeIndex, setActiveIndex] = React.useState(-1)
     const typeaheadRef = React.useRef({ buffer: "", at: 0 })
+    const anchorRef = React.useRef<HTMLButtonElement | null>(null)
+    anchorRef.current = triggerEl
+    // panel element in state: the portal mounts its container one commit
+    // after open flips, so effects need the post-mount render to see it
+    const [listEl, setListEl] = React.useState<HTMLDivElement | null>(null)
 
     const { setElement, isTop } = useOverlayStack(open)
     useEscapeKey(open, isTop, () => {
       setOpen(false)
       returnFocusToTrigger()
     })
+
+    // the listbox portals to the body and anchors under the trigger so no
+    // ancestor (overflow containers, sticky headers) can clip or displace it
+    const { ref: floatingRef, position } = useAnchoredPosition({ active: open, anchorRef, side: "bottom", align: "start" })
 
     const optionEls = React.useCallback(() => {
       const list = listRef.current
@@ -225,7 +237,7 @@ export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps
 
     // on open: focus the selected option, else the first enabled one
     React.useEffect(() => {
-      if (!open) return
+      if (!open || !listEl) return
       setActiveIndex(-1)
       const els = optionEls()
       const selectedIdx = els.findIndex((el) => el.getAttribute("aria-selected") === "true")
@@ -235,7 +247,7 @@ export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps
         setActiveIndex(target)
         els[target]?.focus()
       }
-    }, [open, optionEls])
+    }, [open, listEl, optionEls])
 
     if (!open) return null
 
@@ -292,28 +304,37 @@ export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps
     }
 
     return (
-      <div
-        ref={(node) => {
-          listRef.current = node
-          setElement(node?.parentElement ?? null)
-          if (typeof ref === "function") ref(node)
-          else if (ref) ref.current = node
-        }}
-        id={id ?? (triggerId ? `${triggerId}-listbox` : undefined)}
-        role="listbox"
-        aria-labelledby={triggerId}
-        tabIndex={-1}
-        data-state={open ? "open" : "closed"}
-        onKeyDown={onKeyDown}
-        className={cn(
-          "prui-select-content absolute z-[var(--prui-z-overlay)] mt-1 min-w-40 max-h-60 overflow-auto p-1",
-          "bg-[var(--prui-surface)] border border-[var(--prui-line)] rounded-[var(--prui-radius)] shadow-[var(--prui-shadow-md)] outline-none",
-          className,
-        )}
-        {...props}
-      >
-        {children}
-      </div>
+      <Portal>
+        <div
+          ref={(node) => {
+            listRef.current = node
+            setListEl(node)
+            floatingRef(node)
+            setElement(node)
+            if (typeof ref === "function") ref(node)
+            else if (ref) ref.current = node
+          }}
+          id={id ?? (triggerEl?.id ? `${triggerEl.id}-listbox` : undefined)}
+          role="listbox"
+          aria-labelledby={triggerEl?.id || undefined}
+          tabIndex={-1}
+          data-state={open ? "open" : "closed"}
+          onKeyDown={onKeyDown}
+          className={cn(
+            "prui-select-content fixed z-[var(--prui-z-overlay)] max-h-60 overflow-auto p-1",
+            "bg-[var(--prui-surface)] border border-[var(--prui-line)] rounded-[var(--prui-radius)] shadow-[var(--prui-shadow-md)] outline-none",
+            className,
+          )}
+          style={{
+            top: position?.top ?? -9999,
+            left: position?.left ?? -9999,
+            minWidth: triggerEl ? Math.max(triggerEl.offsetWidth, 160) : 160,
+          }}
+          {...props}
+        >
+          {children}
+        </div>
+      </Portal>
     )
   },
 )

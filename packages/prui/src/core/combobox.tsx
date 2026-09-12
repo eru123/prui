@@ -63,6 +63,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
   const [activeIndex, setActiveIndex] = React.useState(0)
   const inputRef = React.useRef<HTMLInputElement>(null)
   const listRef = React.useRef<HTMLDivElement>(null)
+  const wrapRef = React.useRef<HTMLDivElement>(null)
   const listboxId = React.useId()
   const value = valueProp !== undefined ? valueProp : uncontrolled
   const selectedLabel = options.find((o) => o.value === value)?.label
@@ -81,6 +82,19 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
   useEscapeKey(open, isTop, () => {
     setOpen(false)
     inputRef.current?.focus()
+  })
+
+  // outside pointer closes the listbox
+  React.useEffect(() => {
+    if (!open) return
+    const onPointer = (e: MouseEvent) => {
+      const target = e.target as Node
+      if (wrapRef.current?.contains(target)) return
+      if (listRef.current?.contains(target)) return
+      setOpen(false)
+    }
+    document.addEventListener("mousedown", onPointer)
+    return () => document.removeEventListener("mousedown", onPointer)
   })
 
   const filtered = React.useMemo(() => {
@@ -103,7 +117,8 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
     inputRef.current?.focus()
   }
 
-  const { ref: floatingRef, position } = useAnchoredPosition({ active: open, anchorRef: inputRef, side: "bottom", align: "start" })
+  const anchorRef = wrapRef as React.RefObject<HTMLElement | null>
+  const { ref: floatingRef, position } = useAnchoredPosition({ active: open, anchorRef, side: "bottom", align: "start" })
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     onKeyDown?.(e)
@@ -148,7 +163,8 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
 
   return (
     <>
-      <input
+      <div ref={wrapRef} className={cn("prui-combobox relative inline-flex w-full items-center", className)}>
+        <input
         ref={(node) => {
           inputRef.current = node
           if (typeof ref === "function") ref(node)
@@ -166,7 +182,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
         disabled={disabled}
         placeholder={placeholder}
         className={cn(
-          "prui-combobox-trigger flex h-9 w-full items-center justify-between gap-2 border border-[var(--prui-line)]",
+          "prui-combobox-trigger h-9 w-full pr-8",
           "bg-[var(--prui-background)] rounded-[var(--prui-radius)] px-3 text-sm text-[var(--prui-fg)] placeholder:text-[var(--prui-dim)]",
           "outline-none transition-colors focus:border-[var(--prui-brand)] focus:ring-2 focus:ring-[var(--prui-brand)]/30",
           "disabled:opacity-50 disabled:cursor-not-allowed cursor-text",
@@ -184,9 +200,8 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
         onKeyDown={handleKeyDown}
         {...props}
       />
-      <span className="pointer-events-none relative">
-        <ChevronDown className="pointer-events-none absolute -left-7 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
-      </span>
+        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
+      </div>
       {open ? (
         <Portal>
           <div
