@@ -3,7 +3,11 @@ import { resolveSurface, withSurface, type SurfaceProps } from "./surface"
 import { cn } from "./cn"
 import type { PropsMeta } from "./props-meta"
 
-export type BadgeVariant = "default" | "brand" | "ok" | "warn" | "danger" | "outline"
+/**
+ * Badge variants. Standard vocabulary: neutral / brand / success / warning /
+ * danger / outline; the original ok/warn/default names are aliases.
+ */
+export type BadgeVariant = "default" | "neutral" | "brand" | "info" | "ok" | "success" | "warn" | "warning" | "danger" | "outline"
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement>, SurfaceProps {
   variant?: BadgeVariant
@@ -11,9 +15,13 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement>, Surfa
 
 const badgeVariants: Record<BadgeVariant, string> = {
   default: "bg-[var(--prui-raise)] text-[var(--prui-fg)] border-transparent",
+  neutral: "bg-[var(--prui-raise)] text-[var(--prui-fg)] border-transparent",
   brand: "bg-[var(--prui-brand)]/15 text-[var(--prui-brand)] border-transparent",
+  info: "bg-[var(--prui-brand)]/15 text-[var(--prui-brand)] border-transparent",
   ok: "bg-[var(--prui-ok)]/15 text-[var(--prui-ok)] border-transparent",
+  success: "bg-[var(--prui-ok)]/15 text-[var(--prui-ok)] border-transparent",
   warn: "bg-[var(--prui-warn)]/15 text-[var(--prui-warn)] border-transparent",
+  warning: "bg-[var(--prui-warn)]/15 text-[var(--prui-warn)] border-transparent",
   danger: "bg-[var(--prui-danger)]/15 text-[var(--prui-danger)] border-transparent",
   outline: "bg-transparent text-[var(--prui-fg)] border-[var(--prui-line)]",
 }
@@ -47,7 +55,7 @@ Badge.displayName = "Badge"
 export const badgePropsMeta: PropsMeta = {
   name: "Badge",
   props: [
-    { name: "variant", type: "'default' | 'brand' | 'ok' | 'warn' | 'danger' | 'outline'", default: "'default'", control: "select", options: ["default", "brand", "ok", "warn", "danger", "outline"] },
+    { name: "variant", type: "'neutral' | 'brand' | 'success' | 'warning' | 'danger' | 'outline' | 'info' | 'ok' | 'warn' | 'default'", default: "'default' (neutral)", control: "select", options: ["neutral", "brand", "success", "warning", "danger", "outline", "info", "ok", "warn", "default"] },
     { name: "children", type: "ReactNode", default: null, control: "text" },
   ],
 }

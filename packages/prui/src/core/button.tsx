@@ -4,7 +4,25 @@ import { cn } from "./cn"
 import type { PropsMeta } from "./props-meta"
 import { resolveSurface, withSurface, type SurfaceProps } from "./surface"
 
-export type ButtonVariant = "primary" | "default" | "ghost" | "danger" | "outline" | "soft" | "link"
+/**
+ * Button variants. The shared PRUI vocabulary is
+ * primary / secondary / neutral / danger / success / warning (plus the
+ * stylistic ghost / outline / soft / link kept from the original API).
+ * Legacy names keep working: `default` = secondary, and soft-colored
+ * success/warning map to their token colors.
+ */
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "default"
+  | "neutral"
+  | "ghost"
+  | "danger"
+  | "success"
+  | "warning"
+  | "outline"
+  | "soft"
+  | "link"
 export type ButtonSize = "sm" | "md" | "lg" | "icon"
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, SurfaceProps {
@@ -23,12 +41,21 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
     "bg-[var(--prui-s-bg,var(--prui-brand))] text-[var(--prui-s-fg,var(--prui-brand-fg))] hover:brightness-110 active:brightness-95",
+  secondary:
+    "bg-[var(--prui-s-bg,var(--prui-raise))] text-[var(--prui-s-fg,var(--prui-fg))] border border-[var(--prui-line)] hover:border-[var(--prui-dim)]",
+  // legacy alias of secondary
   default:
     "bg-[var(--prui-s-bg,var(--prui-raise))] text-[var(--prui-s-fg,var(--prui-fg))] border border-[var(--prui-line)] hover:border-[var(--prui-dim)]",
+  neutral:
+    "bg-[var(--prui-s-bg,transparent)] text-[var(--prui-s-fg,var(--prui-fg))] border border-[var(--prui-line)] hover:bg-[var(--prui-raise)]",
   ghost:
     "bg-[var(--prui-s-bg,transparent)] text-[var(--prui-s-fg,var(--prui-fg))] hover:bg-[var(--prui-raise)]",
   danger:
     "bg-[var(--prui-s-bg,var(--prui-danger))] text-[var(--prui-s-fg,#fff)] hover:brightness-110 active:brightness-95",
+  success:
+    "bg-[var(--prui-s-bg,var(--prui-ok))] text-[var(--prui-s-fg,#fff)] hover:brightness-110 active:brightness-95",
+  warning:
+    "bg-[var(--prui-s-bg,var(--prui-warn))] text-[var(--prui-s-fg,#fff)] hover:brightness-110 active:brightness-95",
   outline:
     "bg-[var(--prui-s-bg,transparent)] text-[var(--prui-s-fg,var(--prui-brand))] border border-[var(--prui-s-border,var(--prui-brand))] hover:bg-[var(--prui-brand)]/10",
   soft:
@@ -92,7 +119,7 @@ function Spinner() {
 export const buttonPropsMeta: PropsMeta = {
   name: "Button",
   props: [
-    { name: "variant", type: "'primary' | 'default' | 'ghost' | 'danger' | 'outline' | 'soft' | 'link'", default: "'default'", control: "select", options: ["primary", "default", "ghost", "danger", "outline", "soft", "link"] },
+    { name: "variant", type: "'primary' | 'secondary' | 'neutral' | 'ghost' | 'danger' | 'success' | 'warning' | 'outline' | 'soft' | 'link' | 'default'", default: "'default' (secondary)", control: "select", options: ["primary", "secondary", "neutral", "ghost", "danger", "success", "warning", "outline", "soft", "link", "default"] },
     { name: "size", type: "'sm' | 'md' | 'lg' | 'icon'", default: "'md'", control: "select", options: ["sm", "md", "lg", "icon"] },
     { name: "asChild", type: "boolean", default: "false", control: "boolean" },
     { name: "loading", type: "boolean", default: "false", control: "boolean" },
