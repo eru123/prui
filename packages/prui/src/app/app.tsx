@@ -807,7 +807,15 @@ export function AppShell(props: AppProps) {
               {railCollapsed ? <ChevronsRight className="h-4 w-4" aria-hidden /> : <ChevronsLeft className="h-4 w-4" aria-hidden />}
             </Button>
           ) : null}
-          <BrandMark brand={brand} />
+          {layoutType === "C" ? (
+            /* C owns the brand in its sidebar header row on desktop; the
+               sidehead is hidden below md, so the topbar carries it there */
+            <div className="md:hidden">
+              <BrandMark brand={brand} />
+            </div>
+          ) : (
+            <BrandMark brand={brand} />
+          )}
         </div>
         {searchEnabled ? (
           <button

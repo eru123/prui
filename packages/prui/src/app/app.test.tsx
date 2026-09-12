@@ -415,6 +415,20 @@ describe("Shell layouts (layoutType)", () => {
     expect(head).toHaveTextContent("T")
   })
 
+  it("C owns the brand in the sidehead; the topbar brand is mobile-only", () => {
+    const { unmount } = shell("C")
+    const header = screen.getByTestId("app-header")
+    const brandC = within(header).getAllByText("T")[0]
+    if (!brandC) throw new Error("brand not found in the C topbar")
+    expect(brandC.closest(".md\\:hidden")).not.toBeNull()
+    unmount()
+    shell("A")
+    const brandA = within(screen.getByTestId("app-header")).getAllByText("T")[0]
+    if (!brandA) throw new Error("brand not found in the A topbar")
+    // A/B keep the brand in the topbar at every width
+    expect(brandA.closest(".md\\:hidden")).toBeNull()
+  })
+
   it("C accepts a custom sidebar header", () => {
     shell("C", { sidebarHeader: <span>Workspace</span> })
     expect(screen.getByTestId("sidebar-header")).toHaveTextContent("Workspace")
