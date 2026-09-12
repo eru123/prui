@@ -185,7 +185,7 @@ export function Playground({
   return (
     <section id={title.toLowerCase().replace(/\s+/g, "-")} className="mb-8 scroll-mt-20" data-testid="playground">
       <div className="mb-3 flex items-baseline justify-between">
-        <h3 className="font-mono text-sm font-semibold text-[var(--prui-brand)]">{title}</h3>
+        <h2 className="font-mono text-sm font-semibold text-[var(--prui-brand)]">{title}</h2>
         <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">live playground</span>
       </div>
       <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
