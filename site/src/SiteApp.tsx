@@ -14,12 +14,6 @@ const ThemingPage = lazy(() => import("./pages/Theming").then((m) => ({ default:
 const InstallationPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.InstallationPage })))
 const AdoptionPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.AdoptionPage })))
 const AgentsPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.AgentsPage })))
-const FeedbackDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.FeedbackDoc })))
-const AnchoredDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.AnchoredDoc })))
-const InputsDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.InputsDoc })))
-const NavigationDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.NavigationDoc })))
-const OverlaysDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.OverlaysDoc })))
-const DatesDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.DatesDoc })))
 const TokensDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.TokensDoc })))
 const ArchitectureDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.ArchitectureDoc })))
 const AccessibilityDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.AccessibilityDoc })))
@@ -28,6 +22,28 @@ const PerformanceDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => (
 const I18nDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.I18nDoc })))
 const ChangelogDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.ChangelogDoc })))
 const MigrationDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.MigrationDoc })))
+const AlertDocPage = lazy(() => import("./pages/docs/FeedbackDocs").then((m) => ({ default: m.AlertDoc })))
+const ToastDocPage = lazy(() => import("./pages/docs/FeedbackDocs").then((m) => ({ default: m.ToastDoc })))
+const ProgressDocPage = lazy(() => import("./pages/docs/FeedbackDocs").then((m) => ({ default: m.ProgressDoc })))
+const SkeletonDocPage = lazy(() => import("./pages/docs/FeedbackDocs").then((m) => ({ default: m.SkeletonDoc })))
+const SpinnerDocPage = lazy(() => import("./pages/docs/FeedbackDocs").then((m) => ({ default: m.SpinnerDoc })))
+const TooltipDocPage = lazy(() => import("./pages/docs/AnchoredDocs").then((m) => ({ default: m.TooltipDoc })))
+const PopoverDocPage = lazy(() => import("./pages/docs/AnchoredDocs").then((m) => ({ default: m.PopoverDoc })))
+const CheckboxDocPage = lazy(() => import("./pages/docs/InputsDocs").then((m) => ({ default: m.CheckboxDoc })))
+const RadioDocPage = lazy(() => import("./pages/docs/InputsDocs").then((m) => ({ default: m.RadioDoc })))
+const ComboboxDocPage = lazy(() => import("./pages/docs/InputsDocs").then((m) => ({ default: m.ComboboxDoc })))
+const FileUploadDocPage = lazy(() => import("./pages/docs/InputsDocs").then((m) => ({ default: m.FileUploadDoc })))
+const AccordionDocPage = lazy(() => import("./pages/docs/NavigationDocs").then((m) => ({ default: m.AccordionDoc })))
+const BreadcrumbDocPage = lazy(() => import("./pages/docs/NavigationDocs").then((m) => ({ default: m.BreadcrumbDoc })))
+const TreeViewDocPage = lazy(() => import("./pages/docs/NavigationDocs").then((m) => ({ default: m.TreeViewDoc })))
+const TimelineDocPage = lazy(() => import("./pages/docs/NavigationDocs").then((m) => ({ default: m.TimelineDoc })))
+const DrawerDocPage = lazy(() => import("./pages/docs/OverlayDocs").then((m) => ({ default: m.DrawerDoc })))
+const SheetDocPage = lazy(() => import("./pages/docs/OverlayDocs").then((m) => ({ default: m.SheetDoc })))
+const CalendarDocPage = lazy(() => import("./pages/docs/DatesDocs").then((m) => ({ default: m.CalendarDoc })))
+const DatePickerDocPage = lazy(() => import("./pages/docs/DatesDocs").then((m) => ({ default: m.DatePickerDoc })))
+const DateRangePickerDocPage = lazy(() => import("./pages/docs/DatesDocs").then((m) => ({ default: m.DateRangePickerDoc })))
+const TimePickerDocPage = lazy(() => import("./pages/docs/DatesDocs").then((m) => ({ default: m.TimePickerDoc })))
+const TimeRangePickerDocPage = lazy(() => import("./pages/docs/DatesDocs").then((m) => ({ default: m.TimeRangePickerDoc })))
 const ResourcesDemoPage = lazy(() => import("./pages/ResourcesDemo").then((m) => ({ default: m.ResourcesDemoPage })))
 const NotFoundPage = lazy(() => import("./NotFound").then((m) => ({ default: m.NotFoundPage })))
 const ProvenancePage = lazy(() => import("./pages/Provenance").then((m) => ({ default: m.ProvenancePage })))
@@ -103,12 +119,28 @@ export function SiteApp() {
           <Route path="/guides/adoption" element={<AdoptionPage />} />
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/resources" element={<ResourcesDemoPage />} />
-          <Route path="/components/feedback" element={<FeedbackDoc />} />
-          <Route path="/components/anchored" element={<AnchoredDoc />} />
-          <Route path="/components/inputs" element={<InputsDoc />} />
-          <Route path="/components/navigation" element={<NavigationDoc />} />
-          <Route path="/components/overlays" element={<OverlaysDoc />} />
-          <Route path="/components/dates" element={<DatesDoc />} />
+          <Route path="/components/alert" element={<AlertDocPage />} />
+          <Route path="/components/toast" element={<ToastDocPage />} />
+          <Route path="/components/progress" element={<ProgressDocPage />} />
+          <Route path="/components/skeleton" element={<SkeletonDocPage />} />
+          <Route path="/components/spinner" element={<SpinnerDocPage />} />
+          <Route path="/components/tooltip" element={<TooltipDocPage />} />
+          <Route path="/components/popover" element={<PopoverDocPage />} />
+          <Route path="/components/checkbox" element={<CheckboxDocPage />} />
+          <Route path="/components/radio" element={<RadioDocPage />} />
+          <Route path="/components/combobox" element={<ComboboxDocPage />} />
+          <Route path="/components/file-upload" element={<FileUploadDocPage />} />
+          <Route path="/components/accordion" element={<AccordionDocPage />} />
+          <Route path="/components/breadcrumb" element={<BreadcrumbDocPage />} />
+          <Route path="/components/tree-view" element={<TreeViewDocPage />} />
+          <Route path="/components/timeline" element={<TimelineDocPage />} />
+          <Route path="/components/drawer" element={<DrawerDocPage />} />
+          <Route path="/components/sheet" element={<SheetDocPage />} />
+          <Route path="/components/calendar" element={<CalendarDocPage />} />
+          <Route path="/components/date-picker" element={<DatePickerDocPage />} />
+          <Route path="/components/date-range-picker" element={<DateRangePickerDocPage />} />
+          <Route path="/components/time-picker" element={<TimePickerDocPage />} />
+          <Route path="/components/time-range-picker" element={<TimeRangePickerDocPage />} />
           <Route path="/guides/design-tokens" element={<TokensDoc />} />
           <Route path="/guides/architecture" element={<ArchitectureDoc />} />
           <Route path="/guides/accessibility" element={<AccessibilityDoc />} />

@@ -46,7 +46,7 @@ test.describe("docs site smoke (built with prui)", () => {
   })
 
   test("new component doc pages render", async ({ page }) => {
-    for (const path of ["/components/feedback", "/components/inputs", "/components/dates", "/guides/design-tokens", "/migration"]) {
+    for (const path of ["/components/toast", "/components/combobox", "/components/date-picker", "/components/time-range-picker", "/guides/design-tokens", "/migration"]) {
       await page.goto(path)
       await expect(page.getByTestId("app-content")).toBeVisible()
     }

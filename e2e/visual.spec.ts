@@ -8,7 +8,7 @@ import { test, expect } from "@playwright/test"
 const PAGES = [
   { path: "/", name: "landing" },
   { path: "/components/button", name: "button-doc" },
-  { path: "/components/feedback", name: "feedback-doc" },
+  { path: "/components/toast", name: "toast-doc" },
   { path: "/guides/design-tokens", name: "tokens-guide" },
 ]
 

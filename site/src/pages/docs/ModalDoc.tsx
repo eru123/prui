@@ -1,10 +1,10 @@
 import * as React from "react"
-import { ComponentDoc, confirmModal, Button } from "../../components/ComponentDoc"
+import { ComponentDoc, confirmModal, Button, Modal } from "../../components/ComponentDoc"
 
 export function ModalDoc() {
-  const [, setBasic] = React.useState(false)
-  const [, setBlocked] = React.useState(false)
-  const [, setNoPad] = React.useState(false)
+  const [basic, setBasic] = React.useState(false)
+  const [blocked, setBlocked] = React.useState(false)
+  const [noPad, setNoPad] = React.useState(false)
   const [confirmResult, setConfirmResult] = React.useState<boolean | null>(null)
 
   return (
@@ -30,6 +30,16 @@ export function ModalDoc() {
             <>
               <Button size="sm" onClick={() => setBasic(true)}>sm</Button>
               <Button size="sm" onClick={() => setNoPad(true)}>noPadding</Button>
+              <Modal open={basic} onClose={() => setBasic(false)} size="sm" ariaLabel="Small modal">
+                <h2 className="text-lg font-semibold">Small modal</h2>
+                <p className="mt-1 text-sm text-[var(--prui-dim)]">Size sm: 448px wide with standard padding.</p>
+              </Modal>
+              <Modal open={noPad} onClose={() => setNoPad(false)} size="md" noPadding ariaLabel="No padding modal">
+                <div className="px-8 py-6">
+                  <h2 className="text-lg font-semibold">noPadding</h2>
+                  <p className="mt-1 text-sm text-[var(--prui-dim)]">The frame is yours: pad each section yourself.</p>
+                </div>
+              </Modal>
             </>
           ),
           code: `<Modal open={open} onClose={close} size="sm">
@@ -39,7 +49,14 @@ export function ModalDoc() {
         {
           title: "Blocked close = shake",
           desc: "clicking the overlay with closeOnOverlayClick=false shakes the modal instead of closing",
-          render: <Button size="sm" onClick={() => setBlocked(true)}>Try to close me</Button>,
+          render: (
+            <>
+              <Button size="sm" onClick={() => setBlocked(true)}>Try to close me</Button>
+              <Modal open={blocked} onClose={() => setBlocked(false)} closeOnOverlayClick={false} size="sm" ariaLabel="Blocked modal">
+                <p className="text-sm">Click the overlay: the modal shakes, it does not close.</p>
+              </Modal>
+            </>
+          ),
           code: `<Modal open={open} onClose={close} closeOnOverlayClick={false}>
   <p>Click the overlay: the modal shakes, it does not close.</p>
 </Modal>`,

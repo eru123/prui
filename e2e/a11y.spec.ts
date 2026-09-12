@@ -18,7 +18,7 @@ async function axeScan(page: import("@playwright/test").Page) {
 }
 
 test.describe("real-browser axe audits", () => {
-  for (const path of ["/", "/components", "/components/feedback", "/guides/accessibility"]) {
+  for (const path of ["/", "/components", "/components/toast", "/components/date-range-picker", "/guides/accessibility"]) {
     test(`${path} has no serious axe violations`, async ({ page }) => {
       await page.goto(path)
       await page.waitForLoadState("networkidle")

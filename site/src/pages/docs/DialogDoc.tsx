@@ -1,7 +1,27 @@
 import * as React from "react"
 import { ComponentDoc } from "../../components/ComponentDoc"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, Button, Input, Label, dialogPropsMeta } from "prui/core"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter, Button, Input, Label, dialogPropsMeta } from "prui/core"
 import { PropsTable } from "../../components/Playground"
+
+
+function DialogDemoBody() {
+  const [open, setOpen] = React.useState(false)
+  return (
+    <>
+      <Button size="sm" onClick={() => setOpen(true)}>Open dialog</Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent ariaLabel="Invite teammate">
+          <DialogHeader><DialogTitle>Invite teammate</DialogTitle></DialogHeader>
+          <DialogBody>They will get an email with a join link that expires in 7 days.</DialogBody>
+          <DialogFooter>
+            <Button variant="ghost" size="sm" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button variant="primary" size="sm" onClick={() => setOpen(false)}>Send invite</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
 
 export function DialogDoc() {
   const [open, setOpen] = React.useState(false)
@@ -17,6 +37,20 @@ export function DialogDoc() {
         "For irreversible confirmations prefer confirmModal() from the same package",
       ]}
       demos={[
+        {
+          title: "DialogBody padding",
+          desc: "DialogBody gives the content consistent x/y gutters (flush removes the vertical padding).",
+          render: (
+            <DialogDemoBody />
+          ),
+          code: `<Dialog>
+  <DialogContent ariaLabel="Confirm">
+    <DialogHeader><DialogTitle>Invite teammate</DialogTitle></DialogHeader>
+    <DialogBody>They will get an email with a join link.</DialogBody>
+    <DialogFooter>…</DialogFooter>
+  </DialogContent>
+</Dialog>`,
+        },
         {
           title: "Confirmation",
           render: (
