@@ -394,8 +394,15 @@ describe("Shell layouts (layoutType)", () => {
     expect(document.querySelector(".prui-shell-sidebar .prui-nav-mono")).toBeInTheDocument()
   })
 
-  it("the header carries no rail toggle: collapse is desktop-only (sidebar footer)", () => {
+  it("the header rail toggle sits before the brand; no mobile toggle exists", () => {
     shell("A")
+    const header = screen.getByTestId("app-header")
+    const toggle = screen.getByTestId("sidebar-toggle")
+    expect(header).toContainElement(toggle)
+    const brand = within(header).getAllByText("T")[0]
+    expect(toggle.compareDocumentPosition(brand) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    // hidden below md: the drawer hamburger rules mobile
+    expect(toggle.className).toContain("md:inline-flex")
     expect(screen.queryByTestId("rail-toggle-mobile")).toBeNull()
   })
 

@@ -722,20 +722,6 @@ export function AppShell(props: AppProps) {
             {sidebarFooter}
           </div>
         ) : null}
-        {layoutType !== "D" ? (
-          <div className="border-t border-[var(--prui-line)] p-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-center"
-              aria-label={railCollapsed ? t.expandSidebar : t.collapseSidebar}
-              data-testid="sidebar-toggle"
-              onClick={() => setRailExpanded((r) => !r)}
-            >
-              {railCollapsed ? <ChevronsRight className="h-4 w-4" aria-hidden /> : <ChevronsLeft className="h-4 w-4" aria-hidden />}
-            </Button>
-          </div>
-        ) : null}
       </aside>
 
       {/* mobile drawer */}
@@ -808,7 +794,19 @@ export function AppShell(props: AppProps) {
             <Menu className="h-4 w-4" aria-hidden />
           </Button>
         ) : null}
-        <div className="min-w-0 justify-self-start">
+        <div className="flex min-w-0 items-center gap-1 justify-self-start">
+          {layoutType !== "D" ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={railCollapsed ? t.expandSidebar : t.collapseSidebar}
+              className="hidden md:inline-flex"
+              onClick={() => setRailExpanded((r) => !r)}
+              data-testid="sidebar-toggle"
+            >
+              {railCollapsed ? <ChevronsRight className="h-4 w-4" aria-hidden /> : <ChevronsLeft className="h-4 w-4" aria-hidden />}
+            </Button>
+          ) : null}
           <BrandMark brand={brand} />
         </div>
         {searchEnabled ? (
