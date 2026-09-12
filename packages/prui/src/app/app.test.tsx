@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest"
-import { render, screen, waitFor } from "@testing-library/react"
+import { render, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import { App, AppShell, SidebarNav, type NavItem } from "./app"
@@ -70,7 +70,11 @@ describe("App nav rendering", () => {
     renderAppAt("/")
     const toggle = screen.getByTestId("drawer-toggle")
     await user.click(toggle)
-    expect(screen.getByTestId("mobile-drawer")).toBeInTheDocument()
+    const drawer = screen.getByTestId("mobile-drawer")
+    expect(drawer).toBeInTheDocument()
+    // the brand sits beside the close button so it is not alone in the header
+    expect(within(drawer).getAllByText("HRLabs").length).toBeGreaterThan(0)
+    expect(within(drawer).getByRole("button", { name: "Close navigation" })).toBeInTheDocument()
     expect(document.body.style.overflow).toBe("hidden")
     await user.click(screen.getByTestId("drawer-backdrop"))
     expect(screen.queryByTestId("mobile-drawer")).toBeNull()

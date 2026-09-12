@@ -751,7 +751,12 @@ export function AppShell(props: AppProps) {
               aria-modal="true"
               aria-label="Navigation"
             >
-              <div className="mb-2 flex h-10 items-center justify-end px-1">
+              <div className={cn("mb-2 flex h-10 items-center gap-2 px-1", brand ? "justify-between" : "justify-end")}>
+                {brand ? (
+                  <div className="min-w-0" onClick={() => setDrawerOpen(false)}>
+                    <BrandMark brand={brand} />
+                  </div>
+                ) : null}
                 <button
                   type="button"
                   ref={drawerCloseRef}
