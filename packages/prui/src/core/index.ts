@@ -40,6 +40,13 @@ export {
   type TextareaProps,
 } from "./input"
 
+export {
+  TagInput,
+  tagInputPropsMeta,
+  type TagInputProps,
+  type TagInputSize,
+} from "./tag-input"
+
 export { Label, labelPropsMeta, Separator, separatorPropsMeta, type LabelProps, type SeparatorProps } from "./label"
 
 export {

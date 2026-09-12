@@ -57,6 +57,7 @@ export interface PruiDictionary {
   /* form fields */
   showPassword: string
   hidePassword: string
+  removeTag: string
   /* nav */
   mainNavigation: string
   openNavigation: string
@@ -127,6 +128,7 @@ export const defaultDictionary: PruiDictionary = {
 
   showPassword: "Show password",
   hidePassword: "Hide password",
+  removeTag: "Remove {label}",
 
   mainNavigation: "Main",
   openNavigation: "Open navigation",
