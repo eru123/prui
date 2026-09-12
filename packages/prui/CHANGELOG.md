@@ -13,7 +13,7 @@
   - **API**: Button/Badge adopt the shared variant vocabulary (secondary/neutral/success/warning added; old names alias). The registry-driven Form on `@skiddph/prui/forms` is deprecated in favor of the schema Form from `@skiddph/prui/app` (both keep working).
   - **i18n/RTL**: dictionary + `PruiProvider`; logical properties in the shell.
   - **Testing**: axe suite (vitest) and Playwright smoke/axe/visual specs; per-component a11y/keyboard/focus tests.
-  - **DX**: `prui-cli` (create-prui-app, add, generate theme/resource/page/layout/crud) and StackBlitz/CodeSandbox links on docs examples.
+  - **DX**: `prui-cli` (create-prui-app, add, generate theme/resource/page/layout/crud).
 
 ## 0.7.0
 

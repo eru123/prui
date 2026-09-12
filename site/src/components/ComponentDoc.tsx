@@ -37,7 +37,6 @@ import {
 } from "prui/core"
 import { CodeView } from "./CodeView"
 import { TocRail } from "./TocRail"
-import { PlaygroundLinks } from "./PlaygroundLinks"
 import { DataTable, DataTablePagination, DataTableToolbar, FacetedFilter, DateRangeFilter, NumberRangeFilter } from "prui/data-table"
 
 /** In-depth per-component documentation page scaffold. */
@@ -133,7 +132,6 @@ export function ComponentDoc({
                 {d.render}
               </div>
               {d.code ? <CodeBlock code={d.code} /> : null}
-              {d.code ? <PlaygroundLinks snippet={d.code} name={`${name} — ${d.title}`} /> : null}
             </div>
           ))}
         </Section>
@@ -146,7 +144,6 @@ export function ComponentDoc({
               <div className="mb-1 text-sm font-semibold text-[var(--prui-fg)]">{e.title}</div>
               {e.render}
               <CodeBlock code={e.code} />
-              <PlaygroundLinks snippet={e.code} name={`${name} — ${e.title}`} />
             </div>
           ))}
         </Section>
