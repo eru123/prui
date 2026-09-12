@@ -34,7 +34,7 @@ export function IconsPage() {
     let cancelled = false
     // deep path: the root module would drag the whole catalog into the
     // static graph; this file only loads inside the lazy icons page
-    // @ts-ignore -- deep module ships without its own declaration file
+    // @ts-expect-error -- deep module ships without its own declaration file
     void import("lucide-react/dist/esm/icons/index.js").then((mod) => {
       if (cancelled) return
       // the deep module exports each icon by name (plus a default)
