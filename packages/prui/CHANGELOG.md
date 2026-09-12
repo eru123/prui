@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.6.0
+
+### Minor Changes
+
+- - corrected shell variants: C combines A and B with a sidebar header row, A/B/C collapse on desktop and mobile, D is the facebook-style centered sticky layout
+
 ## 0.5.0
 
 ### Minor Changes
