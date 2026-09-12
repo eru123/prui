@@ -7,10 +7,12 @@ import type { PropsMeta } from "./props-meta"
 
 /**
  * TagInput: comma-separated entry as removable chips (tags, email
- * recipients, keywords). Text commits on a separator, Enter, paste of
- * multi-value text, or blur; Backspace on an empty field removes the last
- * tag. The chip and the value are separate concerns: labelFor decides what
- * the chip displays while onChange keeps emitting the original strings, and
+ * recipients, keywords). Text commits the moment a separator arrives — by
+ * keydown, or through the input value itself (IME, virtual keyboards,
+ * autofill, multi-char separators like " and ") — plus Enter, multi-value
+ * paste, or blur; Backspace on an empty field removes the last tag. The
+ * chip and the value are separate concerns: labelFor decides what the chip
+ * displays while onChange keeps emitting the original strings, and
  * renderTag takes over the chip entirely.
  */
 
@@ -147,6 +149,20 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
     props.onBlur?.(e as React.FocusEvent<HTMLInputElement>)
   }
 
+  // IME and virtual keyboards deliver the separator through the input event
+  // (keydown never fires), so the value path commits too — this is what makes
+  // the tag render the moment the operator is typed on phones, autofill, and
+  // multi-char separators like " and ". Keydown-prevented commits never reach
+  // the value, so the two paths cannot double-fire.
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const next = e.target.value
+    if (separators.some((s) => next.includes(s))) {
+      commit(next)
+      return
+    }
+    setInput(next)
+  }
+
   const surface = resolveSurface({ bg, fg, radius, texture, textureColor, elevation })
   const merged = withSurface(
     cn(
@@ -189,7 +205,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
       <input
         ref={ref}
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={onInputChange}
         onKeyDown={onKeyDown}
         onPaste={onPaste}
         onBlur={onBlur}

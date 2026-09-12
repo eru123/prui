@@ -30,6 +30,23 @@ describe("TagInput", () => {
     expect(spy).toHaveBeenCalledWith(["one", "two", "three"])
   })
 
+  it("a separator arriving through the input event (IME, virtual keyboard) commits", () => {
+    const spy = vi.fn()
+    render(<TagInput aria-label="Tags" onChange={spy} />)
+    const input = screen.getByLabelText("Tags")
+    // no keydown involved: the text lands in the value directly, like insertText
+    fireEvent.change(input, { target: { value: "ime-tag," } })
+    expect(spy).toHaveBeenCalledWith(["ime-tag"])
+    expect(input).toHaveValue("")
+  })
+
+  it("multi-char separators commit through the value path", () => {
+    const spy = vi.fn()
+    render(<TagInput aria-label="Tags" separators={[" and "]} onChange={spy} />)
+    fireEvent.change(screen.getByLabelText("Tags"), { target: { value: "cats and dogs" } })
+    expect(spy).toHaveBeenCalledWith(["cats", "dogs"])
+  })
+
   it("Backspace on an empty field removes the last tag", async () => {
     const user = userEvent.setup()
     const spy = vi.fn()
