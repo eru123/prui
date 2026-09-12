@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Link, useParams } from "react-router-dom"
 import { Button, Badge } from "prui/core"
-import { CodeView } from "../../components/CodeView"
+import { CodeView, languageForFile } from "../../components/CodeView"
 import { LayoutComposition } from "./compose"
 import { LAYOUTS } from "./layouts-data"
 
@@ -153,6 +153,7 @@ export function LayoutCodePage() {
           <CodeView
             code={activeFile.code}
             title={activeFile.path}
+            language={languageForFile(activeFile.path)}
             readOnly
             height="auto"
             className="h-full overflow-hidden rounded-none border-0"

@@ -38,6 +38,24 @@ function configureMonaco(monaco: unknown): void {
   }
 }
 
+/** Pick a Monaco language id from a file name or extension. */
+export function languageForFile(path: string): string {
+  const ext = path.slice(path.lastIndexOf(".") + 1).toLowerCase()
+  switch (ext) {
+    case "ts": return "typescript"
+    case "tsx": return "typescript"
+    case "js": return "javascript"
+    case "jsx": return "javascript"
+    case "mjs": return "javascript"
+    case "cjs": return "javascript"
+    case "css": return "css"
+    case "json": return "json"
+    case "md": return "markdown"
+    case "html": return "html"
+    default: return "typescript"
+  }
+}
+
 export function CodeView({
   code,
   canonical,
@@ -120,7 +138,7 @@ export function CodeView({
               minimap: { enabled: false },
               fontSize: 12,
               lineHeight: 19,
-              lineNumbers: "off",
+              lineNumbers: "on",
               scrollBeyondLastLine: false,
               wordWrap: "on",
               padding: { top: 10, bottom: 10 },

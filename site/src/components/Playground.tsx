@@ -203,7 +203,7 @@ export function Playground({
             canonical={code?.(values) ?? canonical(values)}
             onEdit={onEdit}
             title="snippet"
-            language="tsx"
+            language="typescript"
             className="overflow-hidden"
           />
         </div>
