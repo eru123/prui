@@ -131,6 +131,23 @@ export const DialogTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttrib
 )
 DialogTitle.displayName = "DialogTitle"
 
+export interface DialogBodyProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Remove the default vertical padding (keeps horizontal). */
+  flush?: boolean
+}
+
+/** Padded content area for DialogContent: consistent x/y gutters. */
+export const DialogBody = React.forwardRef<HTMLDivElement, DialogBodyProps>(
+  ({ className, flush, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("prui-dialog-body px-4", flush ? "pt-0 pb-0" : "pt-1 pb-4", className)}
+      {...props}
+    />
+  ),
+)
+DialogBody.displayName = "DialogBody"
+
 export const DialogDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
     <p ref={ref} className={cn("prui-dialog-description text-sm text-[var(--prui-dim)]", className)} {...props} />
@@ -149,5 +166,13 @@ export const dialogPropsMeta: PropsMeta = {
     { name: "defaultOpen", type: "boolean", default: "false", control: "boolean" },
     { name: "onOpenChange", type: "(open: boolean) => void", default: null, control: "none" },
     { name: "initialFocus", type: 'ref | "first" | "container" | false', default: '"first"', control: "none" },
+  ],
+}
+
+export const dialogBodyPropsMeta: PropsMeta = {
+  name: "DialogBody",
+  props: [
+    { name: "flush", type: "boolean", default: "false", control: "boolean", description: "Remove vertical padding." },
+    { name: "className", type: "string", default: "undefined", control: "text" },
   ],
 }
