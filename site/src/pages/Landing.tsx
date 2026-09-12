@@ -1,11 +1,17 @@
-import { useState } from "react"
+import { useState, lazy, Suspense } from "react"
 import { Link } from "react-router-dom"
-import { Button, Badge, Switch, Tabs, TabsList, TabsTrigger, TabsContent, Input, Alert, Progress, Spinner, toast, Toaster } from "prui/core"
+import { Button, Badge, Switch, Tabs, TabsList, TabsTrigger, TabsContent, Input, Alert, Progress, Spinner } from "prui/core"
 import { CopyButton } from "../components/CopyButton"
+
+// The toast demo loads its chunk on first click: the toast store stays out of
+// the landing bundle (AC-6). toast() queues until the Toaster mounts, so the
+// very first click still shows its toast.
+const LazyToaster = lazy(() => import("prui/core").then((m) => ({ default: m.Toaster })))
 
 export function LandingPage() {
   const [saved, setSaved] = useState(false)
   const [sw, setSw] = useState(true)
+  const [toasterOn, setToasterOn] = useState(false)
 
   return (
     <div className="mx-auto w-full max-w-[860px] px-4 pb-20 pt-10 md:px-6">
@@ -71,10 +77,23 @@ export function LandingPage() {
             <Progress value={72} aria-label="Uploading build" />
             <div className="flex items-center gap-2.5">
               <Spinner size="sm" label="Syncing" />
-              <Button size="sm" variant="ghost" onClick={() => toast({ title: "Build 128 is live", variant: "success" })}>toast()</Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  setToasterOn(true)
+                  import("prui/core").then((m) => m.toast({ title: "Build 128 is live", variant: "success" }))
+                }}
+              >
+                toast()
+              </Button>
             </div>
           </div>
-          <Toaster />
+          {toasterOn ? (
+            <Suspense fallback={null}>
+              <LazyToaster />
+            </Suspense>
+          ) : null}
         </div>
       </div>
 
