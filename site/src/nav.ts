@@ -38,6 +38,7 @@ export const nav: NavItem[] = [
       { label: "Button", href: "/components/button" },
       { label: "Input", href: "/components/input" },
       { label: "Textarea", href: "/components/textarea" },
+      { label: "Tag input", href: "/components/tag-input" },
       { label: "Select", href: "/components/select" },
       { label: "Switch", href: "/components/switch" },
       { label: "Tabs", href: "/components/tabs" },
