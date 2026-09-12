@@ -1,6 +1,6 @@
 {
   "name": "@skiddph/prui",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "description": "PRUI component system: primitives, app-layer super-components, pages, and themes",
   "type": "module",
   "license": "Apache-2.0",
