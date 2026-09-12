@@ -10,6 +10,79 @@ ever reference the variables, so a single override file re-skins everything.
   --prui-radius-3: 10px;
   --prui-radius-full: 9999px;
   --prui-dim-op: 0.62;
+
+  /* ---- semantic z-index scale --------------------------------------
+     Never hardcode a z value in a component; reference one of these so
+     overlay stacking stays an ordered, documented contract.
+     header 30 < drawer 40 < overlay 50 < flyout 60 < tooltip 70
+     < modal 10000 < confirm 10010 < toast 10100                        */
+  --prui-z-header: 30;        /* sticky app header */
+  --prui-z-drawer: 40;        /* mobile navigation drawer */
+  --prui-z-overlay: 50;       /* dialogs, palettes, anchored menus */
+  --prui-z-flyout: 60;        /* collapsed-rail nav flyout */
+  --prui-z-tooltip: 70;       /* tooltips above overlays */
+  --prui-z-modal: 10000;      /* Modal + Sheet + Drawer surfaces */
+  --prui-z-confirm: 10010;    /* imperative confirmModal */
+  --prui-z-toast: 10100;      /* toasts always win */
+  --prui-z-content: 1;        /* content above its own backdrop/header (intra-surface) */
+
+  /* ---- motion tokens ------------------------------------------------ */
+  --prui-duration-fast: 150ms;
+  --prui-duration-base: 200ms;
+  --prui-duration-slow: 300ms;
+  --prui-ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --prui-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --prui-ease-spring: cubic-bezier(0.34, 1.3, 0.64, 1);
+
+  /* ---- opacity tokens ----------------------------------------------- */
+  --prui-opacity-disabled: 0.5;
+  --prui-opacity-muted: 0.62;
+  --prui-opacity-overlay: 0.55;
+
+  /* ---- scrim (overlay backdrop color) ------------------------------- */
+  --prui-scrim: rgba(0, 0, 0, 0.55);
+
+  /* ---- spacing scale ------------------------------------------------ */
+  --prui-space-0: 0px;
+  --prui-space-1: 4px;
+  --prui-space-2: 8px;
+  --prui-space-3: 12px;
+  --prui-space-4: 16px;
+  --prui-space-5: 20px;
+  --prui-space-6: 24px;
+  --prui-space-8: 32px;
+  --prui-space-10: 40px;
+  --prui-space-12: 48px;
+
+  /* ---- typography scale (size + line-height pairs) ------------------- */
+  --prui-text-2xs: 10px;   --prui-text-2xs-lh: 14px;
+  --prui-text-xs: 12px;    --prui-text-xs-lh: 16px;
+  --prui-text-sm: 14px;    --prui-text-sm-lh: 20px;
+  --prui-text-base: 16px;  --prui-text-base-lh: 24px;
+  --prui-text-lg: 18px;    --prui-text-lg-lh: 28px;
+  --prui-text-xl: 20px;    --prui-text-xl-lh: 28px;
+  --prui-text-2xl: 24px;   --prui-text-2xl-lh: 32px;
+  --prui-text-3xl: 30px;   --prui-text-3xl-lh: 36px;
+
+  /* ---- font weights -------------------------------------------------- */
+  --prui-weight-normal: 400;
+  --prui-weight-medium: 500;
+  --prui-weight-semibold: 600;
+  --prui-weight-bold: 700;
+
+  /* ---- elevation (dark-first; light mode overrides below) ------------ */
+  --prui-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.28);
+  --prui-shadow-md: 0 4px 12px rgb(0 0 0 / 0.32);
+  --prui-shadow-lg: 0 12px 32px rgb(0 0 0 / 0.4);
+  --prui-shadow-modal: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 10px 10px -5px rgb(0 0 0 / 0.2);
+}
+
+/* Light mode: softer shadows and a lighter scrim */
+.prui-mode-light {
+  --prui-shadow-sm: 0 1px 2px rgb(16 24 40 / 0.08);
+  --prui-shadow-md: 0 4px 12px rgb(16 24 40 / 0.12);
+  --prui-shadow-lg: 0 12px 32px rgb(16 24 40 / 0.16);
+  --prui-shadow-modal: 0 20px 25px -5px rgb(16 24 40 / 0.16), 0 10px 10px -5px rgb(16 24 40 / 0.08);
 }
 
 /* control (dark, blue accent) is the default theme */
@@ -55,9 +128,43 @@ body.modal-open { overflow: hidden; }
 .prui-tex-diagonal {
   background-image: repeating-linear-gradient(-45deg, var(--prui-tex-c, var(--prui-line)) 0 1px, transparent 1px 8px);
 }
-.prui-elev-sm { box-shadow: 0 1px 2px rgb(0 0 0 / 0.28); }
-.prui-elev-md { box-shadow: 0 4px 12px rgb(0 0 0 / 0.32); }
-.prui-elev-lg { box-shadow: 0 12px 32px rgb(0 0 0 / 0.4); }
+.prui-elev-sm { box-shadow: var(--prui-shadow-sm); }
+.prui-elev-md { box-shadow: var(--prui-shadow-md); }
+.prui-elev-lg { box-shadow: var(--prui-shadow-lg); }
+
+/* Named motion presets (all honor prefers-reduced-motion below). */
+@keyframes prui-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes prui-slide-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes prui-skeleton-wave { from { opacity: 0.55; } to { opacity: 1; } }
+@keyframes prui-progress-indeterminate { 0% { margin-inline-start: -33%; } 100% { margin-inline-start: 100%; } }
+.prui-anim-fade { animation: prui-fade-in var(--prui-duration-base) var(--prui-ease-out); }
+.prui-anim-slide { animation: prui-slide-in var(--prui-duration-slow) var(--prui-ease-out); }
+.prui-skeleton { background-color: var(--prui-raise); animation: prui-skeleton-wave 1.4s var(--prui-ease-in-out) infinite alternate; }
+.prui-progress-indeterminate { animation: prui-progress-indeterminate 1.2s var(--prui-ease-in-out) infinite; }
+
+/* Reduced motion: disable shake, scale, fade, slide everywhere PRUI draws
+   them. The !important is required to override inline transition styles. */
+@media (prefers-reduced-motion: reduce) {
+  .prui-modal-shake,
+  .prui-modal-overlay,
+  .prui-modal-content,
+  .prui-dialog-overlay,
+  .prui-dialog-content,
+  .prui-drawer-overlay,
+  .prui-drawer-panel,
+  .prui-sheet-overlay,
+  .prui-sheet-panel,
+  .prui-toast,
+  .prui-skeleton,
+  .prui-progress-indeterminate,
+  .prui-anim-fade,
+  .prui-anim-scale,
+  .prui-anim-slide {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
 
 /* prui-card participates in the surface layer */
 .prui-card {

@@ -1,3 +1,5 @@
+import * as React from "react"
+
 /**
  * PRUI theme system.
  * Tokens are CSS variables set by the named theme classes in this package.
@@ -279,4 +281,50 @@ export const themeMeta = {
     { name: "target", type: "HTMLElement", default: "document.documentElement", control: "none" },
     { name: "storageKey", type: "string | null", default: "'prui:theme'", control: "text" },
   ],
+} as const
+
+/* ------------------------------------------------------------------ */
+/* Design token constants (JS mirror of the CSS custom properties)     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Breakpoint thresholds in px — the JS mirror of the CSS breakpoints the
+ * shell uses (48rem = 768px "md"; the mobile rail grid ends at 47.99rem).
+ * Components that need to branch on viewport in JS read these instead of
+ * hardcoding pixel values.
+ */
+export const PRUI_BREAKPOINTS = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  "2xl": 1536,
+} as const
+
+export type BreakpointName = keyof typeof PRUI_BREAKPOINTS
+
+/** MatchMedia hook over PRUI_BREAKPOINTS (SSR-safe: false until mounted). */
+export function useBreakpointAtLeast(name: BreakpointName): boolean {
+  const [matches, setMatches] = React.useState(false)
+  React.useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return
+    const mq = window.matchMedia(`(min-width: ${PRUI_BREAKPOINTS[name]}px)`)
+    const onChange = () => setMatches(mq.matches)
+    onChange()
+    mq.addEventListener("change", onChange)
+    return () => mq.removeEventListener("change", onChange)
+  }, [name])
+  return matches
+}
+
+/** The named semantic token groups PRUI ships in base.css. */
+export const PRUI_DESIGN_TOKENS = {
+  radius: ["--prui-radius-1", "--prui-radius-2", "--prui-radius-3", "--prui-radius-full"],
+  zIndex: ["--prui-z-header", "--prui-z-drawer", "--prui-z-overlay", "--prui-z-flyout", "--prui-z-tooltip", "--prui-z-modal", "--prui-z-confirm", "--prui-z-toast", "--prui-z-content"],
+  motion: ["--prui-duration-fast", "--prui-duration-base", "--prui-duration-slow", "--prui-ease-out", "--prui-ease-in-out", "--prui-ease-spring"],
+  spacing: ["--prui-space-1", "--prui-space-2", "--prui-space-3", "--prui-space-4", "--prui-space-5", "--prui-space-6", "--prui-space-8", "--prui-space-10", "--prui-space-12"],
+  typography: ["--prui-text-xs", "--prui-text-sm", "--prui-text-base", "--prui-text-lg", "--prui-text-xl", "--prui-text-2xl", "--prui-text-3xl"],
+  weight: ["--prui-weight-normal", "--prui-weight-medium", "--prui-weight-semibold", "--prui-weight-bold"],
+  elevation: ["--prui-shadow-sm", "--prui-shadow-md", "--prui-shadow-lg", "--prui-shadow-modal"],
+  opacity: ["--prui-opacity-disabled", "--prui-opacity-muted", "--prui-opacity-overlay"],
 } as const
