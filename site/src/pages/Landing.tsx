@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { Button, Badge, Switch, Tabs, TabsList, TabsTrigger, TabsContent, Input } from "prui/core"
+import { Button, Badge, Switch, Tabs, TabsList, TabsTrigger, TabsContent, Input, Alert, Progress, Spinner, toast, Toaster } from "prui/core"
 import { CopyButton } from "../components/CopyButton"
 
 export function LandingPage() {
@@ -66,11 +66,15 @@ export function LandingPage() {
         </div>
         <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4">
           <div className="mb-3 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[var(--prui-dim)]">feedback</div>
-          <div className="flex min-h-9 flex-wrap items-center gap-2">
-            <Badge variant="ok">active</Badge>
-            <Badge variant="warn">beta</Badge>
-            <Badge variant="brand">new</Badge>
+          <div className="flex min-h-9 flex-col justify-center gap-2.5">
+            <Alert variant="success" className="text-xs">Deployed · build 128 is live</Alert>
+            <Progress value={72} aria-label="Uploading build" />
+            <div className="flex items-center gap-2.5">
+              <Spinner size="sm" label="Syncing" />
+              <Button size="sm" variant="ghost" onClick={() => toast({ title: "Build 128 is live", variant: "success" })}>toast()</Button>
+            </div>
           </div>
+          <Toaster />
         </div>
       </div>
 
