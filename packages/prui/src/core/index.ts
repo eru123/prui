@@ -3,6 +3,26 @@ export { cn } from "./cn"
 export { resolveSurface, withSurface, type SurfaceProps, type SurfaceRadius, type SurfaceTexture, type SurfaceElevation } from "./surface"
 export type { PropsMeta, PropMeta, PropControl } from "./props-meta"
 
+/* Shared overlay + keyboard-navigation infrastructure (used by every
+   floating surface; exported for advanced composition). */
+export {
+  Portal,
+  useReducedMotion,
+  useFocusTrap,
+  useEscapeKey,
+  useScrollLock,
+  useInertBackground,
+  useOverlay,
+  useOverlayStack,
+  pushOverlay,
+  removeOverlay,
+  isTopOverlay,
+  overlayCount,
+  getFocusable,
+  overlayPropsMeta,
+} from "./overlay"
+export { moveIndex, homeIndex, endIndex, typeaheadIndex } from "./list-nav"
+
 export {
   Button,
   buttonPropsMeta,
@@ -99,3 +119,33 @@ export {
   type ConfirmModalOptions,
   type ConfirmModalType,
 } from "./modal"
+
+export { computePosition, useAnchoredPosition, type AnchorSide, type AnchorAlign, type AnchoredPosition } from "./anchor"
+
+/* Feedback primitives */
+export { Spinner, spinnerPropsMeta, type SpinnerProps, type SpinnerSize } from "./spinner"
+export { Skeleton, skeletonPropsMeta, type SkeletonProps } from "./skeleton"
+export { Alert, alertPropsMeta, type AlertProps, type AlertVariant } from "./alert"
+export { Progress, progressPropsMeta, type ProgressProps } from "./progress"
+export { Toaster, toast, dismissAllToasts, toasterPropsMeta, toastPropsMeta, type ToasterProps, type ToastOptions, type ToastVariant, type ToastHandle } from "./toast"
+
+/* Overlays */
+export { Tooltip, tooltipPropsMeta, type TooltipProps } from "./tooltip"
+export { Popover, popoverPropsMeta, type PopoverProps } from "./popover"
+export { Drawer, Sheet, drawerPropsMeta, sheetPropsMeta, type DrawerProps, type DrawerSide } from "./drawer"
+
+/* Form controls */
+export { Checkbox, checkboxPropsMeta, type CheckboxProps } from "./checkbox"
+export { RadioGroup, Radio, radioGroupPropsMeta, type RadioGroupProps, type RadioProps } from "./radio"
+export { Combobox, comboboxPropsMeta, type ComboboxProps, type ComboboxOption } from "./combobox"
+
+/* Navigation + display */
+export { Accordion, AccordionItem, accordionPropsMeta, type AccordionProps, type AccordionItemProps } from "./accordion"
+export { Breadcrumb, BreadcrumbItem, BreadcrumbEllipsis, breadcrumbPropsMeta, type BreadcrumbProps, type BreadcrumbItemProps } from "./breadcrumb"
+export { TreeView, treeViewPropsMeta, type TreeViewProps, type TreeViewItem } from "./tree-view"
+export { Timeline, timelinePropsMeta, type TimelineProps, type TimelineItemData, type TimelineVariant } from "./timeline"
+
+/* Dates + files */
+export { Calendar, calendarPropsMeta, toDateKey, fromDateKey, type CalendarProps } from "./calendar"
+export { DatePicker, DateRangePicker, datePickerPropsMeta, dateRangePickerPropsMeta, type DatePickerProps, type DateRangePickerProps, type DateRange } from "./date-picker"
+export { FileUpload, fileUploadPropsMeta, type FileUploadProps } from "./file-upload"
