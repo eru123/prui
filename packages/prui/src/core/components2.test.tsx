@@ -249,7 +249,7 @@ describe("DatePicker / DateRangePicker", () => {
     const onChange = vi.fn()
     render(<DatePicker onChange={onChange} ariaLabel="Start date" />)
     await user.click(screen.getByRole("combobox", { name: "Start date" }))
-    expect(screen.getByRole("dialog", { name: "Choose date" })).toBeInTheDocument()
+    expect(screen.getByRole("dialog", { name: "Start date" })).toBeInTheDocument()
     await user.click(screen.getByRole("gridcell", { name: "10" }))
     expect(onChange).toHaveBeenCalled()
     expect(screen.queryByRole("dialog")).toBeNull()
