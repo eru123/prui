@@ -400,6 +400,7 @@ describe("Shell layouts (layoutType)", () => {
     const toggle = screen.getByTestId("sidebar-toggle")
     expect(header).toContainElement(toggle)
     const brand = within(header).getAllByText("T")[0]
+    if (!brand) throw new Error("brand not found in the header")
     expect(toggle.compareDocumentPosition(brand) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     // hidden below md: the drawer hamburger rules mobile
     expect(toggle.className).toContain("md:inline-flex")
