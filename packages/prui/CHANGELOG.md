@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.9.1
+
+### Patch Changes
+
+- - clear shake and toast timers on teardown
+
 ## 0.9.0
 
 ### Minor Changes
