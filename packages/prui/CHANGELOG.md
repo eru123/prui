@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.4.2
+
+### Patch Changes
+
+- - theme switcher clears builder token overlays so switching themes applies again
+
 ## 0.4.1
 
 ### Patch Changes
