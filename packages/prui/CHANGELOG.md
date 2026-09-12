@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.7.0
+
+### Minor Changes
+
+- - collapsed-rail nav groups open a flyout menu instead of expanding inline
+
 ## 0.6.0
 
 ### Minor Changes
