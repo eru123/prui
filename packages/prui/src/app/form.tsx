@@ -6,6 +6,7 @@ import { Select } from "../core/select"
 import { Switch } from "../core/switch"
 import { cn } from "../core/cn"
 import type { PropsMeta } from "../core/props-meta"
+import { usePruiI18n } from "../i18n"
 
 /**
  * Schema-driven Form: fields from a schema, validation display included.
@@ -90,11 +91,12 @@ export function Form({
   defaultValues,
   onSubmit,
   onCancel,
-  cancelLabel = "Cancel",
+  cancelLabel,
   submitting = false,
   error,
   className,
 }: FormProps) {
+  const { t } = usePruiI18n()
   const schema = React.useMemo(() => normalizeSchema(schemaInput), [schemaInput])
   const mergedInitials = initialValues ?? defaultValues
   const [values, setValues] = React.useState<Record<string, unknown>>(() => defaultsFor(schema, mergedInitials))
@@ -124,7 +126,7 @@ export function Form({
       if (f.required) {
         const v = values[f.name]
         const empty = v === "" || v == null || (Array.isArray(v) && v.length === 0)
-        if (empty) nextErrors[f.name] = f.name === undefined ? "Required" : `${f.label} is required.`
+        if (empty) nextErrors[f.name] = t.requiredField.replace("{label}", f.label)
       }
       const custom = f.validate?.(values[f.name], values)
       if (custom) nextErrors[f.name] = custom
@@ -223,7 +225,7 @@ export function Form({
       <div className="flex items-center justify-end gap-2">
         {onCancel ? (
           <Button type="button" variant="ghost" onClick={onCancel} disabled={loading}>
-            {cancelLabel}
+            {cancelLabel ?? t.cancel}
           </Button>
         ) : null}
         <Button type="submit" variant="primary" loading={loading}>

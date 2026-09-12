@@ -9,9 +9,20 @@ import { cn } from "../core/cn"
 import type { PropsMeta } from "../core/props-meta"
 import { getFormApi, registerForm } from "./registry"
 import type { FormApi, FormFieldRule, FormMessage, FormGroupColumns, FormSnapshot, SafeParseSchema } from "./types"
+import { getPruiDictionary } from "../i18n"
+
+const dict = () => getPruiDictionary()
+const fill = (template: string, vars: Record<string, string | number>) =>
+  template.replace(/\{(\w+)\}/g, (_, k) => String(vars[k] ?? ""))
 
 /**
  * Higher-order forms.
+ *
+ * **Deprecated:** this registry-driven `<Form>` (with FormInput /
+ * FormButton) is superseded by the schema-driven `<Form>` from
+ * `@skiddph/prui/app`, which is the canonical implementation. This module
+ * stays fully functional for backwards compatibility; see the migration
+ * guide in the docs (Forms page → Migration notes).
  *
  * - <Form id="user"> owns state and validation. Optional zod-shaped schema.
  * - <FormGroup> groups inputs on one line with responsive column config.
@@ -22,6 +33,18 @@ import type { FormApi, FormFieldRule, FormMessage, FormGroupColumns, FormSnapsho
  *   footers, toolbars, anywhere. It can disable itself while the form is
  *   invalid or pristine.
  */
+
+let deprecationWarned = false
+
+function warnDeprecation(): void {
+  if (deprecationWarned || typeof process !== "undefined" && process.env?.NODE_ENV === "test") return
+  deprecationWarned = true
+  console.warn(
+    "[prui] The registry-driven <Form> from '@skiddph/prui/forms' is deprecated. " +
+      "Migrate to the schema-driven <Form> from '@skiddph/prui/app' — see the Forms page " +
+      "migration notes. This implementation keeps working and will not be removed before v2.",
+  )
+}
 
 /* ---------------- form context ---------------- */
 
@@ -49,22 +72,23 @@ function isEmptyValue(v: unknown): boolean {
 }
 
 function validateValue(value: unknown, rule: FormFieldRule, values: Record<string, unknown>): string | null {
-  if (rule.required && isEmptyValue(value)) return `${rule.label} is required.`
+  const t = dict()
+  if (rule.required && isEmptyValue(value)) return fill(t.requiredField, { label: rule.label })
   if (isEmptyValue(value)) return null
   if (rule.minLength !== undefined && String(value).length < rule.minLength) {
-    return `${rule.label} must be at least ${rule.minLength} characters.`
+    return fill(t.minLength, { label: rule.label, min: rule.minLength })
   }
   if (rule.maxLength !== undefined && String(value).length > rule.maxLength) {
-    return `${rule.label} must be at most ${rule.maxLength} characters.`
+    return fill(t.maxLength, { label: rule.label, max: rule.maxLength })
   }
   if (rule.min !== undefined && typeof value === "number" && value < rule.min) {
-    return `${rule.label} must be ${rule.min} or more.`
+    return fill(t.minNumber, { label: rule.label, min: rule.min })
   }
   if (rule.max !== undefined && typeof value === "number" && value > rule.max) {
-    return `${rule.label} must be ${rule.max} or less.`
+    return fill(t.maxNumber, { label: rule.label, max: rule.max })
   }
   if (rule.pattern && !rule.pattern.test(String(value))) {
-    return rule.patternMessage ?? `${rule.label} has an invalid format.`
+    return rule.patternMessage ?? fill(t.invalidFormat, { label: rule.label })
   }
   return rule.validate?.(value, values) ?? null
 }
@@ -85,7 +109,18 @@ export interface FormProps {
   className?: string
 }
 
+/**
+ * Registry-driven form (deprecated).
+ *
+ * @deprecated Superseded by the schema-driven Form from `@skiddph/prui/app`.
+ * This implementation keeps working (FormButton, the form registry, and
+ * cross-scope control all remain); it will not be removed before v2.
+ * See the docs Forms page for migration notes.
+ */
 export function Form({ id, children, schema, initialValues = {}, onSubmit, onReset, validateOnChange = true, className }: FormProps) {
+  React.useEffect(() => {
+    warnDeprecation()
+  }, [])
   const [values, setValues] = React.useState<Record<string, unknown>>({ ...initialValues })
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const [formError, setFormError] = React.useState<string | null>(null)
