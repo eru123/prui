@@ -61,10 +61,16 @@ export interface PruiDictionary {
   switchTheme: string
   expandSidebar: string
   collapseSidebar: string
-  /* dates */
+  /* dates & time */
   today: string
   clear: string
   apply: string
+  time: string
+  hours: string
+  minutes: string
+  seconds: string
+  from: string
+  to: string
   /* file upload */
   dropFiles: string
   browseFiles: string
@@ -126,6 +132,12 @@ export const defaultDictionary: PruiDictionary = {
   today: "Today",
   clear: "Clear",
   apply: "Apply",
+  time: "Time",
+  hours: "Hours",
+  minutes: "Minutes",
+  seconds: "Seconds",
+  from: "From",
+  to: "To",
 
   dropFiles: "Drag files here or click to browse",
   browseFiles: "Browse files",

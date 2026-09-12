@@ -94,10 +94,13 @@ export {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogBody,
   DialogFooter,
   dialogPropsMeta,
+  dialogBodyPropsMeta,
   type DialogProps,
   type DialogContentProps,
+  type DialogBodyProps,
 } from "./dialog"
 
 export {
@@ -147,5 +150,6 @@ export { Timeline, timelinePropsMeta, type TimelineProps, type TimelineItemData,
 
 /* Dates + files */
 export { Calendar, calendarPropsMeta, toDateKey, fromDateKey, type CalendarProps } from "./calendar"
-export { DatePicker, DateRangePicker, datePickerPropsMeta, dateRangePickerPropsMeta, type DatePickerProps, type DateRangePickerProps, type DateRange } from "./date-picker"
+export { DatePicker, DateRangePicker, datePickerPropsMeta, dateRangePickerPropsMeta, type DatePickerProps, type DateRangePickerProps, type DateRange, type MaxRange } from "./date-picker"
+export { TimePicker, TimeRangePicker, TimePanel, timePickerPropsMeta, timeRangePickerPropsMeta, type TimePickerProps, type TimeRangePickerProps, type TimeRange } from "./time-picker"
 export { FileUpload, fileUploadPropsMeta, type FileUploadProps } from "./file-upload"
