@@ -7,7 +7,7 @@ export function SwitchDoc() {
     <ComponentDoc
       name="Switch"
       importPath="@skiddph/prui/core"
-      description="Binary toggle with immediate effect — no submit required. role=switch with full keyboard support; controlled or uncontrolled."
+      description="Binary toggle with immediate effect: no submit required. role=switch with full keyboard support; controlled or uncontrolled."
       when={[
         "Settings and preferences that apply instantly",
         "Feature flags, enable/disable states",
@@ -32,7 +32,7 @@ export function SwitchDoc() {
       ]}
       examples={[{ title: "In Settings toggles", code: `<SettingsPage toggles={[{ id: "notif", label: "Notifications", onChange: save }]} />` }]}
       dos={["Label every switch (aria-label or visible text)", "Apply the effect immediately on change"]}
-      donts={["Don't use for things needing confirmation — use a checkbox or dialog", "Don't hide the current state; show the value beside it"]}
+      donts={["Don't use for things needing confirmation: use a checkbox or dialog", "Don't hide the current state; show the value beside it"]}
     />
   )
 }

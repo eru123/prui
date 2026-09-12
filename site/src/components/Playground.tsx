@@ -2,14 +2,14 @@ import * as React from "react"
 import type { PropsMeta, PropMeta } from "prui/core"
 import { Input, Switch, Select } from "prui/core"
 import { CodeView } from "./CodeView"
+import { applySnippet, parseSnippet } from "../lib/snippet"
 
 /**
- * Playground engine: controls are generated from the component's propsMeta
- * (single source, AC-4/AC-15), the demo re-renders live, and the snippet
- * below stays in sync with the current prop values.
+ * Playground engine: two-way. Controls are generated from the component's
+ * propsMeta (single source, AC-4/AC-15) and regenerate the snippet; edits
+ * in the snippet parse back into prop values, validated against the same
+ * propsMeta, so the demo reflects the code and violations show as errors.
  */
-
-export { CopyButton } from "./CopyButton"
 
 export type PropValues = Record<string, unknown>
 
@@ -63,14 +63,70 @@ function Control({ meta, value, onChange }: { meta: PropMeta; value: unknown; on
   }
 }
 
-export function usePlayground(meta: PropsMeta, overrides: Partial<PropValues> = {}) {
-  const [values, setValues] = React.useState<PropValues>(() => {
-    const initial: PropValues = {}
-    for (const p of meta.props) {
-      initial[p.name] = overrides[p.name] ?? defaultFor(p)
+function defaultFor(p: PropMeta): unknown {
+  if (p.control === "boolean") return String(p.default) === "true"
+  if (p.control === "number") return Number(p.default) || 0
+  if (p.default === null || String(p.default) === "undefined") return ""
+  return String(p.default).replace(/^['"]|['"]$/g, "")
+}
+
+/** Baseline values: defaults plus caller overrides, used as the parse target. */
+function baseValues(meta: PropsMeta, overrides: Partial<PropValues> = {}): PropValues {
+  const initial: PropValues = {}
+  for (const p of meta.props) {
+    initial[p.name] = overrides[p.name] ?? defaultFor(p)
+  }
+  return initial
+}
+
+function literalFor(v: unknown): string {
+  if (typeof v === "string") return v
+  if (typeof v === "boolean") return v ? "true" : "false"
+  return String(v ?? "")
+}
+
+/** Rebuild the single-element snippet from current values. */
+function buildSnippet(meta: PropsMeta, values: PropValues, overrides: Partial<PropValues> = {}): string {
+  const attrs: string[] = []
+  for (const p of meta.props) {
+    if (p.name === "children") continue
+    if (p.control === "none" || p.control === "object" || p.control === "icon") {
+      if (p.name in overrides) continue
+      continue
     }
-    return initial
-  })
+    const def = defaultFor(p)
+    const v = values[p.name]
+    const isDefault = String(v) === String(def) && def !== null && String(def) !== "undefined"
+    if (isDefault && !(p.name in overrides)) continue
+    if (p.control === "boolean") {
+      attrs.push(`${p.name}={${v ? "true" : "false"}}`)
+    } else if (p.control === "number") {
+      attrs.push(`${p.name}={${Number(v)}}`)
+    } else if (p.control === "select") {
+      attrs.push(`${p.name}="${literalFor(v)}"`)
+    } else if (p.control === "multiselect") {
+      attrs.push(`${p.name}={[${(Array.isArray(v) ? v : []).map((s) => `'${s}'`).join(", ")}]}`)
+    } else {
+      attrs.push(`${p.name}="${literalFor(v)}"`)
+    }
+  }
+  const children = typeof values.children === "string" && values.children ? values.children : ""
+  const inner = attrs.length ? " " + attrs.join(" ") : ""
+  return children
+    ? `<${meta.name}${inner}>${children}</${meta.name}>`
+    : `<${meta.name}${inner} />`
+}
+
+export function usePlayground(meta: PropsMeta, overrides: Partial<PropValues> = {}) {
+  const base = React.useMemo(() => baseValues(meta, overrides), [meta, overrides])
+  const [values, setValues] = React.useState<PropValues>(base)
+  const [codeText, setCodeText] = React.useState<string>(() => buildSnippet(meta, base, overrides))
+  const [errors, setErrors] = React.useState<string[]>([])
+
+  const canonical = React.useCallback(
+    (v: PropValues) => buildSnippet(meta, v, overrides),
+    [meta, overrides],
+  )
 
   const controls = meta.props.filter(
     (p) => p.control !== "none" && !(p.name === "children" && overrides.children !== undefined),
@@ -82,35 +138,31 @@ export function usePlayground(meta: PropsMeta, overrides: Partial<PropValues> = 
         <Control
           key={p.name}
           meta={p}
-          value={p.name in overrides && p.control === "none" ? undefined : values[p.name]}
-          onChange={(v) => setValues((s) => ({ ...s, [p.name]: v }))}
+          value={values[p.name]}
+          onChange={(v) => {
+            const next = { ...values, [p.name]: v }
+            setValues(next)
+            setCodeText(canonical(next))
+            setErrors([])
+          }}
         />
       ))}
     </div>
   )
 
-  const snippetProps = Object.entries(values)
-    .filter(([k, v]) => {
-      const m = meta.props.find((p) => p.name === k)
-      if (!m) return false
-      if (m.control === "none" && !(k in overrides)) return false
-      const def = m.default
-      return !(String(v) === String(def ?? "") && def !== null && String(def) !== "undefined")
-    })
-    .map(([k, v]) => {
-      if (typeof v === "string") return `${k}="${v}"`
-      if (typeof v === "boolean") return v ? k : `${k}={false}`
-      return `${k}={${JSON.stringify(v)}}`
-    })
+  const onEdit = (raw: string) => {
+    setCodeText(raw)
+    const { parsed, error } = parseSnippet(raw)
+    if (error || !parsed) {
+      setErrors([error ?? "Could not parse the snippet."])
+      return
+    }
+    const { values: merged, errors: errs } = applySnippet(meta, parsed, base)
+    setValues(merged)
+    setErrors(errs)
+  }
 
-  return { values, panel, snippetProps, setValues }
-}
-
-function defaultFor(p: PropMeta): unknown {
-  if (p.control === "boolean") return String(p.default) === "true"
-  if (p.control === "number") return Number(p.default) || 0
-  if (p.default === null || String(p.default) === "undefined") return ""
-  return String(p.default).replace(/^['"]|['"]$/g, "")
+  return { values, panel, onEdit, codeText, errors, canonical }
 }
 
 export function Playground({
@@ -124,13 +176,10 @@ export function Playground({
   meta: PropsMeta
   render: (values: PropValues) => React.ReactNode
   defaults?: Partial<PropValues>
+  /** Optional custom snippet builder; defaults to a single-element tag. */
   code?: (values: PropValues) => string
 }) {
-  const { values, panel, snippetProps } = usePlayground(meta, defaults)
-  const componentName = meta.name
-  const snippet =
-    code?.(values) ??
-    `<${componentName}${snippetProps.length ? " " + snippetProps.join(" ") : ""}>${String(values.children ?? "")}</${componentName}>`
+  const { values, panel, onEdit, codeText, errors, canonical } = usePlayground(meta, defaults)
 
   return (
     <section id={title.toLowerCase().replace(/\s+/g, "-")} className="mb-8 scroll-mt-20" data-testid="playground">
@@ -149,8 +198,31 @@ export function Playground({
           {panel}
         </div>
         <div className="border-t border-[var(--prui-line)] bg-[var(--prui-background)]">
-          <CodeView code={snippet} title="snippet" className="overflow-hidden" />
+          <CodeView
+            code={codeText}
+            canonical={code?.(values) ?? canonical(values)}
+            onEdit={onEdit}
+            title="snippet"
+            language="tsx"
+            className="overflow-hidden"
+          />
         </div>
+        {errors.length ? (
+          <div className="border-t border-[var(--prui-line)] px-4 py-3" role="alert" data-testid="playground-errors">
+            <ul className="flex list-disc flex-col gap-1 pl-4">
+              {errors.map((e) => (
+                <li key={e} className="text-xs text-[var(--prui-danger)]">{e}</li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="border-t border-[var(--prui-line)] px-4 py-2.5">
+            <p className="text-[11px] text-[var(--prui-dim)]">
+              The editor drives this demo. Props are checked against the spec table below as you type; reset puts the
+              original snippet back.
+            </p>
+          </div>
+        )}
       </div>
       <PropsTable meta={meta} />
     </section>

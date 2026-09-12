@@ -26,7 +26,7 @@ import {
 } from "./designer/state"
 
 /**
- * /designer — visual app builder (proposal AC-12/13/14).
+ * /designer: visual app builder (proposal AC-12/13/14).
  * Canvas: the real <App> renders live in an iframe. Tools: branding, nav
  * editor (drag-to-reorder/nest + JSON), structure toggles, theme + token
  * overrides. Every change regenerates the <App> code; structural edits are
@@ -136,8 +136,8 @@ export function DesignerPage() {
       </div>
       <h1 className="mb-1 text-2xl font-bold tracking-tight text-[var(--prui-fg)]">Designer</h1>
       <p className="mb-6 max-w-[60ch] text-sm text-[var(--prui-dim)]">
-        The canvas renders the real <code className="rounded bg-[var(--prui-raise)] px-1">&lt;App&gt;</code> from the package —
-        configure it on the right, drag nav items to reorder or nest, and copy the generated code. State lives in the URL.
+        The canvas renders the real <code className="rounded bg-[var(--prui-raise)] px-1">&lt;App&gt;</code> from the package.
+        Configure it on the right, drag nav items to reorder or nest, and copy the generated code. State lives in the URL.
       </p>
 
       <div className="flex flex-col gap-4 lg:flex-row">
@@ -145,7 +145,7 @@ export function DesignerPage() {
         <div className="min-w-0 flex-1">
           <div className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
             <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-2 font-mono text-[11px] text-[var(--prui-dim)]">
-              <span>canvas / live preview — the real &lt;App&gt;</span>
+              <span>canvas / live preview: the real &lt;App&gt;</span>
               <Badge variant="ok">live</Badge>
             </div>
             <DesignerPreview state={state} />

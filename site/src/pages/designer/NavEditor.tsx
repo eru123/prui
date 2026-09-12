@@ -24,7 +24,7 @@ import { canDrop, type FlatNav } from "./state"
 /**
  * Nav editor (AC-14): drag-to-reorder, drag-to-nest (drop a row onto a
  * group's nest strip), select-to-edit inline fields, indent/outdent and
- * delete. Validity is enforced by state.unflattenNav — every gesture ends
+ * delete. Validity is enforced by state.unflattenNav: every gesture ends
  * in a valid config. A Monaco JSON mode edits the same tree as code.
  */
 

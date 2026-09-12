@@ -26,7 +26,7 @@ export function AvatarDoc() {
       ]}
       examples={[{ title: "In a table cell", code: `{ key: "assignee", render: (r) => <Avatar alt={r.assignee} src={r.avatar} /> }` }]}
       dos={["Always pass alt (drives initials)"]}
-      donts={["Don't stretch non-square images — object-cover crops automatically"]}
+      donts={["Don't stretch non-square images: object-cover crops automatically"]}
     />
   )
 }

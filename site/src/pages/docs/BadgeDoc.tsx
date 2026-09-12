@@ -30,7 +30,7 @@ export function BadgeDoc() {
       ]}
       examples={[{ title: "Status column in a table", code: `{ key: "status", label: "Status", render: (r) => <Badge variant={r.on ? "ok" : "warn"}>{r.status}</Badge> }` }]}
       dos={["Map semantics to variants consistently: ok=healthy, warn=attention, danger=failing"]}
-      donts={["Don't put long text in badges", "Don't use badges for actions — they're labels"]}
+      donts={["Don't put long text in badges", "Don't use badges for actions: they're labels"]}
     />
   )
 }

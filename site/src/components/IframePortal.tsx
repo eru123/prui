@@ -5,7 +5,7 @@ import { createRoot, type Root } from "react-dom/client"
  * IframeIsland: mounts a SEPARATE React root inside an iframe document.
  * A portal would inherit the host tree's context (its BrowserRouter, theme
  * state), so preview content that owns a <MemoryRouter> crashes with
- * "Router inside Router" — a fresh createRoot has no inherited context.
+ * "Router inside Router": a fresh createRoot has no inherited context.
  * The host clones its styles into the frame; the sandbox allows same-origin
  * only, so the parent owns the DOM and no scripts run inside the frame.
  */

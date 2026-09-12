@@ -9,8 +9,8 @@ export function TextareaDoc() {
     <ComponentDoc
       name="Textarea"
       importPath="@skiddph/prui/core"
-      description="A multi-line text field styled on the same tokens as Input — resize enabled, theme-aware."
-      when={["Notes, descriptions, messages — anything over one line", "Schema-driven forms via <Form> (type: 'textarea')"]}
+      description="A multi-line text field styled on the same tokens as Input: resize enabled, theme-aware."
+      when={["Notes, descriptions, messages: anything over one line", "Schema-driven forms via <Form> (type: 'textarea')"]}
       demos={[
         {
           title: "Basic",
@@ -47,7 +47,7 @@ export function TextareaDoc() {
       api={<PropsTable meta={textareaPropsMeta} />}
       examples={[{ title: "Disabled state", code: `<Textarea disabled placeholder="Read only" />` }]}
       dos={["Pair with a Label", "Set sensible rows for expected content"]}
-      donts={["Use for single-line values — use Input", "Rely on resize in fixed layouts — set rows"]}
+      donts={["Use for single-line values: use Input", "Rely on resize in fixed layouts: set rows"]}
     />
   )
 }

@@ -10,13 +10,13 @@ export function ButtonDoc() {
       description="The action trigger. Four variants cover the whole hierarchy: primary (one per view), default, ghost, and danger. Sizes sm/md/lg plus icon for square icon-only buttons."
       when={[
         "Triggering actions: save, submit, navigate, delete",
-        "Primary variant: the single main action of a view — never two primaries side by side",
+        "Primary variant: the single main action of a view: never two primaries side by side",
         "Ghost: toolbar and table-row actions where chrome would be noise",
         "Danger: destructive actions, always with a confirmation for irreversible ones",
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Button variant size loading disabled asChild&gt;</code> — a single
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Button variant size loading disabled asChild&gt;</code>: a single
           element; no wrapper parts. <code>asChild</code> merges classes and behavior onto its child (links stay links).
         </p>
       }
@@ -73,7 +73,7 @@ export function ButtonDoc() {
 </Button>`,
         },
         {
-          title: "asChild — button styles on a link",
+          title: "asChild: button styles on a link",
           render: (
             <Button asChild variant="default">
               <a href="https://prui.skiddph.com">Open docs</a>

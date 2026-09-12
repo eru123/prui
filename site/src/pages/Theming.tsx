@@ -36,7 +36,7 @@ export function ThemingPage() {
         <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">theming / tokens</div>
       <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Theming</h1>
       <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
-        Components reference CSS variables only — override one file, re-skin everything. Switch live from the header.
+        Components read CSS variables only. Override one file to re-skin everything, and switch live from the header.
       </p>
 
       <section id="tokens" className="mb-10 scroll-mt-20">
@@ -72,7 +72,7 @@ export function ThemingPage() {
           ))}
         </div>
         <p className="mt-3 text-sm text-[var(--prui-dim)]">
-          Import individually: <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui/theme/control.css</code> — or all at once via{" "}
+          Import individually: <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui/theme/control.css</code>, or all at once via{" "}
           <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui/styles.css</code>.
         </p>
       </section>
@@ -100,7 +100,7 @@ applyTheme({ theme: 'daylight' })      // light mode`}
           ))}
         </div>
         <p className="mt-3 flex items-center gap-2 text-sm text-[var(--prui-dim)]">
-          <Badge variant="ok">live</Badge> these buttons call applyTheme() right now — check the header toggle state.
+          <Badge variant="ok">live</Badge> these buttons call applyTheme() right now. Check the header toggle state.
         </p>
       </section>
       </div>

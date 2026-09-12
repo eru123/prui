@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, Badge } from "prui/core"
 
 const TRACE = [
   { src: "HRLabs/icanhelp/jianpms button.tsx", prui: "prui/core → Button", note: "icanhelp superset + HRLabs asChild; variants unified (primary/default/ghost/danger)" },
-  { src: "all four — input/label/textarea", prui: "prui/core → Input, Textarea, Label", note: "identical files three times over" },
+  { src: "all four: input/label/textarea", prui: "prui/core → Input, Textarea, Label", note: "identical files three times over" },
   { src: "jianpms packages/ui (radix wrappers)", prui: "prui/core → Select, Switch, Tabs, Dialog", note: "radix-free reimplementation with same composable part API" },
   { src: "icanhelp data-table*.tsx (8 files)", prui: "prui/data-table → DataTable, Toolbar, Faceted/DateRange/NumberRange filters, Pagination", note: "filters become column-config type names feeding <Resource>" },
   { src: "HRLabs DataTable.tsx", prui: "prui/data-table → DataTable", note: "sorting model unified with icanhelp cursor pagination" },

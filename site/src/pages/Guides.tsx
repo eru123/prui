@@ -37,10 +37,10 @@ export function GuidesPage() {
         <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Guides</h1>
 
       <Section id="install" title="Installation">
-        <p>PRUI ships react-router-dom, lucide-react, and React 19 as dependencies — one install, no peer wiring:</p>
-        <Code>{`pnpm add @skiddph/prui
+        <p>react, react-dom, and react-router-dom arrive with the package. lucide-react is a peer, so add both:</p>
+        <Code>{`pnpm add @skiddph/prui lucide-react
 
-# main.tsx — theme tokens + shell
+# main.tsx: theme tokens + shell
 import '@skiddph/prui/styles.css'
 import { App } from '@skiddph/prui/app'
 
@@ -55,7 +55,7 @@ import { App } from '@skiddph/prui/app'
           {[
             { t: "Super-components", d: "<App> + <Resource>. Minutes to a working admin.", b: "fastest" },
             { t: "Mix", d: "<App> shell, your own screens with prui/core primitives.", b: "balanced" },
-            { t: "Primitives only", d: "Button, DataTable, theme — your own layout.", b: "incremental" },
+            { t: "Primitives only", d: "Button, DataTable, theme, your own layout.", b: "incremental" },
           ].map((x) => (
             <Card key={x.t}>
               <CardHeader>
@@ -75,7 +75,7 @@ import { App } from '@skiddph/prui/app'
   pagesConfig={{ login: { fields: { remember: true } } }}
   nav={nav}
 >`}</Code>
-        <p>Routes /login, /register, /forgot-password, /reset-password, /otp, /logout — each page takes
+        <p>Routes /login, /register, /forgot-password, /reset-password, /otp, /logout. Each page takes
           <code> onSubmit</code>, <code>fields</code> (per-field show/hide), <code>links</code>, <code>oauth</code>, <code>brand</code>.</p>
       </Section>
       </div>
@@ -99,7 +99,7 @@ export function AgentsPage() {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>skill/ in the repo</CardTitle>
-          <CardDescription>Point your agent at the checkout — no installation step.</CardDescription>
+          <CardDescription>Point your agent at the checkout. No installation step.</CardDescription>
         </CardHeader>
         <CardContent>
           <Code>{`# from the repo root
@@ -109,7 +109,7 @@ skill/
           <p className="text-sm text-[var(--prui-dim)]">
             Works with Hermes, Claude Code, or any agent that reads skill folders. The fast path:{" "}
             <code className="rounded bg-[var(--prui-raise)] px-1">&lt;App nav=&#123;...&#125;&gt;</code> +{" "}
-            <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Resource columns=&#123;...&#125;&gt;</code> + a dashboard page — that is the entire surface.
+            <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Resource columns=&#123;...&#125;&gt;</code> + a dashboard page. That is the entire surface.
           </p>
         </CardContent>
       </Card>

@@ -30,17 +30,7 @@ export const nav: NavItem[] = [
       { label: "Pre-made pages", href: "/pages-doc" },
     ],
   },
-  {
-    label: "Layouts",
-    icon: LayoutTemplate,
-    items: [
-      { label: "Layouts", heading: true },
-      { label: "Dashboard", href: "/layouts#dashboard" },
-      { label: "Listing", href: "/layouts#listing" },
-      { label: "Settings", href: "/layouts#settings" },
-      { label: "Auth", href: "/layouts#auth" },
-    ],
-  },
+  { label: "Layouts", href: "/layouts", icon: LayoutTemplate },
   {
     label: "Theming",
     icon: Palette,

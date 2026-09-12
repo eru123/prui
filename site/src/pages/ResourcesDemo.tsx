@@ -29,7 +29,7 @@ export function ResourcesDemoPage() {
     <div className="mx-auto max-w-5xl">
       <h1 className="mb-2 text-2xl font-bold text-[var(--prui-fg)]">Resources</h1>
       <p className="mb-6 text-sm text-[var(--prui-dim)]">
-        A live <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Resource&gt;</code> over in-memory data — search, filter, sort, paginate, create, edit, delete.
+        A live <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Resource&gt;</code> over in-memory data: search, filter, sort, paginate, create, edit, delete.
       </p>
 
       <StatRow

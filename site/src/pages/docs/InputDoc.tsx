@@ -7,7 +7,7 @@ export function InputDoc() {
     <ComponentDoc
       name="Input"
       importPath="@skiddph/prui/core"
-      description="Text entry for single-line and multi-line values. Native input/textarea under the hood — all native props pass through, so type=email/number/search, autoComplete, pattern all work."
+      description="Text entry for single-line and multi-line values. Native input/textarea under the hood: all native props pass through, so type=email/number/search, autoComplete, pattern all work."
       when={[
         "Single-line text, email, number, password, search entry",
         "Controlled (value + onChange) or uncontrolled (defaultValue)",
@@ -20,7 +20,7 @@ export function InputDoc() {
             <div className="w-72">
               <Label htmlFor="demo-email" className="mb-1.5">Email</Label>
               <Input id="demo-email" type="email" placeholder="you@example.com" value={value} onChange={(e) => setValue(e.target.value)} />
-              <p className="mt-1 font-mono text-[10px] text-[var(--prui-dim)]">value: {value || "—"}</p>
+              <p className="mt-1 font-mono text-[10px] text-[var(--prui-dim)]">value: {value || "empty"}</p>
             </div>
           ),
           code: `const [value, setValue] = useState("")
@@ -73,7 +73,7 @@ export function InputDoc() {
         "Prefer native types (email, number) over manual validation",
       ]}
       donts={[
-        "Don't build another Input for passwords — type=password works",
+        "Don't build another Input for passwords: type=password works",
         "Don't put icons inside the field; lead with a prefix label or put the icon button beside",
       ]}
     />

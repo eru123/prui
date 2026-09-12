@@ -34,7 +34,7 @@ export function DropdownDoc() {
       ]}
       examples={[{ title: "Align end (in headers)", code: `<Dropdown align="end" trigger={…} items={…} />` }]}
       dos={["Keep item labels verbs", "Group destructive items last behind a separator"]}
-      donts={["Don't nest dropdowns", "Don't put more than ~8 items — use a dialog"]}
+      donts={["Don't nest dropdowns", "Don't put more than ~8 items: use a dialog"]}
     />
   )
 }

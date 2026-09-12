@@ -37,7 +37,7 @@ export function TabsDoc() {
       ]}
       examples={[{ title: "Controlled", code: `<Tabs value={tab} onChange={setTab}>…</Tabs>` }]}
       dos={["2-5 tabs; more → use a select or nav", "Tab labels short nouns, no sentences"]}
-      donts={["Don't use for wizard steps (ordered) — tabs are peers", "Don't lazy-load heavy tab content without a loading state"]}
+      donts={["Don't use for wizard steps (ordered): tabs are peers", "Don't lazy-load heavy tab content without a loading state"]}
     />
   )
 }

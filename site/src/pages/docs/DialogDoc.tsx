@@ -92,7 +92,7 @@ export function DialogDoc() {
 <Dialog open={open} onOpenChange={setOpen}>…</Dialog>`,
         },
       ]}
-      dos={["Keep dialogs short — move long tasks to a page", "Always provide a visible cancel path"]}
+      dos={["Keep dialogs short: move long tasks to a page", "Always provide a visible cancel path"]}
       donts={["Open dialogs on page load", "Nest dialogs inside dialogs"]}
     />
   )

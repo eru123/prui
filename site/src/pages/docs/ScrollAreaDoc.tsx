@@ -9,7 +9,7 @@ export function ScrollAreaDoc() {
     <ComponentDoc
       name="ScrollArea"
       importPath="@skiddph/prui/core"
-      description="A themed scroll container with thin token-colored scrollbars — the same treatment as the app sidebar rail."
+      description="A themed scroll container with thin token-colored scrollbars: the same treatment as the app sidebar rail."
       when={["Fixed-height feeds, lists and sidebars", "Anywhere native scrollbars would break the theme"]}
       demos={[
         {
@@ -34,7 +34,7 @@ export function ScrollAreaDoc() {
       api={<PropsTable meta={scrollAreaPropsMeta} />}
       examples={[{ title: "Inline in the App shell", code: `<div className="h-full overflow-y-auto scrollbar-thin">{nav}</div>` }]}
       dos={["Give it an explicit height", "Keep content keyboard-scrollable"]}
-      donts={["Wrap the whole page — let the body scroll", "Nest scroll areas inside scroll areas"]}
+      donts={["Wrap the whole page: let the body scroll", "Nest scroll areas inside scroll areas"]}
     />
   )
 }

@@ -41,11 +41,11 @@ export function ModalDoc() {
           desc: "clicking the overlay with closeOnOverlayClick=false shakes the modal instead of closing",
           render: <Button size="sm" onClick={() => setBlocked(true)}>Try to close me</Button>,
           code: `<Modal open={open} onClose={close} closeOnOverlayClick={false}>
-  <p>Click the overlay — the modal shakes, it does not close.</p>
+  <p>Click the overlay: the modal shakes, it does not close.</p>
 </Modal>`,
         },
         {
-          title: "confirmModal() — imperative",
+          title: "confirmModal(): imperative",
           desc: confirmResult === null ? "resolves a Promise<boolean>; no state wiring needed" : `last result: ${String(confirmResult)}`,
           render: (
             <Button
@@ -84,11 +84,11 @@ if (ok) await api.remove(row)`,
       dos={[
         "noPadding + your own section padding for form dialogs",
         "await confirmModal() for destructive confirmations",
-        "Escape always works unless disableDefaultClose — keep it that way",
+        "Escape always works unless disableDefaultClose: keep it that way",
       ]}
       donts={[
         "Don't stack modals; redesign the flow",
-        "Don't manage body scroll yourself — the modal locks it",
+        "Don't manage body scroll yourself: the modal locks it",
         "Don't put critical info only inside a blocked-close modal",
       ]}
     />

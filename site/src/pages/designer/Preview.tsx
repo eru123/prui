@@ -46,7 +46,7 @@ export function DesignerPreview({ state }: { state: DesignerState }) {
     <IframePortal title="App preview" testId="designer-canvas" height={560}>
       {(doc) => {
         applyFrame(doc)
-        // <App router="memory"> brings its own MemoryRouter — no outer router
+        // <App router="memory"> brings its own MemoryRouter: no outer router
         return (
           <App
             router="memory"
@@ -58,7 +58,7 @@ export function DesignerPreview({ state }: { state: DesignerState }) {
           >
               <div style={{ padding: 24 }}>
                 <p style={{ color: "var(--prui-dim)", fontSize: 13, margin: "0 0 12px" }}>
-                  Content outlet — your routes render here.
+                  Content outlet: your routes render here.
                 </p>
                 <div style={{ display: "flex", gap: 8 }}>
                   {[0, 1, 2].map((i) => (

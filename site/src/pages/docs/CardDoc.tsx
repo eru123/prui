@@ -8,7 +8,7 @@ export function CardDoc() {
     <ComponentDoc
       name="Card"
       importPath="@skiddph/prui/core"
-      description="A surfaced container with header, title, description, content and footer parts — the base of every dashboard widget and settings section."
+      description="A surfaced container with header, title, description, content and footer parts: the base of every dashboard widget and settings section."
       when={[
         "Grouping related content on a surface above the page background",
         "Dashboard KPI tiles and preview panels",
@@ -81,7 +81,7 @@ export function CardDoc() {
         },
       ]}
       dos={["Compose from the exported parts instead of padding the root", "Keep one topic per card"]}
-      donts={["Nest cards inside cards", "Use a Card for pure layout columns — use flex/grid"]}
+      donts={["Nest cards inside cards", "Use a Card for pure layout columns: use flex/grid"]}
     />
   )
 }

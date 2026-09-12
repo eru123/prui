@@ -10,7 +10,7 @@ export function SelectDoc() {
       description="Single-select from options. Two modes: simple (options prop) and composable (Trigger/Value/Content/Item parts for custom content). Controlled via value/onChange or uncontrolled via defaultValue."
       when={[
         "Choosing one value from a known set (3-20 options)",
-        "Forms — name prop renders a hidden input for native submit",
+        "Forms: name prop renders a hidden input for native submit",
         "Use composable parts when items need avatars, badges, or grouping",
       ]}
       demos={[
@@ -28,7 +28,7 @@ export function SelectDoc() {
                   { label: "Member", value: "member" },
                 ]}
               />
-              <p className="mt-1 font-mono text-[10px] text-[var(--prui-dim)]">value: {role || "—"}</p>
+              <p className="mt-1 font-mono text-[10px] text-[var(--prui-dim)]">value: {role || "empty"}</p>
             </div>
           ),
           code: `<Select
@@ -69,7 +69,7 @@ export function SelectDoc() {
         { title: "In a Form schema", code: `{ name: "role", label: "Role", type: "select", options: [...] }` },
       ]}
       dos={["Keyboard: open with Enter/Space, navigate arrows, select with Enter", "Always set placeholder when uncontrolled"]}
-      donts={["Don't use for 2 options — use Switch or radio", "Don't ship an empty options list without an empty state"]}
+      donts={["Don't use for 2 options: use Switch or radio", "Don't ship an empty options list without an empty state"]}
     />
   )
 }

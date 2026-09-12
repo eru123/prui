@@ -45,8 +45,8 @@ export function AppLayerDoc() {
           <h2 className="mb-3 font-mono text-sm font-semibold text-[var(--prui-brand)]">App</h2>
           <p className="mb-3 text-sm text-[var(--prui-dim)]">
             One component renders the shell: sidebar, header, command palette, theme, mobile drawer. This live demo
-            runs the real <code className="rounded bg-[var(--prui-raise)] px-1">&lt;App&gt;</code> in an isolated frame —
-            this site's own chrome is the same component.
+            runs the real <code className="rounded bg-[var(--prui-raise)] px-1">&lt;App&gt;</code> in an isolated frame.
+            This site's own chrome is the same component.
           </p>
           <div className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)]">
             <IframePortal title="App demo" testId="app-demo" height={420}>

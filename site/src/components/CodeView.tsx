@@ -4,7 +4,9 @@ import { CopyButton } from "./CopyButton"
 /**
  * CodeView: all code display goes through Monaco (@monaco-editor/react),
  * lazy-loaded so it never lands in the landing bundle (proposal scope,
- * AC-6 budget). Falls back to a plain <pre> while the editor chunk streams.
+ * AC-6 budget). Editors accept typing; Reset restores the canonical code
+ * passed in `code`. Edits stream back through onEdit so parents can drive
+ * live demos from the code.
  */
 
 const MonacoEditor = React.lazy(async () => {
@@ -14,44 +16,80 @@ const MonacoEditor = React.lazy(async () => {
 
 export function CodeView({
   code,
+  canonical,
   title = "tsx",
   language = "typescript",
   height = "auto",
-  readOnly = true,
+  readOnly = false,
   onEdit,
   className,
 }: {
   code: string
+  /** Reset target; defaults to `code`. The playground passes the snippet
+   * regenerated from the demo's current prop values. */
+  canonical?: string
   title?: string
   language?: string
   /** Fixed px height, or "auto" to size to the content. */
   height?: number | "auto"
+  /** Read-only view for generated output; live views leave it unset. */
   readOnly?: boolean
-  /** When set (with readOnly false), edits stream back through this callback. */
+  /** Called on every edit, and on reset with the canonical code. */
   onEdit?: (value: string) => void
   className?: string
 }) {
-  const lines = React.useMemo(() => code.split("\n").length, [code])
+  const editable = !readOnly
+  const [value, setValue] = React.useState(code)
+
+  // adopt external code (control-panel changes, regenerated snippets)
+  React.useEffect(() => {
+    setValue(code)
+  }, [code])
+
+  const reset = () => {
+    const target = canonical ?? code
+    setValue(target)
+    onEdit?.(target)
+  }
+
+
+  const lines = React.useMemo(() => value.split("\n").length, [value])
   const computedHeight = height === "auto" ? Math.min(560, Math.max(72, lines * 19 + 24)) : height
 
   return (
     <div className={className ?? "relative mb-4 mt-2 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]"}>
       <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">
         <span>{title}</span>
-        {readOnly ? <CopyButton text={code} /> : null}
+        <span className="flex items-center gap-1.5">
+          {editable ? (
+            <button
+              type="button"
+              onClick={reset}
+              className="cursor-pointer rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] px-2 py-0.5 font-mono text-[10px] text-[var(--prui-dim)] hover:text-[var(--prui-fg)]"
+              aria-label="Reset code"
+            >
+              reset
+            </button>
+          ) : null}
+          <CopyButton text={value} />
+        </span>
       </div>
       <div style={{ height: computedHeight }}>
         <React.Suspense
           fallback={
-            <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{code}</pre>
+            <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{value}</pre>
           }
         >
           <MonacoEditor
             height="100%"
             language={language}
-            value={code}
+            value={value}
             theme="vs-dark"
-            onChange={onEdit && !readOnly ? (value) => onEdit(value ?? "") : undefined}
+            onChange={(v) => {
+              const next = v ?? ""
+              setValue(next)
+              onEdit?.(next)
+            }}
             options={{
               readOnly,
               minimap: { enabled: false },
@@ -68,7 +106,7 @@ export function CodeView({
               automaticLayout: true,
             }}
             loading={
-              <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{code}</pre>
+              <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{value}</pre>
             }
           />
         </React.Suspense>
