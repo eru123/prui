@@ -106,6 +106,8 @@ export interface AppProps {
   pages?: "auth" | "utility" | "auth+utility"
   /** Props passed to the auto-routed pre-made pages (per page name). */
   pagesConfig?: Partial<Record<PageSetName, Record<string, unknown>>>
+  /** A pathname (e.g. "/") on which every nav group starts expanded. */
+  expandAllOn?: string
   children?: React.ReactNode
 }
 
@@ -170,12 +172,12 @@ function isActivePath(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(href + "/")
 }
 
-function NavGroup({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
+function NavGroup({ item, onNavigate, expandAllOn }: { item: NavItem; onNavigate?: () => void; expandAllOn?: string }) {
   const { pathname } = useLocation()
   const active = (item.items ?? []).some((child) =>
     child.href ? isActivePath(pathname, child.href) : (child.items ?? []).some((gc) => gc.href && isActivePath(pathname, gc.href)),
   )
-  const [open, setOpen] = React.useState(active)
+  const [open, setOpen] = React.useState(active || (expandAllOn !== undefined && pathname === expandAllOn))
 
   React.useEffect(() => {
     if (active) setOpen(true)
@@ -200,7 +202,7 @@ function NavGroup({ item, onNavigate }: { item: NavItem; onNavigate?: () => void
       {open ? (
         <ul className="ml-4 mt-0.5 flex flex-col gap-0.5 border-l border-[var(--prui-line)] pl-2">
           {(item.items ?? []).map((child) => (
-            <NavItemLink key={child.href ?? child.label} item={child} onNavigate={onNavigate} nested />
+            <NavItemLink key={child.href ?? child.label} item={child} onNavigate={onNavigate} nested expandAllOn={expandAllOn} />
           ))}
         </ul>
       ) : null}
@@ -216,8 +218,8 @@ function NavSubgroupLabel({ label }: { label: string }) {
   )
 }
 
-function NavItemLink({ item, onNavigate, nested }: { item: NavItem; onNavigate?: () => void; nested?: boolean }) {
-  if (item.items && item.items.length > 0) return <NavGroup item={item} onNavigate={onNavigate} />
+function NavItemLink({ item, onNavigate, nested, expandAllOn }: { item: NavItem; onNavigate?: () => void; nested?: boolean; expandAllOn?: string }) {
+  if (item.items && item.items.length > 0) return <NavGroup item={item} onNavigate={onNavigate} expandAllOn={expandAllOn} />
   if (item.heading || (!item.href && !item.items)) return <NavSubgroupLabel label={item.label} />
   if (!item.href) return null
   return (
@@ -242,12 +244,12 @@ function NavItemLink({ item, onNavigate, nested }: { item: NavItem; onNavigate?:
   )
 }
 
-export function SidebarNav({ nav, onNavigate }: { nav: NavItem[]; onNavigate?: () => void }) {
+export function SidebarNav({ nav, onNavigate, expandAllOn }: { nav: NavItem[]; onNavigate?: () => void; expandAllOn?: string }) {
   return (
     <nav aria-label="Main" className="prui-app-nav">
       <ul className="flex flex-col gap-0.5">
         {nav.map((item) => (
-          <NavItemLink key={item.href ?? item.label} item={item} onNavigate={onNavigate} />
+          <NavItemLink key={item.href ?? item.label} item={item} onNavigate={onNavigate} expandAllOn={expandAllOn} />
         ))}
       </ul>
     </nav>
@@ -400,6 +402,7 @@ export function AppShell(props: AppProps) {
     header,
     pages,
     pagesConfig,
+    expandAllOn,
     children,
   } = props
 
@@ -484,7 +487,7 @@ export function AppShell(props: AppProps) {
         style={{ ["--prui-sidebar-width" as string]: `${width}px` }}
       >
         <div className="h-full overflow-y-auto p-2 pt-4 scrollbar-thin">
-          <SidebarNav nav={nav} />
+          <SidebarNav nav={nav} expandAllOn={expandAllOn} />
         </div>
       </aside>
 
@@ -513,7 +516,7 @@ export function AppShell(props: AppProps) {
                 <X className="h-4 w-4" aria-hidden />
               </button>
             </div>
-            <SidebarNav nav={nav} onNavigate={() => setDrawerOpen(false)} />
+            <SidebarNav nav={nav} onNavigate={() => setDrawerOpen(false)} expandAllOn={expandAllOn} />
           </aside>
         </div>
       ) : null}
@@ -605,6 +608,7 @@ export const appPropsMeta: PropsMeta = {
     { name: "router", type: "'browser' | 'memory'", default: "'browser'", control: "select", options: ["browser", "memory", "react-router"] },
     { name: "initialEntries", type: "string[]", default: "undefined", control: "object" },
     { name: "pages", type: "'auth' | 'utility' | 'auth+utility'", default: "undefined", control: "select", options: ["auth", "utility", "auth+utility"] },
+    { name: "expandAllOn", type: "string (pathname)", default: "undefined", control: "text" },
     { name: "header", type: "ReactNode", default: null, control: "none" },
     { name: "children", type: "ReactNode", default: "Outlet", control: "none" },
   ],

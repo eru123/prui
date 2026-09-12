@@ -84,7 +84,6 @@ export function LandingPage() {
               ["App", "Sidebar, header, content", "stable", "0.1.0"],
               ["Resource", "Filters, pagination, toolbar", "stable", "0.1.0"],
               ["Theme system", "Tokens, light and dark", "new", "0.1.0"],
-              ["Designer", "Visual app builder", "beta", "0.1.0"],
             ].map(([c, o, s, v]) => (
               <tr key={c} className="border-b border-[var(--prui-line)] last:border-0 hover:bg-[var(--prui-raise)]">
                 <td className="px-4 py-2.5 text-[var(--prui-fg)]">{c}</td>

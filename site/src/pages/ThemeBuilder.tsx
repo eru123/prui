@@ -1,9 +1,8 @@
 import * as React from "react"
 import { useSearchParams } from "react-router-dom"
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from "prui/core"
-import { applyThemeTokens, clearAppliedTokens, listThemes, type ThemeTokens } from "prui/theme"
+import { Button, Card, CardContent, Input, Label } from "prui/core"
+import { applyThemeTokens, clearAppliedTokens, type ThemeTokens } from "prui/theme"
 import { CodeView } from "../components/CodeView"
-import { CopyButton } from "../components/CopyButton"
 
 /**
  * /theme-builder: pick tokens with real controls, see them on real prui
@@ -198,7 +197,7 @@ export function ThemeBuilderPage() {
   const initial = React.useMemo(() => decodeTokens(params.get("t")), [params])
   const [tokens, setTokens] = React.useState<BuilderTokens>(initial)
   const [themeName, setThemeName] = React.useState("my-theme")
-  const [tab, setTab] = React.useState<"css" | "js">("css")
+  const [tab, setTab] = React.useState<"builder" | "css" | "js">("builder")
 
   // realtime: every change applies to the whole site and persists across reloads
   React.useEffect(() => {
@@ -218,15 +217,6 @@ export function ThemeBuilderPage() {
     setTokens({ ...DEFAULT_TOKENS })
     setParams({}, { replace: true })
   }
-  const registerInPlace = () => {
-    void (async () => {
-      const mod = await import("prui/theme")
-      mod.defineTheme(themeName, toThemeTokens(tokens))
-      mod.applyTheme({ theme: themeName as never })
-      clearAppliedTokens()
-    })()
-  }
-
   const css = toCssVars(tokens)
   const js = toJsSnippet(tokens, themeName)
 
@@ -246,116 +236,97 @@ export function ThemeBuilderPage() {
 
   return (
     <div className="mx-auto w-full max-w-[1200px] px-4 pb-20 pt-6 md:px-6">
-      <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">theming / theme builder</div>
-      <h1 className="mb-1 text-2xl font-bold tracking-tight text-[var(--prui-fg)]">Theme builder</h1>
-      <p className="mb-6 max-w-[62ch] text-sm text-[var(--prui-dim)]">
-        Every overridable token, one screen. The preview island shows real components with your tokens; the site stays
-        on its current theme until you press Try it.
-      </p>
-
-      <div className="flex flex-col gap-4 lg:flex-row">
-        <div className="min-w-0 flex-1">
-          <div className="mb-4 flex flex-wrap items-center gap-2">
-            <Button onClick={reset} data-testid="builder-reset">
-              Reset
-            </Button>
-            <span className="text-xs text-[var(--prui-dim)]">
-              This page is live: every pick re-skins the whole site right away and survives a reload. Reset removes the
-              overlay and puts the current theme back.
-            </span>
-          </div>
-
-          <div className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
-            <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-2">
-              <div className="flex gap-1">
-                <Button variant={tab === "css" ? "default" : "ghost"} size="sm" onClick={() => setTab("css")}>theme.css</Button>
-                <Button variant={tab === "js" ? "default" : "ghost"} size="sm" onClick={() => setTab("js")}>defineTheme()</Button>
-              </div>
-              <CopyButton text={tab === "css" ? css : js} />
-            </div>
-            <div className="p-3">
-              <CodeView
-                code={tab === "css" ? css : js}
-                title={tab === "css" ? "theme.css" : "theme.ts"}
-                language={tab === "css" ? "css" : "typescript"}
-                height={300}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full shrink-0 lg:w-96">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Tokens</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              <div>
-                <Label className="text-xs" htmlFor="builder-name">Theme name</Label>
-                <Input id="builder-name" value={themeName} onChange={(e) => setThemeName(e.target.value)} className="mt-1 h-8 font-mono text-xs" aria-label="Theme name" />
-                <p className="mt-1 text-[11px] text-[var(--prui-dim)]">
-                  Used by the JS snippet: applyTheme {"{ theme: '"}{themeName}{"' }"}.
-                </p>
-              </div>
-
-              <div>
-                <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">presets</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {PRESETS.map((p) => (
-                    <Button key={p.name} size="sm" variant="default" onClick={() => setTokens({ ...p.tokens })}>
-                      {p.name}
-                    </Button>
-                  ))}
-                  <Button size="sm" variant="ghost" onClick={() => setTokens({ ...DEFAULT_TOKENS })}>Clear</Button>
-                </div>
-              </div>
-
-              <div className="flex flex-col divide-y divide-[var(--prui-line)]">
-                {colorFields.map((f) => (
-                  <ColorRow key={f.token} token={f.token} label={f.label} value={tokens[f.key] as string} onChange={(v) => set(f.key, v as never)} />
-                ))}
-              </div>
-
-              <div>
-                <Label className="text-xs" htmlFor="builder-radius">Corner radius: {tokens.radius}px</Label>
-                <input
-                  id="builder-radius"
-                  type="range"
-                  min={0}
-                  max={20}
-                  value={tokens.radius}
-                  onChange={(e) => set("radius", Number(e.target.value))}
-                  className="mt-1 w-full"
-                />
-              </div>
-
-              <div>
-                <Label className="text-xs" htmlFor="builder-dimop">
-                  Secondary text opacity: {(tokens.dimOp * 100).toFixed(0)}%
-                </Label>
-                <input
-                  id="builder-dimop"
-                  type="range"
-                  min={20}
-                  max={100}
-                  value={tokens.dimOp * 100}
-                  onChange={(e) => set("dimOp", Number(e.target.value) / 100)}
-                  className="mt-1 w-full"
-                />
-              </div>
-
-              <div className="flex items-center justify-between gap-2 rounded-[var(--prui-radius)] border border-[var(--prui-line)] p-3">
-                <span className="text-xs text-[var(--prui-dim)]">Register it as a named theme for the header switcher</span>
-                <Button size="sm" variant="default" onClick={registerInPlace}>Register</Button>
-              </div>
-
-              <p className="text-[11px] text-[var(--prui-dim)]">
-                Registered themes: {listThemes().join(", ")}. The switcher picks them up automatically.
-              </p>
-            </CardContent>
-          </Card>
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <div className="font-mono text-xs text-[var(--prui-dim)]">theming / theme builder</div>
+        <div className="flex items-center gap-2">
+          {tab !== "builder" ? (
+            <Input
+              value={themeName}
+              onChange={(e) => setThemeName(e.target.value)}
+              aria-label="Theme name"
+              className="h-8 w-44 font-mono text-xs"
+              placeholder="my-theme"
+            />
+          ) : null}
+          <Button onClick={reset} data-testid="builder-reset">
+            Reset
+          </Button>
         </div>
       </div>
+      <h1 className="mb-1 text-2xl font-bold tracking-tight text-[var(--prui-fg)]">Theme builder</h1>
+      <p className="mb-5 max-w-[62ch] text-sm text-[var(--prui-dim)]">
+        Every overridable token, one screen. Changes apply to this entire site as you make them and survive a reload.
+        Reset removes the overlay and puts the current theme back.
+      </p>
+
+      <div className="mb-4 flex gap-1">
+        <Button variant={tab === "builder" ? "default" : "ghost"} onClick={() => setTab("builder")}>Builder</Button>
+        <Button variant={tab === "css" ? "default" : "ghost"} onClick={() => setTab("css")}>CSS</Button>
+        <Button variant={tab === "js" ? "default" : "ghost"} onClick={() => setTab("js")}>JS</Button>
+      </div>
+
+      {tab === "builder" ? (
+        <Card>
+          <CardContent className="flex flex-col gap-5">
+            <div>
+              <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">presets</div>
+              <div className="flex flex-wrap gap-1.5">
+                {PRESETS.map((p) => (
+                  <Button key={p.name} size="sm" variant="default" onClick={() => setTokens({ ...p.tokens })}>
+                    {p.name}
+                  </Button>
+                ))}
+                <Button size="sm" variant="ghost" onClick={() => setTokens({ ...DEFAULT_TOKENS })}>Clear</Button>
+              </div>
+            </div>
+
+            <div className="grid gap-x-6 gap-y-1" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
+              {colorFields.map((f) => (
+                <ColorRow key={f.token} token={f.token} label={f.label} value={tokens[f.key] as string} onChange={(v) => set(f.key, v as never)} />
+              ))}
+            </div>
+
+            <div>
+              <Label className="text-xs" htmlFor="builder-radius">Corner radius: {tokens.radius}px</Label>
+              <input
+                id="builder-radius"
+                type="range"
+                min={0}
+                max={20}
+                value={tokens.radius}
+                onChange={(e) => set("radius", Number(e.target.value))}
+                className="mt-1 w-full"
+              />
+            </div>
+
+            <div>
+              <Label className="text-xs" htmlFor="builder-dimop">
+                Secondary text opacity: {(tokens.dimOp * 100).toFixed(0)}%
+              </Label>
+              <input
+                id="builder-dimop"
+                type="range"
+                min={20}
+                max={100}
+                value={tokens.dimOp * 100}
+                onChange={(e) => set("dimOp", Number(e.target.value) / 100)}
+                className="mt-1 w-full"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent className="p-3">
+            <CodeView
+              code={tab === "css" ? css : js}
+              title={tab === "css" ? "theme.css" : "theme.ts"}
+              language={tab === "css" ? "css" : "typescript"}
+              height={420}
+            />
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react"
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import { App } from "prui/app-shell"
 import { nav } from "./nav"
 import { LandingPage } from "./pages/Landing"
@@ -11,10 +11,10 @@ const LayoutsCatalogPage = lazy(() => import("./pages/layouts/LayoutsPages").the
 const LayoutDemoPage = lazy(() => import("./pages/layouts/LayoutsPages").then((m) => ({ default: m.LayoutDemoPage })))
 const LayoutCodePage = lazy(() => import("./pages/layouts/LayoutsPages").then((m) => ({ default: m.LayoutCodePage })))
 const ThemingPage = lazy(() => import("./pages/Theming").then((m) => ({ default: m.ThemingPage })))
-const GuidesPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.GuidesPage })))
+const InstallationPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.InstallationPage })))
+const AdoptionPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.AdoptionPage })))
 const AgentsPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.AgentsPage })))
 const ResourcesDemoPage = lazy(() => import("./pages/ResourcesDemo").then((m) => ({ default: m.ResourcesDemoPage })))
-const DesignerPage = lazy(() => import("./pages/Designer").then((m) => ({ default: m.DesignerPage })))
 const NotFoundPage = lazy(() => import("./NotFound").then((m) => ({ default: m.NotFoundPage })))
 const ProvenancePage = lazy(() => import("./pages/Provenance").then((m) => ({ default: m.ProvenancePage })))
 const ButtonDoc = lazy(() => import("./pages/docs/ButtonDoc").then((m) => ({ default: m.ButtonDoc })))
@@ -52,6 +52,7 @@ export function SiteApp() {
       search={{ enabled: true, hotkey: "/", placeholder: "Search the system" }}
       theme={{ default: "control", persist: true }}
       sidebar={{ width: 240 }}
+      expandAllOn="/"
     >
       <Suspense fallback={<Loading />}>
         <Routes>
@@ -81,10 +82,11 @@ export function SiteApp() {
           <Route path="/forms" element={<FormsPage />} />
           <Route path="/theme-builder" element={<ThemeBuilderPage />} />
           <Route path="/theming" element={<ThemingPage />} />
-          <Route path="/guides" element={<GuidesPage />} />
+          <Route path="/guides" element={<Navigate to="/guides/installation" replace />} />
+          <Route path="/guides/installation" element={<InstallationPage />} />
+          <Route path="/guides/adoption" element={<AdoptionPage />} />
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/resources" element={<ResourcesDemoPage />} />
-          <Route path="/designer" element={<DesignerPage />} />
           <Route path="/internal/provenance" element={<ProvenancePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
