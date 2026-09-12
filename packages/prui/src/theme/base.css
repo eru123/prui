@@ -71,18 +71,64 @@ body.modal-open { overflow: hidden; }
   border-radius: var(--prui-s-radius, var(--prui-radius));
 }
 
-/* Application shell: CSS grid areas. Mobile is a single column with the
-   drawer; md and up place sidebar, header, and content per data-layout:
+/* Application shell: CSS grid areas.
+   Mobile: single column + drawer; with a collapsed rail the mobile shell
+   becomes a two-column grid (rail + content) so collapse works on phones.
+   md and up, per data-layout:
    A  sidebar full height, header inside the content column
-   B  header across the top, expanded sidebar below it
-   C  header across the top, icon rail below it (collapsible via toggle)
-   D  embedded list + action slot on the left, stacked cards on the right */
+   B  full-width header, sidebar below it
+   C  full-width header PLUS a sidebar header row (topbar height/width),
+      nav below that; combination of A and B
+   D  facebook style: full-width topbar, centered container, sticky embedded
+      sidebar beside stacked cards; page scroll, sidebar not fixed left
+   A/B/C collapse to an icon rail via the sidebar toggle. */
 .prui-shell {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
 }
 .prui-shell-sidebar { display: none; }
+
+/* collapsed rail: applies to A/B/C on every viewport (mobile included) */
+.prui-shell[data-collapsed="true"] { --prui-shell-sidebar: var(--prui-rail-width, 64px); }
+.prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-nav-label,
+.prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-nav-chevron { display: none; }
+.prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-app-nav button { justify-content: center; padding-inline: 0; }
+.prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-nav-mono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--prui-radius-1);
+  background: var(--prui-raise);
+  font-size: 10px;
+  font-weight: 600;
+}
+.prui-shell[data-collapsed="true"] .prui-shell-sidehead { justify-content: center; padding-inline: 0; }
+.prui-nav-mono { display: none; }
+
+@media (max-width: 47.99rem) {
+  /* collapsed rail on mobile: persistent icon rail under the header */
+  .prui-shell[data-collapsed="true"] {
+    display: grid;
+    height: 100dvh;
+    overflow: hidden;
+    grid-template-columns: var(--prui-rail-width, 64px) minmax(0, 1fr);
+    grid-template-areas:
+      "header header"
+      "sidebar content";
+  }
+  .prui-shell[data-collapsed="true"] .prui-shell-sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    border-right: 1px solid var(--prui-line);
+    background: var(--prui-surface);
+  }
+  .prui-shell[data-collapsed="true"] .prui-shell-content { overflow-y: auto; }
+}
+
 @media (min-width: 48rem) {
   .prui-shell {
     display: grid;
@@ -104,31 +150,46 @@ body.modal-open { overflow: hidden; }
   }
   .prui-shell-header { grid-area: header; }
   .prui-shell-content { grid-area: content; overflow-y: auto; }
-  .prui-shell[data-layout="B"],
-  .prui-shell[data-layout="C"] {
+
+  /* B: full-width header, sidebar below */
+  .prui-shell[data-layout="B"] {
     grid-template-areas:
       "header header"
       "sidebar content";
   }
+
+  /* C: full-width header + sidebar header (topbar height, sidebar width) */
   .prui-shell[data-layout="C"] {
-    grid-template-columns: var(--prui-shell-sidebar, var(--prui-rail-width, 64px)) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-areas:
+      "header   header"
+      "sidehead content"
+      "sidebar  content";
   }
-  .prui-shell[data-layout="D"] .prui-shell-sidebar { border-right: none; background: transparent; }
-  .prui-shell[data-layout="D"] .prui-shell-header { border-bottom: none; background: transparent; }
-  .prui-shell[data-collapsed="true"] { --prui-shell-sidebar: var(--prui-rail-width, 64px); }
-  .prui-shell[data-collapsed="true"] .prui-nav-label,
-  .prui-shell[data-collapsed="true"] .prui-nav-chevron { display: none; }
-  .prui-shell[data-collapsed="true"] .prui-app-nav button { justify-content: center; padding-inline: 0; }
-  .prui-shell[data-collapsed="true"] .prui-nav-mono {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: var(--prui-radius-1);
-    background: var(--prui-raise);
-    font-size: 10px;
-    font-weight: 600;
+  .prui-shell-sidehead { grid-area: sidehead; }
+
+  /* D: facebook style. Page-level scroll; centered sidebar+content pair;
+     sidebar sticky beside the content, never fixed to the viewport left. */
+  .prui-shell[data-layout="D"] {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    column-gap: 1.5rem;
+    grid-template-columns: minmax(1rem, 1fr) minmax(13rem, 16rem) minmax(0, 56rem) minmax(1rem, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+      "header header header header"
+      ". sidebar content .";
   }
+  .prui-shell[data-layout="D"] .prui-shell-sidebar {
+    position: sticky;
+    top: 4.5rem; /* topbar (3.5rem) + breathing room */
+    align-self: start;
+    max-height: calc(100dvh - 5.5rem);
+    overflow-y: auto;
+    border-right: none;
+    background: transparent;
+  }
+  .prui-shell[data-layout="D"] .prui-shell-header { border-bottom: none; background: var(--prui-background); }
+  .prui-shell[data-layout="D"] .prui-shell-content { overflow: visible; }
 }
-.prui-nav-mono { display: none; }

@@ -109,13 +109,18 @@ export interface AppProps {
   /** A pathname (e.g. "/") on which every nav group starts expanded. */
   expandAllOn?: string
   /**
-   * Desktop shell arrangement (md and up; mobile always uses the drawer):
+   * Shell arrangement (A/B/C also work collapsed on mobile via the rail):
    *  - "A" full-height sidebar, header inside the content column (default)
-   *  - "B" full-width header, expanded sidebar below it
-   *  - "C" full-width header, collapsed icon rail below it (with toggle)
-   *  - "D" embedded-card layout: borderless list + action slot, stacked cards
+   *  - "B" full-width header, sidebar below it
+   *  - "C" full-width header PLUS a sidebar header row (topbar height,
+   *    sidebar width), nav below that; the combination of A and B
+   *  - "D" facebook style: full-width topbar, centered sticky embedded
+   *    sidebar beside stacked cards (page scroll, sidebar not fixed left)
+   * A, B and C are collapsible to an icon rail (desktop and mobile).
    */
   layoutType?: "A" | "B" | "C" | "D"
+  /** Content of the layout-C sidebar header; defaults to the brand. */
+  sidebarHeader?: React.ReactNode
   /** Prominent action slot pinned to the sidebar bottom (e.g. layout D). */
   sidebarFooter?: React.ReactNode
   children?: React.ReactNode
@@ -423,6 +428,7 @@ export function AppShell(props: AppProps) {
     pagesConfig,
     expandAllOn,
     layoutType = "A",
+    sidebarHeader,
     sidebarFooter,
     children,
   } = props
@@ -433,7 +439,7 @@ export function AppShell(props: AppProps) {
 
   const collapsible = sidebarCfg.collapsible !== false
   const [drawerOpen, setDrawerOpen] = React.useState(sidebarCfg.defaultOpen === true)
-  const [railExpanded, setRailExpanded] = React.useState(false)
+  const [railExpanded, setRailExpanded] = React.useState(true)
   const [paletteOpen, setPaletteOpen] = React.useState(false)
   const location = useLocation()
   const navigate = useNavigate()
@@ -500,7 +506,7 @@ export function AppShell(props: AppProps) {
 
   const width = sidebarCfg.width ?? 240
 
-  const railCollapsed = layoutType === "C" && !railExpanded
+  const railCollapsed = !railExpanded && layoutType !== "D"
 
   return (
     <div
@@ -522,7 +528,7 @@ export function AppShell(props: AppProps) {
             {sidebarFooter}
           </div>
         ) : null}
-        {layoutType === "C" ? (
+        {layoutType !== "D" ? (
           <div className="border-t border-[var(--prui-line)] p-2">
             <Button
               variant="ghost"
@@ -568,6 +574,14 @@ export function AppShell(props: AppProps) {
         </div>
       ) : null}
 
+      {layoutType === "C" ? (
+        <div
+          data-testid="sidebar-header"
+          className="prui-shell-sidehead hidden h-14 items-center gap-2 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:flex"
+        >
+          {sidebarHeader ?? <BrandMark brand={brand} />}
+        </div>
+      ) : null}
       <header
         data-testid="app-header"
         className="prui-shell-header sticky top-0 z-30 grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:px-6"
@@ -582,6 +596,18 @@ export function AppShell(props: AppProps) {
             data-testid="drawer-toggle"
           >
             <Menu className="h-4 w-4" aria-hidden />
+          </Button>
+        ) : null}
+        {collapsible && layoutType !== "D" ? (
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={railCollapsed ? "Show sidebar rail" : "Hide sidebar rail"}
+            className="md:hidden"
+            onClick={() => setRailExpanded((r) => !r)}
+            data-testid="rail-toggle-mobile"
+          >
+            {railCollapsed ? <ChevronsRight className="h-4 w-4" aria-hidden /> : <ChevronsLeft className="h-4 w-4" aria-hidden />}
           </Button>
         ) : null}
         <div className="min-w-0 justify-self-start">
@@ -656,6 +682,7 @@ export const appPropsMeta: PropsMeta = {
     { name: "pages", type: "'auth' | 'utility' | 'auth+utility'", default: "undefined", control: "select", options: ["auth", "utility", "auth+utility"] },
     { name: "expandAllOn", type: "string (pathname)", default: "undefined", control: "text" },
     { name: "layoutType", type: "'A' | 'B' | 'C' | 'D'", default: "'A'", control: "select", options: ["A", "B", "C", "D"] },
+    { name: "sidebarHeader", type: "ReactNode (layout C sidebar header)", default: "brand", control: "none" },
     { name: "sidebarFooter", type: "ReactNode", default: null, control: "none" },
     { name: "header", type: "ReactNode", default: null, control: "none" },
     { name: "children", type: "ReactNode", default: "Outlet", control: "none" },

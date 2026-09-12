@@ -29,10 +29,10 @@ const SHELL_NAV: NavItem[] = [
 ]
 
 const VARIANTS: { v: "A" | "B" | "C" | "D"; name: string; blurb: string }[] = [
-  { v: "A", name: "A · full-height sidebar", blurb: "Sidebar spans the full height; the header sits in the content column." },
-  { v: "B", name: "B · full-width header", blurb: "Header across the top; the expanded sidebar sits below it." },
-  { v: "C", name: "C · collapsed rail", blurb: "Header across the top; icon rail below it, expandable via the rail toggle." },
-  { v: "D", name: "D · embedded cards", blurb: "Borderless embedded list with an action slot at the bottom; stacked cards." },
+  { v: "A", name: "A · full-height sidebar", blurb: "Sidebar spans the full height; the header sits in the content column. Collapses to an icon rail." },
+  { v: "B", name: "B · full-width header", blurb: "Header across the top with the sidebar below it. Collapses to an icon rail." },
+  { v: "C", name: "C · header + sidebar header", blurb: "A and B combined: full-width topbar plus a sidebar header row matching its height and the sidebar's width. Collapses to an icon rail." },
+  { v: "D", name: "D · facebook style", blurb: "Full-width topbar, centered container, sticky embedded sidebar beside stacked cards. The sidebar follows the content, never fixed to the viewport left." },
 ]
 
 const APP_TOC = [
@@ -136,6 +136,7 @@ export function AppLayerDoc() {
                         <App
                           router="memory"
                           layoutType={v.v}
+                          sidebarHeader={v.v === "C" ? <span className="prui-nav-label text-sm font-semibold" style={{ color: "var(--prui-fg)" }}>Workspace</span> : undefined}
                           brand={{ name: "Acme" }}
                           nav={SHELL_NAV}
                           search={{ enabled: true, hotkey: "/" }}
@@ -171,10 +172,17 @@ export function AppLayerDoc() {
 // B: full-width header, expanded sidebar below it
 <App layoutType="B" nav={nav}>{routes}</App>
 
-// C: header + collapsed icon rail, expandable via the rail toggle
-<App layoutType="C" nav={nav}>{routes}</App>
+// C: A + B combined. Full-width topbar plus a sidebar header row
+//    (topbar height, sidebar width); sidebarHeader replaces the brand
+<App layoutType="C" nav={nav} sidebarHeader={<span>Workspace</span>}>
+  {routes}
+</App>
 
-// D: embedded list with an action slot, stacked cards
+// A, B, C collapse to an icon rail via the sidebar toggle, on desktop
+// and on mobile (the header button switches the phone to rail mode).
+
+// D: facebook style. Full-width topbar, centered sticky sidebar beside
+//    stacked cards; the page scrolls, the sidebar follows the content.
 <App layoutType="D" nav={nav} sidebarFooter={<Button>New project</Button>}>
   {routes}
 </App>`}

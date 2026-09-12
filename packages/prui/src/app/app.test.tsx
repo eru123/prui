@@ -368,33 +368,49 @@ describe("Shell layouts (layoutType)", () => {
     )
   }
 
-  it("defaults to layout A", () => {
-    shell("A")
-    expect(document.querySelector(".prui-shell")?.getAttribute("data-layout")).toBe("A")
-    expect(screen.queryByTestId("sidebar-footer")).toBeNull()
+  it("A, B and C start expanded and expose the collapse toggle", () => {
+    for (const v of ["A", "B", "C"] as const) {
+      const { unmount } = shell(v)
+      const el = document.querySelector(".prui-shell")
+      expect(el?.getAttribute("data-layout")).toBe(v)
+      expect(el?.getAttribute("data-collapsed")).toBeNull()
+      expect(screen.getByTestId("sidebar-toggle")).toBeInTheDocument()
+      unmount()
+    }
   })
 
-  it("exposes the layout attribute for B", () => {
-    shell("B")
-    expect(document.querySelector(".prui-shell")?.getAttribute("data-layout")).toBe("B")
-  })
-
-  it("C starts collapsed and the toggle expands it", async () => {
+  it("the toggle collapses any variant and hides nav labels", async () => {
     const user = userEvent.setup()
-    shell("C")
-    expect(document.querySelector(".prui-shell")?.getAttribute("data-collapsed")).toBe("true")
+    shell("B")
     await user.click(screen.getByTestId("sidebar-toggle"))
-    expect(document.querySelector(".prui-shell")?.getAttribute("data-collapsed")).toBeNull()
+    const el = document.querySelector(".prui-shell")
+    expect(el?.getAttribute("data-collapsed")).toBe("true")
+    expect(el?.getAttribute("style")).toContain("--prui-rail-width")
+    expect(document.querySelector(".prui-shell-sidebar .prui-nav-mono")).toBeInTheDocument()
   })
 
-  it("C collapsed rail renders monograms instead of labels", () => {
+  it("a mobile rail toggle is available for A/B/C", () => {
+    shell("A")
+    expect(screen.getByTestId("rail-toggle-mobile")).toBeInTheDocument()
+  })
+
+  it("C renders a sidebar header row aligned with the topbar", () => {
     shell("C")
-    expect(document.querySelector(".prui-nav-mono")).toBeInTheDocument()
+    const head = screen.getByTestId("sidebar-header")
+    expect(head).toBeInTheDocument()
+    expect(head.className).toContain("h-14")
+    expect(head).toHaveTextContent("T")
   })
 
-  it("D renders the sidebar footer slot", () => {
+  it("C accepts a custom sidebar header", () => {
+    shell("C", { sidebarHeader: <span>Workspace</span> })
+    expect(screen.getByTestId("sidebar-header")).toHaveTextContent("Workspace")
+  })
+
+  it("D has no collapse toggle and renders the sidebar footer slot", () => {
     shell("D", { sidebarFooter: <button>New project</button> })
+    expect(screen.queryByTestId("sidebar-toggle")).toBeNull()
+    expect(screen.queryByTestId("rail-toggle-mobile")).toBeNull()
     expect(screen.getByText("New project")).toBeInTheDocument()
-    expect(document.querySelector(".prui-shell")?.getAttribute("data-layout")).toBe("D")
   })
 })
