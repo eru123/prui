@@ -43,6 +43,18 @@ export function InputDoc() {
 <Input id="email" type="email" value={value} onChange={(e) => setValue(e.target.value)} />`,
         },
         {
+          title: "Password with show/hide eye",
+          desc: "type=password renders the eye toggle by default: aria-labelled, aria-pressed, and it never steals the caret. passwordToggle={false} keeps a plain masked field; a custom trailingIcon takes over the slot.",
+          render: (
+            <div className="flex w-72 flex-col gap-2">
+              <Input type="password" defaultValue="hunter2" aria-label="Password" />
+              <Input type="password" disabled defaultValue="locked" aria-label="Disabled password" />
+            </div>
+          ),
+          code: `<Input type="password" defaultValue="hunter2" />   {/* eye included */}
+<Input type="password" passwordToggle={false} />   {/* plain masked field */}`,
+        },
+        {
           title: "States",
           render: (
             <>
