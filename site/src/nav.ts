@@ -1,10 +1,11 @@
 import type { NavItem } from "prui/app"
-import { BookOpenIcon, PaletteIcon, LayersIcon } from "./nav-icons"
+import { BookOpenIcon, BookMarkedIcon, PaletteIcon, LayersIcon } from "./nav-icons"
 
 export const nav: NavItem[] = [
   { label: "Introduction", href: "/", icon: BookOpenIcon },
   {
     label: "Guides",
+    icon: BookMarkedIcon,
     items: [
       { label: "Installation", href: "/guides/installation" },
       { label: "Progressive adoption", href: "/guides/adoption" },
