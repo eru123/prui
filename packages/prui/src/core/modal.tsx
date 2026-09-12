@@ -300,9 +300,6 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
       }
 
       // focus trap: confirm default, Tab cycles confirm/cancel, Escape cancels.
-      // ConfirmComponent is a real component; the linter cannot see it through
-      // the promise-callback nesting of the imperative confirmModal.
-      // eslint-disable-next-line react-hooks/rules-of-hooks -- see note above
       React.useEffect(() => {
         if (!show || isPending) return
         confirmRef.current?.focus()
@@ -332,7 +329,6 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
         }
         document.addEventListener("keydown", onKey)
         return () => document.removeEventListener("keydown", onKey)
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- inner component scope
       }, [show, isPending])
 
       if (!show) return null

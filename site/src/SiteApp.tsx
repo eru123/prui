@@ -35,6 +35,8 @@ const TextareaDoc = lazy(() => import("./pages/docs/TextareaDoc").then((m) => ({
 const ScrollAreaDoc = lazy(() => import("./pages/docs/ScrollAreaDoc").then((m) => ({ default: m.ScrollAreaDoc })))
 const AppLayerDoc = lazy(() => import("./pages/docs/AppLayerDoc").then((m) => ({ default: m.AppLayerDoc })))
 const PagesDoc = lazy(() => import("./pages/docs/PagesDoc").then((m) => ({ default: m.PagesDoc })))
+const FormsPage = lazy(() => import("./pages/FormsPage").then((m) => ({ default: m.FormsPage })))
+const ThemeBuilderPage = lazy(() => import("./pages/ThemeBuilder").then((m) => ({ default: m.ThemeBuilderPage })))
 
 function Loading() {
   return (
@@ -76,6 +78,8 @@ export function SiteApp() {
           <Route path="/layouts" element={<LayoutsCatalogPage />} />
           <Route path="/layouts/:slug" element={<LayoutDemoPage />} />
           <Route path="/layouts/:slug/code" element={<LayoutCodePage />} />
+          <Route path="/forms" element={<FormsPage />} />
+          <Route path="/theme-builder" element={<ThemeBuilderPage />} />
           <Route path="/theming" element={<ThemingPage />} />
           <Route path="/guides" element={<GuidesPage />} />
           <Route path="/agents" element={<AgentsPage />} />

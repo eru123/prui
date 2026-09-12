@@ -1,5 +1,5 @@
 import type { NavItem } from "prui/app"
-import { BookOpen, Palette, Layers, LayoutTemplate, PenTool } from "lucide-react"
+import { BookOpen, Palette, Layers, LayoutTemplate, PenTool, ClipboardPen } from "lucide-react"
 
 export const nav: NavItem[] = [
   { label: "Introduction", href: "/", icon: BookOpen },
@@ -38,8 +38,11 @@ export const nav: NavItem[] = [
       { label: "Token reference", href: "/theming#tokens" },
       { label: "Named themes", href: "/theming#themes" },
       { label: "Runtime switching", href: "/theming#switching" },
+      { label: "Custom themes", href: "/theming#custom" },
+      { label: "Theme builder", href: "/theme-builder" },
     ],
   },
+  { label: "Forms", href: "/forms", icon: ClipboardPen },
   {
     label: "Guides",
     icon: BookOpen,

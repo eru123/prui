@@ -20,6 +20,7 @@ const pruiAliases = [
   // The site chrome only needs the shell; importing the app-layer barrel
   // would drag Resource/DataTable into the landing chunk (AC-6).
   { find: /^prui\/app-shell$/, replacement: pruiSrc("app/app.tsx") },
+  { find: /^prui\/forms$/, replacement: pruiSrc("forms/index.ts") },
   { find: /^prui\/app$/, replacement: pruiSrc("app/index.ts") },
 ]
 

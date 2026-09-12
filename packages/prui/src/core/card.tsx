@@ -1,10 +1,11 @@
 import * as React from "react"
+import { resolveSurface, withSurface, type SurfaceProps } from "./surface"
 import { cn } from "./cn"
 import type { PropsMeta } from "./props-meta"
 
 export type BadgeVariant = "default" | "brand" | "ok" | "warn" | "danger" | "outline"
 
-export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement>, SurfaceProps {
   variant?: BadgeVariant
 }
 
@@ -18,19 +19,28 @@ const badgeVariants: Record<BadgeVariant, string> = {
 }
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant = "default", ...props }, ref) => (
-    <span
-      ref={ref}
-      data-variant={variant}
-      className={cn(
-        "prui-badge inline-flex items-center gap-1 rounded-[var(--prui-radius-full)] border px-2 py-0.5",
+  ({ className, style, variant = "default", bg, fg, radius, texture, textureColor, elevation, ...props }, ref) => {
+    const surface = resolveSurface({ bg, fg, radius, texture, textureColor, elevation })
+    const merged = withSurface(
+      cn(
+        "prui-badge inline-flex items-center gap-1 rounded-[var(--prui-s-radius,var(--prui-radius-full))] border px-2 py-0.5",
         "text-xs font-medium whitespace-nowrap",
         badgeVariants[variant],
         className,
-      )}
-      {...props}
-    />
-  ),
+      ),
+      style,
+      surface,
+    )
+    return (
+      <span
+        ref={ref}
+        data-variant={variant}
+        style={merged.style}
+        className={merged.className}
+        {...props}
+      />
+    )
+  },
 )
 Badge.displayName = "Badge"
 
@@ -44,17 +54,35 @@ export const badgePropsMeta: PropsMeta = {
 
 /* ---------------- Card ---------------- */
 
-export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        "prui-card rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]",
+export type CardVariant = "default" | "outline" | "ghost" | "elevated"
+
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceProps {
+  variant?: CardVariant
+  /** Strip the skin: keep the box, style everything yourself. */
+  unstyled?: boolean
+}
+
+const cardVariantClasses: Record<CardVariant, string> = {
+  default: "border border-[var(--prui-line)]",
+  outline: "border border-[var(--prui-s-border,var(--prui-brand))] bg-transparent",
+  ghost: "border border-transparent bg-transparent",
+  elevated: "border border-[var(--prui-line)] prui-elev-md",
+}
+
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, style, variant = "default", unstyled, bg, fg, radius, texture, textureColor, elevation, ...props }, ref) => {
+    const surface = resolveSurface({ bg, fg, radius, texture, textureColor, elevation })
+    const merged = withSurface(
+      cn(
+        "prui-card rounded-[var(--prui-s-radius,var(--prui-radius))]",
+        unstyled ? [] : [cardVariantClasses[variant]],
         className,
-      )}
-      {...props}
-    />
-  ),
+      ),
+      style,
+      surface,
+    )
+    return <div ref={ref} className={merged.className} style={merged.style} {...props} />
+  },
 )
 Card.displayName = "Card"
 

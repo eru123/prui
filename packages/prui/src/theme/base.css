@@ -34,3 +34,39 @@ body.modal-open { overflow: hidden; }
 .prui-app aside ::-webkit-scrollbar-thumb:hover,
 .prui-app aside::-webkit-scrollbar-thumb:hover { background: var(--prui-line); }
 .prui-app aside { scrollbar-width: thin; scrollbar-color: var(--prui-raise) transparent; }
+
+/* Surface flexibility layer: per-component overrides via custom properties.
+   Components consume var(--prui-s-*, theme token) so an unset property
+   degrades to the theme default. Textures draw subtle patterns from
+   --prui-tex-c (default: the line token). */
+.prui-tex-dots {
+  background-image: radial-gradient(var(--prui-tex-c, var(--prui-line)) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+.prui-tex-grid {
+  background-image:
+    linear-gradient(var(--prui-tex-c, var(--prui-line)) 1px, transparent 1px),
+    linear-gradient(90deg, var(--prui-tex-c, var(--prui-line)) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.prui-tex-stripes {
+  background-image: repeating-linear-gradient(45deg, var(--prui-tex-c, var(--prui-line)) 0 1px, transparent 1px 10px);
+}
+.prui-tex-diagonal {
+  background-image: repeating-linear-gradient(-45deg, var(--prui-tex-c, var(--prui-line)) 0 1px, transparent 1px 8px);
+}
+.prui-elev-sm { box-shadow: 0 1px 2px rgb(0 0 0 / 0.28); }
+.prui-elev-md { box-shadow: 0 4px 12px rgb(0 0 0 / 0.32); }
+.prui-elev-lg { box-shadow: 0 12px 32px rgb(0 0 0 / 0.4); }
+
+/* prui-card participates in the surface layer */
+.prui-card {
+  background-color: var(--prui-s-bg, var(--prui-surface));
+  color: var(--prui-s-fg, inherit);
+  border-radius: var(--prui-s-radius, var(--prui-radius));
+}
+.prui-f-control {
+  background-color: var(--prui-s-bg, var(--prui-background));
+  color: var(--prui-s-fg, var(--prui-fg));
+  border-radius: var(--prui-s-radius, var(--prui-radius));
+}

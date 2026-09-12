@@ -34,6 +34,7 @@ export default defineConfig({
         core: r("src/core/index.ts"),
         ...coreEntries,
         app: r("src/app/index.ts"),
+        forms: r("src/forms/index.ts"),
         pages: r("src/pages/index.ts"),
         "data-table": r("src/data-table/index.ts"),
         theme: r("src/theme/index.ts"),

@@ -8,11 +8,11 @@ import {
   useNavigate,
   Outlet,
 } from "react-router-dom"
-import { ChevronDown, Menu, Search, X } from "lucide-react"
+import { ChevronDown, Menu, Palette, Search, X } from "lucide-react"
 import { cn } from "../core/cn"
 import { Dropdown } from "../core/dropdown"
 import { Button } from "../core/button"
-import { applyTheme, readPersistedTheme, resolveThemeName, themeMode, PRUI_THEMES } from "../theme"
+import { applyTheme, readPersistedTheme, resolveThemeName, themeMode, listThemes } from "../theme"
 import type { AppliedTheme, ThemeDefault } from "../theme"
 import type { PropsMeta } from "../core/props-meta"
 import { AutoPages } from "./auto-pages"
@@ -148,13 +148,14 @@ function ThemeToggle({ config }: { config?: boolean | ThemeConfig }) {
         <button
           type="button"
           aria-label="Switch theme"
+          title={`Theme: ${state.theme}`}
           data-testid="theme-toggle"
           className="inline-flex h-8 w-8 items-center justify-center rounded-[var(--prui-radius)] text-[var(--prui-dim)] hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)] cursor-pointer"
         >
-          <span className="text-xs font-semibold uppercase">{state.theme.slice(0, 2)}</span>
+          <Palette className="h-4 w-4" aria-hidden />
         </button>
       }
-      items={PRUI_THEMES.map((t) => ({
+      items={listThemes().map((t) => ({
         label: `${t}${t === state.theme ? " (active)" : ""}`,
         onSelect: () => setTheme({ theme: t, mode: t === "daylight" ? "light" : "dark" }),
       }))}
