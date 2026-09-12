@@ -13,9 +13,10 @@ export const nav: NavItem[] = [
   },
   { label: "Layouts", href: "/layouts", icon: LayoutTemplate },
   {
-    label: "Theming",
+    label: "Appearance",
     icon: Palette,
     items: [
+      { label: "Icons", href: "/icons" },
       { label: "Theming", href: "/theming" },
       { label: "Theme builder", href: "/theme-builder" },
     ],
