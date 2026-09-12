@@ -1,8 +1,8 @@
 import type { NavItem } from "prui/app"
-import { BookOpen, Palette, Layers, LayoutTemplate } from "lucide-react"
+import { BookOpenIcon, PaletteIcon, LayersIcon, LayoutTemplateIcon } from "./nav-icons"
 
 export const nav: NavItem[] = [
-  { label: "Introduction", href: "/", icon: BookOpen },
+  { label: "Introduction", href: "/", icon: BookOpenIcon },
   {
     label: "Guides",
     items: [
@@ -11,10 +11,10 @@ export const nav: NavItem[] = [
       { label: "Agents", href: "/agents" },
     ],
   },
-  { label: "Layouts", href: "/layouts", icon: LayoutTemplate },
+  { label: "Layouts", href: "/layouts", icon: LayoutTemplateIcon },
   {
     label: "Appearance",
-    icon: Palette,
+    icon: PaletteIcon,
     items: [
       { label: "Icons", href: "/icons" },
       { label: "Theming", href: "/theming" },
@@ -23,7 +23,7 @@ export const nav: NavItem[] = [
   },
   {
     label: "Components",
-    icon: Layers,
+    icon: LayersIcon,
     items: [
       { label: "Primitives", heading: true },
       { label: "Button", href: "/components/button" },

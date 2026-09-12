@@ -1,4 +1,4 @@
-import { defineConfig } from "vite"
+import { defineConfig, type Plugin } from "vite"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
 import { resolve, dirname } from "node:path"
@@ -40,14 +40,35 @@ function vendorPackage(id: string): string | undefined {
   if (!pkg) return
   if (pkg === "react" || pkg === "react-dom" || pkg === "scheduler") return "vendor-react-dom"
   if (pkg === "react-router-dom" || pkg === "@remix-run/router") return "vendor-react-dom"
-  if (pkg === "lucide-react") return "vendor-icons"
+  // lucide-react must split naturally: its root module carries the full icon
+  // catalog (the icons map export), and the site chrome only needs a handful
+  // of nav icons. A shared chunk would drag 700KB of icons into every page's
+  // static graph, so no manual grouping here.
   if (pkg.startsWith("@dnd-kit/")) return "vendor-dnd"
   if (pkg.startsWith("@monaco-editor/")) return "vendor-monaco"
+  if (pkg === "lucide-react") return undefined // natural split: chrome uses a few icons, the catalog page pulls the rest lazily
   return "vendor-misc"
 }
 
+// The lucide root module re-exports the full icon catalog through its
+// `icons` map. Any static use of the root (even one spinner icon) would
+// pull all 1600 icons into the static graph, so the site build strips the
+// map; the icons page imports the catalog lazily via a deep path instead.
+function stripLucideIconsMap(): Plugin {
+  return {
+    name: "strip-lucide-icons-map",
+    transform(code, id) {
+      const norm = id.split("\\").join("/")
+      if (!norm.includes("lucide-react") || !norm.endsWith("dist/esm/lucide-react.js")) return
+      return code
+        .replace(/import \* as index from ['"]\.\/icons\/index\.js['"];?/, "")
+        .replace(/export \{ index as icons \};?/, "")
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), stripLucideIconsMap()],
   resolve: {
     alias: pruiAliases,
   },
