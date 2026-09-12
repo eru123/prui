@@ -73,8 +73,8 @@ jobs:
       - name: Consume changesets (version bump + commit + tag)
         if: steps.changed.outputs.changed == 'true'
         run: |
-          git config user.name "prui-bot"
-          git config user.email "bot@skiddph.com"
+          git config user.name "eru123"
+          git config user.email "jericho@skiddph.com"
           pnpm changeset version
           if git diff --quiet; then
             echo "released=false" >> "$GITHUB_ENV"
