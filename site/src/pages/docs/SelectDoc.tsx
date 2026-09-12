@@ -2,7 +2,7 @@ import * as React from "react"
 import { ComponentDoc, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../components/ComponentDoc"
 
 export function SelectDoc() {
-  const [role, setRole] = React.useState("")
+  const [role, setRole] = React.useState<string | string[]>("")
   return (
     <ComponentDoc
       name="Select"
@@ -14,6 +14,45 @@ export function SelectDoc() {
         "Use composable parts when items need avatars, badges, or grouping",
       ]}
       demos={[
+        {
+          title: "Searchable",
+          desc: "a filter input pins to the top of the listbox; typing narrows options in place and Enter picks the first match.",
+          render: (
+            <div className="w-56">
+              <Select
+                searchable
+                aria-label="Search fruits"
+                options={[
+                  { label: "Apple", value: "apple" },
+                  { label: "Banana", value: "banana" },
+                  { label: "Blueberry", value: "blueberry" },
+                  { label: "Cherry", value: "cherry" },
+                ]}
+              />
+            </div>
+          ),
+          code: `<Select searchable options={fruits} aria-label="Fruit" />
+// type "bl" → only Blueberry remains; Enter picks it`,
+        },
+        {
+          title: "Multiple",
+          desc: "items toggle without closing; value/onChange become string[] and the trigger shows the first label + a count.",
+          render: (
+            <div className="w-56">
+              <Select
+                multiple
+                aria-label="Pick fruits"
+                options={[
+                  { label: "Apple", value: "apple" },
+                  { label: "Banana", value: "banana" },
+                  { label: "Blueberry", value: "blueberry" },
+                  { label: "Cherry", value: "cherry" },
+                ]}
+              />
+            </div>
+          ),
+          code: `<Select multiple options={fruits} value={picked} onChange={(v) => setPicked(v as string[])} />`,
+        },
         {
           title: "Simple mode (options prop)",
           render: (

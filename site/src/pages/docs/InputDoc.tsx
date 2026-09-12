@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Search, CircleDollarSign } from "lucide-react"
 import { ComponentDoc, Input, Textarea, Label } from "../../components/ComponentDoc"
 
 export function InputDoc() {
@@ -14,6 +15,19 @@ export function InputDoc() {
         "Textarea for long-form content; it grows and stays resizable",
       ]}
       demos={[
+        {
+          title: "Leading and trailing icons",
+          desc: "icon and trailingIcon render inside the field; horizontal padding adjusts automatically.",
+          render: (
+            <div className="flex w-72 flex-col gap-2">
+              <Input icon={<Search />} placeholder="Search…" aria-label="Search" />
+              <Input trailingIcon={<CircleDollarSign />} placeholder="0.00" aria-label="Amount" />
+              <Input icon={<Search />} trailingIcon={<CircleDollarSign />} placeholder="Both" aria-label="Both" />
+            </div>
+          ),
+          code: `<Input icon={<Search />} placeholder="Search…" />
+<Input trailingIcon={<CircleDollarSign />} placeholder="0.00" />`,
+        },
         {
           title: "Controlled with label",
           render: (
