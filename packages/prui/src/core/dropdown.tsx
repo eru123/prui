@@ -1,6 +1,16 @@
 import * as React from "react"
 import { cn } from "./cn"
+import { useOverlayStack, useEscapeKey } from "./overlay"
+import { moveIndex, homeIndex, endIndex, typeaheadIndex } from "./list-nav"
 import type { PropsMeta } from "./props-meta"
+
+/**
+ * Dropdown: an anchored menu over a trigger. Full WAI-ARIA menu keyboard
+ * support: Enter/Space/ArrowDown open, ArrowUp/Down + Home/End move,
+ * printable-character typeahead selects, Escape (topmost overlay only)
+ * closes and restores focus to the trigger, Tab closes. Non-modal: no scroll
+ * lock and no background inertness.
+ */
 
 export interface DropdownItem {
   label: string
@@ -21,65 +31,198 @@ export interface DropdownProps {
   className?: string
 }
 
-export const Dropdown = ({
-  items,
-  trigger,
-  children,
-  open: openProp,
-  defaultOpen = false,
-  onOpenChange,
-  align = "start",
-  className,
-}: DropdownProps) => {
+const MENU_ITEM_SELECTOR = "[role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']"
+
+export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(function Dropdown(
+  {
+    items,
+    trigger,
+    children,
+    open: openProp,
+    defaultOpen = false,
+    onOpenChange,
+    align = "start",
+    className,
+  },
+  ref,
+) {
   const [uncontrolled, setUncontrolled] = React.useState(defaultOpen)
   const isControlled = openProp !== undefined
   const open = isControlled ? openProp : uncontrolled
   const rootRef = React.useRef<HTMLDivElement>(null)
+  const menuRef = React.useRef<HTMLDivElement>(null)
+  const triggerRef = React.useRef<HTMLElement>(null)
+  const [activeIndex, setActiveIndex] = React.useState(-1)
+  const typeaheadRef = React.useRef({ buffer: "", at: 0 })
 
   const setOpen = (o: boolean) => {
     if (!isControlled) setUncontrolled(o)
     onOpenChange?.(o)
+    if (!o) {
+      setActiveIndex(-1)
+      typeaheadRef.current = { buffer: "", at: 0 }
+      // return focus to the invoker when the menu closes through the keyboard path
+      const active = document.activeElement
+      if (active && menuRef.current?.contains(active)) triggerRef.current?.focus()
+    }
   }
 
+  const { setElement, isTop } = useOverlayStack(open)
+  useEscapeKey(open, isTop, () => {
+    setOpen(false)
+  })
+
+  // outside pointer press closes (non-modal dismiss)
   React.useEffect(() => {
     if (!open) return
     const onDocClick = (e: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false)
     }
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false)
-    }
     document.addEventListener("mousedown", onDocClick)
-    document.addEventListener("keydown", onKey)
-    return () => {
-      document.removeEventListener("mousedown", onDocClick)
-      document.removeEventListener("keydown", onKey)
-    }
+    return () => document.removeEventListener("mousedown", onDocClick)
   })
 
-  return (
-    <div ref={rootRef} className={cn("prui-dropdown relative inline-block", className)} data-state={open ? "open" : "closed"}>
-      <div
-        role="button"
-        tabIndex={0}
+  const menuItems = React.useCallback(() => {
+    const menu = menuRef.current
+    if (!menu) return [] as HTMLElement[]
+    return Array.from(menu.querySelectorAll<HTMLElement>(MENU_ITEM_SELECTOR))
+  }, [])
+
+  const focusItem = (index: number) => {
+    setActiveIndex(index)
+    const els = menuItems()
+    els[index]?.focus()
+  }
+
+  // on open, focus the first enabled item (menu pattern)
+  React.useEffect(() => {
+    if (!open) return
+    const els = menuItems()
+    const first = els.findIndex((el) => !(el as HTMLButtonElement).disabled)
+    if (first >= 0) {
+      setActiveIndex(first)
+      els[first]?.focus()
+    } else if (menuRef.current) {
+      menuRef.current.focus()
+    }
+  }, [open, menuItems])
+
+  const onMenuKeyDown = (e: React.KeyboardEvent) => {
+    const els = menuItems()
+    const enabled = (i: number) => !(els[i] as HTMLButtonElement | null)?.disabled
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault()
+        focusItem(moveIndex(activeIndex, 1, els.length, { enabled }))
+        break
+      case "ArrowUp":
+        e.preventDefault()
+        focusItem(moveIndex(activeIndex, -1, els.length, { enabled }))
+        break
+      case "Home":
+        e.preventDefault()
+        focusItem(homeIndex(els.length, enabled))
+        break
+      case "End":
+        e.preventDefault()
+        focusItem(endIndex(els.length, enabled))
+        break
+      case "Tab":
+        setOpen(false)
+        break
+      case "Enter":
+      case " ":
+        // let the focused button's native activation run; just close after
+        break
+      default: {
+        if (e.key.length === 1) {
+          const labels = () => els.map((el) => el.textContent ?? "")
+          const { index } = typeaheadIndex(labels, typeaheadRef.current, e.key, activeIndex)
+          if (index >= 0 && index !== activeIndex) {
+            e.preventDefault()
+            focusItem(index)
+          }
+        }
+      }
+    }
+  }
+
+  const openWithKeyboard = () => {
+    setOpen(true)
+  }
+
+  // trigger: clone a provided element (button/link/anything) and wire it up,
+  // or render one for plain content. Cloning avoids nested interactive roles.
+  let triggerNode: React.ReactNode
+  if (React.isValidElement(trigger)) {
+    const child = trigger as React.ReactElement<Record<string, unknown>>
+    triggerNode = React.cloneElement(child, {
+      ref: (el: HTMLElement) => {
+        triggerRef.current = el
+        const original = child.props.ref as React.Ref<HTMLElement> | undefined
+        if (typeof original === "function") (original as (v: HTMLElement | null) => void)(el)
+        else if (original && typeof original === "object") (original as React.MutableRefObject<HTMLElement | null>).current = el
+      },
+      "aria-haspopup": "menu",
+      "aria-expanded": open,
+      onClick: (e: React.MouseEvent) => {
+        const original = child.props.onClick as ((ev: React.MouseEvent) => void) | undefined
+        original?.(e)
+        if (!e.defaultPrevented) setOpen(!open)
+      },
+      onKeyDown: (e: React.KeyboardEvent) => {
+        const original = child.props.onKeyDown as ((ev: React.KeyboardEvent) => void) | undefined
+        original?.(e)
+        if (e.defaultPrevented) return
+        if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+          if (!open) {
+            e.preventDefault()
+            openWithKeyboard()
+          }
+        }
+      },
+    })
+  } else {
+    triggerNode = (
+      <button
+        type="button"
+        ref={(el) => {
+          triggerRef.current = el
+        }}
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen(!open)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
+          if ((e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") && !open) {
             e.preventDefault()
-            setOpen(!open)
+            openWithKeyboard()
           }
         }}
       >
         {trigger}
-      </div>
+      </button>
+    )
+  }
+
+  return (
+    <div ref={(node) => {
+      rootRef.current = node
+      if (typeof ref === "function") ref(node)
+      else if (ref) ref.current = node
+    }} className={cn("prui-dropdown relative inline-block", className)} data-state={open ? "open" : "closed"}>
+      {triggerNode}
       {open ? (
         <div
+          ref={(node) => {
+            menuRef.current = node
+            setElement(node?.parentElement ?? null)
+          }}
           role="menu"
+          tabIndex={-1}
+          onKeyDown={onMenuKeyDown}
           className={cn(
-            "prui-dropdown-menu absolute z-50 mt-1 min-w-40 rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
-            "bg-[var(--prui-surface)] p-1 shadow-lg",
+            "prui-dropdown-menu absolute z-[var(--prui-z-overlay)] mt-1 min-w-40 rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
+            "bg-[var(--prui-surface)] p-1 shadow-[var(--prui-shadow-md)] outline-none",
             align === "end" ? "right-0" : "left-0",
           )}
         >
@@ -90,6 +233,7 @@ export const Dropdown = ({
                 <button
                   type="button"
                   role="menuitem"
+                  tabIndex={-1}
                   disabled={item.disabled}
                   onClick={() => {
                     if (item.disabled) return
@@ -98,7 +242,7 @@ export const Dropdown = ({
                   }}
                   className={cn(
                     "flex w-full items-center rounded-[calc(var(--prui-radius)-1px)] px-2.5 py-1.5 text-left text-sm",
-                    "hover:bg-[var(--prui-raise)] cursor-pointer disabled:opacity-50 disabled:pointer-events-none",
+                    "hover:bg-[var(--prui-raise)] focus-visible:bg-[var(--prui-raise)] outline-none cursor-pointer disabled:opacity-50 disabled:pointer-events-none",
                     item.danger ? "text-[var(--prui-danger)]" : "text-[var(--prui-fg)]",
                   )}
                 >
@@ -110,7 +254,7 @@ export const Dropdown = ({
       ) : null}
     </div>
   )
-}
+})
 Dropdown.displayName = "Dropdown"
 
 export const dropdownPropsMeta: PropsMeta = {
@@ -120,5 +264,6 @@ export const dropdownPropsMeta: PropsMeta = {
     { name: "trigger", type: "ReactNode", default: null, control: "none" },
     { name: "align", type: "'start' | 'end'", default: "'start'", control: "select", options: ["start", "end"] },
     { name: "onOpenChange", type: "(open: boolean) => void", default: null, control: "none" },
+    { name: "open", type: "boolean", default: "undefined", control: "boolean" },
   ],
 }

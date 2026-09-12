@@ -45,17 +45,60 @@ Tabs.displayName = "Tabs"
 export type TabsListProps = React.HTMLAttributes<HTMLDivElement>
 
 export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      role="tablist"
-      className={cn(
-        "prui-tabs-list inline-flex h-9 items-center gap-1 rounded-[var(--prui-radius)] bg-[var(--prui-raise)] p-1",
-        className,
-      )}
-      {...props}
-    />
-  ),
+  ({ className, onKeyDown, ...props }, ref) => {
+    const listRef = React.useRef<HTMLDivElement>(null)
+
+    const tabsInList = (): HTMLButtonElement[] => {
+      const list = listRef.current
+      if (!list) return []
+      return Array.from(list.querySelectorAll<HTMLButtonElement>("[role='tab']"))
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      onKeyDown?.(e)
+      if (e.defaultPrevented) return
+      const tabs = tabsInList()
+      const current = tabs.findIndex((t) => t.tabIndex === 0)
+      const delta = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0
+      if (delta !== 0) {
+        e.preventDefault()
+        const next = tabs[(current + delta + tabs.length) % tabs.length]
+        next?.focus()
+        next?.click()
+        return
+      }
+      if (e.key === "Home") {
+        e.preventDefault()
+        tabs[0]?.focus()
+        tabs[0]?.click()
+        return
+      }
+      if (e.key === "End") {
+        e.preventDefault()
+        const last = tabs[tabs.length - 1]
+        last?.focus()
+        last?.click()
+      }
+    }
+
+    return (
+      <div
+        ref={(node) => {
+          listRef.current = node
+          if (typeof ref === "function") ref(node)
+          else if (ref) ref.current = node
+        }}
+        role="tablist"
+        aria-orientation="horizontal"
+        onKeyDown={handleKeyDown}
+        className={cn(
+          "prui-tabs-list inline-flex h-9 items-center gap-1 rounded-[var(--prui-radius)] bg-[var(--prui-raise)] p-1",
+          className,
+        )}
+        {...props}
+      />
+    )
+  },
 )
 TabsList.displayName = "TabsList"
 
@@ -74,7 +117,9 @@ export const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>
         role="tab"
         id={`${baseId}-tab-${value}`}
         aria-selected={selected}
-        aria-controls={`${baseId}-panel-${value}`}
+        // the panel exists in the DOM only while selected; referencing a
+        // missing id is an invalid ARIA value, so point only when mounted
+        aria-controls={selected ? `${baseId}-panel-${value}` : undefined}
         data-state={selected ? "active" : "inactive"}
         tabIndex={selected ? 0 : -1}
         className={cn(

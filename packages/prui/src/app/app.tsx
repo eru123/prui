@@ -13,9 +13,12 @@ import { ChevronDown, ChevronsLeft, ChevronsRight, Menu, Palette, Search, X } fr
 import { cn } from "../core/cn"
 import { Dropdown } from "../core/dropdown"
 import { Button } from "../core/button"
+import { Portal, useOverlay, useOverlayStack, useEscapeKey } from "../core/overlay"
+import { moveIndex, homeIndex, endIndex } from "../core/list-nav"
 import { applyTheme, clearAppliedTokens, readPersistedTheme, resolveThemeName, themeMode, listThemes } from "../theme"
 import type { AppliedTheme, ThemeDefault } from "../theme"
 import type { PropsMeta } from "../core/props-meta"
+import { usePruiI18n } from "../i18n"
 import { AutoPages } from "./auto-pages"
 import type { PageSetName } from "./auto-pages"
 
@@ -158,6 +161,7 @@ export function useThemeState(config?: boolean | ThemeConfig) {
 
 function ThemeToggle({ config }: { config?: boolean | ThemeConfig }) {
   const { enabled, state, setTheme } = useThemeState(config)
+  const { t } = usePruiI18n()
   if (!enabled) return null
   return (
     <Dropdown
@@ -165,7 +169,7 @@ function ThemeToggle({ config }: { config?: boolean | ThemeConfig }) {
       trigger={
         <button
           type="button"
-          aria-label="Switch theme"
+          aria-label={t.switchTheme}
           title={`Theme: ${state.theme}`}
           data-testid="theme-toggle"
           className="inline-flex h-8 w-8 items-center justify-center rounded-[var(--prui-radius)] text-[var(--prui-dim)] hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)] cursor-pointer"
@@ -209,18 +213,27 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
 
   // Collapsed rail: the whole group is ONE rail item; clicking it opens a
   // flyout menu (portaled to the body so the rail's overflow cannot clip it)
-  // instead of expanding nested rows inside a 64px column.
+  // instead of expanding nested rows inside a 64px column. Full menu
+  // keyboard support: arrows, Home/End, Escape (topmost overlay), and focus
+  // returns to the rail trigger on close.
   const [menuOpen, setMenuOpen] = React.useState(false)
   const [menuPos, setMenuPos] = React.useState<{ top: number; left: number } | null>(null)
   const triggerRef = React.useRef<HTMLButtonElement>(null)
+  const menuRef = React.useRef<HTMLDivElement>(null)
+  const [activeIndex, setActiveIndex] = React.useState(-1)
+
+  const closeMenu = React.useCallback(() => {
+    setMenuOpen(false)
+    setActiveIndex(-1)
+    const active = document.activeElement
+    if (active && menuRef.current?.contains(active)) triggerRef.current?.focus()
+  }, [])
+
+  const { setElement, isTop } = useOverlayStack(menuOpen)
+  useEscapeKey(menuOpen, isTop, () => closeMenu())
 
   React.useEffect(() => {
-    if (!menuOpen) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenuOpen(false)
-    }
-    document.addEventListener("keydown", onKey)
-    return () => document.removeEventListener("keydown", onKey)
+    if (menuOpen) menuRef.current?.focus()
   }, [menuOpen])
 
   if (collapsed) {
@@ -233,6 +246,7 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
         flyout.push({ label: child.label, href: child.href })
       }
     }
+    const navigable = flyout.filter((f) => f.href)
 
     const openMenu = () => {
       const rect = triggerRef.current?.getBoundingClientRect()
@@ -246,6 +260,39 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
       setMenuOpen((o) => !o)
     }
 
+    const focusFlyoutItem = (index: number) => {
+      setActiveIndex(index)
+      const buttons = menuRef.current?.querySelectorAll<HTMLButtonElement>("[role='menuitem']")
+      if (!buttons) return
+      const arr = Array.from(buttons)
+      arr[index]?.focus()
+    }
+
+    const onMenuKeyDown = (e: React.KeyboardEvent) => {
+      const count = navigable.length
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault()
+          focusFlyoutItem(moveIndex(activeIndex, 1, count))
+          break
+        case "ArrowUp":
+          e.preventDefault()
+          focusFlyoutItem(moveIndex(activeIndex, -1, count))
+          break
+        case "Home":
+          e.preventDefault()
+          focusFlyoutItem(homeIndex(count))
+          break
+        case "End":
+          e.preventDefault()
+          focusFlyoutItem(endIndex(count))
+          break
+        case "Tab":
+          closeMenu()
+          break
+      }
+    }
+
     return (
       <li data-testid="nav-group">
         <button
@@ -255,6 +302,12 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
           aria-haspopup="menu"
           aria-expanded={menuOpen}
           onClick={openMenu}
+          onKeyDown={(e) => {
+            if (!menuOpen && (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ")) {
+              e.preventDefault()
+              openMenu()
+            }
+          }}
           data-testid="rail-group-trigger"
           className={cn(
             "flex w-full items-center justify-center rounded-[var(--prui-radius)] px-2.5 py-1.5 text-sm cursor-pointer",
@@ -270,12 +323,18 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
         {menuOpen && menuPos
           ? createPortal(
               <>
-                <div className="fixed inset-0 z-[60]" onClick={() => setMenuOpen(false)} data-testid="rail-flyout-backdrop" />
+                <div className="fixed inset-0 z-[var(--prui-z-flyout)]" onClick={() => closeMenu()} data-testid="rail-flyout-backdrop" />
                 <div
+                  ref={(node) => {
+                    menuRef.current = node
+                    setElement(node)
+                  }}
                   role="menu"
                   aria-label={item.label}
+                  tabIndex={-1}
+                  onKeyDown={onMenuKeyDown}
                   data-testid="rail-flyout"
-                  className="fixed z-[61] flex w-56 max-h-80 flex-col overflow-y-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] py-1.5 shadow-xl"
+                  className="fixed z-[calc(var(--prui-z-flyout)+1)] flex w-56 max-h-80 flex-col overflow-y-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] py-1.5 shadow-[var(--prui-shadow-lg)] outline-none"
                   style={{ top: menuPos.top, left: menuPos.left }}
                 >
                   <div className="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--prui-dim)]">{item.label}</div>
@@ -289,15 +348,16 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
                         key={fi.href}
                         type="button"
                         role="menuitem"
+                        tabIndex={-1}
                         data-testid="rail-flyout-item"
                         className={cn(
                           "flex cursor-pointer items-center rounded-[calc(var(--prui-radius)-1px)] px-3 py-1.5 text-left text-sm",
                           fi.href && isActivePath(pathname, fi.href)
                             ? "bg-[var(--prui-brand)]/15 text-[var(--prui-brand)]"
-                            : "text-[var(--prui-fg)] hover:bg-[var(--prui-raise)]",
+                            : "text-[var(--prui-fg)] hover:bg-[var(--prui-raise)] focus-visible:bg-[var(--prui-raise)] outline-none",
                         )}
                         onClick={() => {
-                          setMenuOpen(false)
+                          closeMenu()
                           onNavigate?.()
                           if (fi.href) navigate(fi.href)
                         }}
@@ -380,8 +440,9 @@ function NavItemLink({ item, onNavigate, nested, expandAllOn, collapsed }: { ite
 }
 
 export function SidebarNav({ nav, onNavigate, expandAllOn, collapsed }: { nav: NavItem[]; onNavigate?: () => void; expandAllOn?: string; collapsed?: boolean }) {
+  const { t } = usePruiI18n()
   return (
-    <nav aria-label="Main" className="prui-app-nav">
+    <nav aria-label={t.mainNavigation} className="prui-app-nav">
       <ul className="flex flex-col gap-0.5">
         {nav.map((item) => (
           <NavItemLink key={item.href ?? item.label} item={item} onNavigate={onNavigate} expandAllOn={expandAllOn} collapsed={collapsed} />
@@ -422,7 +483,7 @@ export function CommandPalette({
   open,
   onOpenChange,
   entries,
-  placeholder = "Type a command or search...",
+  placeholder,
   onNavigate,
 }: {
   open: boolean
@@ -431,8 +492,11 @@ export function CommandPalette({
   placeholder?: string
   onNavigate?: (href: string) => void
 }) {
+  const { t } = usePruiI18n()
   const [query, setQuery] = React.useState("")
   const [active, setActive] = React.useState(0)
+  const inputRef = React.useRef<HTMLInputElement>(null)
+  const effectivePlaceholder = placeholder ?? t.commandPlaceholder
 
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -442,7 +506,13 @@ export function CommandPalette({
 
   React.useEffect(() => setActive(0), [query])
 
-  if (!open) return null
+  // shared overlay infrastructure: focus trap (initial focus = the search
+  // input), focus restoration, topmost Escape, scroll lock, inert background
+  const { ref: overlayRef } = useOverlay({
+    open,
+    onEscape: () => onOpenChange(false),
+    initialFocus: inputRef,
+  })
 
   const go = (entry: PaletteEntry) => {
     onOpenChange(false)
@@ -450,77 +520,87 @@ export function CommandPalette({
     else if (entry.href) onNavigate?.(entry.href)
   }
 
+  if (!open) return null
+
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-24"
-      style={{ backgroundColor: "rgba(0,0,0,0.55)" }}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onOpenChange(false)
-      }}
-    >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="Command palette"
-        data-testid="command-palette"
-        className="w-full max-w-md rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] shadow-xl"
-      >
-        <input
-          autoFocus
-          type="text"
-          role="combobox"
-          aria-expanded="true"
-          aria-label="Command palette search"
-          aria-activedescendant={filtered[active] ? `palette-option-${active}` : undefined}
-          placeholder={placeholder}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") onOpenChange(false)
-            if (e.key === "ArrowDown") {
-              e.preventDefault()
-              setActive((a) => Math.min(a + 1, filtered.length - 1))
-            }
-            if (e.key === "ArrowUp") {
-              e.preventDefault()
-              setActive((a) => Math.max(a - 1, 0))
-            }
-            if (e.key === "Enter") {
-              const entry = filtered[active]
-              if (entry) {
-                onOpenChange(false)
-                if (entry.onSelect) entry.onSelect()
-                else if (entry.href) onNavigate?.(entry.href)
-              }
-            }
+    <Portal>
+      <div ref={overlayRef}>
+        <div
+          className="prui-dialog-overlay fixed inset-0 z-[var(--prui-z-overlay)] flex items-start justify-center pt-24"
+          style={{ backgroundColor: "var(--prui-scrim)" }}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) onOpenChange(false)
           }}
-          className="w-full bg-transparent px-4 py-3 text-sm text-[var(--prui-fg)] placeholder:text-[var(--prui-dim)] outline-none border-b border-[var(--prui-line)] rounded-t-[var(--prui-radius)]"
-        />
-        <ul role="listbox" className="max-h-64 overflow-auto p-1">
-          {filtered.length === 0 ? (
-            <li className="px-3 py-2 text-sm text-[var(--prui-dim)]">No matches.</li>
-          ) : (
-            filtered.map((entry, i) => (
-              <li
-                key={`${entry.label}-${i}`}
-                id={`palette-option-${i}`}
-                role="option"
-                aria-selected={i === active}
-                onMouseEnter={() => setActive(i)}
-                onClick={() => go(entry)}
-                className={cn(
-                  "cursor-pointer rounded-[calc(var(--prui-radius)-1px)] px-3 py-2 text-sm text-[var(--prui-fg)]",
-                  i === active && "bg-[var(--prui-raise)]",
-                )}
-              >
-                {entry.group ? <span className="mr-2 text-xs text-[var(--prui-dim)]">{entry.group}</span> : null}
-                {entry.label}
-              </li>
-            ))
-          )}
-        </ul>
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Command palette"
+            data-testid="command-palette"
+            className="w-full max-w-md rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] shadow-[var(--prui-shadow-lg)]"
+          >
+            <input
+              ref={inputRef}
+              type="text"
+              role="combobox"
+              aria-expanded="true"
+              aria-controls="prui-palette-listbox"
+              aria-label="Command palette search"
+              aria-activedescendant={filtered[active] ? `palette-option-${active}` : undefined}
+              placeholder={effectivePlaceholder}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowDown") {
+                  e.preventDefault()
+                  setActive((a) => Math.min(a + 1, filtered.length - 1))
+                }
+                if (e.key === "ArrowUp") {
+                  e.preventDefault()
+                  setActive((a) => Math.max(a - 1, 0))
+                }
+                if (e.key === "Home" && filtered.length > 0) {
+                  e.preventDefault()
+                  setActive(0)
+                }
+                if (e.key === "End" && filtered.length > 0) {
+                  e.preventDefault()
+                  setActive(filtered.length - 1)
+                }
+                if (e.key === "Enter") {
+                  const entry = filtered[active]
+                  if (entry) go(entry)
+                }
+              }}
+              className="w-full bg-transparent px-4 py-3 text-sm text-[var(--prui-fg)] placeholder:text-[var(--prui-dim)] outline-none border-b border-[var(--prui-line)] rounded-t-[var(--prui-radius)]"
+            />
+            <ul id="prui-palette-listbox" role="listbox" aria-label="Commands" className="max-h-64 overflow-auto p-1">
+              {filtered.length === 0 ? (
+                <li className="px-3 py-2 text-sm text-[var(--prui-dim)]" role="option" aria-selected="false" aria-disabled="true">{t.commandNoMatches}</li>
+              ) : (
+                filtered.map((entry, i) => (
+                  <li
+                    key={`${entry.label}-${i}`}
+                    id={`palette-option-${i}`}
+                    role="option"
+                    aria-selected={i === active}
+                    onMouseEnter={() => setActive(i)}
+                    onClick={() => go(entry)}
+                    className={cn(
+                      "cursor-pointer rounded-[calc(var(--prui-radius)-1px)] px-3 py-2 text-sm text-[var(--prui-fg)]",
+                      i === active && "bg-[var(--prui-raise)]",
+                    )}
+                  >
+                    {entry.group ? <span className="mr-2 text-xs text-[var(--prui-dim)]">{entry.group}</span> : null}
+                    {entry.label}
+                  </li>
+                ))
+              )}
+            </ul>
+          </div>
+        </div>
       </div>
-    </div>
+    </Portal>
   )
 }
 
@@ -544,6 +624,7 @@ export function AppShell(props: AppProps) {
     children,
   } = props
 
+  const { t } = usePruiI18n()
   const searchCfg: SearchConfig = typeof search === "object" ? search : { enabled: search !== false }
   const searchEnabled = searchCfg.enabled !== false
   const hotkey = searchCfg.hotkey ?? "/"
@@ -605,15 +686,14 @@ export function AppShell(props: AppProps) {
     }
   }, [location.pathname])
 
-  // scroll lock while the drawer is open
-  React.useEffect(() => {
-    if (!drawerOpen) return
-    const prev = document.body.style.overflow
-    document.body.style.overflow = "hidden"
-    return () => {
-      document.body.style.overflow = prev
-    }
-  }, [drawerOpen])
+  // the mobile drawer is a modal overlay: portaled, focus-trapped,
+  // scroll-locked, background inert, Escape closes (shared infrastructure)
+  const drawerCloseRef = React.useRef<HTMLButtonElement>(null)
+  const { ref: drawerOverlayRef } = useOverlay({
+    open: drawerOpen,
+    onEscape: () => setDrawerOpen(false),
+    initialFocus: drawerCloseRef,
+  })
 
   const width = sidebarCfg.width ?? 240
 
@@ -645,7 +725,7 @@ export function AppShell(props: AppProps) {
               variant="ghost"
               size="sm"
               className="w-full justify-center"
-              aria-label={railCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              aria-label={railCollapsed ? t.expandSidebar : t.collapseSidebar}
               data-testid="sidebar-toggle"
               onClick={() => setRailExpanded((r) => !r)}
             >
@@ -657,32 +737,35 @@ export function AppShell(props: AppProps) {
 
       {/* mobile drawer */}
       {drawerOpen ? (
-        <div className="md:hidden fixed inset-0 z-40" data-testid="mobile-drawer">
-          <div
-            className="absolute inset-0"
-            style={{ backgroundColor: "rgba(0,0,0,0.55)" }}
-            onClick={() => setDrawerOpen(false)}
-            data-testid="drawer-backdrop"
-          />
-          <aside
-            className="absolute left-0 top-0 h-full w-64 overflow-y-auto border-r border-[var(--prui-line)] bg-[var(--prui-surface)] p-2"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Navigation"
-          >
-            <div className="mb-2 flex h-10 items-center justify-end px-1">
-              <button
-                type="button"
-                aria-label="Close navigation"
-                onClick={() => setDrawerOpen(false)}
-                className="rounded-[var(--prui-radius)] p-1 text-[var(--prui-dim)] hover:text-[var(--prui-fg)] cursor-pointer"
-              >
-                <X className="h-4 w-4" aria-hidden />
-              </button>
-            </div>
-            <SidebarNav nav={nav} onNavigate={() => setDrawerOpen(false)} expandAllOn={expandAllOn} collapsed={false} />
-          </aside>
-        </div>
+        <Portal>
+          <div ref={drawerOverlayRef} className="md:hidden fixed inset-0 z-[var(--prui-z-drawer)]" data-testid="mobile-drawer">
+            <div
+              className="absolute inset-0"
+              style={{ backgroundColor: "var(--prui-scrim)" }}
+              onClick={() => setDrawerOpen(false)}
+              data-testid="drawer-backdrop"
+            />
+            <aside
+              className="absolute left-0 top-0 h-full w-64 overflow-y-auto border-r border-[var(--prui-line)] bg-[var(--prui-surface)] p-2"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Navigation"
+            >
+              <div className="mb-2 flex h-10 items-center justify-end px-1">
+                <button
+                  type="button"
+                  ref={drawerCloseRef}
+                  aria-label={t.closeNavigation}
+                  onClick={() => setDrawerOpen(false)}
+                  className="rounded-[var(--prui-radius)] p-1 text-[var(--prui-dim)] hover:text-[var(--prui-fg)] cursor-pointer"
+                >
+                  <X className="h-4 w-4" aria-hidden />
+                </button>
+              </div>
+              <SidebarNav nav={nav} onNavigate={() => setDrawerOpen(false)} expandAllOn={expandAllOn} collapsed={false} />
+            </aside>
+          </div>
+        </Portal>
       ) : null}
 
       {layoutType === "C" ? (
@@ -695,13 +778,13 @@ export function AppShell(props: AppProps) {
       ) : null}
       <header
         data-testid="app-header"
-        className="prui-shell-header sticky top-0 z-30 grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:px-6"
+        className="prui-shell-header sticky top-0 z-[var(--prui-z-header)] grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:px-6"
       >
         {collapsible ? (
           <Button
             variant="ghost"
             size="icon"
-            aria-label="Open navigation"
+            aria-label={t.openNavigation}
             className="md:hidden"
             onClick={() => setDrawerOpen(true)}
             data-testid="drawer-toggle"
@@ -713,7 +796,7 @@ export function AppShell(props: AppProps) {
           <Button
             variant="ghost"
             size="icon"
-            aria-label={railCollapsed ? "Show sidebar rail" : "Hide sidebar rail"}
+            aria-label={railCollapsed ? t.expandSidebar : t.collapseSidebar}
             className="md:hidden"
             onClick={() => setRailExpanded((r) => !r)}
             data-testid="rail-toggle-mobile"
@@ -732,7 +815,7 @@ export function AppShell(props: AppProps) {
             className="hidden h-8 w-[min(420px,34vw)] items-center gap-2 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] px-3.5 text-sm text-[var(--prui-dim)] hover:border-[var(--prui-dim)] cursor-pointer md:flex"
           >
             <Search className="h-4 w-4" aria-hidden />
-            <span className="flex-1 text-left">{searchCfg.placeholder ?? "Search..."}</span>
+            <span className="flex-1 text-left">{searchCfg.placeholder ?? `${t.search}...`}</span>
             <kbd className="ml-auto rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] bg-[var(--prui-raise)] px-1.5 py-0.5 text-xs">{hotkey}</kbd>
           </button>
         ) : null}
@@ -741,7 +824,11 @@ export function AppShell(props: AppProps) {
           <ThemeToggle config={theme} />
         </div>
       </header>
-      <main data-testid="app-content" className="prui-shell-content min-h-0 flex-1 p-4 md:p-6">
+      <main
+        data-testid="app-content"
+        tabIndex={0}
+        className="prui-shell-content min-h-0 flex-1 p-4 outline-none md:p-6"
+      >
         {pages ? (
           <AutoPages mode={pages} config={pagesConfig}>
             {children}

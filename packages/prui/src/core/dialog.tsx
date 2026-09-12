@@ -1,7 +1,16 @@
 import * as React from "react"
 import { X } from "lucide-react"
 import { cn } from "./cn"
+import { Portal, useOverlay } from "./overlay"
+import { usePruiI18n } from "../i18n"
 import type { PropsMeta } from "./props-meta"
+
+/**
+ * Dialog: the compound, declarative modal surface (<Dialog> + <DialogContent/
+ * Header/Title/Description/Footer>). Built on the shared overlay
+ * infrastructure: portaled, focus-trapped with focus restoration, topmost
+ * Escape, scroll-locked, background aria-hidden/inert while open.
+ */
 
 export interface DialogProps {
   open?: boolean
@@ -45,64 +54,64 @@ export interface DialogContentProps extends React.HTMLAttributes<HTMLDivElement>
   /** Accessibility label when no DialogTitle is rendered. */
   ariaLabel?: string
   hideClose?: boolean
+  /** Initial focus target: first focusable (default), the dialog itself, a specific element, or none. */
+  initialFocus?: React.RefObject<HTMLElement | null> | "first" | "container" | false
 }
 
 export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
-  ({ className, children, ariaLabel, hideClose, onClick, ...props }, ref) => {
+  ({ className, children, ariaLabel, hideClose, initialFocus = "first", onClick, ...props }, ref) => {
     const { open, setOpen, labelId } = useDialog()
+    const { t } = usePruiI18n()
 
-    React.useEffect(() => {
-      if (!open) return
-      const onKey = (e: KeyboardEvent) => {
-        if (e.key === "Escape") setOpen(false)
-      }
-      document.addEventListener("keydown", onKey)
-      const prevOverflow = document.body.style.overflow
-      document.body.style.overflow = "hidden"
-      return () => {
-        document.removeEventListener("keydown", onKey)
-        document.body.style.overflow = prevOverflow
-      }
-    }, [open, setOpen])
+    const { ref: overlayRef } = useOverlay({
+      open,
+      onEscape: () => setOpen(false),
+      initialFocus,
+    })
 
     if (!open) return null
 
     return (
-      <div
-        className="prui-dialog-overlay fixed inset-0 z-50 flex items-center justify-center p-4"
-        style={{ backgroundColor: "rgba(0,0,0,0.55)" }}
-        onMouseDown={(e) => {
-          if (e.target === e.currentTarget) setOpen(false)
-        }}
-      >
-        <div
-          ref={ref}
-          role="dialog"
-          aria-modal="true"
-          aria-label={ariaLabel}
-          aria-labelledby={ariaLabel ? undefined : labelId}
-          className={cn(
-            "prui-dialog-content relative z-10 w-full max-w-lg rounded-[var(--prui-radius)]",
-            "border border-[var(--prui-line)] bg-[var(--prui-surface)] shadow-xl",
-            "max-h-[85vh] overflow-auto outline-none",
-            className,
-          )}
-          onClick={onClick}
-          {...props}
-        >
-          {children}
-          {hideClose ? null : (
-            <button
-              type="button"
-              aria-label="Close"
-              onClick={() => setOpen(false)}
-              className="absolute right-3 top-3 rounded-[var(--prui-radius-1)] p-1 text-[var(--prui-dim)] hover:text-[var(--prui-fg)] hover:bg-[var(--prui-raise)] cursor-pointer"
+      <Portal>
+        <div ref={overlayRef}>
+          <div
+            className="prui-dialog-overlay fixed inset-0 z-[var(--prui-z-overlay)] flex items-center justify-center p-4"
+            style={{ backgroundColor: "var(--prui-scrim)" }}
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) setOpen(false)
+            }}
+          >
+            <div
+              ref={ref}
+              role="dialog"
+              aria-modal="true"
+              aria-label={ariaLabel}
+              aria-labelledby={ariaLabel ? undefined : labelId}
+              tabIndex={-1}
+              className={cn(
+                "prui-dialog-content relative z-[var(--prui-z-content)] w-full max-w-lg rounded-[var(--prui-radius)]",
+                "border border-[var(--prui-line)] bg-[var(--prui-surface)] shadow-[var(--prui-shadow-lg)]",
+                "max-h-[85vh] overflow-auto outline-none",
+                className,
+              )}
+              onClick={onClick}
+              {...props}
             >
-              <X className="h-4 w-4" aria-hidden />
-            </button>
-          )}
+              {children}
+              {hideClose ? null : (
+                <button
+                  type="button"
+                  aria-label={t.close}
+                  onClick={() => setOpen(false)}
+                  className="absolute right-3 top-3 rounded-[var(--prui-radius-1)] p-1 text-[var(--prui-dim)] hover:text-[var(--prui-fg)] hover:bg-[var(--prui-raise)] cursor-pointer"
+                >
+                  <X className="h-4 w-4" aria-hidden />
+                </button>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+      </Portal>
     )
   },
 )
@@ -139,5 +148,6 @@ export const dialogPropsMeta: PropsMeta = {
     { name: "open", type: "boolean", default: "undefined", control: "boolean" },
     { name: "defaultOpen", type: "boolean", default: "false", control: "boolean" },
     { name: "onOpenChange", type: "(open: boolean) => void", default: null, control: "none" },
+    { name: "initialFocus", type: 'ref | "first" | "container" | false', default: '"first"', control: "none" },
   ],
 }
