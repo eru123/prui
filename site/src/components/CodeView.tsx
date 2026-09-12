@@ -14,6 +14,30 @@ const MonacoEditor = React.lazy(async () => {
   return { default: mod.Editor }
 })
 
+/**
+ * Snippets are fragments (a single JSX tag, a CSS block), so the language
+ * services would light them up with "module not found" and syntax squiggles.
+ * Turn every diagnostic source off before the first editor mounts.
+ */
+function configureMonaco(monaco: unknown): void {
+  try {
+    const m = monaco as {
+      languages?: Record<string, Record<string, { setDiagnosticsOptions?: (o: Record<string, unknown>) => void; setOptions?: (o: Record<string, unknown>) => void }>>
+    }
+    const lang = m.languages ?? {}
+    for (const key of ["typescript", "javascript"]) {
+      for (const d of [lang[key]?.typescriptDefaults, lang[key]?.javascriptDefaults]) {
+        d?.setDiagnosticsOptions?.({ noSemanticValidation: true, noSyntaxValidation: true, noSuggestionDiagnostics: true })
+      }
+    }
+    lang.css?.cssDefaults?.setOptions?.({ validate: false })
+    lang.json?.jsonDefaults?.setDiagnosticsOptions?.({ noValidation: true, allowComments: true })
+    lang.html?.htmlDefaults?.setOptions?.({ format: { tabSize: 2 } })
+  } catch {
+    // diagnostics suppression is cosmetic; never block the editor on it
+  }
+}
+
 export function CodeView({
   code,
   canonical,
@@ -85,6 +109,7 @@ export function CodeView({
             language={language}
             value={value}
             theme="vs-dark"
+            beforeMount={configureMonaco}
             onChange={(v) => {
               const next = v ?? ""
               setValue(next)
@@ -104,6 +129,7 @@ export function CodeView({
               scrollbar: { verticalScrollbarSize: 8, horizontalScrollbarSize: 8 },
               folding: true,
               automaticLayout: true,
+              renderValidationDecorations: "off",
             }}
             loading={
               <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{value}</pre>
