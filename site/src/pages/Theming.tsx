@@ -1,4 +1,4 @@
-import { PRUI_THEMES, applyTheme } from "prui/theme"
+import { PRUI_THEMES, applyTheme, clearAppliedTokens } from "prui/theme"
 import { Card, CardHeader, CardTitle, CardDescription, Badge } from "prui/core"
 import { CodeView } from "../components/CodeView"
 import { TocRail } from "../components/TocRail"
@@ -94,7 +94,10 @@ applyTheme({ theme: 'daylight' })      // light mode`}
             <button
               key={t}
               type="button"
-              onClick={() => applyTheme({ theme: t })}
+              onClick={() => {
+                clearAppliedTokens()
+                applyTheme({ theme: t })
+              }}
               className="cursor-pointer rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-raise)] px-3 py-1.5 text-sm text-[var(--prui-fg)] hover:border-[var(--prui-brand)]"
             >
               Apply <span className="font-mono text-xs text-[var(--prui-brand)]">{t}</span>

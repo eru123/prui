@@ -12,7 +12,7 @@ import { ChevronDown, Menu, Palette, Search, X } from "lucide-react"
 import { cn } from "../core/cn"
 import { Dropdown } from "../core/dropdown"
 import { Button } from "../core/button"
-import { applyTheme, readPersistedTheme, resolveThemeName, themeMode, listThemes } from "../theme"
+import { applyTheme, clearAppliedTokens, readPersistedTheme, resolveThemeName, themeMode, listThemes } from "../theme"
 import type { AppliedTheme, ThemeDefault } from "../theme"
 import type { PropsMeta } from "../core/props-meta"
 import { AutoPages } from "./auto-pages"
@@ -159,7 +159,12 @@ function ThemeToggle({ config }: { config?: boolean | ThemeConfig }) {
       }
       items={listThemes().map((t) => ({
         label: `${t}${t === state.theme ? " (active)" : ""}`,
-        onSelect: () => setTheme({ theme: t, mode: t === "daylight" ? "light" : "dark" }),
+        onSelect: () => {
+          // a token overlay (theme builder) would override the new theme's
+          // colors: switching themes is an explicit revert of that overlay
+          clearAppliedTokens()
+          setTheme({ theme: t, mode: t === "daylight" ? "light" : "dark" })
+        },
       }))}
     />
   )
