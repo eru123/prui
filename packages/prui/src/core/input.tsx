@@ -1,6 +1,8 @@
 import * as React from "react"
+import { Eye, EyeOff } from "lucide-react"
 import { resolveSurface, withSurface, type SurfaceProps } from "./surface"
 import { cn } from "./cn"
+import { usePruiI18n } from "../i18n"
 import type { PropsMeta } from "./props-meta"
 
 const fieldBase =
@@ -24,12 +26,19 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   variant?: "default" | "filled"
   /** Icon rendered inside the field's leading edge. */
   icon?: React.ReactNode
-  /** Icon rendered inside the field's trailing edge. */
+  /** Icon rendered inside the field's trailing edge. A custom trailingIcon
+   * takes over the slot and suppresses the password eye toggle. */
   trailingIcon?: React.ReactNode
+  /** With type="password", render an eye show/hide toggle in the trailing
+   * slot (the default). Set false to keep a plain masked field. */
+  passwordToggle?: boolean
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, style, type = "text", size = "md", variant = "default", icon, trailingIcon, bg, fg, radius, texture, textureColor, elevation, ...props }, ref) => {
+  ({ className, style, type = "text", size = "md", variant = "default", icon, trailingIcon, passwordToggle = true, bg, fg, radius, texture, textureColor, elevation, ...props }, ref) => {
+    const { t } = usePruiI18n()
+    const [revealed, setRevealed] = React.useState(false)
+    const showEye = type === "password" && passwordToggle !== false && !trailingIcon
     const surface = resolveSurface({ bg, fg, radius, texture, textureColor, elevation })
     const merged = withSurface(
       cn(
@@ -37,14 +46,22 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         inputSizeClasses[size],
         variant === "filled" && "bg-[var(--prui-s-bg,var(--prui-raise))] border-transparent",
         icon && "pl-9",
-        trailingIcon && "pr-9",
+        (trailingIcon || showEye) && "pr-9",
         className,
       ),
       style,
       surface,
     )
-    const input = <input ref={ref} type={type} className={merged.className} style={merged.style} {...props} />
-    if (!icon && !trailingIcon) return input
+    const input = (
+      <input
+        ref={ref}
+        type={showEye && revealed ? "text" : type}
+        className={merged.className}
+        style={merged.style}
+        {...props}
+      />
+    )
+    if (!icon && !trailingIcon && !showEye) return input
     return (
       <span className="relative inline-flex w-full">
         {icon ? (
@@ -57,6 +74,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center text-[var(--prui-dim)] [&>svg]:h-4 [&>svg]:w-4">
             {trailingIcon}
           </span>
+        ) : showEye ? (
+          <button
+            type="button"
+            aria-label={revealed ? t.hidePassword : t.showPassword}
+            aria-pressed={revealed}
+            disabled={props.disabled}
+            // keep the caret in the field: focus never leaves the input
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setRevealed((r) => !r)}
+            className="absolute right-1.5 top-1/2 flex h-6 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-[var(--prui-radius-1)] text-[var(--prui-dim)] hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {revealed ? <EyeOff className="h-4 w-4" aria-hidden /> : <Eye className="h-4 w-4" aria-hidden />}
+          </button>
         ) : null}
       </span>
     )
@@ -71,7 +101,8 @@ export const inputPropsMeta: PropsMeta = {
     { name: "size", type: "'sm' | 'md' | 'lg'", default: "'md'", control: "select", options: ["sm", "md", "lg"] },
     { name: "variant", type: "'default' | 'filled'", default: "'default'", control: "select", options: ["default", "filled"] },
     { name: "icon", type: "ReactNode", default: "undefined", control: "none", description: "Icon inside the leading edge (padding adjusts)." },
-    { name: "trailingIcon", type: "ReactNode", default: "undefined", control: "none", description: "Icon inside the trailing edge." },
+    { name: "trailingIcon", type: "ReactNode", default: "undefined", control: "none", description: "Icon inside the trailing edge; takes over the slot from the password eye." },
+    { name: "passwordToggle", type: "boolean", default: "true", control: "boolean", description: "type=password renders an eye show/hide toggle unless a trailingIcon owns the slot." },
     { name: "value", type: "string", default: null, control: "text" },
     { name: "placeholder", type: "string", default: "undefined", control: "text" },
     { name: "disabled", type: "boolean", default: "false", control: "boolean" },

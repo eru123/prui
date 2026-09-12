@@ -40,6 +40,46 @@ describe("Textarea padding", () => {
   })
 })
 
+describe("Input password toggle", () => {
+  it("type=password renders an eye toggle that reveals and re-masks", async () => {
+    const user = userEvent.setup()
+    render(<Input type="password" defaultValue="hunter2" aria-label="Password" />)
+    const input = screen.getByLabelText("Password") as HTMLInputElement
+    expect(input.type).toBe("password")
+    const eye = screen.getByRole("button", { name: "Show password" })
+    expect(input.className).toContain("pr-9")
+    await user.click(eye)
+    expect(input.type).toBe("text")
+    expect(screen.getByRole("button", { name: "Hide password" })).toHaveAttribute("aria-pressed", "true")
+    await user.click(screen.getByRole("button", { name: "Hide password" }))
+    expect(input.type).toBe("password")
+  })
+
+  it("passwordToggle={false} and custom trailingIcon suppress the eye", () => {
+    const { rerender } = render(<Input type="password" passwordToggle={false} aria-label="Pw" />)
+    expect(screen.queryByRole("button", { name: /password/i })).toBeNull()
+    rerender(<Input type="password" trailingIcon={<X />} aria-label="Pw" />)
+    expect(screen.queryByRole("button", { name: /password/i })).toBeNull()
+  })
+
+  it("the eye is disabled with the field", () => {
+    render(<Input type="password" disabled aria-label="Locked" />)
+    expect(screen.getByRole("button", { name: "Show password" })).toBeDisabled()
+  })
+
+  it("toggling never steals the caret from the field", async () => {
+    const user = userEvent.setup()
+    render(<Input type="password" defaultValue="s3cret" aria-label="Focus test" />)
+    const input = screen.getByLabelText("Focus test")
+    await user.click(input)
+    await user.click(screen.getByRole("button", { name: "Show password" }))
+    // mousedown is prevented: focus stays in the field while typing continues
+    expect(input).toHaveFocus()
+    await user.keyboard("x")
+    expect((input as HTMLInputElement).value).toBe("s3cretx")
+  })
+})
+
 const fruits = [
   { label: "Apple", value: "apple" },
   { label: "Banana", value: "banana" },

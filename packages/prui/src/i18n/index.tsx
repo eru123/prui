@@ -54,6 +54,9 @@ export interface PruiDictionary {
   /* toasts/alerts */
   dismiss: string
   notifications: string
+  /* form fields */
+  showPassword: string
+  hidePassword: string
   /* nav */
   mainNavigation: string
   openNavigation: string
@@ -121,6 +124,9 @@ export const defaultDictionary: PruiDictionary = {
 
   dismiss: "Dismiss",
   notifications: "Notifications",
+
+  showPassword: "Show password",
+  hidePassword: "Hide password",
 
   mainNavigation: "Main",
   openNavigation: "Open navigation",
