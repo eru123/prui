@@ -119,7 +119,7 @@ export function CodeView({
       <div style={{ height: computedHeight }}>
         <React.Suspense
           fallback={
-            <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{value}</pre>
+            <pre tabIndex={0} className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)] outline-none">{value}</pre>
           }
         >
           <MonacoEditor
@@ -150,7 +150,7 @@ export function CodeView({
               renderValidationDecorations: "off",
             }}
             loading={
-              <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)]">{value}</pre>
+              <pre tabIndex={0} className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--prui-fg)] outline-none">{value}</pre>
             }
           />
         </React.Suspense>

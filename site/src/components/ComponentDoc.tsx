@@ -37,6 +37,7 @@ import {
 } from "prui/core"
 import { CodeView } from "./CodeView"
 import { TocRail } from "./TocRail"
+import { PlaygroundLinks } from "./PlaygroundLinks"
 import { DataTable, DataTablePagination, DataTableToolbar, FacetedFilter, DateRangeFilter, NumberRangeFilter } from "prui/data-table"
 
 /** In-depth per-component documentation page scaffold. */
@@ -51,6 +52,14 @@ export function ComponentDoc({
   examples,
   dos,
   donts,
+  accessibility,
+  composition,
+  customization,
+  edgeCases,
+  mistakes,
+  performance,
+  migration,
+  crossLinks,
 }: {
   name: string
   importPath: string
@@ -62,6 +71,22 @@ export function ComponentDoc({
   examples: { title: string; code: string; render?: React.ReactNode }[]
   dos: string[]
   donts: string[]
+  /** ARIA roles, keyboard map, screen-reader notes. */
+  accessibility?: React.ReactNode
+  /** How the parts compose with each other and with plain elements. */
+  composition?: React.ReactNode
+  /** Theming, surface props, CSS variable hooks. */
+  customization?: React.ReactNode
+  /** Boundary conditions and failure modes. */
+  edgeCases?: string[]
+  /** Common mistakes and how to fix them. */
+  mistakes?: string[]
+  /** Render/re-render notes, bundle notes. */
+  performance?: React.ReactNode
+  /** Deprecations affecting this component + how to migrate. */
+  migration?: React.ReactNode
+  /** Related pages. */
+  crossLinks?: { label: string; href: string }[]
 }) {
   const toc = [
     { id: "when-to-use", label: "When to use" },
@@ -70,6 +95,14 @@ export function ComponentDoc({
     ...(api ? [{ id: "api", label: "API" }] : []),
     { id: "examples", label: "Examples" },
     { id: "do-dont", label: "Do / Don't" },
+    ...(accessibility ? [{ id: "accessibility", label: "Accessibility" }] : []),
+    ...(composition ? [{ id: "composition", label: "Composition" }] : []),
+    ...(customization ? [{ id: "customization", label: "Customization" }] : []),
+    ...(edgeCases ? [{ id: "edge-cases", label: "Edge cases" }] : []),
+    ...(mistakes ? [{ id: "mistakes", label: "Common mistakes" }] : []),
+    ...(performance ? [{ id: "performance", label: "Performance" }] : []),
+    ...(migration ? [{ id: "migration", label: "Migration" }] : []),
+    ...(crossLinks ? [{ id: "cross-links", label: "Related" }] : []),
   ]
 
   return (
@@ -100,6 +133,7 @@ export function ComponentDoc({
                 {d.render}
               </div>
               {d.code ? <CodeBlock code={d.code} /> : null}
+              {d.code ? <PlaygroundLinks snippet={d.code} name={`${name} — ${d.title}`} /> : null}
             </div>
           ))}
         </Section>
@@ -112,6 +146,7 @@ export function ComponentDoc({
               <div className="mb-1 text-sm font-semibold text-[var(--prui-fg)]">{e.title}</div>
               {e.render}
               <CodeBlock code={e.code} />
+              <PlaygroundLinks snippet={e.code} name={`${name} — ${e.title}`} />
             </div>
           ))}
         </Section>
@@ -130,6 +165,33 @@ export function ComponentDoc({
           </CardContent>
         </Card>
       </div>
+
+        {accessibility ? <Section id="accessibility" title="Accessibility">{accessibility}</Section> : null}
+        {composition ? <Section id="composition" title="Composition">{composition}</Section> : null}
+        {customization ? <Section id="customization" title="Customization">{customization}</Section> : null}
+        {edgeCases ? (
+          <Section id="edge-cases" title="Edge cases">
+            <ul className="list-disc pl-5">{edgeCases.map((e) => <li key={e}>{e}</li>)}</ul>
+          </Section>
+        ) : null}
+        {mistakes ? (
+          <Section id="mistakes" title="Common mistakes">
+            <ul className="list-disc pl-5">{mistakes.map((m) => <li key={m}>{m}</li>)}</ul>
+          </Section>
+        ) : null}
+        {performance ? <Section id="performance" title="Performance">{performance}</Section> : null}
+        {migration ? <Section id="migration" title="Migration notes">{migration}</Section> : null}
+        {crossLinks ? (
+          <Section id="cross-links" title="Related">
+            <ul className="list-none pl-0">
+              {crossLinks.map((l) => (
+                <li key={l.href} className="mb-1">
+                  <Link to={l.href} className="text-[var(--prui-brand)] hover:underline">{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </Section>
+        ) : null}
 
         <p className="mt-8 text-center font-mono text-xs text-[var(--prui-dim)]">
           <Link to="/components" className="hover:text-[var(--prui-fg)]">← all components</Link>

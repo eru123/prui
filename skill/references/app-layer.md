@@ -95,6 +95,16 @@ A complete CRUD screen from a schema: toolbar + faceted filters + DataTable + cu
 | `pageSize` | `number` | `20` | Rows per page |
 | `form` | `ReactNode` | - | Optional custom form for create/edit; omit to auto-generate from columns |
 | `actions` | `('create' \| 'edit' \| 'delete')[]` | all | Which row/toolbar actions to show |
+| `state` | `Partial<{ page, pageSize, search, filters, sort, selection, expandedRows }>` | - | Controlled state (per-key); omit keys to leave them uncontrolled |
+| `defaultState` | same shape | - | Initial values for uncontrolled keys |
+| `onStateChange` | `(state) => void` | - | Fires with the complete state on any change |
+| `onPageChange` | `(page: number) => void` | - | Granular page callback |
+| `onFilterChange` | `(filters) => void` | - | Granular filters callback |
+| `onSortChange` | `(sort) => void` | - | Granular sort callback |
+| `onSearchChange` | `(search: string) => void` | - | Granular search callback |
+| `selectable` | `boolean \| { multiple?: boolean }` | - | Adds a checkbox column; selection lands in state.selection |
+| `renderExpandedRow` | `(row) => ReactNode` | - | Adds expandable row detail; open keys land in state.expandedRows |
+| `searchDebounce` | `number` | `250` | ms before search refires list() |
 
 ### Column
 

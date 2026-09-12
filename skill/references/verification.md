@@ -56,3 +56,17 @@ For each `<Resource>`:
 ## Passing bar
 
 All sections pass, or every failure is explicitly reported with a reason. The end-to-end scaffold procedure ([agents-workflow.md](agents-workflow.md)) ends with this checklist; treat it as part of the build, not an optional extra.
+
+
+## Accessibility verification (2026 enterprise pass)
+
+- Every overlay is focus-trapped with initial focus and focus restoration;
+  Escape is answered only by the topmost open overlay (try nesting a Drawer
+  inside a Modal).
+- Menus/listboxes support Arrow/Home/End + typeahead; Tabs support
+  ArrowLeft/Right + Home/End; Calendar supports day/week arrows +
+  PageUp/PageDown; TreeView supports the full tree key map.
+- `prefers-reduced-motion` disables shake/scale/fade/slide globally.
+- The repo's own audit: `pnpm --filter @skiddph/prui test` runs the axe
+  suite (`src/a11y/axe.test.tsx`); `npx playwright test` runs real-browser
+  axe + visual snapshots against the docs site.

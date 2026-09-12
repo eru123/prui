@@ -57,8 +57,8 @@ export function ComponentsPage() {
       <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
         Both layers, live. Every demo has a control panel generated from the same propsMeta that renders the props
         table and the snippet: configure it, copy it. In-depth pages live under each component in the sidebar; the
-        super-components are documented in the <a href="/app-layer" className="text-[var(--prui-brand)] hover:underline">app layer</a>{" "}
-        and <a href="/pages-doc" className="text-[var(--prui-brand)] hover:underline">pre-made pages</a> catalogs.
+        super-components are documented in the <a href="/app-layer" className="text-[var(--prui-brand)] underline hover:underline">app layer</a>{" "}
+        and <a href="/pages-doc" className="text-[var(--prui-brand)] underline hover:underline">pre-made pages</a> catalogs.
       </p>
 
       <Playground title="Button" meta={buttonPropsMeta} render={(v) => (
@@ -108,7 +108,7 @@ export function ComponentsPage() {
       <DialogDemo />
 
       <section id="app" className="mb-8 scroll-mt-20">
-        <h3 className="mb-3 font-mono text-sm font-semibold text-[var(--prui-brand)]">App</h3>
+        <h2 className="mb-3 font-mono text-sm font-semibold text-[var(--prui-brand)]">App</h2>
         <p className="mb-3 text-sm text-[var(--prui-dim)]">
           The shell around this very site is <code className="rounded bg-[var(--prui-raise)] px-1">&lt;App&gt;</code>: sidebar groups,
           command palette (<kbd className="rounded border border-[var(--prui-line)] px-1 text-xs">/</kbd>), theme toggle, mobile drawer.
@@ -118,7 +118,7 @@ export function ComponentsPage() {
       </section>
 
       <section id="resource" className="mb-8 scroll-mt-20">
-        <h3 className="mb-3 font-mono text-sm font-semibold text-[var(--prui-brand)]">Resource</h3>
+        <h2 className="mb-3 font-mono text-sm font-semibold text-[var(--prui-brand)]">Resource</h2>
         <p className="mb-3 text-sm text-[var(--prui-dim)]">
           A complete CRUD screen from a column config: see it live on the <a href="/resources" className="text-[var(--prui-brand)] hover:underline">Resources demo page</a>.
         </p>
@@ -126,7 +126,7 @@ export function ComponentsPage() {
       </section>
 
       <section id="data-table" className="mb-8 scroll-mt-20">
-        <h3 className="mb-3 font-mono text-sm font-semibold text-[var(--prui-brand)]">DataTable</h3>
+        <h2 className="mb-3 font-mono text-sm font-semibold text-[var(--prui-brand)]">DataTable</h2>
         <p className="mb-3 text-sm text-[var(--prui-dim)]">Column config, sorting, loading/empty states: feeds &lt;Resource&gt;.</p>
         <MetaOnly meta={dataTablePropsMeta} />
       </section>

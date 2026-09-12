@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { Button, Badge, Switch, Tabs, TabsList, TabsTrigger, Input } from "prui/core"
+import { Button, Badge, Switch, Tabs, TabsList, TabsTrigger, TabsContent, Input } from "prui/core"
 import { CopyButton } from "../components/CopyButton"
 
 export function LandingPage() {
@@ -51,6 +51,15 @@ export function LandingPage() {
                 <TabsTrigger value="details">Details</TabsTrigger>
                 <TabsTrigger value="activity">Activity</TabsTrigger>
               </TabsList>
+              <TabsContent value="details">
+                <div className="mt-2 flex flex-col gap-1 text-xs text-[var(--prui-dim)]">
+                  <span>Ada Lovelace · Senior engineer</span>
+                  <span>Joined 2024 · active</span>
+                </div>
+              </TabsContent>
+              <TabsContent value="activity">
+                <div className="mt-2 text-xs text-[var(--prui-dim)]">Recent activity appears here.</div>
+              </TabsContent>
             </Tabs>
             <Switch checked={sw} onChange={setSw} aria-label="Demo switch" />
           </div>

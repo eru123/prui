@@ -8,7 +8,7 @@ description: Build React admin panels, dashboards, internal tools, and prototype
 PRUI is a React component system with two layers:
 
 - **App layer** (`prui/app`): config-driven super-components. `<App nav={...}>` renders the whole shell (sidebar, header, routes, theme). `<Resource columns={...}>` renders a complete CRUD screen. This layer builds a working admin app in minutes.
-- **Primitives layer** (`prui/core`, `prui/data-table`): Button, Input, Select, Tabs, DataTable, and friends, for standard composition when you need full control.
+- **Primitives layer** (`prui/core`, `prui/data-table`): Button, Input, Select, Tabs, DataTable, and friends, for standard composition when you need full control. The catalog now also ships Toast (toast()/Toaster), Alert, Tooltip, Popover, Checkbox, Radio, Combobox, Skeleton, Spinner, Progress, Accordion, Breadcrumb, Drawer, Sheet, FileUpload, Calendar, DatePicker, DateRangePicker, TreeView, and Timeline — all keyboard-complete, themable, and controlled/uncontrolled.
 
 Routing is owned by `<App>`: it wires the router, binds nav to routes, and detects active state. You never wire react-router manually (react-router-dom arrives as a dependency of prui).
 

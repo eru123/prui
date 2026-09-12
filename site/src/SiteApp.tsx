@@ -14,6 +14,20 @@ const ThemingPage = lazy(() => import("./pages/Theming").then((m) => ({ default:
 const InstallationPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.InstallationPage })))
 const AdoptionPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.AdoptionPage })))
 const AgentsPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.AgentsPage })))
+const FeedbackDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.FeedbackDoc })))
+const AnchoredDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.AnchoredDoc })))
+const InputsDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.InputsDoc })))
+const NavigationDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.NavigationDoc })))
+const OverlaysDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.OverlaysDoc })))
+const DatesDoc = lazy(() => import("./pages/docs/NewComponentsDoc").then((m) => ({ default: m.DatesDoc })))
+const TokensDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.TokensDoc })))
+const ArchitectureDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.ArchitectureDoc })))
+const AccessibilityDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.AccessibilityDoc })))
+const SSRDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.SSRDoc })))
+const PerformanceDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.PerformanceDoc })))
+const I18nDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.I18nDoc })))
+const ChangelogDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.ChangelogDoc })))
+const MigrationDoc = lazy(() => import("./pages/docs/GuidesDoc").then((m) => ({ default: m.MigrationDoc })))
 const ResourcesDemoPage = lazy(() => import("./pages/ResourcesDemo").then((m) => ({ default: m.ResourcesDemoPage })))
 const NotFoundPage = lazy(() => import("./NotFound").then((m) => ({ default: m.NotFoundPage })))
 const ProvenancePage = lazy(() => import("./pages/Provenance").then((m) => ({ default: m.ProvenancePage })))
@@ -89,6 +103,20 @@ export function SiteApp() {
           <Route path="/guides/adoption" element={<AdoptionPage />} />
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/resources" element={<ResourcesDemoPage />} />
+          <Route path="/components/feedback" element={<FeedbackDoc />} />
+          <Route path="/components/anchored" element={<AnchoredDoc />} />
+          <Route path="/components/inputs" element={<InputsDoc />} />
+          <Route path="/components/navigation" element={<NavigationDoc />} />
+          <Route path="/components/overlays" element={<OverlaysDoc />} />
+          <Route path="/components/dates" element={<DatesDoc />} />
+          <Route path="/guides/design-tokens" element={<TokensDoc />} />
+          <Route path="/guides/architecture" element={<ArchitectureDoc />} />
+          <Route path="/guides/accessibility" element={<AccessibilityDoc />} />
+          <Route path="/guides/ssr" element={<SSRDoc />} />
+          <Route path="/guides/performance" element={<PerformanceDoc />} />
+          <Route path="/guides/i18n" element={<I18nDoc />} />
+          <Route path="/changelog" element={<ChangelogDoc />} />
+          <Route path="/migration" element={<MigrationDoc />} />
           <Route path="/internal/provenance" element={<ProvenancePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

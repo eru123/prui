@@ -3,7 +3,9 @@
 PRUI is a React component system with two layers, built from four production apps (HRLabs, jianpms, t4xlabs, icanhelp-tracker) that used to copy the same UI code by hand:
 
 - **App layer** (`@skiddph/prui/app`) — config-driven super-components. `<App nav={...}>` renders the whole shell (sidebar, header, command palette, theme, mobile drawer, optional session-timeout flow). `<Resource>` renders a complete CRUD screen from a column config and your API functions. Plus `Form`, `StatRow`, `Settings`, `AuthShell`, `SessionTimeout` and the pre-made page set (login, register, OTP, 404, error, profile, settings, admin setup), auto-routable via `<App pages="auth">`.
-- **Primitives layer** (`@skiddph/prui/core`, `@skiddph/prui/data-table`) — Button, Input, Select, Tabs, DataTable and friends for standard composition.
+- **Primitives layer** (`@skiddph/prui/core`, `@skiddph/prui/data-table`) — Button, Input, Select, Tabs, DataTable and friends for standard composition, plus the enterprise set: Toast, Alert, Tooltip, Popover, Checkbox, Radio, Combobox, Skeleton, Spinner, Progress, Accordion, Breadcrumb, Drawer, Sheet, FileUpload, Calendar, DatePicker, DateRangePicker, TreeView, Timeline. Every overlay sits on one shared infrastructure (focus trap, restore, nested stacking, topmost Escape, inert background, reduced motion) and every list is keyboard-complete (arrows, Home/End, typeahead).
+- **Semantic tokens** — z-index, motion, typography, spacing, elevation, and opacity scales as CSS variables (`--prui-z-*`, `--prui-duration-*`, `--prui-shadow-*`, …) with light-mode-aware shadows and a JS mirror (`PRUI_BREAKPOINTS`, `PRUI_DESIGN_TOKENS`).
+- **i18n & RTL** — every user-facing string comes from a dictionary (`PruiProvider` / `setPruiDictionary`); layout uses logical properties.
 - **Theme system** (`@skiddph/prui/theme`) — CSS-variable tokens, four named themes (control, workshop, ember, daylight), runtime `applyTheme()`, overridable from one CSS file.
 
 The docs site at [prui.skiddph.com](https://prui.skiddph.com) is built with prui itself and ships a live component catalog, layout examples, theming guide, an agent quickstart, and a visual **Designer** (`/designer`) that renders a real `<App>` preview and generates the config code.
@@ -41,6 +43,7 @@ pnpm -r test        # vitest: library (component + contract tests) and site (des
 pnpm -r build       # library dist + docs site dist
 pnpm lint           # eslint (flat config)
 pnpm format         # prettier
+npx playwright test # real-browser smoke + axe + visual regression (site must be built)
 node scripts/bundle-guard.mjs    # AC-7: core/button must not ship App/Resource
 node scripts/landing-budget.mjs  # AC-6: landing JS under 100KB compressed
 ```
@@ -51,7 +54,8 @@ Local site dev server: `pnpm --filter prui-site dev`. The site imports prui from
 
 | Path | What |
 |---|---|
-| `packages/prui` | The library: `src/core`, `src/app`, `src/data-table`, `src/pages`, `src/theme` |
+| `packages/prui` | The library: `src/core`, `src/app`, `src/data-table`, `src/pages`, `src/forms`, `src/theme`, `src/i18n` |
+| `packages/cli` | `create-prui-app` + generators (theme, resource, page, layout, CRUD) |
 | `site` | Docs site (Vite + prui), deployed to prui.skiddph.com |
 | `skill` | Agent skill (SKILL.md + references), versioned with the repo |
 | `prototypes` | The approved design variants; p4 (direction D) is the build contract |

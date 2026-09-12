@@ -27,6 +27,7 @@ function Control({ meta, value, onChange }: { meta: PropMeta; value: unknown; on
         <div className="flex w-40 flex-col gap-1">
           <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{meta.name}</span>
           <Select
+            aria-label={meta.name}
             value={String(value ?? "")}
             onChange={onChange}
             options={(meta.options ?? []).map((o) => ({ label: o, value: o }))}
@@ -239,7 +240,7 @@ export function MetaOnly({ meta }: { meta: PropsMeta }) {
 
 export function PropsTable({ meta }: { meta: PropsMeta }) {
   return (
-    <div className="mt-3 overflow-x-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)]">
+    <div tabIndex={0} className="mt-3 overflow-x-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)] outline-none">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-[var(--prui-line)] bg-[var(--prui-raise)] text-left">
