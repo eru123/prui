@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "../core/button"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../core/select"
 import type { PropsMeta } from "../core/props-meta"
+import { usePruiI18n } from "../i18n"
 
 /**
  * Cursor pagination. The list contract returns { rows, nextCursor, prevCursor };
@@ -37,17 +38,18 @@ export function DataTablePagination({
   pageSizeOptions = [10, 20, 50, 100],
   className,
 }: DataTablePaginationProps) {
+  const { t } = usePruiI18n()
   return (
     <div className={className ?? "flex items-center justify-between gap-2 py-2"}>
       <div className="flex items-center gap-2 text-sm text-[var(--prui-dim)]">
-        <span>Rows per page</span>
+        <span>{t.rowsPerPage}</span>
         <div className="w-20">
           <Select
             value={String(pageSize)}
             onChange={(v) => onPageSizeChange?.(Number(v))}
             options={pageSizeOptions.map((n) => ({ label: String(n), value: String(n) }))}
           >
-            <SelectTrigger aria-label="Rows per page" className="h-7">
+            <SelectTrigger aria-label={t.rowsPerPage} className="h-7">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -62,12 +64,12 @@ export function DataTablePagination({
       </div>
       <div className="flex items-center gap-2">
         <span className="text-sm text-[var(--prui-dim)]" data-testid="pagination-page">
-          Page {page}
+          {`${t.page} ${page}`}
         </span>
         <Button
           variant="default"
           size="icon"
-          aria-label="Previous page"
+          aria-label={t.previousPage}
           disabled={!hasPreviousPage}
           onClick={() => onPageChange?.(page - 1, "prev")}
         >
@@ -76,7 +78,7 @@ export function DataTablePagination({
         <Button
           variant="default"
           size="icon"
-          aria-label="Next page"
+          aria-label={t.nextPage}
           disabled={!hasNextPage}
           onClick={() => onPageChange?.(page + 1, "next")}
         >

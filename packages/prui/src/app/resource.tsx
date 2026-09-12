@@ -14,6 +14,7 @@ import {
   type ToolbarFilterValue,
 } from "../data-table/data-table-toolbar"
 import { Form, type FormSchema } from "./form"
+import { usePruiI18n } from "../i18n"
 
 /**
  * <Resource>: a complete CRUD screen from a column config and API functions.
@@ -54,6 +55,19 @@ export interface ResourceColumn<T extends ResourceRow> extends Column<T> {
 
 export type ResourceAction = "create" | "edit" | "delete"
 
+/** The full interactive state of a Resource screen. */
+export interface ResourceState {
+  page: number
+  pageSize: number
+  search: string
+  filters: ToolbarFilterValues
+  sort: { key: string; direction: "asc" | "desc" } | null
+  /** Keys of selected rows (rowKey or row.id). */
+  selection: (string | number)[]
+  /** Keys of expanded rows (requires renderExpandedRow). */
+  expandedRows: (string | number)[]
+}
+
 export interface ResourceProps<T extends ResourceRow> {
   /** Resource display name, e.g. "employees". */
   name: string
@@ -76,7 +90,33 @@ export interface ResourceProps<T extends ResourceRow> {
   /** Get a row identity, defaults to row.id then index. */
   rowKey?: (row: T, index: number) => string
   searchPlaceholder?: string
+  /** Default page size (alias of defaultState.pageSize). */
   pageSize?: number
+  /**
+   * Controlled state: any subset of { page, pageSize, search, filters, sort,
+   * selection, expandedRows }. Omitted keys stay uncontrolled.
+   */
+  state?: Partial<ResourceState>
+  /** Initial values for the uncontrolled keys. */
+  defaultState?: Partial<ResourceState>
+  /** Fires on every state change with the complete state. */
+  onStateChange?: (state: ResourceState) => void
+  /** Granular callbacks (also fired alongside onStateChange). */
+  onPageChange?: (page: number) => void
+  onFilterChange?: (filters: ToolbarFilterValues) => void
+  onSortChange?: (sort: ResourceState["sort"]) => void
+  onSearchChange?: (search: string) => void
+  /** Fires when the page size control changes. */
+  onPageSizeChange?: (size: number) => void
+  onSelectionChange?: (keys: (string | number)[], rows: T[]) => void
+  /** Row selection: true = multiple, { multiple: false } = single. */
+  selectable?: boolean | { multiple?: boolean }
+  /** Expandable row detail (rendered under the row when expanded). */
+  renderExpandedRow?: (row: T) => React.ReactNode
+  /** Window-render large row sets. */
+  virtualized?: boolean
+  /** Debounce for the search input before list() refires, in ms. Default 250. */
+  searchDebounce?: number
   className?: string
 }
 
@@ -121,27 +161,84 @@ export function Resource<T extends ResourceRow>({
   formSchema,
   rowKey,
   searchPlaceholder,
-  pageSize: initialPageSize = 20,
+  pageSize: initialPageSize,
+  state: stateProp,
+  defaultState,
+  onStateChange,
+  onPageChange,
+  onFilterChange,
+  onSortChange,
+  onSearchChange,
+  onPageSizeChange,
+  onSelectionChange,
+  selectable,
+  renderExpandedRow,
+  virtualized,
+  searchDebounce = 250,
   className,
 }: ResourceProps<T>) {
+  const { t } = usePruiI18n()
   const doRemove = remove ?? deleteAlias
   const enabled = actions ?? (["create", "edit", "delete"] as ResourceAction[])
   const can = (a: ResourceAction) => enabled.includes(a) && (a === "create" ? !!create : a === "edit" ? !!update : !!doRemove)
 
+  /* -------- controlled/uncontrolled state (per-key) ---------------- */
+  const defaults = React.useMemo<ResourceState>(
+    () => ({
+      page: 1,
+      pageSize: initialPageSize ?? defaultState?.pageSize ?? 20,
+      search: defaultState?.search ?? "",
+      filters: defaultState?.filters ?? {},
+      sort: defaultState?.sort ?? null,
+      selection: defaultState?.selection ?? [],
+      expandedRows: defaultState?.expandedRows ?? [],
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- defaults are read once
+    [],
+  )
+
+  const [uncontrolled, setUncontrolled] = React.useState<ResourceState>(defaults)
+  const state: ResourceState = React.useMemo(
+    () => ({ ...uncontrolled, ...Object.fromEntries(Object.entries(stateProp ?? {}).filter(([, v]) => v !== undefined)) }),
+    [uncontrolled, stateProp],
+  )
+
+  const patchState = React.useCallback(
+    (patch: Partial<ResourceState>) => {
+      setUncontrolled((prev) => {
+        const next: ResourceState = { ...prev }
+        const overrides = stateProp as Partial<Record<keyof ResourceState, unknown>> | undefined
+        for (const [k, v] of Object.entries(patch)) {
+          // a controlled key keeps its external value
+          if (overrides && k in overrides && overrides[k as keyof ResourceState] !== undefined) continue
+          ;(next as unknown as Record<string, unknown>)[k] = v
+        }
+        const merged: ResourceState = { ...next, ...Object.fromEntries(Object.entries(stateProp ?? {}).filter(([, v]) => v !== undefined)) }
+        onStateChange?.(merged)
+        return next
+      })
+    },
+    [stateProp, onStateChange],
+  )
+
+  const { page, pageSize, search, filters, sort, selection, expandedRows } = state
+
   const [rows, setRows] = React.useState<T[]>([])
   const [nextCursor, setNextCursor] = React.useState<string | null>(null)
-  const [page, setPage] = React.useState(1)
-  const [pageSize, setPageSize] = React.useState(initialPageSize)
   const [cursorStack, setCursorStack] = React.useState<(string | null)[]>([null])
-  const [search, setSearch] = React.useState("")
-  const [filters, setFilters] = React.useState<ToolbarFilterValues>({})
-  const [sort, setSort] = React.useState<{ key: string; direction: "asc" | "desc" } | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
 
   const [editing, setEditing] = React.useState<T | null>(null)
   const [modalOpen, setModalOpen] = React.useState(false)
   const [deleteBusy, setDeleteBusy] = React.useState(false)
+
+  // debounce the search term before it refires list()
+  const [debouncedSearch, setDebouncedSearch] = React.useState(search)
+  React.useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search), searchDebounce)
+    return () => clearTimeout(t)
+  }, [search, searchDebounce])
 
   const currentCursor = cursorStack[page - 1] ?? null
 
@@ -150,7 +247,7 @@ export function Resource<T extends ResourceRow>({
     setLoading(true)
     setError(null)
     try {
-      const result = await list({ search, cursor: currentCursor, pageSize, sort, filters })
+      const result = await list({ search: debouncedSearch, cursor: currentCursor, pageSize, sort, filters })
       setRows(result.rows)
       setNextCursor(result.nextCursor ?? result.cursor ?? null)
     } catch (err) {
@@ -161,7 +258,7 @@ export function Resource<T extends ResourceRow>({
       setLoading(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, currentCursor, pageSize, sort, filtersKey, list])
+  }, [debouncedSearch, currentCursor, pageSize, sort, filtersKey, list])
 
   React.useEffect(() => {
     void load()
@@ -169,22 +266,83 @@ export function Resource<T extends ResourceRow>({
 
   // reset pagination when search/filters/pageSize change
   React.useEffect(() => {
-    setPage(1)
+    patchState({ page: 1 })
     setCursorStack([null])
-  }, [search, pageSize, filtersKey])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, pageSize, filtersKey])
 
-  const toolbarFilters: ToolbarFilterConfig[] = columns
-    .filter((c) => c.filter)
-    .map((c) => ({
-      key: c.key,
-      label: typeof c.label === "string" ? c.label : c.key,
-      type: (c.filter === "numberrange" ? "number" : c.filter) as ToolbarFilterConfig["type"],
-      options: normalizeFilterOptions(c.filterOptions ?? c.options),
-    }))
+  const toolbarFilters: ToolbarFilterConfig[] = React.useMemo(
+    () =>
+      columns
+        .filter((c) => c.filter)
+        .map((c) => ({
+          key: c.key,
+          label: typeof c.label === "string" ? c.label : c.key,
+          type: (c.filter === "numberrange" ? "number" : c.filter) as ToolbarFilterConfig["type"],
+          options: normalizeFilterOptions(c.filterOptions ?? c.options),
+        })),
+    [columns],
+  )
 
-  const onFilterChange = (key: string, value: ToolbarFilterValue) => {
-    setFilters((f) => ({ ...f, [key]: value }))
+  const handleFilterChange = (key: string, value: ToolbarFilterValue) => {
+    const next = { ...filters, [key]: value }
+    patchState({ filters: next })
+    onFilterChange?.(next)
   }
+
+  const setSearchValue = (value: string) => {
+    patchState({ search: value })
+    onSearchChange?.(value)
+  }
+
+  const applySort = (next: { key: string; direction: "asc" | "desc" } | null) => {
+    patchState({ sort: next })
+    onSortChange?.(next)
+  }
+
+  const goPage = (next: number, direction: "next" | "prev") => {
+    if (direction === "next") {
+      const cursor = nextCursor
+      setCursorStack((s) => {
+        const copy = [...s]
+        copy[next - 1] = cursor
+        return copy
+      })
+    }
+    patchState({ page: next })
+    onPageChange?.(next)
+  }
+
+  const tableColumns: Column<T>[] = React.useMemo(
+    () => [
+      ...columns.filter((c) => !c.hidden),
+      ...(can("edit") || can("delete")
+        ? [
+            {
+              key: "actions",
+              label: "",
+              align: "right" as const,
+              render: (row: T) => (
+                <div className="flex items-center justify-end gap-1">
+                  {can("edit") ? (
+                    <Button variant="ghost" size="icon" aria-label="Edit" onClick={() => openEditRef.current?.(row)} data-testid="resource-edit">
+                      <Pencil className="h-3.5 w-3.5" aria-hidden />
+                    </Button>
+                  ) : null}
+                  {can("delete") ? (
+                    <Button variant="ghost" size="icon" aria-label="Delete" disabled={deleteBusy} onClick={() => void openDeleteRef.current?.(row)} data-testid="resource-delete">
+                      <Trash2 className="h-3.5 w-3.5 text-[var(--prui-danger)]" aria-hidden />
+                    </Button>
+                  ) : null}
+                </div>
+              ),
+            } satisfies Column<T>,
+          ]
+        : []),
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- can() depends only on the action functions
+    [columns, create, update, doRemove, deleteBusy],
+  )
 
   const openCreate = () => {
     setEditing(null)
@@ -198,10 +356,10 @@ export function Resource<T extends ResourceRow>({
 
   const openDelete = async (row: T) => {
     const confirmed = await confirmModal({
-      title: `Delete ${singular}?`,
-      message: "This action cannot be undone.",
-      confirmText: "Delete",
-      cancelText: "Cancel",
+      title: `${t.delete} ${singular}?`,
+      message: t.deleteConfirmMessage,
+      confirmText: t.delete,
+      cancelText: t.cancel,
       type: "danger",
     })
     if (!confirmed || !doRemove) return
@@ -214,44 +372,16 @@ export function Resource<T extends ResourceRow>({
     }
   }
 
-  const goPage = (next: number, direction: "next" | "prev") => {
-    if (direction === "next") {
-      const cursor = nextCursor
-      setCursorStack((s) => {
-        const copy = [...s]
-        copy[next - 1] = cursor
-        return copy
-      })
-    }
-    setPage(next)
-  }
+  // stable refs so the memoized action cells don't capture stale closures
+  const openEditRef = React.useRef(openEdit)
+  openEditRef.current = openEdit
+  const openDeleteRef = React.useRef(openDelete)
+  openDeleteRef.current = openDelete
 
-  const tableColumns: Column<T>[] = [
-    ...columns.filter((c) => !c.hidden),
-    ...(can("edit") || can("delete")
-      ? [
-          {
-            key: "actions",
-            label: "",
-            align: "right" as const,
-            render: (row: T) => (
-              <div className="flex items-center justify-end gap-1">
-                {can("edit") ? (
-                  <Button variant="ghost" size="icon" aria-label="Edit" onClick={() => openEdit(row)} data-testid="resource-edit">
-                    <Pencil className="h-3.5 w-3.5" aria-hidden />
-                  </Button>
-                ) : null}
-                {can("delete") ? (
-                  <Button variant="ghost" size="icon" aria-label="Delete" disabled={deleteBusy} onClick={() => void openDelete(row)} data-testid="resource-delete">
-                    <Trash2 className="h-3.5 w-3.5 text-[var(--prui-danger)]" aria-hidden />
-                  </Button>
-                ) : null}
-              </div>
-            ),
-          } satisfies Column<T>,
-        ]
-      : []),
-  ]
+  const rowKeyFn = React.useCallback(
+    (row: T, index: number) => String(rowKey ? rowKey(row, index) : ((row as { id?: string | number }).id ?? index)),
+    [rowKey],
+  )
 
   const effectiveSchema = formSchema ?? schemaFromColumns(columns, editing)
   const initialValues = editing
@@ -269,17 +399,17 @@ export function Resource<T extends ResourceRow>({
       </div>
 
       <DataTableToolbar
-        searchPlaceholder={searchPlaceholder ?? `Search ${name}...`}
+        searchPlaceholder={searchPlaceholder ?? t.searchEntity.replace("{name}", name)}
         searchValue={search}
-        onSearchChange={setSearch}
+        onSearchChange={setSearchValue}
         filters={toolbarFilters}
         filterValues={filters}
-        onFilterChange={onFilterChange}
+        onFilterChange={handleFilterChange}
         actions={
           can("create") ? (
             <Button variant="primary" size="sm" onClick={openCreate} data-testid="resource-create">
               <Plus className="h-4 w-4" aria-hidden />
-              New {singular}
+              {t.newEntity.replace("{name}", singular)}
             </Button>
           ) : undefined
         }
@@ -291,7 +421,24 @@ export function Resource<T extends ResourceRow>({
         </div>
       ) : null}
 
-      <DataTable columns={tableColumns} rows={rows} rowKey={rowKey} sort={sort} onSortChange={setSort} loading={loading} />
+      <DataTable
+        columns={tableColumns}
+        rows={rows}
+        rowKey={rowKeyFn}
+        sort={sort}
+        onSortChange={applySort}
+        loading={loading}
+        selectable={selectable}
+        selectedRowKeys={selection}
+        onSelectionChange={(keys, selectedRows) => {
+          patchState({ selection: keys })
+          onSelectionChange?.(keys, selectedRows)
+        }}
+        renderExpandedRow={renderExpandedRow}
+        expandedRowKeys={expandedRows}
+        onExpandedRowsChange={(keys) => patchState({ expandedRows: keys })}
+        virtualized={virtualized}
+      />
 
       <DataTablePagination
         page={page}
@@ -299,12 +446,15 @@ export function Resource<T extends ResourceRow>({
         hasNextPage={nextCursor != null}
         hasPreviousPage={page > 1}
         onPageChange={goPage}
-        onPageSizeChange={(s) => setPageSize(s)}
+        onPageSizeChange={(s) => {
+          patchState({ pageSize: s })
+          onPageSizeChange?.(s)
+        }}
       />
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="sm" ariaLabel={editing ? `Edit ${singular}` : `New ${singular}`} noPadding>
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="sm" ariaLabel={editing ? t.editEntity.replace("{name}", singular) : t.newEntity.replace("{name}", singular)} noPadding>
           <div className="px-8 pt-8 pb-2">
-            <h2 className="text-lg font-semibold" style={{ color: "var(--prui-fg)" }}>{editing ? `Edit ${singular}` : `New ${singular}`}</h2>
+            <h2 className="text-lg font-semibold" style={{ color: "var(--prui-fg)" }}>{editing ? t.editEntity.replace("{name}", singular) : t.newEntity.replace("{name}", singular)}</h2>
           </div>
           <div className="px-8 pb-8">
             {form ?? (
@@ -341,5 +491,18 @@ export const resourcePropsMeta: PropsMeta = {
     { name: "form", type: "ReactNode", default: "built-in schema form", control: "none" },
     { name: "formSchema", type: "FormSchema", default: "derived from columns", control: "object" },
     { name: "pageSize", type: "number", default: "20", control: "number" },
+    { name: "state", type: "Partial<ResourceState>", default: "undefined", control: "object", description: "Controlled page/pageSize/search/filters/sort/selection/expandedRows." },
+    { name: "defaultState", type: "Partial<ResourceState>", default: "{}", control: "object" },
+    { name: "onStateChange", type: "(state: ResourceState) => void", default: null, control: "none" },
+    { name: "onPageChange", type: "(page: number) => void", default: null, control: "none" },
+    { name: "onPageSizeChange", type: "(size: number) => void", default: null, control: "none" },
+    { name: "onFilterChange", type: "(filters: ToolbarFilterValues) => void", default: null, control: "none" },
+    { name: "onSortChange", type: "(sort: ResourceState['sort']) => void", default: null, control: "none" },
+    { name: "onSearchChange", type: "(search: string) => void", default: null, control: "none" },
+    { name: "onSelectionChange", type: "(keys, rows) => void", default: null, control: "none" },
+    { name: "selectable", type: "boolean | { multiple?: boolean }", default: "undefined", control: "boolean" },
+    { name: "renderExpandedRow", type: "(row: T) => ReactNode", default: null, control: "none" },
+    { name: "virtualized", type: "boolean", default: "false", control: "boolean" },
+    { name: "searchDebounce", type: "number (ms)", default: "250", control: "number" },
   ],
 }
