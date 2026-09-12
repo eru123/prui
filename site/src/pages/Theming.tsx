@@ -187,9 +187,8 @@ applyThemeTokens({ brand: '#16a34a' }, { target: panelEl })`}
       <section id="builder" className="mb-10 scroll-mt-20">
         <h2 className="mb-3 text-base font-semibold text-[var(--prui-fg)]">Theme builder</h2>
         <p className="max-w-[60ch] text-sm text-[var(--prui-dim)]">
-          Pick colors with real pickers, drag the radius, and watch a live island of prui components. Try it applies
-          your tokens to this site so you can feel the theme; reset reverts. When it looks right, copy the generated
-          CSS or JS.
+          Pick colors with real pickers, drag the radius, and the whole site re-skins in real time. Your tokens persist
+          across reloads until you press Reset, and the generated CSS or JS is yours to keep.
         </p>
         <p className="mt-3">
           <a href="/theme-builder" className="text-sm text-[var(--prui-brand)] hover:underline">Open the theme builder →</a>

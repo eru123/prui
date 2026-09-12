@@ -1,10 +1,9 @@
 import * as React from "react"
 import { useSearchParams } from "react-router-dom"
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from "prui/core"
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from "prui/core"
 import { applyThemeTokens, clearAppliedTokens, listThemes, type ThemeTokens } from "prui/theme"
 import { CodeView } from "../components/CodeView"
 import { CopyButton } from "../components/CopyButton"
-import { IframePortal } from "../components/IframePortal"
 
 /**
  * /theme-builder: pick tokens with real controls, see them on real prui
@@ -196,87 +195,30 @@ function ColorRow({ label, token, value, onChange }: { label: string; token: str
   )
 }
 
-function PreviewIsland({ tokens }: { tokens: BuilderTokens }) {
-  return (
-    <IframePortal title="Theme preview" testId="builder-preview" height={430}>
-      {(doc) => {
-        const root = doc.documentElement
-        root.className = "prui-root prui-theme-control prui-mode-dark"
-        root.style.colorScheme = "dark"
-        doc.body.style.margin = "0"
-        doc.body.style.background = "var(--prui-background)"
-        // preview-only: tokens live inside the frame, the site never changes
-        for (const [k, v] of Object.entries(toThemeTokens(tokens))) {
-          if (v !== undefined) doc.body.style.setProperty(`--prui-${k}`, String(v))
-        }
-        doc.body.style.setProperty("--prui-radius", `${tokens.radius}px`)
-        doc.body.style.setProperty("--prui-dim-op", String(tokens.dimOp))
-        return (
-          <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 18 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: 15, fontWeight: 600, color: "var(--prui-fg)" }}>Acme Console</span>
-              <span style={{ fontSize: 11, color: "var(--prui-dim)" }}>theme preview</span>
-            </div>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <button className="prui-button inline-flex h-9 items-center rounded-[var(--prui-radius)] px-3.5 text-sm font-medium" style={{ background: "var(--prui-brand)", color: "var(--prui-brand-fg)" }}>
-                Primary
-              </button>
-              <button className="prui-button inline-flex h-9 items-center rounded-[var(--prui-radius)] border px-3.5 text-sm" style={{ background: "var(--prui-raise)", color: "var(--prui-fg)", borderColor: "var(--prui-line)" }}>
-                Default
-              </button>
-              <button className="prui-button inline-flex h-9 items-center rounded-[var(--prui-radius)] px-3.5 text-sm" style={{ color: "var(--prui-fg)" }}>
-                Ghost
-              </button>
-              <button className="prui-button inline-flex h-9 items-center rounded-[var(--prui-radius)] px-3.5 text-sm" style={{ background: "var(--prui-danger)", color: "#fff" }}>
-                Delete
-              </button>
-            </div>
-            <div style={{ display: "flex", gap: 8 }}>
-              {["stable", "new", "beta"].map((v) => (
-                <span key={v} style={{ fontSize: 12, padding: "2px 10px", borderRadius: 9999, border: `1px solid ${tokens.line}`, background: tokens.raise, color: tokens.fg }}>
-                  {v}
-                </span>
-              ))}
-            </div>
-            <div style={{ borderRadius: "var(--prui-radius)", border: "1px solid var(--prui-line)", background: "var(--prui-surface)", padding: 16 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: "var(--prui-fg)", marginBottom: 10 }}>Card title</div>
-              <input
-                placeholder="Search employees"
-                style={{ width: "100%", boxSizing: "border-box", height: 36, padding: "0 12px", fontSize: 14, color: "var(--prui-fg)", background: "var(--prui-background)", border: `1px solid ${tokens.line}`, borderRadius: "calc(var(--prui-radius) - 2px)", outline: "none" }}
-              />
-              <p style={{ marginTop: 10, fontSize: 13, color: "var(--prui-dim)" }}>
-                Secondary text uses the dim token at {(tokens.dimOp * 100).toFixed(0)}% opacity.
-              </p>
-            </div>
-          </div>
-        )
-      }}
-    </IframePortal>
-  )
-}
-
 export function ThemeBuilderPage() {
   const [params, setParams] = useSearchParams()
-  const [tokens, setTokens] = React.useState<BuilderTokens>(() => decodeTokens(params.get("t")))
+  const initial = React.useMemo(() => decodeTokens(params.get("t")), [params])
+  const [tokens, setTokens] = React.useState<BuilderTokens>(initial)
   const [themeName, setThemeName] = React.useState("my-theme")
-  const [tried, setTried] = React.useState(false)
   const [tab, setTab] = React.useState<"css" | "js">("css")
 
-  const encoded = React.useMemo(() => encodeTokens(tokens), [tokens])
+  // realtime: every change applies to the whole site and persists across reloads
   React.useEffect(() => {
+    applyThemeTokens(toThemeTokens(tokens))
+  }, [tokens])
+
+  React.useEffect(() => {
+    const encoded = encodeTokens(tokens)
     if (params.get("t") !== encoded) setParams({ t: encoded }, { replace: true })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [encoded])
+  }, [tokens])
 
   const set = <K extends keyof BuilderTokens>(k: K, v: BuilderTokens[K]) => setTokens((s) => ({ ...s, [k]: v }))
 
-  const tryIt = () => {
-    applyThemeTokens(toThemeTokens(tokens))
-    setTried(true)
-  }
   const reset = () => {
     clearAppliedTokens()
-    setTried(false)
+    setTokens({ ...DEFAULT_TOKENS })
+    setParams({}, { replace: true })
   }
   const registerInPlace = () => {
     void (async () => {
@@ -284,7 +226,6 @@ export function ThemeBuilderPage() {
       mod.defineTheme(themeName, toThemeTokens(tokens))
       mod.applyTheme({ theme: themeName as never })
       clearAppliedTokens()
-      setTried(false)
     })()
   }
 
@@ -316,27 +257,17 @@ export function ThemeBuilderPage() {
 
       <div className="flex flex-col gap-4 lg:flex-row">
         <div className="min-w-0 flex-1">
-          <div className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
-            <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-2 font-mono text-[11px] text-[var(--prui-dim)]">
-              <span>preview island / your tokens, real components</span>
-              {tried ? <Badge variant="warn">applied to site</Badge> : <Badge variant="ok">site unchanged</Badge>}
-            </div>
-            <PreviewIsland tokens={tokens} />
-          </div>
-
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <Button variant="primary" onClick={tryIt} data-testid="builder-try">
-              Try it!
-            </Button>
-            <Button onClick={reset} disabled={!tried} data-testid="builder-reset">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <Button onClick={reset} data-testid="builder-reset">
               Reset
             </Button>
             <span className="text-xs text-[var(--prui-dim)]">
-              Try it applies the tokens to this site so you can feel the theme. Reset reverts to the theme you had.
+              This page is live: every pick re-skins the whole site right away and survives a reload. Reset removes the
+              overlay and puts the current theme back.
             </span>
           </div>
 
-          <div className="mt-4 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
+          <div className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
             <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-2">
               <div className="flex gap-1">
                 <Button variant={tab === "css" ? "default" : "ghost"} size="sm" onClick={() => setTab("css")}>theme.css</Button>

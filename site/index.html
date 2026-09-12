@@ -3,6 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      try {
+        var __t = JSON.parse(localStorage.getItem("prui:tokens") || "null");
+        if (__t && typeof __t === "object") {
+          var __el = document.documentElement;
+          for (var __k in __t) {
+            if (__t[__k] === null || __t[__k] === undefined) continue;
+            var __v = String(__t[__k]);
+            if (__k === "radius" && /^\d+(\.\d+)?$/.test(__v)) __v = __v + "px";
+            __el.style.setProperty("--prui-" + __k, __v);
+          }
+        }
+      } catch (e) {}
+    </script>
     <title>PRUI — the app-layer component system</title>
     <meta name="description" content="PRUI: primitives, super-components, and themes. Assemble a working admin app from props, not projects." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
