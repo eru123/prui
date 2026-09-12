@@ -1,5 +1,6 @@
 import { LayoutDashboard, Users, CalendarDays, TrendingUp } from "lucide-react"
 import { App, Form, Settings, appPropsMeta, resourcePropsMeta, formPropsMeta, settingsPropsMeta, authShellPropsMeta, sessionTimeoutPropsMeta, type NavItem } from "prui/app"
+import { Button } from "prui/core"
 import type { PropsMeta } from "prui/core"
 import { MetaOnly, PropsTable } from "../../components/Playground"
 import { CodeView } from "../../components/CodeView"
@@ -21,8 +22,22 @@ const DEMO_NAV: NavItem[] = [
   },
 ]
 
+const SHELL_NAV: NavItem[] = [
+  { label: "Home", href: "/", icon: LayoutDashboard },
+  { label: "Team", href: "/team", icon: Users },
+  { label: "Reports", href: "/reports", icon: CalendarDays },
+]
+
+const VARIANTS: { v: "A" | "B" | "C" | "D"; name: string; blurb: string }[] = [
+  { v: "A", name: "A · full-height sidebar", blurb: "Sidebar spans the full height; the header sits in the content column." },
+  { v: "B", name: "B · full-width header", blurb: "Header across the top; the expanded sidebar sits below it." },
+  { v: "C", name: "C · collapsed rail", blurb: "Header across the top; icon rail below it, expandable via the rail toggle." },
+  { v: "D", name: "D · embedded cards", blurb: "Borderless embedded list with an action slot at the bottom; stacked cards." },
+]
+
 const APP_TOC = [
   { id: "app-shell", label: "App" },
+  { id: "shell-layouts", label: "Shell layouts" },
   { id: "resource", label: "Resource" },
   { id: "form", label: "Form" },
   { id: "settings-comp", label: "Settings" },
@@ -94,6 +109,79 @@ export function AppLayerDoc() {
             />
           </div>
           <MetaOnly meta={appPropsMeta} />
+        </section>
+
+        {/* Shell layouts */}
+        <section id="shell-layouts" className="mb-10 scroll-mt-20">
+          <h2 className="mb-3 font-mono text-sm font-semibold text-[var(--prui-brand)]">Shell layouts</h2>
+          <p className="mb-4 max-w-[62ch] text-sm text-[var(--prui-dim)]">
+            One prop, four desktop arrangements, driven by CSS grid areas. Mobile always uses the drawer.
+          </p>
+          <div className="flex flex-col gap-8">
+            {VARIANTS.map((v) => (
+              <div key={v.v}>
+                <div className="mb-2 flex items-baseline justify-between">
+                  <div className="font-mono text-xs text-[var(--prui-fg)]">{v.name}</div>
+                  <div className="font-mono text-[10px] text-[var(--prui-dim)]">layoutType='{v.v}'</div>
+                </div>
+                <div className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)]">
+                  <IframePortal title={`Shell ${v.v}`} height={360}>
+                    {(doc) => {
+                      doc.documentElement.classList.add("prui-root", "prui-theme-control", "prui-mode-dark")
+                      const body = doc.body
+                      body.style.margin = "0"
+                      body.style.background = "var(--prui-background)"
+                      // <App router="memory"> brings its own MemoryRouter
+                      return (
+                        <App
+                          router="memory"
+                          layoutType={v.v}
+                          brand={{ name: "Acme" }}
+                          nav={SHELL_NAV}
+                          search={{ enabled: true, hotkey: "/" }}
+                          theme={false}
+                          sidebar={{ width: 190 }}
+                          sidebarFooter={
+                            v.v === "D" ? (
+                              <Button variant="primary" size="sm" className="w-full">New project</Button>
+                            ) : undefined
+                          }
+                        >
+                          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                            {[0, 1, 2].map((i) => (
+                              <div key={i} style={{ height: 56, borderRadius: "var(--prui-radius)", border: "1px solid var(--prui-line)", background: "var(--prui-surface)" }} />
+                            ))}
+                          </div>
+                        </App>
+                      )
+                    }}
+                  </IframePortal>
+                </div>
+                <p className="mt-2 text-xs text-[var(--prui-dim)]">{v.blurb}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3">
+            <CodeView
+              code={`import { App } from '@skiddph/prui/app'
+
+// A (default): sidebar full height, header in the content column
+<App layoutType="A" nav={nav}>{routes}</App>
+
+// B: full-width header, expanded sidebar below it
+<App layoutType="B" nav={nav}>{routes}</App>
+
+// C: header + collapsed icon rail, expandable via the rail toggle
+<App layoutType="C" nav={nav}>{routes}</App>
+
+// D: embedded list with an action slot, stacked cards
+<App layoutType="D" nav={nav} sidebarFooter={<Button>New project</Button>}>
+  {routes}
+</App>`}
+              title="layoutType.tsx"
+              height={240}
+            />
+          </div>
         </section>
 
         {/* Resource */}

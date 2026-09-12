@@ -8,7 +8,7 @@ import {
   useNavigate,
   Outlet,
 } from "react-router-dom"
-import { ChevronDown, Menu, Palette, Search, X } from "lucide-react"
+import { ChevronDown, ChevronsLeft, ChevronsRight, Menu, Palette, Search, X } from "lucide-react"
 import { cn } from "../core/cn"
 import { Dropdown } from "../core/dropdown"
 import { Button } from "../core/button"
@@ -108,6 +108,16 @@ export interface AppProps {
   pagesConfig?: Partial<Record<PageSetName, Record<string, unknown>>>
   /** A pathname (e.g. "/") on which every nav group starts expanded. */
   expandAllOn?: string
+  /**
+   * Desktop shell arrangement (md and up; mobile always uses the drawer):
+   *  - "A" full-height sidebar, header inside the content column (default)
+   *  - "B" full-width header, expanded sidebar below it
+   *  - "C" full-width header, collapsed icon rail below it (with toggle)
+   *  - "D" embedded-card layout: borderless list + action slot, stacked cards
+   */
+  layoutType?: "A" | "B" | "C" | "D"
+  /** Prominent action slot pinned to the sidebar bottom (e.g. layout D). */
+  sidebarFooter?: React.ReactNode
   children?: React.ReactNode
 }
 
@@ -177,7 +187,7 @@ function isActivePath(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(href + "/")
 }
 
-function NavGroup({ item, onNavigate, expandAllOn }: { item: NavItem; onNavigate?: () => void; expandAllOn?: string }) {
+function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem; onNavigate?: () => void; expandAllOn?: string; collapsed?: boolean }) {
   const { pathname } = useLocation()
   const active = (item.items ?? []).some((child) =>
     child.href ? isActivePath(pathname, child.href) : (child.items ?? []).some((gc) => gc.href && isActivePath(pathname, gc.href)),
@@ -200,14 +210,14 @@ function NavGroup({ item, onNavigate, expandAllOn }: { item: NavItem; onNavigate
           active ? "text-[var(--prui-fg)]" : "text-[var(--prui-dim)] hover:text-[var(--prui-fg)]",
         )}
       >
-        {Icon ? <Icon className="h-4 w-4 shrink-0" aria-hidden /> : null}
-        <span className="flex-1 text-left truncate">{item.label}</span>
-        <ChevronDown className={cn("h-4 w-4 transition-transform", !open && "-rotate-90")} aria-hidden />
+        {Icon ? <Icon className="h-4 w-4 shrink-0" aria-hidden /> : <span className={cn("prui-nav-mono text-[10px] font-semibold")}>{item.label.slice(0, 2).toUpperCase()}</span>}
+        <span className={cn("flex-1 text-left truncate", "prui-nav-label")}>{item.label}</span>
+        <ChevronDown className={cn("prui-nav-chevron h-4 w-4 transition-transform", !open && "-rotate-90")} aria-hidden />
       </button>
       {open ? (
         <ul className="ml-4 mt-0.5 flex flex-col gap-0.5 border-l border-[var(--prui-line)] pl-2">
           {(item.items ?? []).map((child) => (
-            <NavItemLink key={child.href ?? child.label} item={child} onNavigate={onNavigate} nested expandAllOn={expandAllOn} />
+            <NavItemLink key={child.href ?? child.label} item={child} onNavigate={onNavigate} nested expandAllOn={expandAllOn} collapsed={collapsed} />
           ))}
         </ul>
       ) : null}
@@ -223,8 +233,8 @@ function NavSubgroupLabel({ label }: { label: string }) {
   )
 }
 
-function NavItemLink({ item, onNavigate, nested, expandAllOn }: { item: NavItem; onNavigate?: () => void; nested?: boolean; expandAllOn?: string }) {
-  if (item.items && item.items.length > 0) return <NavGroup item={item} onNavigate={onNavigate} expandAllOn={expandAllOn} />
+function NavItemLink({ item, onNavigate, nested, expandAllOn, collapsed }: { item: NavItem; onNavigate?: () => void; nested?: boolean; expandAllOn?: string; collapsed?: boolean }) {
+  if (item.items && item.items.length > 0) return <NavGroup item={item} onNavigate={onNavigate} expandAllOn={expandAllOn} collapsed={collapsed} />
   if (item.heading || (!item.href && !item.items)) return <NavSubgroupLabel label={item.label} />
   if (!item.href) return null
   return (
@@ -242,19 +252,23 @@ function NavItemLink({ item, onNavigate, nested, expandAllOn }: { item: NavItem;
           )
         }
       >
-        {item.icon && !nested ? <item.icon className="h-4 w-4 shrink-0" aria-hidden /> : null}
-        <span className="truncate">{item.label}</span>
+        {item.icon && !nested ? (
+          <item.icon className="h-4 w-4 shrink-0" aria-hidden />
+        ) : collapsed ? (
+          <span className={cn("prui-nav-mono text-[10px] font-semibold")}>{item.label.slice(0, 2).toUpperCase()}</span>
+        ) : null}
+        <span className={cn("truncate", collapsed && nested && "prui-nav-label", "prui-nav-label")}>{item.label}</span>
       </NavLink>
     </li>
   )
 }
 
-export function SidebarNav({ nav, onNavigate, expandAllOn }: { nav: NavItem[]; onNavigate?: () => void; expandAllOn?: string }) {
+export function SidebarNav({ nav, onNavigate, expandAllOn, collapsed }: { nav: NavItem[]; onNavigate?: () => void; expandAllOn?: string; collapsed?: boolean }) {
   return (
     <nav aria-label="Main" className="prui-app-nav">
       <ul className="flex flex-col gap-0.5">
         {nav.map((item) => (
-          <NavItemLink key={item.href ?? item.label} item={item} onNavigate={onNavigate} expandAllOn={expandAllOn} />
+          <NavItemLink key={item.href ?? item.label} item={item} onNavigate={onNavigate} expandAllOn={expandAllOn} collapsed={collapsed} />
         ))}
       </ul>
     </nav>
@@ -266,7 +280,7 @@ function BrandMark({ brand }: { brand?: BrandConfig }) {
   const content = (
     <>
       {brand.mark ? <img src={brand.mark} alt="" className="h-6 w-6 rounded-[var(--prui-radius-1)] object-cover" /> : null}
-      <span className="truncate font-semibold text-[var(--prui-fg)]">{brand.name}</span>
+      <span className="prui-nav-label truncate font-semibold text-[var(--prui-fg)]">{brand.name}</span>
     </>
   )
   const classes = "flex items-center gap-2 px-1 py-1 min-w-0"
@@ -408,6 +422,8 @@ export function AppShell(props: AppProps) {
     pages,
     pagesConfig,
     expandAllOn,
+    layoutType = "A",
+    sidebarFooter,
     children,
   } = props
 
@@ -417,6 +433,7 @@ export function AppShell(props: AppProps) {
 
   const collapsible = sidebarCfg.collapsible !== false
   const [drawerOpen, setDrawerOpen] = React.useState(sidebarCfg.defaultOpen === true)
+  const [railExpanded, setRailExpanded] = React.useState(false)
   const [paletteOpen, setPaletteOpen] = React.useState(false)
   const location = useLocation()
   const navigate = useNavigate()
@@ -483,17 +500,42 @@ export function AppShell(props: AppProps) {
 
   const width = sidebarCfg.width ?? 240
 
+  const railCollapsed = layoutType === "C" && !railExpanded
+
   return (
-    <div className="prui-app flex min-h-screen bg-[var(--prui-background)] text-[var(--prui-fg)]">
-      {/* desktop sidebar: fixed rail with its own scroll, no brand row (p4) */}
-      <aside
-        data-testid="sidebar"
-        className="hidden md:block md:fixed md:inset-y-0 md:left-0 md:z-30 md:w-[var(--prui-sidebar-width)] md:border-r md:border-[var(--prui-line)] md:bg-[var(--prui-surface)]"
-        style={{ ["--prui-sidebar-width" as string]: `${width}px` }}
-      >
-        <div className="h-full overflow-y-auto p-2 pt-4 scrollbar-thin">
-          <SidebarNav nav={nav} expandAllOn={expandAllOn} />
+    <div
+      className="prui-app prui-shell min-h-dvh bg-[var(--prui-background)] text-[var(--prui-fg)]"
+      data-layout={layoutType}
+      data-collapsed={railCollapsed ? "true" : undefined}
+      style={{ "--prui-shell-sidebar": railCollapsed ? "var(--prui-rail-width, 64px)" : `${width}px` } as React.CSSProperties}
+    >
+      {/* desktop sidebar: grid area (mobile uses the drawer below) */}
+      <aside data-testid="sidebar" className="prui-shell-sidebar hidden md:flex md:flex-col md:min-h-0">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-2 pt-4 scrollbar-thin">
+          <SidebarNav nav={nav} expandAllOn={expandAllOn} collapsed={railCollapsed} />
         </div>
+        {sidebarFooter ? (
+          <div
+            className={cn("border-t border-[var(--prui-line)] p-2", railCollapsed && "flex justify-center px-1")}
+            data-testid="sidebar-footer"
+          >
+            {sidebarFooter}
+          </div>
+        ) : null}
+        {layoutType === "C" ? (
+          <div className="border-t border-[var(--prui-line)] p-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-center"
+              aria-label={railCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              data-testid="sidebar-toggle"
+              onClick={() => setRailExpanded((r) => !r)}
+            >
+              {railCollapsed ? <ChevronsRight className="h-4 w-4" aria-hidden /> : <ChevronsLeft className="h-4 w-4" aria-hidden />}
+            </Button>
+          </div>
+        ) : null}
       </aside>
 
       {/* mobile drawer */}
@@ -521,57 +563,56 @@ export function AppShell(props: AppProps) {
                 <X className="h-4 w-4" aria-hidden />
               </button>
             </div>
-            <SidebarNav nav={nav} onNavigate={() => setDrawerOpen(false)} expandAllOn={expandAllOn} />
+            <SidebarNav nav={nav} onNavigate={() => setDrawerOpen(false)} expandAllOn={expandAllOn} collapsed={false} />
           </aside>
         </div>
       ) : null}
-      <div className="flex min-w-0 flex-1 flex-col md:ml-[var(--prui-sidebar-width)]" style={{ ["--prui-sidebar-width" as string]: `${width}px` }}>
-        <header
-          data-testid="app-header"
-          className="sticky top-0 z-30 grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:px-6"
-        >
-          {collapsible ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Open navigation"
-              className="md:hidden"
-              onClick={() => setDrawerOpen(true)}
-              data-testid="drawer-toggle"
-            >
-              <Menu className="h-4 w-4" aria-hidden />
-            </Button>
-          ) : null}
-          <div className="min-w-0 justify-self-start">
-            <BrandMark brand={brand} />
-          </div>
-          {searchEnabled ? (
-            <button
-              type="button"
-              onClick={() => setPaletteOpen(true)}
-              data-testid="search-trigger"
-              className="hidden h-8 w-[min(420px,34vw)] items-center gap-2 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] px-3.5 text-sm text-[var(--prui-dim)] hover:border-[var(--prui-dim)] cursor-pointer md:flex"
-            >
-              <Search className="h-4 w-4" aria-hidden />
-              <span className="flex-1 text-left">{searchCfg.placeholder ?? "Search..."}</span>
-              <kbd className="ml-auto rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] bg-[var(--prui-raise)] px-1.5 py-0.5 text-xs">{hotkey}</kbd>
-            </button>
-          ) : null}
-          <div className="flex items-center gap-2 justify-self-end">
-            {header}
-            <ThemeToggle config={theme} />
-          </div>
-        </header>
-        <main className="flex-1 p-4 md:p-6">
-          {pages ? (
-            <AutoPages mode={pages} config={pagesConfig}>
-              {children}
-            </AutoPages>
-          ) : (
-            (children ?? <Outlet />)
-          )}
-        </main>
-      </div>
+
+      <header
+        data-testid="app-header"
+        className="prui-shell-header sticky top-0 z-30 grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:px-6"
+      >
+        {collapsible ? (
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Open navigation"
+            className="md:hidden"
+            onClick={() => setDrawerOpen(true)}
+            data-testid="drawer-toggle"
+          >
+            <Menu className="h-4 w-4" aria-hidden />
+          </Button>
+        ) : null}
+        <div className="min-w-0 justify-self-start">
+          <BrandMark brand={brand} />
+        </div>
+        {searchEnabled ? (
+          <button
+            type="button"
+            onClick={() => setPaletteOpen(true)}
+            data-testid="search-trigger"
+            className="hidden h-8 w-[min(420px,34vw)] items-center gap-2 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] px-3.5 text-sm text-[var(--prui-dim)] hover:border-[var(--prui-dim)] cursor-pointer md:flex"
+          >
+            <Search className="h-4 w-4" aria-hidden />
+            <span className="flex-1 text-left">{searchCfg.placeholder ?? "Search..."}</span>
+            <kbd className="ml-auto rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] bg-[var(--prui-raise)] px-1.5 py-0.5 text-xs">{hotkey}</kbd>
+          </button>
+        ) : null}
+        <div className="flex items-center gap-2 justify-self-end">
+          {header}
+          <ThemeToggle config={theme} />
+        </div>
+      </header>
+      <main data-testid="app-content" className="prui-shell-content min-h-0 flex-1 p-4 md:p-6">
+        {pages ? (
+          <AutoPages mode={pages} config={pagesConfig}>
+            {children}
+          </AutoPages>
+        ) : (
+          (children ?? <Outlet />)
+        )}
+      </main>
 
       {authCfg ? (
         <React.Suspense fallback={null}>
@@ -614,6 +655,8 @@ export const appPropsMeta: PropsMeta = {
     { name: "initialEntries", type: "string[]", default: "undefined", control: "object" },
     { name: "pages", type: "'auth' | 'utility' | 'auth+utility'", default: "undefined", control: "select", options: ["auth", "utility", "auth+utility"] },
     { name: "expandAllOn", type: "string (pathname)", default: "undefined", control: "text" },
+    { name: "layoutType", type: "'A' | 'B' | 'C' | 'D'", default: "'A'", control: "select", options: ["A", "B", "C", "D"] },
+    { name: "sidebarFooter", type: "ReactNode", default: null, control: "none" },
     { name: "header", type: "ReactNode", default: null, control: "none" },
     { name: "children", type: "ReactNode", default: "Outlet", control: "none" },
   ],

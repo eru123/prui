@@ -356,3 +356,45 @@ describe("Settings", () => {
     expect(screen.getByText("App name")).toBeInTheDocument()
   })
 })
+
+describe("Shell layouts (layoutType)", () => {
+  function shell(layoutType: "A" | "B" | "C" | "D", props: Record<string, unknown> = {}) {
+    return render(
+      <MemoryRouter initialEntries={["/"]}>
+        <AppShell brand={{ name: "T" }} nav={nav} layoutType={layoutType} {...props}>
+          <div>CONTENT</div>
+        </AppShell>
+      </MemoryRouter>,
+    )
+  }
+
+  it("defaults to layout A", () => {
+    shell("A")
+    expect(document.querySelector(".prui-shell")?.getAttribute("data-layout")).toBe("A")
+    expect(screen.queryByTestId("sidebar-footer")).toBeNull()
+  })
+
+  it("exposes the layout attribute for B", () => {
+    shell("B")
+    expect(document.querySelector(".prui-shell")?.getAttribute("data-layout")).toBe("B")
+  })
+
+  it("C starts collapsed and the toggle expands it", async () => {
+    const user = userEvent.setup()
+    shell("C")
+    expect(document.querySelector(".prui-shell")?.getAttribute("data-collapsed")).toBe("true")
+    await user.click(screen.getByTestId("sidebar-toggle"))
+    expect(document.querySelector(".prui-shell")?.getAttribute("data-collapsed")).toBeNull()
+  })
+
+  it("C collapsed rail renders monograms instead of labels", () => {
+    shell("C")
+    expect(document.querySelector(".prui-nav-mono")).toBeInTheDocument()
+  })
+
+  it("D renders the sidebar footer slot", () => {
+    shell("D", { sidebarFooter: <button>New project</button> })
+    expect(screen.getByText("New project")).toBeInTheDocument()
+    expect(document.querySelector(".prui-shell")?.getAttribute("data-layout")).toBe("D")
+  })
+})

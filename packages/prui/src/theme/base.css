@@ -70,3 +70,65 @@ body.modal-open { overflow: hidden; }
   color: var(--prui-s-fg, var(--prui-fg));
   border-radius: var(--prui-s-radius, var(--prui-radius));
 }
+
+/* Application shell: CSS grid areas. Mobile is a single column with the
+   drawer; md and up place sidebar, header, and content per data-layout:
+   A  sidebar full height, header inside the content column
+   B  header across the top, expanded sidebar below it
+   C  header across the top, icon rail below it (collapsible via toggle)
+   D  embedded list + action slot on the left, stacked cards on the right */
+.prui-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+.prui-shell-sidebar { display: none; }
+@media (min-width: 48rem) {
+  .prui-shell {
+    display: grid;
+    height: 100dvh;
+    overflow: hidden;
+    grid-template-columns: var(--prui-shell-sidebar, var(--prui-sidebar-width, 260px)) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+      "sidebar header"
+      "sidebar content";
+  }
+  .prui-shell-sidebar {
+    display: flex;
+    flex-direction: column;
+    grid-area: sidebar;
+    min-height: 0;
+    border-right: 1px solid var(--prui-line);
+    background: var(--prui-surface);
+  }
+  .prui-shell-header { grid-area: header; }
+  .prui-shell-content { grid-area: content; overflow-y: auto; }
+  .prui-shell[data-layout="B"],
+  .prui-shell[data-layout="C"] {
+    grid-template-areas:
+      "header header"
+      "sidebar content";
+  }
+  .prui-shell[data-layout="C"] {
+    grid-template-columns: var(--prui-shell-sidebar, var(--prui-rail-width, 64px)) minmax(0, 1fr);
+  }
+  .prui-shell[data-layout="D"] .prui-shell-sidebar { border-right: none; background: transparent; }
+  .prui-shell[data-layout="D"] .prui-shell-header { border-bottom: none; background: transparent; }
+  .prui-shell[data-collapsed="true"] { --prui-shell-sidebar: var(--prui-rail-width, 64px); }
+  .prui-shell[data-collapsed="true"] .prui-nav-label,
+  .prui-shell[data-collapsed="true"] .prui-nav-chevron { display: none; }
+  .prui-shell[data-collapsed="true"] .prui-app-nav button { justify-content: center; padding-inline: 0; }
+  .prui-shell[data-collapsed="true"] .prui-nav-mono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--prui-radius-1);
+    background: var(--prui-raise);
+    font-size: 10px;
+    font-weight: 600;
+  }
+}
+.prui-nav-mono { display: none; }
