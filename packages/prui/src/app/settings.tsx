@@ -76,7 +76,7 @@ function TypedField({ field }: { field: SettingsField }) {
         className="w-56"
         options={normalizeSelectOptions(field.options) ?? []}
         value={String(value ?? "")}
-        onChange={(v) => onChange?.(v)}
+        onChange={(v) => onChange?.(Array.isArray(v) ? v.join(",") : v)}
         aria-label={field.label}
       />
     )
