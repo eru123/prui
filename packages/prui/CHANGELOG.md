@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.4.0
+
+### Minor Changes
+
+- - surface flexibility layer, custom theme APIs (defineTheme/applyThemeTokens), palette toggle icon, higher-order forms module with cross-scope FormButton, theme builder page, forms docs
+
 ## 0.3.0
 
 ### Minor Changes
