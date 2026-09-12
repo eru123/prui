@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.4.1
+
+### Patch Changes
+
+- - auto-fit grid for theme builder token rows (3 columns desktop, no class collisions)
+
 ## 0.4.0
 
 ### Minor Changes
