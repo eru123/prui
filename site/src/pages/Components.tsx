@@ -32,10 +32,26 @@ import { StatRow, statRowPropsMeta } from "prui/app"
 import { appPropsMeta, resourcePropsMeta } from "prui/app"
 import { dataTablePropsMeta } from "prui/data-table"
 import { Playground, MetaOnly } from "../components/Playground"
+import { TocRail } from "../components/TocRail"
+
+const COMPONENTS_TOC = [
+  { id: "button", label: "Button" },
+  { id: "input", label: "Input" },
+  { id: "switch", label: "Switch" },
+  { id: "tabs", label: "Tabs" },
+  { id: "badge", label: "Badge" },
+  { id: "card", label: "Card" },
+  { id: "dialog", label: "Dialog" },
+  { id: "app", label: "App" },
+  { id: "resource", label: "Resource" },
+  { id: "data-table", label: "DataTable" },
+  { id: "statrow", label: "StatRow" },
+]
 
 export function ComponentsPage() {
   return (
-    <div className="mx-auto w-full max-w-[780px] px-4 pb-20 pt-8 md:px-6">
+    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-[780px] flex-1">
       <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">components / catalog</div>
       <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Components</h1>
       <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
@@ -126,6 +142,9 @@ export function ComponentsPage() {
           />
         </div>
       )} />
+      </div>
+
+      <TocRail items={COMPONENTS_TOC} />
     </div>
   )
 }

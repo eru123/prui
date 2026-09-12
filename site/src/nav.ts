@@ -31,17 +31,7 @@ export const nav: NavItem[] = [
     ],
   },
   { label: "Layouts", href: "/layouts", icon: LayoutTemplate },
-  {
-    label: "Theming",
-    icon: Palette,
-    items: [
-      { label: "Token reference", href: "/theming#tokens" },
-      { label: "Named themes", href: "/theming#themes" },
-      { label: "Runtime switching", href: "/theming#switching" },
-      { label: "Custom themes", href: "/theming#custom" },
-      { label: "Theme builder", href: "/theme-builder" },
-    ],
-  },
+  { label: "Theming", href: "/theming", icon: Palette },
   { label: "Forms", href: "/forms", icon: ClipboardPen },
   {
     label: "Guides",
