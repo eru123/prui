@@ -407,6 +407,66 @@ describe("Shell layouts (layoutType)", () => {
     expect(screen.getByTestId("sidebar-header")).toHaveTextContent("Workspace")
   })
 
+  it("a collapsed group is one rail item opening a flyout menu", async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <AppShell brand={{ name: "T" }} nav={nav} layoutType="A">
+          <Routes>
+            <Route path="/" element={<div>HOME</div>} />
+            <Route path="/leave/requests" element={<div>REQUESTS</div>} />
+          </Routes>
+        </AppShell>
+      </MemoryRouter>,
+    )
+    await user.click(screen.getByTestId("sidebar-toggle"))
+    // the Leave group is a single rail item now
+    expect(screen.getByTestId("rail-group-trigger")).toBeInTheDocument()
+    expect(screen.queryByText("Requests")).toBeNull()
+    // clicking it opens the flyout (portaled to the body, outside the rail)
+    await user.click(screen.getByTestId("rail-group-trigger"))
+    const flyout = await screen.findByTestId("rail-flyout")
+    expect(flyout).toBeInTheDocument()
+    expect(document.body.contains(flyout)).toBe(true)
+    // items navigate and close the flyout
+    await user.click(screen.getAllByTestId("rail-flyout-item").find((el) => el.textContent === "Requests")!)
+    expect(screen.getByText("REQUESTS")).toBeInTheDocument()
+    expect(screen.queryByTestId("rail-flyout")).toBeNull()
+  })
+
+  it("the flyout closes on backdrop click and Escape", async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <AppShell brand={{ name: "T" }} nav={nav} layoutType="A">
+          <div>HOME</div>
+        </AppShell>
+      </MemoryRouter>,
+    )
+    await user.click(screen.getByTestId("sidebar-toggle"))
+    await user.click(screen.getByTestId("rail-group-trigger"))
+    expect(screen.getByTestId("rail-flyout")).toBeInTheDocument()
+    await user.click(screen.getByTestId("rail-flyout-backdrop"))
+    expect(screen.queryByTestId("rail-flyout")).toBeNull()
+    await user.click(screen.getByTestId("rail-group-trigger"))
+    await user.keyboard("{Escape}")
+    expect(screen.queryByTestId("rail-flyout")).toBeNull()
+  })
+
+  it("passive nav headings are hidden in the collapsed rail", async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <AppShell brand={{ name: "T" }} nav={[...nav, { label: "Section", heading: true }]} layoutType="A">
+          <div>HOME</div>
+        </AppShell>
+      </MemoryRouter>,
+    )
+    expect(screen.getByText("Section")).toBeInTheDocument()
+    await user.click(screen.getByTestId("sidebar-toggle"))
+    expect(screen.queryByText("Section")).toBeNull()
+  })
+
   it("D has no collapse toggle and renders the sidebar footer slot", () => {
     shell("D", { sidebarFooter: <button>New project</button> })
     expect(screen.queryByTestId("sidebar-toggle")).toBeNull()

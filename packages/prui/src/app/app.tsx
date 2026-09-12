@@ -1,4 +1,5 @@
 import * as React from "react"
+import { createPortal } from "react-dom"
 import {
   BrowserRouter,
   MemoryRouter,
@@ -194,6 +195,7 @@ function isActivePath(pathname: string, href: string): boolean {
 
 function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem; onNavigate?: () => void; expandAllOn?: string; collapsed?: boolean }) {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const active = (item.items ?? []).some((child) =>
     child.href ? isActivePath(pathname, child.href) : (child.items ?? []).some((gc) => gc.href && isActivePath(pathname, gc.href)),
   )
@@ -204,6 +206,115 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
   }, [active])
 
   const Icon = item.icon
+
+  // Collapsed rail: the whole group is ONE rail item; clicking it opens a
+  // flyout menu (portaled to the body so the rail's overflow cannot clip it)
+  // instead of expanding nested rows inside a 64px column.
+  const [menuOpen, setMenuOpen] = React.useState(false)
+  const [menuPos, setMenuPos] = React.useState<{ top: number; left: number } | null>(null)
+  const triggerRef = React.useRef<HTMLButtonElement>(null)
+
+  React.useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false)
+    }
+    document.addEventListener("keydown", onKey)
+    return () => document.removeEventListener("keydown", onKey)
+  }, [menuOpen])
+
+  if (collapsed) {
+    const flyout: { label?: string; href?: string; heading?: string }[] = []
+    for (const child of item.items ?? []) {
+      if (child.items?.length) {
+        if (child.items.some((gc) => gc.href)) flyout.push({ heading: child.label })
+        for (const gc of child.items) if (gc.href) flyout.push({ label: gc.label, href: gc.href })
+      } else if (child.href) {
+        flyout.push({ label: child.label, href: child.href })
+      }
+    }
+
+    const openMenu = () => {
+      const rect = triggerRef.current?.getBoundingClientRect()
+      if (rect) {
+        const est = Math.min(flyout.length * 32 + 40, 320)
+        setMenuPos({
+          left: rect.right + 8,
+          top: Math.max(8, Math.min(rect.top, window.innerHeight - est - 8)),
+        })
+      }
+      setMenuOpen((o) => !o)
+    }
+
+    return (
+      <li data-testid="nav-group">
+        <button
+          ref={triggerRef}
+          type="button"
+          title={item.label}
+          aria-haspopup="menu"
+          aria-expanded={menuOpen}
+          onClick={openMenu}
+          data-testid="rail-group-trigger"
+          className={cn(
+            "flex w-full items-center justify-center rounded-[var(--prui-radius)] px-2.5 py-1.5 text-sm cursor-pointer",
+            active || menuOpen ? "text-[var(--prui-brand)]" : "text-[var(--prui-dim)] hover:text-[var(--prui-fg)]",
+          )}
+        >
+          {Icon ? (
+            <Icon className="h-4 w-4 shrink-0" aria-hidden />
+          ) : (
+            <span className="prui-nav-mono text-[10px] font-semibold">{item.label.slice(0, 2).toUpperCase()}</span>
+          )}
+        </button>
+        {menuOpen && menuPos
+          ? createPortal(
+              <>
+                <div className="fixed inset-0 z-[60]" onClick={() => setMenuOpen(false)} data-testid="rail-flyout-backdrop" />
+                <div
+                  role="menu"
+                  aria-label={item.label}
+                  data-testid="rail-flyout"
+                  className="fixed z-[61] flex w-56 max-h-80 flex-col overflow-y-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] py-1.5 shadow-xl"
+                  style={{ top: menuPos.top, left: menuPos.left }}
+                >
+                  <div className="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--prui-dim)]">{item.label}</div>
+                  {flyout.map((fi, i) =>
+                    fi.heading ? (
+                      <div key={`h-${i}`} className="px-3 pb-0.5 pt-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--prui-dim)]">
+                        {fi.heading}
+                      </div>
+                    ) : (
+                      <button
+                        key={fi.href}
+                        type="button"
+                        role="menuitem"
+                        data-testid="rail-flyout-item"
+                        className={cn(
+                          "flex cursor-pointer items-center rounded-[calc(var(--prui-radius)-1px)] px-3 py-1.5 text-left text-sm",
+                          fi.href && isActivePath(pathname, fi.href)
+                            ? "bg-[var(--prui-brand)]/15 text-[var(--prui-brand)]"
+                            : "text-[var(--prui-fg)] hover:bg-[var(--prui-raise)]",
+                        )}
+                        onClick={() => {
+                          setMenuOpen(false)
+                          onNavigate?.()
+                          if (fi.href) navigate(fi.href)
+                        }}
+                      >
+                        {fi.label}
+                      </button>
+                    ),
+                  )}
+                </div>
+              </>,
+              document.body,
+            )
+          : null}
+      </li>
+    )
+  }
+
   return (
     <li data-testid="nav-group">
       <button
@@ -240,7 +351,7 @@ function NavSubgroupLabel({ label }: { label: string }) {
 
 function NavItemLink({ item, onNavigate, nested, expandAllOn, collapsed }: { item: NavItem; onNavigate?: () => void; nested?: boolean; expandAllOn?: string; collapsed?: boolean }) {
   if (item.items && item.items.length > 0) return <NavGroup item={item} onNavigate={onNavigate} expandAllOn={expandAllOn} collapsed={collapsed} />
-  if (item.heading || (!item.href && !item.items)) return <NavSubgroupLabel label={item.label} />
+  if (item.heading || (!item.href && !item.items)) return collapsed ? null : <NavSubgroupLabel label={item.label} />
   if (!item.href) return null
   return (
     <li>
