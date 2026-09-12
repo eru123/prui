@@ -775,7 +775,21 @@ export function AppShell(props: AppProps) {
           data-testid="sidebar-header"
           className="prui-shell-sidehead hidden h-14 items-center gap-2 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:flex"
         >
-          {sidebarHeader ?? <BrandMark brand={brand} />}
+          {/* C carries the collapse toggle here, before the brand: the row
+              lives in the sidebar column, right where the toggle operates */}
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={railCollapsed ? t.expandSidebar : t.collapseSidebar}
+            onClick={() => setRailExpanded((r) => !r)}
+            data-testid="sidebar-toggle"
+            className="shrink-0"
+          >
+            {railCollapsed ? <ChevronsRight className="h-4 w-4" aria-hidden /> : <ChevronsLeft className="h-4 w-4" aria-hidden />}
+          </Button>
+          <div className="prui-sidehead-content min-w-0">
+            {sidebarHeader ?? <BrandMark brand={brand} />}
+          </div>
         </div>
       ) : null}
       <header
@@ -795,7 +809,7 @@ export function AppShell(props: AppProps) {
           </Button>
         ) : null}
         <div className="flex min-w-0 items-center gap-1 justify-self-start">
-          {layoutType !== "D" ? (
+          {layoutType !== "D" && layoutType !== "C" ? (
             <Button
               variant="ghost"
               size="icon"

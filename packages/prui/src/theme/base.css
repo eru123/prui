@@ -214,9 +214,9 @@ body.modal-open { overflow: hidden; }
   font-weight: 600;
 }
 .prui-shell[data-collapsed="true"] .prui-shell-sidehead { justify-content: center; padding-inline: 0; }
-/* the sidehead is a sibling of the sidebar, not inside it: its brand label
-   needs the same collapse treatment (mark centers, name hides) */
-.prui-shell[data-collapsed="true"] .prui-shell-sidehead .prui-nav-label { display: none; }
+/* collapsed, the sidehead is just the expand toggle: the brand/custom
+   content (any width) hides and the chevron centers in the rail */
+.prui-shell[data-collapsed="true"] .prui-shell-sidehead .prui-sidehead-content { display: none; }
 .prui-nav-mono { display: none; }
 
 @media (max-width: 47.99rem) {

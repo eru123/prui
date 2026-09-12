@@ -429,6 +429,17 @@ describe("Shell layouts (layoutType)", () => {
     expect(brandA.closest(".md\\:hidden")).toBeNull()
   })
 
+  it("C carries the toggle in the sidebar header row, before its content", () => {
+    shell("C")
+    // not in the topbar: C's sidebar header row owns it, next to the brand
+    expect(within(screen.getByTestId("app-header")).queryByTestId("sidebar-toggle")).toBeNull()
+    const sidehead = screen.getByTestId("sidebar-header")
+    const toggle = within(sidehead).getByTestId("sidebar-toggle")
+    const brand = within(sidehead).getAllByText("T")[0]
+    if (!brand) throw new Error("brand not found in the sidehead")
+    expect(toggle.compareDocumentPosition(brand) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
   it("C accepts a custom sidebar header", () => {
     shell("C", { sidebarHeader: <span>Workspace</span> })
     expect(screen.getByTestId("sidebar-header")).toHaveTextContent("Workspace")
