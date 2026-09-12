@@ -1,0 +1,26 @@
+{
+  "name": "prui-cli",
+  "version": "0.1.0",
+  "description": "PRUI developer-experience CLI: scaffold apps, add component starters, generate themes/resources/pages/layouts/CRUD",
+  "type": "module",
+  "license": "Apache-2.0",
+  "bin": {
+    "prui-cli": "./bin/prui-cli.mjs",
+    "create-prui-app": "./bin/prui-cli.mjs"
+  },
+  "files": [
+    "bin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eru123/prui.git",
+    "directory": "packages/cli"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
