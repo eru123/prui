@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.5.0
+
+### Minor Changes
+
+- - shell layouts showcase with live previews on the app-layer page
+
 ## 0.4.2
 
 ### Patch Changes
