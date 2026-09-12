@@ -1,7 +1,7 @@
 import * as React from "react"
 import { X } from "lucide-react"
 import { cn } from "./cn"
-import { Portal, useOverlay, useReducedMotion } from "./overlay"
+import { Portal, useOverlay, useMountTransition } from "./overlay"
 import { usePruiI18n } from "../i18n"
 import type { PropsMeta } from "./props-meta"
 
@@ -60,35 +60,13 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(function Dra
   const [uncontrolled, setUncontrolled] = React.useState(defaultOpen)
   const isControlled = openProp !== undefined
   const open = isControlled ? openProp : uncontrolled
-  const [mounted, setMounted] = React.useState(open)
-  const [shown, setShown] = React.useState(false)
-  const reduced = useReducedMotion()
+  const { mounted, shown } = useMountTransition(open)
   const { t } = usePruiI18n()
 
   const setOpen = (o: boolean) => {
     if (!isControlled) setUncontrolled(o)
     onOpenChange?.(o)
   }
-
-  // mount/unmount with slide animation; reduced motion skips it
-  React.useEffect(() => {
-    if (open) {
-      setMounted(true)
-      if (reduced) {
-        setShown(true)
-        return
-      }
-      const id = requestAnimationFrame(() => setShown(true))
-      return () => cancelAnimationFrame(id)
-    }
-    setShown(false)
-    if (reduced) {
-      setMounted(false)
-      return
-    }
-    const id = setTimeout(() => setMounted(false), 300)
-    return () => clearTimeout(id)
-  }, [open, reduced])
 
   const { ref: overlayRef } = useOverlay({
     open,

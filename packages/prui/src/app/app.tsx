@@ -13,7 +13,7 @@ import { ChevronDown, ChevronsLeft, ChevronsRight, Menu, Palette, Search, X } fr
 import { cn } from "../core/cn"
 import { Dropdown } from "../core/dropdown"
 import { Button } from "../core/button"
-import { Portal, useOverlay, useOverlayStack, useEscapeKey } from "../core/overlay"
+import { Portal, useOverlay, useOverlayStack, useEscapeKey, useMountTransition } from "../core/overlay"
 import { moveIndex, homeIndex, endIndex } from "../core/list-nav"
 import { applyTheme, clearAppliedTokens, readPersistedTheme, resolveThemeName, themeMode, listThemes } from "../theme"
 import type { AppliedTheme, ThemeDefault } from "../theme"
@@ -695,6 +695,9 @@ export function AppShell(props: AppProps) {
     initialFocus: drawerCloseRef,
   })
 
+  // slide in/out lifecycle, shared with the core Drawer; reduced motion skips it
+  const { mounted: drawerMounted, shown: drawerShown } = useMountTransition(drawerOpen)
+
   const width = sidebarCfg.width ?? 240
 
   const railCollapsed = !railExpanded && layoutType !== "D"
@@ -736,17 +739,25 @@ export function AppShell(props: AppProps) {
       </aside>
 
       {/* mobile drawer */}
-      {drawerOpen ? (
+      {drawerMounted ? (
         <Portal>
           <div ref={drawerOverlayRef} className="md:hidden fixed inset-0 z-[var(--prui-z-drawer)]" data-testid="mobile-drawer">
             <div
-              className="absolute inset-0"
-              style={{ backgroundColor: "var(--prui-scrim)" }}
+              className="absolute inset-0 prui-drawer-overlay"
+              style={{
+                backgroundColor: "var(--prui-scrim)",
+                opacity: drawerShown ? 1 : 0,
+                transition: "opacity var(--prui-duration-slow) var(--prui-ease-out)",
+              }}
               onClick={() => setDrawerOpen(false)}
               data-testid="drawer-backdrop"
             />
             <aside
-              className="absolute left-0 top-0 h-full w-64 overflow-y-auto border-r border-[var(--prui-line)] bg-[var(--prui-surface)] p-2"
+              className="absolute left-0 top-0 h-full w-64 overflow-y-auto border-r border-[var(--prui-line)] bg-[var(--prui-surface)] p-2 prui-drawer-panel"
+              style={{
+                transform: drawerShown ? "translateX(0)" : "translateX(-100%)",
+                transition: "transform var(--prui-duration-slow) var(--prui-ease-out)",
+              }}
               role="dialog"
               aria-modal="true"
               aria-label="Navigation"

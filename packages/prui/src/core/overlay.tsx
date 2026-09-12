@@ -60,6 +60,45 @@ export function useReducedMotion(): boolean {
   return reduced
 }
 
+/**
+ * Mount/unmount lifecycle for enter/exit animations. Mounts immediately when
+ * `open` turns true; flips `shown` a frame later so the enter state (the
+ * "from" transform) paints first — a single rAF can merge into that first
+ * paint under discrete-event flushes and skip the animation entirely, so this
+ * waits two frames. On close, `shown` drops at once and unmounting waits
+ * `exitMs` for the exit animation. Reduced motion skips both directions.
+ */
+export function useMountTransition(open: boolean, exitMs = 300): { mounted: boolean; shown: boolean } {
+  const reduced = useReducedMotion()
+  const [mounted, setMounted] = React.useState(open)
+  const [shown, setShown] = React.useState(false)
+  React.useEffect(() => {
+    if (open) {
+      setMounted(true)
+      if (reduced) {
+        setShown(true)
+        return
+      }
+      let inner = 0
+      const outer = requestAnimationFrame(() => {
+        inner = requestAnimationFrame(() => setShown(true))
+      })
+      return () => {
+        cancelAnimationFrame(outer)
+        cancelAnimationFrame(inner)
+      }
+    }
+    setShown(false)
+    if (reduced) {
+      setMounted(false)
+      return
+    }
+    const id = setTimeout(() => setMounted(false), exitMs)
+    return () => clearTimeout(id)
+  }, [open, reduced, exitMs])
+  return { mounted, shown }
+}
+
 /* ------------------------------------------------------------------ */
 /* Focusable queries                                                   */
 /* ------------------------------------------------------------------ */

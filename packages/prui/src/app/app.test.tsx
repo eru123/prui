@@ -77,7 +77,8 @@ describe("App nav rendering", () => {
     expect(within(drawer).getByRole("button", { name: "Close navigation" })).toBeInTheDocument()
     expect(document.body.style.overflow).toBe("hidden")
     await user.click(screen.getByTestId("drawer-backdrop"))
-    expect(screen.queryByTestId("mobile-drawer")).toBeNull()
+    // the panel slides out before unmounting
+    await waitFor(() => expect(screen.queryByTestId("mobile-drawer")).toBeNull())
     expect(document.body.style.overflow).toBe("")
   })
 
