@@ -25,7 +25,7 @@ export const nav: NavItem[] = [
     icon: PaletteIcon,
     items: [
       { label: "Icons", href: "/icons" },
-      { label: "Layouts", href: "/layouts" },
+      { label: "Examples", href: "/examples" },
       { label: "Theming", href: "/theming" },
       { label: "Theme builder", href: "/theme-builder" },
     ],

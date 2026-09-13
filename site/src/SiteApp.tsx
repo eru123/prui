@@ -7,9 +7,7 @@ import { LandingPage } from "./pages/Landing"
 // Lazy routes keep the landing bundle small (AC-6): only the landing ships in
 // the initial chunk; every other page streams on demand.
 const ComponentsPage = lazy(() => import("./pages/Components").then((m) => ({ default: m.ComponentsPage })))
-const LayoutsCatalogPage = lazy(() => import("./pages/layouts/LayoutsPages").then((m) => ({ default: m.LayoutsCatalogPage })))
-const LayoutDemoPage = lazy(() => import("./pages/layouts/LayoutsPages").then((m) => ({ default: m.LayoutDemoPage })))
-const LayoutCodePage = lazy(() => import("./pages/layouts/LayoutsPages").then((m) => ({ default: m.LayoutCodePage })))
+const ExamplesPage = lazy(() => import("./pages/Examples").then((m) => ({ default: m.ExamplesPage })))
 const ThemingPage = lazy(() => import("./pages/Theming").then((m) => ({ default: m.ThemingPage })))
 const InstallationPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.InstallationPage })))
 const AdoptionPage = lazy(() => import("./pages/Guides").then((m) => ({ default: m.AdoptionPage })))
@@ -111,9 +109,7 @@ export function SiteApp() {
           <Route path="/components/scroll-area" element={<ScrollAreaDoc />} />
           <Route path="/app-layer" element={<AppLayerDoc />} />
           <Route path="/pages-doc" element={<PagesDoc />} />
-          <Route path="/layouts" element={<LayoutsCatalogPage />} />
-          <Route path="/layouts/:slug" element={<LayoutDemoPage />} />
-          <Route path="/layouts/:slug/code" element={<LayoutCodePage />} />
+          <Route path="/examples" element={<ExamplesPage />} />
           <Route path="/forms" element={<FormsPage />} />
           <Route path="/icons" element={<IconsPage />} />
           <Route path="/theme-builder" element={<ThemeBuilderPage />} />
