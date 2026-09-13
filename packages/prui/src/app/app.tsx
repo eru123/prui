@@ -120,6 +120,9 @@ export interface AppProps {
   layoutType?: "A" | "B"
   /** Prominent action slot pinned to the sidebar bottom. */
   sidebarFooter?: React.ReactNode
+  /** Max width of the centered body column ("72rem" default; numbers are px,
+   * false removes the cap so the body fills the content area). */
+  contentMaxWidth?: number | string | false
   children?: React.ReactNode
 }
 
@@ -615,6 +618,7 @@ export function AppShell(props: AppProps) {
     pagesConfig,
     expandAllOn,
     layoutType = "A",
+    contentMaxWidth = "72rem",
     sidebarFooter,
     children,
   } = props
@@ -702,7 +706,10 @@ export function AppShell(props: AppProps) {
       className="prui-app prui-shell min-h-dvh bg-[var(--prui-background)] text-[var(--prui-fg)]"
       data-layout={layoutType}
       data-collapsed={railCollapsed ? "true" : undefined}
-      style={{ "--prui-shell-sidebar": railCollapsed ? "var(--prui-rail-width, 64px)" : `${width}px` } as React.CSSProperties}
+      style={{
+        "--prui-shell-sidebar": railCollapsed ? "var(--prui-rail-width, 64px)" : `${width}px`,
+        "--prui-content-max": contentMaxWidth === false ? "none" : typeof contentMaxWidth === "number" ? `${contentMaxWidth}px` : contentMaxWidth,
+      } as React.CSSProperties}
     >
       {/* desktop sidebar: grid area (mobile uses the drawer below) */}
       <aside data-testid="sidebar" className="prui-shell-sidebar hidden md:flex md:flex-col md:min-h-0">
@@ -816,13 +823,17 @@ export function AppShell(props: AppProps) {
         tabIndex={0}
         className="prui-shell-content min-h-0 flex-1 p-4 outline-none md:p-6"
       >
-        {pages ? (
-          <AutoPages mode={pages} config={pagesConfig}>
-            {children}
-          </AutoPages>
-        ) : (
-          (children ?? <Outlet />)
-        )}
+        {/* the body column caps and centers on wide viewports; override per
+            app with contentMaxWidth (or --prui-content-max globally) */}
+        <div className="mx-auto w-full max-w-[var(--prui-content-max,72rem)]">
+          {pages ? (
+            <AutoPages mode={pages} config={pagesConfig}>
+              {children}
+            </AutoPages>
+          ) : (
+            (children ?? <Outlet />)
+          )}
+        </div>
       </main>
 
       {authCfg ? (
@@ -867,6 +878,7 @@ export const appPropsMeta: PropsMeta = {
     { name: "pages", type: "'auth' | 'utility' | 'auth+utility'", default: "undefined", control: "select", options: ["auth", "utility", "auth+utility"] },
     { name: "expandAllOn", type: "string (pathname)", default: "undefined", control: "text" },
     { name: "layoutType", type: "'A' | 'B'", default: "'A'", control: "select", options: ["A", "B"] },
+    { name: "contentMaxWidth", type: "number | string | false", default: "'72rem'", control: "text", description: "Max width of the centered body column; false removes the cap." },
     { name: "sidebarFooter", type: "ReactNode", default: null, control: "none" },
     { name: "header", type: "ReactNode", default: null, control: "none" },
     { name: "children", type: "ReactNode", default: "Outlet", control: "none" },

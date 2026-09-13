@@ -479,6 +479,22 @@ describe("Shell layouts (layoutType)", () => {
     expect(screen.queryByText("Section")).toBeNull()
   })
 
+  it("the body column caps and centers; contentMaxWidth overrides it", () => {
+    const { unmount } = shell("A")
+    const main = screen.getByTestId("app-content")
+    const shellEl = document.querySelector(".prui-shell") as HTMLElement
+    const column = main.firstElementChild as HTMLElement
+    expect(column.className).toContain("mx-auto")
+    expect(column.className).toContain("max-w-[var(--prui-content-max,72rem)]")
+    expect(shellEl.style.getPropertyValue("--prui-content-max")).toBe("72rem")
+    unmount()
+    const wide = shell("A", { contentMaxWidth: 960 })
+    expect((document.querySelector(".prui-shell") as HTMLElement).style.getPropertyValue("--prui-content-max")).toBe("960px")
+    wide.unmount()
+    shell("A", { contentMaxWidth: false })
+    expect((document.querySelector(".prui-shell") as HTMLElement).style.getPropertyValue("--prui-content-max")).toBe("none")
+  })
+
   it("the sidebar footer slot renders above the collapse-free bottom", () => {
     shell("B", { sidebarFooter: <button>New project</button> })
     expect(screen.getByTestId("sidebar-footer")).toHaveTextContent("New project")
