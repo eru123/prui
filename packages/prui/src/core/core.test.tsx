@@ -130,6 +130,21 @@ describe("Badge / Card / Avatar", () => {
     render(<Avatar alt="Ada Lovelace" data-testid="av" />)
     expect(screen.getByTestId("av")).toHaveTextContent("AL")
   })
+
+  it("Avatar parses the fallback to initials; full names never render", () => {
+    render(<Avatar fallback="Jericho Aquino" data-testid="av-fb" />)
+    expect(screen.getByTestId("av-fb")).toHaveTextContent("JA")
+    render(<Avatar fallback="Grace Hopper" data-testid="av-fb2" />)
+    expect(screen.getByTestId("av-fb2")).toHaveTextContent("GH")
+    render(<Avatar fallback="Admin" data-testid="av-fb3" />)
+    expect(screen.getByTestId("av-fb3")).toHaveTextContent("A")
+  })
+
+  it("Avatar text stays on one line regardless of input", () => {
+    render(<Avatar fallback="Ada Lovelace" data-testid="av-nw" />)
+    expect(screen.getByTestId("av-nw").className).toContain("whitespace-nowrap")
+    expect(screen.getByTestId("av-nw").className).toContain("overflow-hidden")
+  })
 })
 
 describe("Switch", () => {

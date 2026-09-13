@@ -142,7 +142,8 @@ export const cardPropsMeta: PropsMeta = {
 export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   src?: string
   alt?: string
-  /** Fallback initials when no image or image fails. */
+  /** Fallback when no image or image fails; a name is parsed to its first
+   * two initials ("Ada Lovelace" -> "AL") so full strings never render. */
   fallback?: string
   size?: "sm" | "md" | "lg"
 }
@@ -153,24 +154,32 @@ const avatarSizes = {
   lg: "h-12 w-12 text-base",
 }
 
+/** First letters of the first two words, uppercased; "Ada Lovelace" -> "AL". */
+function initialsOf(name?: string): string {
+  if (!name) return ""
+  return (
+    name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((w) => w[0]?.toUpperCase() ?? "")
+      .join("")
+  )
+}
+
 export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
   ({ className, src, alt, fallback, size = "md", ...props }, ref) => {
     const [failed, setFailed] = React.useState(false)
     const showImg = src && !failed
-    const initials =
-      fallback ??
-      (alt
-        ? alt
-            .split(/\s+/)
-            .slice(0, 2)
-            .map((w) => w[0]?.toUpperCase() ?? "")
-            .join("")
-        : "")
+    // both the fallback and alt paths parse to initials: a raw name string
+    // must never reach the circle, it would wrap and clip
+    const initials = initialsOf(fallback ?? alt)
     return (
       <span
         ref={ref}
         className={cn(
           "prui-avatar relative inline-flex shrink-0 select-none items-center justify-center overflow-hidden",
+          "whitespace-nowrap leading-none",
           "rounded-[var(--prui-radius-full)] bg-[var(--prui-raise)] text-[var(--prui-dim)] font-medium",
           avatarSizes[size],
           className,
@@ -193,7 +202,7 @@ export const avatarPropsMeta: PropsMeta = {
   props: [
     { name: "src", type: "string", default: "undefined", control: "text" },
     { name: "alt", type: "string", default: "undefined", control: "text" },
-    { name: "fallback", type: "string", default: "initials from alt", control: "text" },
+    { name: "fallback", type: "string", default: "undefined", control: "text", description: "Parsed to its first two initials like alt; full names never render." },
     { name: "size", type: "'sm' | 'md' | 'lg'", default: "'md'", control: "select", options: ["sm", "md", "lg"] },
   ],
 }
