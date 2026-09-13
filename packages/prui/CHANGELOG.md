@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.13.7
+
+### Patch Changes
+
+- 5261263: Shell header keeps px-4 at every width; the desktop-only px-6 step is dropped.
+
 ## 0.13.6
 
 ### Patch Changes
