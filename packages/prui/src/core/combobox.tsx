@@ -1,6 +1,7 @@
 import * as React from "react"
 import { ChevronDown } from "lucide-react"
 import { cn } from "./cn"
+import { useFieldSlots, type FieldSlotProps } from "./form-field"
 import { Portal, useOverlayStack, useEscapeKey } from "./overlay"
 import { useAnchoredPosition } from "./anchor"
 import { moveIndex, homeIndex, endIndex } from "./list-nav"
@@ -19,7 +20,7 @@ export interface ComboboxOption {
   disabled?: boolean
 }
 
-export interface ComboboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value" | "defaultValue"> {
+export interface ComboboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value" | "defaultValue">, FieldSlotProps {
   options: ComboboxOption[]
   value?: string
   defaultValue?: string
@@ -51,12 +52,15 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
     filter,
     disabled,
     id,
+    label,
+    helperText,
     className,
     onKeyDown,
     ...props
   },
   ref,
 ) {
+  const field = useFieldSlots({ id, label, helperText })
   const [uncontrolled, setUncontrolled] = React.useState(defaultValue ?? "")
   const [open, setOpenRaw] = React.useState(defaultOpen)
   const [query, setQuery] = React.useState<string | null>(null)
@@ -161,7 +165,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
     }
   }
 
-  return (
+  return field.wrap(
     <>
       <div ref={wrapRef} className={cn("prui-combobox relative inline-flex w-full items-center", className)}>
         <input
@@ -170,7 +174,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
           if (typeof ref === "function") ref(node)
           else if (ref) ref.current = node
         }}
-        id={id}
+        id={field.id}
         type="text"
         role="combobox"
         aria-expanded={open}
@@ -261,7 +265,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
           </div>
         </Portal>
       ) : null}
-    </>
+    </>,
   )
 })
 Combobox.displayName = "Combobox"

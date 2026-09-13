@@ -3,6 +3,7 @@ import { ChevronDown, Check, Search } from "lucide-react"
 import { cn } from "./cn"
 import { Portal, useOverlayStack, useEscapeKey } from "./overlay"
 import { useAnchoredPosition } from "./anchor"
+import { useFieldSlots, type FieldSlotProps } from "./form-field"
 import { moveIndex, homeIndex, endIndex, typeaheadIndex } from "./list-nav"
 import { usePruiI18n } from "../i18n"
 import type { PropsMeta } from "./props-meta"
@@ -31,7 +32,7 @@ export interface SelectOption {
 }
 
 export interface SelectProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange" | "value" | "defaultValue" | "multiple"> {
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange" | "value" | "defaultValue" | "multiple">, FieldSlotProps {
   options?: SelectOption[]
   /** string in single mode, string[] with multiple. */
   value?: string | string[]
@@ -90,9 +91,12 @@ export const Select = ({
   searchable = false,
   multiple = false,
   id,
+  label,
+  helperText,
   children,
   ...rest
 }: SelectProps) => {
+  const field = useFieldSlots({ id, label, helperText })
   const [uncontrolled, setUncontrolled] = React.useState<string[]>(asArray(defaultValue))
   const [open, setOpenRaw] = React.useState(false)
   const [triggerEl, setTriggerEl] = React.useState<HTMLButtonElement | null>(null)
@@ -140,18 +144,20 @@ export const Select = ({
     >
       {name ? <input type="hidden" name={name} value={values.join(",")} /> : null}
       {children ?? (
-        <>
-          <SelectTrigger disabled={disabled} id={id} {...rest}>
-            <SelectValue placeholder={placeholder} />
-          </SelectTrigger>
-          <SelectContent>
-            {(options ?? []).map((opt) => (
-              <SelectItem key={opt.value} value={opt.value} disabled={opt.disabled}>
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </>
+        field.wrap(
+          <>
+            <SelectTrigger disabled={disabled} id={field.id ?? id} {...rest}>
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              {(options ?? []).map((opt) => (
+                <SelectItem key={opt.value} value={opt.value} disabled={opt.disabled}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </>,
+        )
       )}
     </Ctx.Provider>
   )

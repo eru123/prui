@@ -3,6 +3,7 @@ import { X } from "lucide-react"
 import { resolveSurface, withSurface, type SurfaceProps } from "./surface"
 import { cn } from "./cn"
 import { usePruiI18n } from "../i18n"
+import { useFieldSlots, type FieldSlotProps } from "./form-field"
 import type { PropsMeta } from "./props-meta"
 
 /**
@@ -20,7 +21,8 @@ export type TagInputSize = "sm" | "md" | "lg"
 
 export interface TagInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "value" | "defaultValue" | "onChange" | "children">,
-    SurfaceProps {
+    SurfaceProps,
+    FieldSlotProps {
   /** Control height step (the field grows vertically with wrapped chips). */
   size?: TagInputSize
   /** Visual variant: outlined (default) or filled. */
@@ -78,6 +80,9 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
     labelFor,
     renderTag,
     disabled,
+    label,
+    helperText,
+    id,
     bg,
     fg,
     radius,
@@ -89,6 +94,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
   ref,
 ) {
   const { t } = usePruiI18n()
+  const field = useFieldSlots({ id, label, helperText })
   const isControlled = value !== undefined
   const [uncontrolled, setUncontrolled] = React.useState(defaultValue ?? [])
   const tags = isControlled ? value : uncontrolled
@@ -179,7 +185,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
     surface,
   )
 
-  return (
+  return field.wrap(
     <div className={merged.className} style={merged.style}>
       {tags.map((tag, i) =>
         renderTag ? (
@@ -204,6 +210,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
       )}
       <input
         ref={ref}
+        id={field.id}
         value={input}
         onChange={onInputChange}
         onKeyDown={onKeyDown}
@@ -213,7 +220,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
         {...props}
         className="h-7 min-w-16 flex-1 bg-transparent text-sm outline-none placeholder:text-[var(--prui-dim)] disabled:cursor-not-allowed"
       />
-    </div>
+    </div>,
   )
 })
 TagInput.displayName = "TagInput"

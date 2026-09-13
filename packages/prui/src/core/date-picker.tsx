@@ -1,6 +1,7 @@
 import * as React from "react"
 import { CalendarDays, Clock } from "lucide-react"
 import { cn } from "./cn"
+import { useFieldSlots, type FieldSlotProps } from "./form-field"
 import { Portal, useOverlayStack, useEscapeKey } from "./overlay"
 import { useAnchoredPosition } from "./anchor"
 import { Calendar, fromDateKey } from "./calendar"
@@ -20,7 +21,9 @@ import type { PropsMeta } from "./props-meta"
  * when the picked end precedes the start.
  */
 
-export interface DatePickerProps {
+export interface DatePickerProps extends FieldSlotProps {
+  /** Trigger input id; generated when a label needs association. */
+  id?: string
   value?: string
   defaultValue?: string
   onChange?: (date: string) => void
@@ -78,12 +81,16 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
     disabled,
     className,
     ariaLabel,
+    label,
+    helperText,
+    id,
     timepicker = false,
     seconds = false,
     minuteStep,
   },
   ref,
 ) {
+  const field = useFieldSlots({ id, label, helperText })
   const effectivePlaceholder = placeholder ?? (timepicker ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD")
   const [uncontrolled, setUncontrolled] = React.useState(defaultValue ?? "")
   const isControlled = valueProp !== undefined
@@ -119,7 +126,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
     commit(`${date} ${tm}`)
   }
 
-  return (
+  return field.wrap(
     <>
       <input
         ref={(node) => {
@@ -127,6 +134,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
           if (typeof ref === "function") ref(node)
           else if (ref) ref.current = node
         }}
+        id={field.id}
         type="text"
         readOnly
         role="combobox"
@@ -192,7 +200,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
           </div>
         </Portal>
       ) : null}
-    </>
+    </>,
   )
 })
 DatePicker.displayName = "DatePicker"
@@ -213,7 +221,9 @@ export interface DateRange {
  */
 export type MaxRange = number | `${number}d` | `${number}w` | `${number}m` | `${number}y` | (string & {})
 
-export interface DateRangePickerProps {
+export interface DateRangePickerProps extends FieldSlotProps {
+  /** Trigger input id; generated when a label needs association. */
+  id?: string
   value?: DateRange
   defaultValue?: DateRange
   onChange?: (range: DateRange) => void
@@ -267,12 +277,16 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
     disabled,
     className,
     ariaLabel,
+    label,
+    helperText,
+    id,
     timepicker = false,
     seconds = false,
     minuteStep,
   },
   ref,
 ) {
+  const field = useFieldSlots({ id, label, helperText })
   const { t } = usePruiI18n()
   const effectivePlaceholder = placeholder ?? (timepicker ? "YYYY-MM-DD HH:mm – YYYY-MM-DD HH:mm" : "YYYY-MM-DD – YYYY-MM-DD")
   const [uncontrolled, setUncontrolled] = React.useState<DateRange>(defaultValue ?? {})
@@ -346,7 +360,7 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
 
   const display = from ? (to ? `${value.from} – ${value.to}` : `${value.from} – …`) : ""
 
-  return (
+  return field.wrap(
     <>
       <input
         ref={(node) => {
@@ -354,6 +368,7 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
           if (typeof ref === "function") ref(node)
           else if (ref) ref.current = node
         }}
+        id={field.id}
         type="text"
         readOnly
         role="combobox"
@@ -451,7 +466,7 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
           </div>
         </Portal>
       ) : null}
-    </>
+    </>,
   )
 })
 DateRangePicker.displayName = "DateRangePicker"

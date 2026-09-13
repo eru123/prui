@@ -34,11 +34,22 @@ export {
 export {
   Input,
   inputPropsMeta,
+  InputGroup,
+  inputGroupPropsMeta,
   Textarea,
   textareaPropsMeta,
   type InputProps,
+  type InputGroupProps,
   type TextareaProps,
 } from "./input"
+
+export {
+  FormField,
+  formFieldPropsMeta,
+  useFieldSlots,
+  type FormFieldProps,
+  type FieldSlotProps,
+} from "./form-field"
 
 export {
   TagInput,

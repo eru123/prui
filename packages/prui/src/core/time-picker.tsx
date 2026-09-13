@@ -3,6 +3,7 @@ import { Clock } from "lucide-react"
 import { cn } from "./cn"
 import { Portal, useOverlayStack, useEscapeKey } from "./overlay"
 import { useAnchoredPosition } from "./anchor"
+import { useFieldSlots, type FieldSlotProps } from "./form-field"
 import { moveIndex } from "./list-nav"
 import { usePruiI18n } from "../i18n"
 import type { PropsMeta } from "./props-meta"
@@ -17,7 +18,9 @@ import type { PropsMeta } from "./props-meta"
  * timepicker is on.
  */
 
-export interface TimePickerProps {
+export interface TimePickerProps extends FieldSlotProps {
+  /** Trigger input id; generated when a label needs association. */
+  id?: string
   /** "HH:mm" or "HH:mm:ss" when seconds is set. */
   value?: string
   defaultValue?: string
@@ -38,7 +41,9 @@ export interface TimePickerProps {
 
 export type TimeRange = { from?: string; to?: string }
 
-export interface TimeRangePickerProps {
+export interface TimeRangePickerProps extends FieldSlotProps {
+  /** Trigger input id; generated when a label needs association. */
+  id?: string
   value?: TimeRange
   defaultValue?: TimeRange
   onChange?: (range: TimeRange) => void
@@ -242,9 +247,10 @@ function useTimePopover(anchorRef: React.RefObject<HTMLElement | null>, open: bo
 /* ---------------- TimePicker ---------------- */
 
 export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(function TimePicker(
-  { value: valueProp, defaultValue, onChange, minuteStep, seconds, min, max, disabled, placeholder = "HH:mm", ariaLabel, className },
+  { value: valueProp, defaultValue, onChange, minuteStep, seconds, min, max, disabled, placeholder = "HH:mm", ariaLabel, className, label, helperText, id },
   ref,
 ) {
+  const field = useFieldSlots({ id, label, helperText })
   const [uncontrolled, setUncontrolled] = React.useState(defaultValue ?? "")
   const [open, setOpen] = React.useState(false)
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -262,9 +268,10 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
     onChange?.(time)
   }
 
-  return (
+  return field.wrap(
     <>
       <input
+        id={field.id}
         ref={(node) => {
           inputRef.current = node
           if (typeof ref === "function") ref(node)
@@ -308,7 +315,7 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
           </div>
         </Portal>
       ) : null}
-    </>
+    </>,
   )
 })
 TimePicker.displayName = "TimePicker"
@@ -316,9 +323,10 @@ TimePicker.displayName = "TimePicker"
 /* ---------------- TimeRangePicker ---------------- */
 
 export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePickerProps>(function TimeRangePicker(
-  { value: valueProp, defaultValue, onChange, minuteStep, seconds, min, max, disabled, placeholder = "HH:mm – HH:mm", ariaLabel, className },
+  { value: valueProp, defaultValue, onChange, minuteStep, seconds, min, max, disabled, placeholder = "HH:mm – HH:mm", ariaLabel, className, label, helperText, id },
   ref,
 ) {
+  const field = useFieldSlots({ id, label, helperText })
   const { t } = usePruiI18n()
   const [uncontrolled, setUncontrolled] = React.useState<TimeRange>(defaultValue ?? {})
   const [open, setOpen] = React.useState(false)
@@ -352,9 +360,10 @@ export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePicke
   const fromMax = value.to ?? max
   const toMin = value.from ?? min
 
-  return (
+  return field.wrap(
     <>
       <input
+        id={field.id}
         ref={(node) => {
           inputRef.current = node
           if (typeof ref === "function") ref(node)
@@ -432,7 +441,7 @@ export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePicke
           </div>
         </Portal>
       ) : null}
-    </>
+    </>,
   )
 })
 TimeRangePicker.displayName = "TimeRangePicker"
