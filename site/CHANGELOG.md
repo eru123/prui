@@ -1,5 +1,12 @@
 # prui-site
 
+## 0.1.24
+
+### Patch Changes
+
+- Updated dependencies [239053d]
+  - @skiddph/prui@0.13.5
+
 ## 0.1.23
 
 ### Patch Changes
