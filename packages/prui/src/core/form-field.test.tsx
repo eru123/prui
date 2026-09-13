@@ -99,9 +99,10 @@ describe("Controls on the slot system", () => {
 })
 
 describe("Toolbar baseline alignment", () => {
-  it("rows align items-end and range filters carry one group label", () => {
+  it("search, filters, and actions share one aligned field grid", () => {
     const { container } = render(
       <DataTableToolbar
+        actions={<button type="button">New</button>}
         filters={[
           { key: "team", label: "Team", type: "select", options: [{ label: "Core", value: "core" }] },
           { key: "hired", label: "Hired", type: "daterange" },
@@ -110,16 +111,20 @@ describe("Toolbar baseline alignment", () => {
       />,
     )
     const bar = container.querySelector(".prui-toolbar")
-    expect(bar!.className).toContain("items-end")
-    // every filter is one FormField: a single group label above the control
+    expect(bar!.className).toContain("items-start")
+    // search, every filter, and the actions cluster are each one FormField,
+    // so all of them share the label-row + control-row grid
     const fields = bar!.querySelectorAll(".prui-form-field")
-    expect(fields.length).toBe(3)
+    expect(fields.length).toBe(5)
+    expect(screen.getByLabelText("Search")).toBeInTheDocument()
     expect(screen.getByText("Hired")).toBeInTheDocument()
     expect(screen.getByText("Salary")).toBeInTheDocument()
     // range children carry compact sub-labels, not stacked label rows
     expect(screen.getByText("from")).toBeInTheDocument()
     expect(screen.getByText("min")).toBeInTheDocument()
     expect(screen.queryByText("Hired from")).toBeNull()
+    // the actions land inside the last FormField's control row
+    expect(fields[fields.length - 1]?.querySelector("button")?.textContent).toBe("New")
   })
 })
 

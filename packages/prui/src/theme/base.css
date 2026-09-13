@@ -197,6 +197,21 @@ body.modal-open { overflow: hidden; }
 }
 .prui-shell-sidebar { display: none; }
 
+/* Toolbars: every member is a FormField (label row + control row). Helper
+   rows never carry content in toolbars, so they collapse. Phones collapse
+   the label rows too and stack the members as full-width compact controls;
+   desktop keeps the aligned label grid. */
+.prui-toolbar .prui-form-field > div:last-child { display: none; }
+
+@media (max-width: 47.99rem) {
+  .prui-toolbar { align-items: stretch; }
+  .prui-toolbar .prui-form-field { width: 100%; }
+  .prui-toolbar .prui-form-field > div:first-child { display: none; }
+  .prui-toolbar .prui-form-field input { width: 100%; }
+  .prui-toolbar .prui-form-field .prui-dropdown { width: 100%; }
+  .prui-toolbar .prui-form-field .prui-faceted-filter { width: 100%; }
+}
+
 /* collapsed rail: applies on every viewport (mobile included) */
 .prui-shell[data-collapsed="true"] { --prui-shell-sidebar: var(--prui-rail-width, 64px); }
 .prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-nav-label,

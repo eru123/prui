@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Search } from "lucide-react"
 import { Input } from "../core/input"
+import { FormField } from "../core/form-field"
 import { cn } from "../core/cn"
 import type { PropsMeta } from "../core/props-meta"
 import { FacetedFilter } from "./data-table-faceted-filter"
@@ -67,21 +68,27 @@ export function DataTableToolbar({
   const search = isControlled ? searchValue : uncontrolledSearch
 
   return (
-    <div className={cn("prui-toolbar flex flex-wrap items-end gap-3 py-2", className)}>
-      <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
-        <Input
-          type="search"
-          aria-label="Search"
-          placeholder={searchPlaceholder}
-          className="h-8 w-56 pl-8"
-          value={search}
-          onChange={(e) => {
-            if (!isControlled) setUncontrolledSearch(e.target.value)
-            onSearchChange?.(e.target.value)
-          }}
-        />
-      </div>
+    <div className={cn("prui-toolbar flex flex-wrap items-start gap-2 py-2 md:gap-3", className)}>
+      {/* every toolbar member renders through FormField's two-row structure
+          (label row + control row; helper rows collapse via .prui-toolbar CSS),
+          so search, filters, and actions all share one aligned grid. Phones
+          collapse the label rows too — see the toolbar rules in base.css */}
+      <FormField label="Search" className="w-56 max-w-full">
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
+          <Input
+            type="search"
+            aria-label="Search"
+            placeholder={searchPlaceholder}
+            className="h-8 w-full pl-8"
+            value={search}
+            onChange={(e) => {
+              if (!isControlled) setUncontrolledSearch(e.target.value)
+              onSearchChange?.(e.target.value)
+            }}
+          />
+        </div>
+      </FormField>
 
       {filters.map((f) => {
         const current = filterValues?.[f.key]
@@ -146,7 +153,15 @@ export function DataTableToolbar({
         )
       })}
 
-      {actions ? <div className="ml-auto flex items-center gap-2">{actions}</div> : null}
+      {/* actions sit in a FormField with an empty label row: the buttons land
+          on the same control row as every input, and the reserved row keeps
+          the grid uniform. ml-auto only pins them right on desktop; phones
+          let the buttons flow inline after the controls */}
+      {actions ? (
+        <FormField className="md:ml-auto">
+          <div className="flex min-h-8 flex-wrap items-center gap-2">{actions}</div>
+        </FormField>
+      ) : null}
     </div>
   )
 }
