@@ -1,4 +1,4 @@
-import { Button, Badge } from "prui/core"
+import { Button } from "prui/core"
 import { ExternalLink, Github, LayoutDashboard, LifeBuoy, Settings } from "lucide-react"
 
 /**
@@ -14,7 +14,6 @@ const EXAMPLES = [
   {
     name: "dashboard",
     title: "Northwind HR",
-    layout: "A · full-height sidebar",
     icon: LayoutDashboard,
     blurb:
       "A complete HR app over localStorage: live StatRow, a full CRUD Resource (search, status facet, salary range, hired date range, sort, 8/page, expandable rows with skills and notes), leave approvals, CSV export modal, a record screen with Drawer notes and confirmed deletes, and an activity timeline.",
@@ -22,7 +21,6 @@ const EXAMPLES = [
   {
     name: "helpdesk",
     title: "Support helpdesk",
-    layout: "B · full-width header",
     icon: LifeBuoy,
     blurb:
       "Ticket operations with no server: inbox Resource with customer and priority facets plus a date range, inline ticket workflow in expanded rows (assignee, priority, status, notes), SLA watch with Progress budgets, a resolved archive with confirmed bulk clear, and live customer cards.",
@@ -30,7 +28,6 @@ const EXAMPLES = [
   {
     name: "settings",
     title: "Workspace settings",
-    layout: "A · full-height sidebar",
     icon: Settings,
     blurb:
       "Five pages, one store: general settings with inline validation (error fields), member invites through a validated TagInput, a notification matrix, security with shown-once API keys, the password eye field, and confirmModal danger zones — every action lands in an audit Timeline that survives reloads.",
@@ -65,12 +62,9 @@ export function ExamplesPage() {
                 />
               </a>
               <div className="flex flex-col gap-2 p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex min-w-0 items-center gap-2">
-                    <ex.icon className="h-4 w-4 shrink-0 text-[var(--prui-brand)]" aria-hidden />
-                    <span className="truncate font-semibold text-[var(--prui-fg)]">{ex.title}</span>
-                  </div>
-                  <Badge variant="brand">{ex.layout}</Badge>
+                <div className="flex min-w-0 items-center gap-2">
+                  <ex.icon className="h-4 w-4 shrink-0 text-[var(--prui-brand)]" aria-hidden />
+                  <span className="truncate font-semibold text-[var(--prui-fg)]">{ex.title}</span>
                 </div>
                 <p className="text-xs leading-relaxed text-[var(--prui-dim)]">{ex.blurb}</p>
                 <div className="mt-1 flex items-center gap-2">
@@ -84,9 +78,7 @@ export function ExamplesPage() {
                       <Github className="h-3.5 w-3.5" aria-hidden /> Code
                     </Button>
                   </a>
-                  <span className="ml-auto font-mono text-[10px] text-[var(--prui-dim)]">
-                    {ex.name}-prui.skiddph.com
-                  </span>
+
                 </div>
               </div>
             </article>
