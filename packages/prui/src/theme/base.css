@@ -201,7 +201,10 @@ body.modal-open { overflow: hidden; }
 .prui-shell[data-collapsed="true"] { --prui-shell-sidebar: var(--prui-rail-width, 64px); }
 .prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-nav-label,
 .prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-nav-chevron { display: none; }
-.prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-app-nav button { justify-content: center; padding-inline: 0; }
+/* rail items center their icon (buttons and router links alike); expanded
+   keeps the default flex-start with the label after the icon */
+.prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-app-nav button,
+.prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-app-nav a { justify-content: center; padding-inline: 0; }
 .prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-nav-mono {
   display: inline-flex;
   align-items: center;
