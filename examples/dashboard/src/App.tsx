@@ -6,7 +6,7 @@ import {
 import {
   Button, Badge, Card, CardHeader, CardTitle, CardContent, Avatar, Separator, TagInput, Textarea,
   Progress, Timeline, Drawer, Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter,
-  toast, Toaster, Input, Select, Modal,
+  toast, Toaster, Input, Select, Modal, DateRangePicker,
 } from "@skiddph/prui/core"
 import { Users, DollarSign, CalendarCheck, Percent, LayoutDashboard, Table2, CalendarDays, Settings as SettingsIcon, Trash2, UserCircle } from "lucide-react"
 import { Gate, SidebarUserMenu, ProfilePage } from "./auth"
@@ -312,8 +312,14 @@ function Leave() {
           options={employees.map((e) => ({ label: e.name, value: e.id }))}
         />
         <Select label="Type" helperText=" " value={draft.type} onChange={(v) => patch({ type: v as LeaveRequest["type"] })} options={[{ label: "Annual", value: "Annual" }, { label: "Sick", value: "Sick" }, { label: "Unpaid", value: "Unpaid" }]} />
-        <Input label="From" type="date" helperText=" " value={draft.from} onChange={(e) => patch({ from: e.target.value })} />
-        <Input label="To" type="date" helperText=" " value={draft.to} onChange={(e) => patch({ to: e.target.value })} />
+        <DateRangePicker
+          label="Dates"
+          helperText=" "
+          className="h-9 w-64"
+          ariaLabel="Leave dates"
+          value={{ from: draft.from || undefined, to: draft.to || undefined }}
+          onChange={(range) => patch({ from: range.from ?? "", to: range.to ?? "" })}
+        />
         <Button
           variant="primary"
           disabled={!draft.employeeId || !draft.from || !draft.to}
