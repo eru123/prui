@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Input } from "../core/input"
-import { Label } from "../core/label"
+import { FormField } from "../core/form-field"
 import { Button } from "../core/button"
 
 /** Price range filter: min and max with a currency symbol. */
@@ -43,9 +43,9 @@ export function PriceFilter({
   }
 
   return (
-    <div className={className ?? "flex items-end gap-2"} data-testid="price-filter">
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs text-[var(--prui-dim)]">{label} min</Label>
+    <FormField label={label} className={className} data-testid="price-filter">
+      <div className="flex items-center gap-1.5">
+        <span aria-hidden className="text-xs text-[var(--prui-dim)]">min</span>
         <div className="relative">
           <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-xs text-[var(--prui-dim)]" aria-hidden>
             {currency}
@@ -58,9 +58,7 @@ export function PriceFilter({
             onChange={(e) => set({ ...value, min: parse(e.target.value) })}
           />
         </div>
-      </div>
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs text-[var(--prui-dim)]">max</Label>
+        <span aria-hidden className="text-xs text-[var(--prui-dim)]">max</span>
         <div className="relative">
           <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-xs text-[var(--prui-dim)]" aria-hidden>
             {currency}
@@ -73,12 +71,12 @@ export function PriceFilter({
             onChange={(e) => set({ ...value, max: parse(e.target.value) })}
           />
         </div>
+        {value.min !== undefined || value.max !== undefined ? (
+          <Button variant="ghost" size="sm" onClick={() => set({})}>
+            Clear
+            </Button>
+        ) : null}
       </div>
-      {value.min !== undefined || value.max !== undefined ? (
-        <Button variant="ghost" size="sm" onClick={() => set({})}>
-          Clear
-        </Button>
-      ) : null}
-    </div>
+    </FormField>
   )
 }

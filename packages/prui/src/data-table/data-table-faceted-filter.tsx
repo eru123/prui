@@ -1,6 +1,7 @@
 import * as React from "react"
-import { Check, PlusCircle } from "lucide-react"
+import { Check, ChevronDown, PlusCircle } from "lucide-react"
 import { Badge } from "../core/card"
+import { FormField } from "../core/form-field"
 import { Dropdown } from "../core/dropdown"
 
 /** Faceted select filter: multi-select of named options with counts. */
@@ -39,24 +40,23 @@ export function FacetedFilter({
   }
 
   return (
-    <Dropdown
-      className={className}
-      trigger={
-        <button
-          type="button"
-          className="prui-faceted-filter inline-flex h-8 items-center gap-1.5 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] px-2.5 text-sm cursor-pointer hover:border-[var(--prui-dim)]"
-          data-testid="faceted-filter"
-        >
-          <PlusCircle className="h-3.5 w-3.5 text-[var(--prui-dim)]" aria-hidden />
-          {label}
-          {selected.length > 0 ? (
-            <>
-              <span className="ml-1 rounded-[var(--prui-radius-full)] bg-[var(--prui-raise)] px-1.5 text-xs">{selected.length}</span>
-            </>
-          ) : null}
-        </button>
-      }
-    >
+    <FormField label={label} className={className}>
+      <Dropdown
+        trigger={
+          <button
+            type="button"
+            aria-label={label}
+            className="prui-faceted-filter inline-flex h-8 items-center gap-1.5 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] px-2.5 text-sm cursor-pointer hover:border-[var(--prui-dim)]"
+            data-testid="faceted-filter"
+          >
+            <PlusCircle className="h-3.5 w-3.5 text-[var(--prui-dim)]" aria-hidden />
+            {selected.length > 0 ? (
+              <span className="rounded-[var(--prui-radius-full)] bg-[var(--prui-raise)] px-1.5 text-xs">{selected.length}</span>
+            ) : null}
+            <ChevronDown className="h-3.5 w-3.5 text-[var(--prui-dim)]" aria-hidden />
+          </button>
+        }
+      >
       <div role="menu" className="min-w-44">
         {options.length === 0 ? (
           <div className="px-2 py-1.5 text-sm text-[var(--prui-dim)]">No options</div>
@@ -102,6 +102,7 @@ export function FacetedFilter({
           </button>
         ) : null}
       </div>
-    </Dropdown>
+      </Dropdown>
+    </FormField>
   )
 }

@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Input } from "../core/input"
-import { Label } from "../core/label"
+import { FormField } from "../core/form-field"
 import { Button } from "../core/button"
 
 /** Date range filter: from and to date inputs. */
@@ -34,32 +34,34 @@ export function DateRangeFilter({
   }
 
   return (
-    <div className={className ?? "flex items-end gap-2"} data-testid="daterange-filter">
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs text-[var(--prui-dim)]">{label} from</Label>
+    <FormField
+      label={label}
+      className={className}
+      data-testid="daterange-filter"
+    >
+      <div className="flex items-center gap-1.5">
+        <span aria-hidden className="text-xs text-[var(--prui-dim)]">from</span>
         <Input
           type="date"
           aria-label={`${label} from`}
-          className="h-8 w-36"
+          className="h-8 w-32"
           value={value.from ?? ""}
           onChange={(e) => set({ ...value, from: e.target.value || undefined })}
         />
-      </div>
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs text-[var(--prui-dim)]">to</Label>
+        <span aria-hidden className="text-xs text-[var(--prui-dim)]">to</span>
         <Input
           type="date"
           aria-label={`${label} to`}
-          className="h-8 w-36"
+          className="h-8 w-32"
           value={value.to ?? ""}
           onChange={(e) => set({ ...value, to: e.target.value || undefined })}
         />
+        {value.from || value.to ? (
+          <Button variant="ghost" size="sm" onClick={() => set({})}>
+            Clear
+          </Button>
+        ) : null}
       </div>
-      {value.from || value.to ? (
-        <Button variant="ghost" size="sm" onClick={() => set({})}>
-          Clear
-        </Button>
-      ) : null}
-    </div>
+    </FormField>
   )
 }

@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Input } from "../core/input"
-import { Label } from "../core/label"
+import { FormField } from "../core/form-field"
 import { Button } from "../core/button"
 
 /** Time range filter: start and end as HH:MM strings. */
@@ -34,9 +34,9 @@ export function TimeRangeFilter({
   }
 
   return (
-    <div className={className ?? "flex items-end gap-2"} data-testid="time-filter">
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs text-[var(--prui-dim)]">{label} from</Label>
+    <FormField label={label} className={className} data-testid="time-filter">
+      <div className="flex items-center gap-1.5">
+        <span aria-hidden className="text-xs text-[var(--prui-dim)]">from</span>
         <Input
           type="time"
           aria-label={`${label} from`}
@@ -44,9 +44,7 @@ export function TimeRangeFilter({
           value={value.from ?? ""}
           onChange={(e) => set({ ...value, from: e.target.value || undefined })}
         />
-      </div>
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs text-[var(--prui-dim)]">to</Label>
+        <span aria-hidden className="text-xs text-[var(--prui-dim)]">to</span>
         <Input
           type="time"
           aria-label={`${label} to`}
@@ -54,12 +52,12 @@ export function TimeRangeFilter({
           value={value.to ?? ""}
           onChange={(e) => set({ ...value, to: e.target.value || undefined })}
         />
+        {value.from || value.to ? (
+          <Button variant="ghost" size="sm" onClick={() => set({})}>
+            Clear
+          </Button>
+        ) : null}
       </div>
-      {value.from || value.to ? (
-        <Button variant="ghost" size="sm" onClick={() => set({})}>
-          Clear
-        </Button>
-      ) : null}
-    </div>
+    </FormField>
   )
 }

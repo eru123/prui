@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Input } from "../core/input"
-import { Label } from "../core/label"
+import { FormField } from "../core/form-field"
 import { Button } from "../core/button"
 
 /** Single-date filter: one date input (exact day match). */
@@ -33,9 +33,8 @@ export function DateFilter({
   }
 
   return (
-    <div className={className ?? "flex items-end gap-2"} data-testid="date-filter">
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs text-[var(--prui-dim)]">{label}</Label>
+    <FormField label={label} className={className} data-testid="date-filter">
+      <div className="flex items-center gap-1.5">
         <Input
           type="date"
           aria-label={label}
@@ -43,12 +42,12 @@ export function DateFilter({
           value={value.date ?? ""}
           onChange={(e) => set({ date: e.target.value || undefined })}
         />
+        {value.date ? (
+          <Button variant="ghost" size="sm" onClick={() => set({})}>
+            Clear
+          </Button>
+        ) : null}
       </div>
-      {value.date ? (
-        <Button variant="ghost" size="sm" onClick={() => set({})}>
-          Clear
-        </Button>
-      ) : null}
-    </div>
+    </FormField>
   )
 }

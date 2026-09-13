@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Input } from "../core/input"
-import { Label } from "../core/label"
+import { FormField } from "../core/form-field"
 import { Button } from "../core/button"
 
 /** Number range filter: min and max numeric inputs. */
@@ -40,9 +40,9 @@ export function NumberRangeFilter({
   }
 
   return (
-    <div className={className ?? "flex items-end gap-2"} data-testid="numberrange-filter">
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs text-[var(--prui-dim)]">{label} min</Label>
+    <FormField label={label} className={className} data-testid="numberrange-filter">
+      <div className="flex items-center gap-1.5">
+        <span aria-hidden className="text-xs text-[var(--prui-dim)]">min</span>
         <Input
           type="number"
           aria-label={`${label} min`}
@@ -50,9 +50,7 @@ export function NumberRangeFilter({
           value={value.min ?? ""}
           onChange={(e) => set({ ...value, min: parse(e.target.value) })}
         />
-      </div>
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs text-[var(--prui-dim)]">max</Label>
+        <span aria-hidden className="text-xs text-[var(--prui-dim)]">max</span>
         <Input
           type="number"
           aria-label={`${label} max`}
@@ -60,12 +58,12 @@ export function NumberRangeFilter({
           value={value.max ?? ""}
           onChange={(e) => set({ ...value, max: parse(e.target.value) })}
         />
+        {value.min !== undefined || value.max !== undefined ? (
+          <Button variant="ghost" size="sm" onClick={() => set({})}>
+            Clear
+          </Button>
+        ) : null}
       </div>
-      {value.min !== undefined || value.max !== undefined ? (
-        <Button variant="ghost" size="sm" onClick={() => set({})}>
-          Clear
-        </Button>
-      ) : null}
-    </div>
+    </FormField>
   )
 }

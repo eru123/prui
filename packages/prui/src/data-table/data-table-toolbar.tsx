@@ -67,7 +67,7 @@ export function DataTableToolbar({
   const search = isControlled ? searchValue : uncontrolledSearch
 
   return (
-    <div className={cn("prui-toolbar flex flex-wrap items-center gap-2 py-2", className)}>
+    <div className={cn("prui-toolbar flex flex-wrap items-end gap-3 py-2", className)}>
       <div className="relative">
         <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
         <Input
