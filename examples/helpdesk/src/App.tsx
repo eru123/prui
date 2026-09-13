@@ -7,7 +7,7 @@ import {
   confirmModal, toast, Toaster, Breadcrumb, BreadcrumbItem,
 } from "@skiddph/prui/core"
 import { Inbox, Clock, CheckCircle2, Building2, AlertTriangle, UserCircle } from "lucide-react"
-import { Gate, UserMenuSlot, ProfilePage } from "./auth"
+import { Gate, SidebarUserMenu, ProfilePage } from "./auth"
 import { useLocal, readLocal, writeLocal } from "./store"
 
 /* ------------------------------- model ------------------------------- */
@@ -353,8 +353,9 @@ const nav: NavItem[] = [
 
 function Shell() {
   return (
-    <App layoutType="B" header={<UserMenuSlot />}
-      brand={{ name: "Helpdesk" }} nav={nav} search={{ enabled: true, hotkey: "/" }} theme={false}>
+    <App layoutType="B" brand={{ name: "Helpdesk" }} nav={nav} search={{ enabled: true, hotkey: "/" }} theme={false}
+      sidebarFooter={({ collapsed }) => <SidebarUserMenu collapsed={collapsed} />}
+    >
       <Routes>
         <Route path="/" element={<SupportInbox />} />
         <Route path="/sla" element={<Sla />} />

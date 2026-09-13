@@ -10,7 +10,7 @@
     "deploy": "vite build && wrangler deploy"
   },
   "dependencies": {
-    "@skiddph/prui": "^0.16.0",
+    "@skiddph/prui": "^0.16.1",
     "lucide-react": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

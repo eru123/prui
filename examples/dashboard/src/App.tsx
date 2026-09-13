@@ -9,7 +9,7 @@ import {
   toast, Toaster, Input, Select, Modal,
 } from "@skiddph/prui/core"
 import { Users, DollarSign, CalendarCheck, Percent, LayoutDashboard, Table2, CalendarDays, Settings as SettingsIcon, Trash2, UserCircle } from "lucide-react"
-import { Gate, UserMenuSlot, ProfilePage } from "./auth"
+import { Gate, SidebarUserMenu, ProfilePage } from "./auth"
 import { useLocal, readLocal, writeLocal, resetLocal } from "./store"
 
 /* ------------------------------- model ------------------------------- */
@@ -571,8 +571,9 @@ const nav: NavItem[] = [
 
 function Shell() {
   return (
-    <App header={<UserMenuSlot />}
-      brand={{ name: "Northwind" }} nav={nav} search={{ enabled: true, hotkey: "/" }} theme={false} sidebar={{ width: 230 }}>
+    <App brand={{ name: "Northwind" }} nav={nav} search={{ enabled: true, hotkey: "/" }} theme={false} sidebar={{ width: 230 }}
+      sidebarFooter={({ collapsed }) => <SidebarUserMenu collapsed={collapsed} />}
+    >
       <Routes>
         <Route path="/" element={<Overview />} />
         <Route path="/employees" element={<Employees />} />

@@ -1,5 +1,7 @@
 import * as React from "react"
 import { LoginPage, RegisterPage, ForgotPasswordPage } from "@skiddph/prui/pages"
+import { useNavigate } from "react-router-dom"
+import { ChevronDown } from "lucide-react"
 import {
   Dropdown, Avatar, Button, Card, CardHeader, CardTitle, CardContent, Input, Separator, Badge,
   confirmModal, toast,
@@ -148,27 +150,59 @@ export function UserMenu({ name, email, onSignOut }: { name: string; email: stri
 }
 
 /**
- * The header user menu. Render as a node (header={<UserMenu />}) so its
- * hooks run inside the App's tree; no router hooks needed — clearing the
- * session makes the Gate swap the shell for the login screen.
+ * The sidebar footer user menu: avatar + name/email expanded, avatar only
+ * on the collapsed rail. Profile navigates; Sign out confirms first. Render
+ * it through the shell's render-form footer so it sees the rail state:
+ *
+ *   sidebarFooter={({ collapsed }) => <SidebarUserMenu collapsed={collapsed} />}
  */
-export function UserMenuSlot() {
+export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
   const { user, signOut } = useAuth()
+  const navigate = useNavigate()
   if (!user) return null
+
+  const confirmSignOut = () => {
+    confirmModal({
+      title: "Sign out?",
+      message: "Your data stays in this browser's localStorage — sign back in anytime.",
+    }).then((ok) => {
+      if (!ok) return
+      signOut()
+      toast({ title: "Signed out", variant: "neutral" })
+    })
+  }
+
   return (
-    <UserMenu
-      name={user.name}
-      email={user.email}
-      onSignOut={async () => {
-        // confirmation for demonstration: destructive-ish actions confirm
-        const ok = await confirmModal({
-          title: "Sign out?",
-          message: "Your data stays in this browser's localStorage — sign back in anytime.",
-        })
-        if (!ok) return
-        signOut()
-        toast({ title: "Signed out", variant: "neutral" })
-      }}
+    <Dropdown
+      align={collapsed ? "start" : "end"}
+      trigger={
+        collapsed ? (
+          <button
+            type="button"
+            aria-label={`Account: ${user.name}`}
+            className="flex cursor-pointer items-center rounded-[var(--prui-radius-full)] p-0.5 hover:bg-[var(--prui-raise)]"
+          >
+            <Avatar fallback={user.name} size="sm" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            aria-label={`Account: ${user.name}`}
+            className="flex w-full cursor-pointer items-center gap-2 rounded-[var(--prui-radius)] p-1.5 text-left hover:bg-[var(--prui-raise)]"
+          >
+            <Avatar fallback={user.name} />
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-sm text-[var(--prui-fg)]">{user.name}</span>
+              <span className="block truncate text-xs text-[var(--prui-dim)]">{user.email}</span>
+            </span>
+            <ChevronDown className="h-4 w-4 shrink-0 text-[var(--prui-dim)]" aria-hidden />
+          </button>
+        )
+      }
+      items={[
+        { label: "Profile", onSelect: () => navigate("/profile") },
+        { label: "Sign out", onSelect: confirmSignOut },
+      ]}
     />
   )
 }
