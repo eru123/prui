@@ -118,8 +118,10 @@ export interface AppProps {
    *  - "B" full-width header, sidebar below it
    */
   layoutType?: "A" | "B"
-  /** Prominent action slot pinned to the sidebar bottom. */
-  sidebarFooter?: React.ReactNode
+  /** Slot pinned to the sidebar bottom (e.g. a user menu). Pass a node, or a
+   * function of the rail state to adapt: ({ collapsed }) => collapsed ?
+   * avatarOnly : fullRow — the collapsed rail is only 64px wide. */
+  sidebarFooter?: React.ReactNode | ((state: { collapsed: boolean }) => React.ReactNode)
   /** Max width of the centered body column ("72rem" default; numbers are px,
    * false removes the cap so the body fills the content area). */
   contentMaxWidth?: number | string | false
@@ -721,7 +723,7 @@ export function AppShell(props: AppProps) {
             className={cn("border-t border-[var(--prui-line)] p-2", railCollapsed && "flex justify-center px-1")}
             data-testid="sidebar-footer"
           >
-            {sidebarFooter}
+            {typeof sidebarFooter === "function" ? sidebarFooter({ collapsed: railCollapsed }) : sidebarFooter}
           </div>
         ) : null}
       </aside>
@@ -878,6 +880,7 @@ export const appPropsMeta: PropsMeta = {
     { name: "pages", type: "'auth' | 'utility' | 'auth+utility'", default: "undefined", control: "select", options: ["auth", "utility", "auth+utility"] },
     { name: "expandAllOn", type: "string (pathname)", default: "undefined", control: "text" },
     { name: "layoutType", type: "'A' | 'B'", default: "'A'", control: "select", options: ["A", "B"] },
+    { name: "sidebarFooter", type: "ReactNode | ({ collapsed }) => ReactNode", default: "undefined", control: "none", description: "Slot pinned to the sidebar bottom; the function form adapts to the collapsed rail." },
     { name: "contentMaxWidth", type: "number | string | false", default: "'72rem'", control: "text", description: "Max width of the centered body column; false removes the cap." },
     { name: "sidebarFooter", type: "ReactNode", default: null, control: "none" },
     { name: "header", type: "ReactNode", default: null, control: "none" },

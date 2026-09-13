@@ -499,4 +499,18 @@ describe("Shell layouts (layoutType)", () => {
     shell("B", { sidebarFooter: <button>New project</button> })
     expect(screen.getByTestId("sidebar-footer")).toHaveTextContent("New project")
   })
+
+  it("the sidebar footer render form adapts to the rail state", async () => {
+    const user = userEvent.setup()
+    shell("A", {
+      sidebarFooter: ({ collapsed }: { collapsed: boolean }) => (
+        <button type="button" data-testid="footer-user">{collapsed ? "avatar" : "full row"}</button>
+      ),
+    })
+    expect(screen.getByTestId("footer-user")).toHaveTextContent("full row")
+    await user.click(screen.getByTestId("sidebar-toggle"))
+    expect(screen.getByTestId("footer-user")).toHaveTextContent("avatar")
+    // the collapsed rail centers the footer content
+    expect(screen.getByTestId("sidebar-footer").className).toContain("justify-center")
+  })
 })
