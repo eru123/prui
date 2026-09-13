@@ -119,8 +119,10 @@ describe("Toolbar baseline alignment", () => {
     expect(screen.getByLabelText("Search")).toBeInTheDocument()
     expect(screen.getByText("Hired")).toBeInTheDocument()
     expect(screen.getByText("Salary")).toBeInTheDocument()
-    // range children carry compact sub-labels, not stacked label rows
-    expect(screen.getByText("from")).toBeInTheDocument()
+    // the daterange filter is ONE in-house DateRangePicker trigger
+    expect(screen.getByRole("combobox", { name: "Hired" })).toBeInTheDocument()
+    expect(screen.queryByText("from")).toBeNull()
+    // numberrange children still carry compact sub-labels
     expect(screen.getByText("min")).toBeInTheDocument()
     expect(screen.queryByText("Hired from")).toBeNull()
     // the actions land inside the last FormField's control row

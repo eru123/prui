@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Input } from "../core/input"
+import { DateRangePicker } from "../core/date-picker"
 import { FormField } from "../core/form-field"
 import { Button } from "../core/button"
 
@@ -40,21 +40,11 @@ export function DateRangeFilter({
       data-testid="daterange-filter"
     >
       <div className="flex items-center gap-1.5">
-        <span aria-hidden className="text-xs text-[var(--prui-dim)]">from</span>
-        <Input
-          type="date"
-          aria-label={`${label} from`}
-          className="h-8 w-32"
-          value={value.from ?? ""}
-          onChange={(e) => set({ ...value, from: e.target.value || undefined })}
-        />
-        <span aria-hidden className="text-xs text-[var(--prui-dim)]">to</span>
-        <Input
-          type="date"
-          aria-label={`${label} to`}
-          className="h-8 w-32"
-          value={value.to ?? ""}
-          onChange={(e) => set({ ...value, to: e.target.value || undefined })}
+        <DateRangePicker
+          ariaLabel={label}
+          className="h-8 w-64"
+          value={{ from: value.from, to: value.to }}
+          onChange={(range) => set({ from: range.from || undefined, to: range.to || undefined })}
         />
         {value.from || value.to ? (
           <Button variant="ghost" size="sm" onClick={() => set({})}>

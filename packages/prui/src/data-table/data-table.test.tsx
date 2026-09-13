@@ -176,12 +176,17 @@ describe("Toolbar and filters", () => {
     expect(onChange).toHaveBeenLastCalledWith(["active", "leave"])
   })
 
-  it("DateRangeFilter reports from/to", async () => {
+  it("DateRangeFilter picks a range through the in-house picker", async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
     render(<DateRangeFilter label="Hired" onChange={onChange} />)
-    await user.type(screen.getByLabelText("Hired from"), "2024-01-01")
-    expect(onChange).toHaveBeenLastCalledWith({ from: "2024-01-01" })
+    // the filter renders one DateRangePicker trigger; picking two days in the
+    // current month commits from then to
+    await user.click(screen.getByRole("combobox", { name: "Hired" }))
+    await user.click(screen.getByRole("gridcell", { name: "2" }))
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ from: expect.stringMatching(/-02$/) }))
+    await user.click(screen.getByRole("gridcell", { name: "10" }))
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ from: expect.stringMatching(/-02$/), to: expect.stringMatching(/-10$/) }))
   })
 
   it("NumberRangeFilter reports min/max", async () => {

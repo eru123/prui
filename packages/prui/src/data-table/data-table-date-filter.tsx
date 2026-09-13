@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Input } from "../core/input"
+import { DatePicker } from "../core/date-picker"
 import { FormField } from "../core/form-field"
 import { Button } from "../core/button"
 
@@ -35,12 +35,11 @@ export function DateFilter({
   return (
     <FormField label={label} className={className} data-testid="date-filter">
       <div className="flex items-center gap-1.5">
-        <Input
-          type="date"
-          aria-label={label}
+        <DatePicker
+          ariaLabel={label}
           className="h-8 w-36"
-          value={value.date ?? ""}
-          onChange={(e) => set({ date: e.target.value || undefined })}
+          value={value.date}
+          onChange={(date) => set({ date: date || undefined })}
         />
         {value.date ? (
           <Button variant="ghost" size="sm" onClick={() => set({})}>
