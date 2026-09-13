@@ -261,9 +261,13 @@ describe("Form schema input", () => {
     expect(screen.getByRole("combobox", { name: "Status" })).toHaveTextContent("leave")
   })
 
-  it("renders date fields as date inputs", () => {
+  it("renders date fields as the in-house DatePicker", () => {
     render(<Form schema={[{ name: "hired", label: "Hired", type: "date" }]} />)
-    expect(screen.getByLabelText(/Hired/)).toHaveAttribute("type", "date")
+    const trigger = screen.getByLabelText(/Hired/)
+    expect(trigger.className).toContain("prui-date-picker")
+    // picker trigger is a combobox-style readonly input, not a native date field
+    expect(trigger).toHaveAttribute("type", "text")
+    expect(trigger).toHaveAttribute("readonly")
   })
 })
 

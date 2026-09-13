@@ -2,6 +2,7 @@ import * as React from "react"
 import { Button } from "../core/button"
 import { Input, Textarea } from "../core/input"
 import { Label } from "../core/label"
+import { DatePicker } from "../core/date-picker"
 import { Select } from "../core/select"
 import { Switch } from "../core/switch"
 import { cn } from "../core/cn"
@@ -183,13 +184,13 @@ export function Form({
                   onChange={(v) => setField(f.name, v)}
                 />
               ) : f.type === "date" ? (
-                <Input
+                <DatePicker
                   {...common}
-                  type="date"
+                  ariaLabel={f.label}
                   placeholder={f.placeholder}
                   disabled={f.disabled || loading}
                   value={String(values[f.name] ?? "")}
-                  onChange={(e) => setField(f.name, e.target.value)}
+                  onChange={(date) => setField(f.name, date ?? "")}
                 />
               ) : f.type === "boolean" ? (
                 <Switch
