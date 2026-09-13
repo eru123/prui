@@ -3,7 +3,7 @@ import { LoginPage, RegisterPage, ForgotPasswordPage } from "@skiddph/prui/pages
 import { useNavigate } from "react-router-dom"
 import { ChevronDown } from "lucide-react"
 import {
-  Dropdown, Avatar, Button, Card, CardHeader, CardTitle, CardContent, Input, Separator, Badge,
+  Dropdown, Avatar, Button, FileUpload, Card, CardHeader, CardTitle, CardContent, Input, Separator, Badge,
   confirmModal, toast,
 } from "@skiddph/prui/core"
 import { useLocal } from "./store"
@@ -18,6 +18,8 @@ export interface AuthUser {
   name: string
   email: string
   password: string
+  /** Profile picture: a data URL kept in localStorage. */
+  avatar?: string
 }
 
 interface AuthState {
@@ -182,7 +184,7 @@ export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
             aria-label={`Account: ${user.name}`}
             className="flex cursor-pointer items-center rounded-[var(--prui-radius-full)] p-0.5 hover:bg-[var(--prui-raise)]"
           >
-            <Avatar fallback={user.name} size="sm" />
+            <Avatar src={user.avatar} fallback={user.name} size="sm" />
           </button>
         ) : (
           <button
@@ -190,7 +192,7 @@ export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
             aria-label={`Account: ${user.name}`}
             className="flex w-full cursor-pointer items-center gap-2 rounded-[var(--prui-radius)] p-1.5 text-left hover:bg-[var(--prui-raise)]"
           >
-            <Avatar fallback={user.name} />
+            <Avatar src={user.avatar} fallback={user.name} />
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm text-[var(--prui-fg)]">{user.name}</span>
               <span className="block truncate text-xs text-[var(--prui-dim)]">{user.email}</span>
@@ -253,7 +255,7 @@ export function ProfilePage() {
 
       <Card className="max-w-md">
         <CardContent className="flex items-center gap-4 pt-5">
-          <Avatar fallback={user.name} size="lg" />
+          <Avatar src={user.avatar} fallback={user.name} size="lg" />
           <div className="min-w-0">
             <div className="truncate text-sm font-semibold">{user.name}</div>
             <div className="flex items-center gap-2">
@@ -261,6 +263,43 @@ export function ProfilePage() {
               <Badge variant="ok">signed in</Badge>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card className="max-w-md">
+        <CardHeader><CardTitle className="text-sm">Profile picture</CardTitle></CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <div className="flex items-center gap-4">
+            <Avatar src={user.avatar} fallback={user.name} size="lg" />
+            <div className="text-xs text-[var(--prui-dim)]">
+              Stored as a data URL in localStorage — it survives reloads like everything else.
+              Without a picture the initials fallback shows.
+            </div>
+          </div>
+          <FileUpload
+            accept="image/*"
+            multiple={false}
+            maxSize={1024 * 1024}
+            hideList
+            hint="Drop a picture or click to browse (1MB max)"
+            onFiles={(files) => {
+              const file = files[0]
+              if (!file) return
+              const reader = new FileReader()
+              reader.onload = () => {
+                updateUser({ avatar: String(reader.result) })
+                toast({ title: "Picture updated", variant: "success" })
+              }
+              reader.readAsDataURL(file)
+            }}
+          />
+          {user.avatar ? (
+            <div>
+              <Button size="sm" variant="ghost" onClick={() => { updateUser({ avatar: undefined }); toast({ title: "Picture removed", variant: "neutral" }) }}>
+                Remove picture
+              </Button>
+            </div>
+          ) : null}
         </CardContent>
       </Card>
 
