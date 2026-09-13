@@ -207,7 +207,11 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function
         </button>
       </div>
       <div role="grid" aria-label={monthLabel} className="flex flex-col gap-1">
-        <div role="row" className="grid grid-cols-7 text-center text-xs font-medium text-[var(--prui-dim)]">
+        <div
+          role="row"
+          className="grid grid-cols-7 text-center text-xs font-medium text-[var(--prui-dim)]"
+          style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}
+        >
           {weekdays.map((wd) => (
             <span key={wd} role="columnheader" className="px-1 py-0.5">
               {wd}
@@ -215,7 +219,12 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function
           ))}
         </div>
         {Array.from({ length: 6 }).map((_, week) => (
-          <div key={week} role="row" className="grid grid-cols-7 gap-0.5">
+          <div
+            key={week}
+            role="row"
+            className="grid grid-cols-7 gap-0.5"
+            style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}
+          >
             {cells.slice(week * 7, week * 7 + 7).map((key, i) => {
               if (key === null) return <span key={i} role="gridcell" />
               const selected = key === value
