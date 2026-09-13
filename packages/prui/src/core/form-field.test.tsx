@@ -122,3 +122,12 @@ describe("Toolbar baseline alignment", () => {
     expect(screen.queryByText("Hired from")).toBeNull()
   })
 })
+
+describe("Input validation state", () => {
+  it("error renders the danger border and focus ring", () => {
+    render(<Input error aria-label="Bad" />)
+    const input = screen.getByLabelText("Bad")
+    expect(input.className).toContain("border-[var(--prui-danger)]")
+    expect(input.className).toContain("focus:ring-[var(--prui-danger)]/30")
+  })
+})

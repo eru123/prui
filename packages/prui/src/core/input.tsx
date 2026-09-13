@@ -33,10 +33,12 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   /** With type="password", render an eye show/hide toggle in the trailing
    * slot (the default). Set false to keep a plain masked field. */
   passwordToggle?: boolean
+  /** Validation state: renders the field border (and focus ring) in danger. */
+  error?: boolean
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, style, type = "text", size = "md", variant = "default", icon, trailingIcon, passwordToggle = true, label, helperText, id, bg, fg, radius, texture, textureColor, elevation, ...props }, ref) => {
+  ({ className, style, type = "text", size = "md", variant = "default", icon, trailingIcon, passwordToggle = true, error, label, helperText, id, bg, fg, radius, texture, textureColor, elevation, ...props }, ref) => {
     const { t } = usePruiI18n()
     const [revealed, setRevealed] = React.useState(false)
     const field = useFieldSlots({ id, label, helperText })
@@ -47,6 +49,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         fieldBase,
         inputSizeClasses[size],
         variant === "filled" && "bg-[var(--prui-s-bg,var(--prui-raise))] border-transparent",
+        error && "border-[var(--prui-danger)] focus:border-[var(--prui-danger)] focus:ring-[var(--prui-danger)]/30",
         icon && "pl-9",
         (trailingIcon || showEye) && "pr-9",
         className,
@@ -108,6 +111,7 @@ export const inputPropsMeta: PropsMeta = {
     { name: "passwordToggle", type: "boolean", default: "true", control: "boolean", description: "type=password renders an eye show/hide toggle unless a trailingIcon owns the slot." },
     { name: "label", type: "ReactNode", default: "undefined", control: "text", description: "Renders the field through FormField: label above, helper below, slots reserved when empty." },
     { name: "helperText", type: "ReactNode", default: "undefined", control: "text", description: "Hint/message under the control (FormField bottom slot)." },
+    { name: "error", type: "boolean", default: "false", control: "boolean", description: "Validation state: danger border and focus ring." },
     { name: "value", type: "string", default: null, control: "text" },
     { name: "placeholder", type: "string", default: "undefined", control: "text" },
     { name: "disabled", type: "boolean", default: "false", control: "boolean" },
@@ -115,17 +119,26 @@ export const inputPropsMeta: PropsMeta = {
   ],
 }
 
-export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & FieldSlotProps
+export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> &
+  FieldSlotProps & {
+    /** Validation state: renders the field border (and focus ring) in danger. */
+    error?: boolean
+  }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, style, label, helperText, id, ...props }, ref) => {
+  ({ className, style, label, helperText, error, id, ...props }, ref) => {
     const field = useFieldSlots({ id, label, helperText })
     return field.wrap(
       <textarea
         ref={ref}
         id={field.id}
         style={style}
-        className={cn(fieldBase, "h-auto min-h-20 resize-y px-3 py-2", className)}
+        className={cn(
+          fieldBase,
+          "h-auto min-h-20 resize-y px-3 py-2",
+          error && "border-[var(--prui-danger)] focus:border-[var(--prui-danger)] focus:ring-[var(--prui-danger)]/30",
+          className,
+        )}
         {...props}
       />,
     )
