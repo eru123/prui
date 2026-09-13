@@ -213,10 +213,9 @@ body.modal-open { overflow: hidden; }
   font-size: 10px;
   font-weight: 600;
 }
-.prui-shell[data-collapsed="true"] .prui-shell-sidehead { justify-content: center; padding-inline: 0; }
-/* collapsed, the sidehead is just the expand toggle: the brand/custom
-   content (any width) hides and the chevron centers in the rail */
-.prui-shell[data-collapsed="true"] .prui-shell-sidehead .prui-sidehead-content { display: none; }
+/* collapsed to the rail, the workspace strip hides: its row auto-collapses
+   and the nav rail starts right under the topbar */
+.prui-shell[data-collapsed="true"] .prui-shell-sidehead { display: none; }
 .prui-nav-mono { display: none; }
 
 @media (max-width: 47.99rem) {

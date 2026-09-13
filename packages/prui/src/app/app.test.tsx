@@ -408,39 +408,23 @@ describe("Shell layouts (layoutType)", () => {
   })
 
   it("C renders a sidebar header row aligned with the topbar", () => {
-    shell("C")
+    shell("C", { sidebarHeader: <span>T</span> })
     const head = screen.getByTestId("sidebar-header")
     expect(head).toBeInTheDocument()
     expect(head.className).toContain("h-14")
     expect(head).toHaveTextContent("T")
   })
 
-  it("C owns the brand in the sidehead; the topbar brand is mobile-only", () => {
+  it("C keeps the brand and toggle in the topbar; the sidehead is opt-in", () => {
+    // without sidebarHeader there is no second row to duplicate the brand
     const { unmount } = shell("C")
+    expect(screen.queryByTestId("sidebar-header")).toBeNull()
     const header = screen.getByTestId("app-header")
-    const brandC = within(header).getAllByText("T")[0]
-    if (!brandC) throw new Error("brand not found in the C topbar")
-    expect(brandC.closest(".md\\:hidden")).not.toBeNull()
-    unmount()
-    shell("A")
-    const brandA = within(screen.getByTestId("app-header")).getAllByText("T")[0]
-    if (!brandA) throw new Error("brand not found in the A topbar")
-    // A/B keep the brand in the topbar at every width
-    expect(brandA.closest(".md\\:hidden")).toBeNull()
-  })
-
-  it("C carries the toggle in the sidebar header row, before its content", () => {
-    shell("C")
-    // not in the topbar: C's sidebar header row owns it, next to the brand
-    expect(within(screen.getByTestId("app-header")).queryByTestId("sidebar-toggle")).toBeNull()
-    const sidehead = screen.getByTestId("sidebar-header")
-    const toggle = within(sidehead).getByTestId("sidebar-toggle")
-    const brand = within(sidehead).getAllByText("T")[0]
-    if (!brand) throw new Error("brand not found in the sidehead")
+    const toggle = within(header).getByTestId("sidebar-toggle")
+    const brand = within(header).getAllByText("T")[0]
+    if (!brand) throw new Error("brand not found in the C topbar")
     expect(toggle.compareDocumentPosition(brand) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-  })
-
-  it("C accepts a custom sidebar header", () => {
+    unmount()
     shell("C", { sidebarHeader: <span>Workspace</span> })
     expect(screen.getByTestId("sidebar-header")).toHaveTextContent("Workspace")
   })

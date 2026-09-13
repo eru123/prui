@@ -172,8 +172,9 @@ export function AppLayerDoc() {
 // B: full-width header, expanded sidebar below it
 <App layoutType="B" nav={nav}>{routes}</App>
 
-// C: A + B combined. Full-width topbar plus a sidebar header row
-//    (topbar height, sidebar width); sidebarHeader replaces the brand
+// C: A + B combined. Full-width topbar (brand + collapse toggle) plus an
+//    opt-in sidebar header row (topbar height, sidebar width) for workspace
+//    content; without sidebarHeader there is no second row
 <App layoutType="C" nav={nav} sidebarHeader={<span>Workspace</span>}>
   {routes}
 </App>
