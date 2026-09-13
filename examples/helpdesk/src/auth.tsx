@@ -39,7 +39,7 @@ export function useAuth() {
     user: auth.users.find((u) => u.email === auth.current) ?? null,
     signIn: (email: string, password: string): string | null => {
       const user = auth.users.find((u) => u.email.toLowerCase() === email.toLowerCase())
-      if (!user) return "No account with that email — register first."
+      if (!user) return "No account with that email; register first."
       if (user.password !== password) return "Wrong password."
       setAuth((prev) => ({ ...prev, current: user.email }))
       return null
@@ -166,7 +166,7 @@ export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
   const confirmSignOut = () => {
     confirmModal({
       title: "Sign out?",
-      message: "Your data stays in this browser's localStorage — sign back in anytime.",
+      message: "Your data stays in this browser's localStorage; sign back in anytime.",
     }).then((ok) => {
       if (!ok) return
       signOut()
@@ -210,7 +210,7 @@ export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
 }
 
 /**
- * The profile page: edit the stored account — display name, password change
+ * The profile page: edit the stored account; display name, password change
  * with the eye fields and validation, and a danger zone. Every save writes
  * the auth store (and survives reloads like everything else).
  */
@@ -250,7 +250,7 @@ export function ProfilePage() {
     <div className="page">
       <div className="page-head">
         <h1>Profile</h1>
-        <p>Your account lives in localStorage with everything else — edit it and reload to believe it.</p>
+        <p>Your account lives in localStorage with everything else; edit it and reload to believe it.</p>
       </div>
 
       <Card className="max-w-md">
@@ -272,7 +272,7 @@ export function ProfilePage() {
           <div className="flex items-center gap-4">
             <Avatar src={user.avatar} fallback={user.name} size="lg" />
             <div className="text-xs text-[var(--prui-dim)]">
-              Stored as a data URL in localStorage — it survives reloads like everything else.
+              Stored as a data URL in localStorage; it survives reloads like everything else.
               Without a picture the initials fallback shows.
             </div>
           </div>
@@ -344,7 +344,7 @@ export function ProfilePage() {
       <Card className="max-w-md">
         <CardHeader><CardTitle className="text-sm">Danger zone</CardTitle></CardHeader>
         <CardContent className="flex flex-col gap-2">
-          <p className="text-xs text-[var(--prui-dim)]">Both actions confirm first — the modal is the point.</p>
+          <p className="text-xs text-[var(--prui-dim)]">Both actions confirm first; the modal is the point.</p>
           <div className="flex flex-wrap gap-2">
             <Button
               variant="default"

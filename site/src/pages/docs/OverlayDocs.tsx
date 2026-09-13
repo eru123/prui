@@ -9,7 +9,7 @@ export function DrawerDoc() {
     <ComponentDoc
       name="Drawer"
       importPath="@skiddph/prui/core"
-      description="A side-anchored modal panel for detail panes, filters, and task flows. Portaled, focus-trapped with focus restoration, scroll-locked, background inert, and topmost-only Escape — the full overlay contract."
+      description="A side-anchored modal panel for detail panes, filters, and task flows. Portaled, focus-trapped with focus restoration, scroll-locked, background inert, and topmost-only Escape; the full overlay contract."
       when={[
         "Row detail panes over a table (edit without losing context)",
         "Multi-field filters that affect a visible result set",
@@ -17,7 +17,7 @@ export function DrawerDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Drawer open onOpenChange side size ariaLabel hideClose&gt;</code> —
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Drawer open onOpenChange side size ariaLabel hideClose&gt;</code>:
           scrim + panel; <code>side</code> picks left/right/top/bottom, <code>size</code> sets width (sides) or max height
           (top/bottom).
         </p>
@@ -71,7 +71,7 @@ export function DrawerDoc() {
       ]}
       dos={["Prefer a drawer over a dialog when the background list must stay visible", "Give the panel an ariaLabel naming its purpose"]
       }
-      donts={["Don't stack a drawer over a dialog for the same task — pick one", "Don't put the primary close affordance only in the scrim"]}
+      donts={["Don't stack a drawer over a dialog for the same task; pick one", "Don't put the primary close affordance only in the scrim"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>role=dialog aria-modal with an accessible name; Tab/Shift+Tab cycle inside.</li>
@@ -79,17 +79,17 @@ export function DrawerDoc() {
           <li>Background is aria-hidden + inert; body scroll locks; slides stop under reduced motion.</li>
         </ul>
       }
-      composition={<p>Compose anything inside — forms, tabs, TreeView explorers. size accepts px numbers or any CSS length string.</p>}
+      composition={<p>Compose anything inside; forms, tabs, TreeView explorers. size accepts px numbers or any CSS length string.</p>}
       customization={<p>Panel surface/shadow are tokens; the scrim is --prui-scrim. Side is directional by design (mirror manually for RTL).</p>}
       edgeCases={[
-        "Nested drawers stack correctly — only the topmost answers Escape",
+        "Nested drawers stack correctly; only the topmost answers Escape",
         "hideClose removes the X; provide your own visible close action then",
       ]}
       mistakes={["Controlled open without onOpenChange (Escape closes nothing)", "Scrollable page content taller than the panel without inner overflow"]}
       performance={<p>Mounts only while open (plus the exit animation window).</p>}
       crossLinks={[
-        { label: "Sheet — the bottom preset", href: "/components/sheet" },
-        { label: "Dialog — centered modals", href: "/components/dialog" },
+        { label: "Sheet; the bottom preset", href: "/components/sheet" },
+        { label: "Dialog; centered modals", href: "/components/dialog" },
       ]}
     />
   )
@@ -110,7 +110,7 @@ export function SheetDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Sheet open onOpenChange ariaLabel size&gt;</code> — identical
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Sheet open onOpenChange ariaLabel size&gt;</code>; identical
           API to Drawer with side fixed to bottom; size caps the height (default 80vh).
         </p>
       }
@@ -154,7 +154,7 @@ export function SheetDoc() {
         },
       ]}
       dos={["Keep primary actions within thumb reach (bottom of the sheet)", "Cap content height via size and let the panel scroll internally"]}
-      donts={["Don't use for desktop-first layouts — Drawer reads better there"]}
+      donts={["Don't use for desktop-first layouts. Drawer reads better there"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>Same contract as Drawer: dialog semantics, focus trap and restoration, inert background, topmost Escape.</li>
@@ -164,11 +164,11 @@ export function SheetDoc() {
       composition={<p>Anything you put in a Drawer works here; size as any CSS length (default 80vh).</p>}
       customization={<p>Token surface + scrim; the handle is --prui-line. Full-width by design.</p>}
       edgeCases={["Content shorter than the cap shrinks the sheet", "size applies as max-height on bottom sheets"]}
-      mistakes={["Relying on the handle for drag-to-dismiss (not implemented — provide close affordances)"]}
+      mistakes={["Relying on the handle for drag-to-dismiss (not implemented; provide close affordances)"]}
       performance={<p>Identical to Drawer; mounts only while open.</p>}
       crossLinks={[
-        { label: "Drawer — side panels", href: "/components/drawer" },
-        { label: "Dialog — centered modals", href: "/components/dialog" },
+        { label: "Drawer; side panels", href: "/components/drawer" },
+        { label: "Dialog; centered modals", href: "/components/dialog" },
       ]}
     />
   )

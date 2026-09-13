@@ -30,7 +30,7 @@ const EXAMPLES = [
     title: "Workspace settings",
     icon: Settings,
     blurb:
-      "Five pages, one store: general settings with inline validation (error fields), member invites through a validated TagInput, a notification matrix, security with shown-once API keys, the password eye field, and confirmModal danger zones — every action lands in an audit Timeline that survives reloads.",
+      "Five pages, one store: general settings with inline validation (error fields), member invites through a validated TagInput, a notification matrix, security with shown-once API keys, the password eye field, and confirmModal danger zones; every action lands in an audit Timeline that survives reloads.",
   },
 ] as const
 
@@ -43,9 +43,9 @@ export function ExamplesPage() {
         <p className="mb-8 max-w-[62ch] text-[15px] text-[var(--prui-dim)]">
           Independent React projects living in{" "}
           <code className="rounded bg-[var(--prui-raise)] px-1">examples/</code> at the repo root. Each installs{" "}
-          <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui@latest</code> from npm — never the
-          workspace copy — so they exercise exactly what you install. Every card links to its live deployment and to
-          the source tree on GitHub. Every example is a complete app with login, register, forgot-password, and a sidebar-footer account menu — the only backend is localStorage, so your session and data survive reloads. Fixed daylight theme, no switcher. Sign in with the seeded demo account or register your own. The footer menu collapses to just the avatar on the rail; Sign-out confirms first; and a Profile page edits the stored account (name, password with the eye fields, delete).
+          <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui@latest</code> from npm; never the
+          workspace copy; so they exercise exactly what you install. Every card links to its live deployment and to
+          the source tree on GitHub. Every example is a complete app with login, register, forgot-password, and a sidebar-footer account menu; the only backend is localStorage, so your session and data survive reloads. Fixed daylight theme, no switcher. Sign in with the seeded demo account or register your own. The footer menu collapses to just the avatar on the rail; Sign-out confirms first; and a Profile page edits the stored account (name, password with the eye fields, delete).
         </p>
 
         <div className="grid gap-5 sm:grid-cols-2">
@@ -90,7 +90,7 @@ export function ExamplesPage() {
           <code className="rounded bg-[var(--prui-raise)] px-1 py-0.5 font-mono text-xs">
             cd examples/{EXAMPLES[0].name} &amp;&amp; npm install &amp;&amp; npm run dev
           </code>{" "}
-          — every example is a plain Vite project with no workspace links.
+         ; every example is a plain Vite project with no workspace links.
         </p>
       </div>
     </div>

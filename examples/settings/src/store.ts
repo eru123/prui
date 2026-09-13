@@ -3,7 +3,7 @@ import { useCallback, useSyncExternalStore } from "react"
 /**
  * localStorage-backed store: the app's entire "backend". Every write updates
  * an in-memory cache (stable snapshot references), mirrors to localStorage,
- * and notifies subscribers — no server anywhere.
+ * and notifies subscribers; no server anywhere.
  */
 
 const cache = new Map<string, unknown>()

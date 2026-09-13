@@ -6,7 +6,7 @@ import { MetaOnly } from "../components/Playground"
 import { formPropsMeta, formGroupPropsMeta, formInputPropsMeta, formButtonPropsMeta } from "prui/forms"
 
 /**
- * /forms — the higher-order form set: single-type inputs with full attrs,
+ * /forms; the higher-order form set: single-type inputs with full attrs,
  * responsive groups, zod-optional validation, and buttons that drive a
  * form from outside its scope (the modal footer case).
  */

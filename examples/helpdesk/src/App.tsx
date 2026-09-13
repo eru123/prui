@@ -215,7 +215,7 @@ function TicketPanel({ ticketId, onPatch }: { ticketId: string; onPatch: Patch }
           rows={2}
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="Internal note — Enter saves"
+          placeholder="Internal note. Enter saves"
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey && note.trim()) {
               e.preventDefault()

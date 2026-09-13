@@ -35,7 +35,7 @@ export function TooltipDoc() {
         },
         {
           title: "Keyboard focus shows it too",
-          desc: "Tab to the button — the tooltip appears on focus, exactly as on hover.",
+          desc: "Tab to the button; the tooltip appears on focus, exactly as on hover.",
           render: (
             <Tooltip content="Press to sync all workspaces" delay={100}>
               <Button variant="outline">Sync now</Button>
@@ -67,7 +67,7 @@ export function TooltipDoc() {
         "Prefer side=top near the bottom edge of the viewport (flipping is automatic)",
       ]}
       donts={[
-        "Don't put interactive content inside a tooltip — use Popover",
+        "Don't put interactive content inside a tooltip; use Popover",
         "Don't duplicate the visible label as the tooltip",
         "Don't rely on tooltips on touch-only targets",
       ]}
@@ -75,7 +75,7 @@ export function TooltipDoc() {
         <ul className="list-disc pl-5">
           <li>Shows on focus as well as hover; role=tooltip when visible.</li>
           <li>Escape (while the tooltip is the topmost overlay) hides it without moving focus.</li>
-          <li>pointer-events: none — the bubble can never intercept a click.</li>
+          <li>pointer-events: none; the bubble can never intercept a click.</li>
         </ul>
       }
       composition={
@@ -91,13 +91,13 @@ export function TooltipDoc() {
         "Repositions on scroll and resize while open",
       ]}
       mistakes={[
-        "Tooltips on disabled buttons (disabled controls don't fire hover/focus in all browsers — wrap them instead)",
+        "Tooltips on disabled buttons (disabled controls don't fire hover/focus in all browsers; wrap them instead)",
         "Long paragraphs inside the bubble",
       ]}
       performance={<p>One portaled node while open; the anchor hook listens to scroll/resize only while visible.</p>}
       crossLinks={[
-        { label: "Popover — interactive anchored content", href: "/components/popover" },
-        { label: "Dropdown — menus", href: "/components/dropdown" },
+        { label: "Popover; interactive anchored content", href: "/components/popover" },
+        { label: "Dropdown; menus", href: "/components/dropdown" },
       ]}
     />
   )
@@ -110,11 +110,11 @@ export function PopoverDoc() {
     <ComponentDoc
       name="Popover"
       importPath="@skiddph/prui/core"
-      description="A click-triggered anchored panel for rich, interactive content — filters, pickers, mini-forms. Non-modal by default: initial focus moves inside, Escape or an outside click closes it, and focus returns to the trigger."
+      description="A click-triggered anchored panel for rich, interactive content; filters, pickers, mini-forms. Non-modal by default: initial focus moves inside, Escape or an outside click closes it, and focus returns to the trigger."
       when={[
         "Filter/control clusters that shouldn't warrant a dialog",
         "Quick forms (rename, note) tied to an element",
-        "Any anchored surface with focusable content — the interactive Tooltip"
+        "Any anchored surface with focusable content; the interactive Tooltip"
       ]}
       anatomy={
         <p>
@@ -149,7 +149,7 @@ export function PopoverDoc() {
         },
         {
           title: "Controlled open state",
-          desc: "drive open from URL state, dashboards, or a parent — the trigger still toggles.",
+          desc: "drive open from URL state, dashboards, or a parent; the trigger still toggles.",
           render: (
             <Popover trigger={<Button variant="outline">Details</Button>} ariaLabel="Chart details">
               <div className="w-64 text-sm text-[var(--prui-dim)]">
@@ -179,10 +179,10 @@ export function PopoverDoc() {
       dos={[
         "Give every panel an ariaLabel",
         "Keep panels compact; use a Dialog for anything scrollable",
-        "Return focus is automatic — don't fight it",
+        "Return focus is automatic; don't fight it",
       ]}
       donts={[
-        "Don't put menus in a Popover — Dropdown has the menu keyboard map",
+        "Don't put menus in a Popover. Dropdown has the menu keyboard map",
         "Don't stack popovers off each other; anchor to the real trigger",
       ]}
       accessibility={
@@ -194,7 +194,7 @@ export function PopoverDoc() {
       }
       composition={
         <p>
-          Composes with Checkbox, RadioGroup, Combobox, TimePanel — anything interactive. The panel repositions on
+          Composes with Checkbox, RadioGroup, Combobox, TimePanel; anything interactive. The panel repositions on
           scroll/resize and flips sides against the viewport.
         </p>
       }
@@ -204,13 +204,13 @@ export function PopoverDoc() {
         "onOpenChange fires on every transition so controlled state stays honest",
       ]}
       mistakes={[
-        "Forgetting ariaLabel — the dialog then borrows a default name",
+        "Forgetting ariaLabel; the dialog then borrows a default name",
         "Wrapping the whole page in modal popovers (defeats non-modality)",
       ]}
       performance={<p>One portal while open; scroll/resize listeners exist only while visible.</p>}
       crossLinks={[
-        { label: "Tooltip — passive labels", href: "/components/tooltip" },
-        { label: "Dialog — modal flows", href: "/components/dialog" },
+        { label: "Tooltip; passive labels", href: "/components/tooltip" },
+        { label: "Dialog; modal flows", href: "/components/dialog" },
       ]}
     />
   )

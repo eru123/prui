@@ -84,21 +84,21 @@ export function AccordionDoc() {
         <ul className="list-disc pl-5">
           <li>Headers: buttons with aria-expanded + aria-controls; panels are role=region labelled by their header.</li>
           <li>ArrowUp/Down move between headers; Home/End jump to the first/last.</li>
-          <li>Collapsed panels are hidden (display:none) — never announced.</li>
+          <li>Collapsed panels are hidden (display:none); never announced.</li>
         </ul>
       }
-      composition={<p>Item bodies accept anything: forms, tables, nested content. Value keys are your strings — stable ids make controlled state predictable.</p>}
+      composition={<p>Item bodies accept anything: forms, tables, nested content. Value keys are your strings; stable ids make controlled state predictable.</p>}
       customization={<p>Item chrome (border/radius/surface) uses tokens; chevron rotation animates and stops under reduced motion.</p>}
       edgeCases={[
         "type=single closes the previous section on open",
-        "Duplicate item values make state ambiguous — keep them unique",
+        "Duplicate item values make state ambiguous; keep them unique",
         "Disabled items render dimmed and unfocusable",
       ]}
       mistakes={["Putting the whole app inside an accordion", "Relying on default open state for critical info"]}
       performance={<p>Panels unmount visually via hidden; controlled value changes re-render headers cheaply.</p>}
       crossLinks={[
-        { label: "Tabs — same content, parallel view", href: "/components/tabs" },
-        { label: "TreeView — hierarchical data", href: "/components/tree-view" },
+        { label: "Tabs; same content, parallel view", href: "/components/tabs" },
+        { label: "TreeView; hierarchical data", href: "/components/tree-view" },
       ]}
     />
   )
@@ -175,7 +175,7 @@ export function BreadcrumbDoc() {
         },
       ]}
       dos={["Keep the current page as plain text (current), not a link", "Cap visible levels with collapseAfter on deep products"]}
-      donts={["Don't use for sibling navigation — that's Tabs or a nav group"]}
+      donts={["Don't use for sibling navigation; that's Tabs or a nav group"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>nav landmark labelled “Breadcrumb”; ol/li structure for the trail.</li>
@@ -192,7 +192,7 @@ export function BreadcrumbDoc() {
       mistakes={["Linking the current page to itself"]}
       performance={<p>Pure list rendering; collapses are computed at render.</p>}
       crossLinks={[
-        { label: "Tabs — sibling navigation", href: "/components/tabs" },
+        { label: "Tabs; sibling navigation", href: "/components/tabs" },
         { label: "App shell layouts", href: "/layouts" },
       ]}
     />
@@ -219,7 +219,7 @@ export function TreeViewDoc() {
     <ComponentDoc
       name="TreeView"
       importPath="@skiddph/prui/core"
-      description="A hierarchical list for files, categories, and org structures — expand/collapse, single selection, aria-level/aria-expanded structure, and the complete tree keyboard pattern."
+      description="A hierarchical list for files, categories, and org structures; expand/collapse, single selection, aria-level/aria-expanded structure, and the complete tree keyboard pattern."
       when={[
         "File explorers and object stores",
         "Category/taxonomy editors",
@@ -227,7 +227,7 @@ export function TreeViewDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;TreeView items expanded selected onSelect ariaLabel /&gt;</code> —
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;TreeView items expanded selected onSelect ariaLabel /&gt;</code>:
           a flat data tree of <code>&#123; id, label, children, disabled &#125;</code>; only expanded branches render.
         </p>
       }
@@ -270,7 +270,7 @@ const [selected, setSelected] = useState<string>()
         },
       ]}
       dos={["Give the tree an ariaLabel", "Control expanded/selected for URL or store sync"]}
-      donts={["Don't render thousands of nodes fully expanded — control defaultExpanded", "Don't make every node a navigation; selection and expansion are different verbs"]}
+      donts={["Don't render thousands of nodes fully expanded; control defaultExpanded", "Don't make every node a navigation; selection and expansion are different verbs"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>role=tree/treeitem with aria-level, aria-expanded, and aria-selected.</li>
@@ -285,11 +285,11 @@ const [selected, setSelected] = useState<string>()
         "Clicking a parent both toggles and selects it (common file-explorer behavior)",
         "Disabled nodes are visible but skipped",
       ]}
-      mistakes={["Mutating the items array in place — return a new tree from onExpanded flows"]}
+      mistakes={["Mutating the items array in place; return a new tree from onExpanded flows"]}
       performance={<p>The visible list is flattened once per render; collapsed subtrees cost nothing.</p>}
       crossLinks={[
-        { label: "Drawer — explorer panels", href: "/components/drawer" },
-        { label: "Accordion — flat collapsibles", href: "/components/accordion" },
+        { label: "Drawer; explorer panels", href: "/components/drawer" },
+        { label: "Accordion; flat collapsibles", href: "/components/accordion" },
       ]}
     />
   )
@@ -300,7 +300,7 @@ export function TimelineDoc() {
     <ComponentDoc
       name="Timeline"
       importPath="@skiddph/prui/core"
-      description="A vertical chronology with markers, timestamps, descriptions, and per-item color semantics — activity feeds, audit logs, and status histories in one component."
+      description="A vertical chronology with markers, timestamps, descriptions, and per-item color semantics; activity feeds, audit logs, and status histories in one component."
       when={[
         "Activity/audit feeds",
         "Order and deployment histories",
@@ -347,12 +347,12 @@ export function TimelineDoc() {
 }))} />`,
         },
       ]}
-      dos={["Order newest-first or oldest-first — just be consistent", "Use variant to encode outcome (success/danger), not decoration"]}
-      donts={["Don't use for future/planned events needing interaction — build a stepper"]}
+      dos={["Order newest-first or oldest-first; just be consistent", "Use variant to encode outcome (success/danger), not decoration"]}
+      donts={["Don't use for future/planned events needing interaction; build a stepper"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>role=list with list items; markers and rail are aria-hidden.</li>
-          <li>Content is plain text — screen readers read it in DOM order.</li>
+          <li>Content is plain text; screen readers read it in DOM order.</li>
         </ul>
       }
       composition={<p>Drops into cards and drawer bodies; align=\"right\" mirrors for RTL-ish layouts.</p>}
@@ -361,8 +361,8 @@ export function TimelineDoc() {
       mistakes={["Cramming interactive buttons into descriptions without list semantics"]}
       performance={<p>Pure list render.</p>}
       crossLinks={[
-        { label: "TreeView — hierarchies", href: "/components/tree-view" },
-        { label: "Alert — status callouts", href: "/components/alert" },
+        { label: "TreeView; hierarchies", href: "/components/tree-view" },
+        { label: "Alert; status callouts", href: "/components/alert" },
       ]}
     />
   )

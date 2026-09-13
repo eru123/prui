@@ -18,7 +18,7 @@ function SizesDemo() {
       <Modal open={size !== null} onClose={() => setSize(null)} size={size ?? "md"} ariaLabel={`${size} modal`}>
         <h2 className="text-lg font-semibold">Size {size}</h2>
         <p className="mt-1 text-sm text-[var(--prui-dim)]">
-          Content width {size ? widths[size] : ""}. Pick another size button after closing — or resize with <code>maxWidth</code> / <code>padding</code>.
+          Content width {size ? widths[size] : ""}. Pick another size button after closing; or resize with <code>maxWidth</code> / <code>padding</code>.
         </p>
       </Modal>
     </>
@@ -43,7 +43,7 @@ function PaddingDemo() {
         ) : which === "custom" ? (
           <>
             <h2 className="text-lg font-semibold">Custom padding</h2>
-            <p className="mt-1 text-sm text-[var(--prui-dim)]">padding="12px 20px" — any CSS shorthand works.</p>
+            <p className="mt-1 text-sm text-[var(--prui-dim)]">padding="12px 20px"; any CSS shorthand works.</p>
           </>
         ) : (
           <>
@@ -158,7 +158,7 @@ function ScrollDemo() {
         <div className="mt-2 flex flex-col gap-2 text-sm text-[var(--prui-dim)]">
           {Array.from({ length: 12 }).map((_, i) => (
             <p key={i}>
-              <strong className="text-[var(--prui-fg)]">0.{12 - i}.0</strong> — item {i + 1} of the changelog. The
+              <strong className="text-[var(--prui-fg)]">0.{12 - i}.0</strong>; item {i + 1} of the changelog. The
               modal body scrolls independently; the overlay also scrolls when the modal is taller than the viewport.
             </p>
           ))}
@@ -206,7 +206,7 @@ function HideCloseDemo() {
     <>
       <Button size="sm" onClick={() => setOpen(true)}>showCloseButton=false</Button>
       <Modal open={open} onClose={() => setOpen(false)} showCloseButton={false} size="xs" ariaLabel="No close button">
-        <p className="text-sm">No X — provide your own close affordance (Escape still works).</p>
+        <p className="text-sm">No X; provide your own close affordance (Escape still works).</p>
         <div className="mt-3 flex justify-end">
           <Button size="sm" onClick={() => setOpen(false)}>Done</Button>
         </div>
@@ -222,7 +222,7 @@ export function ModalDoc() {
     <ComponentDoc
       name="Modal"
       importPath="@skiddph/prui/core"
-      description="The production modal: a sized, animated modal surface with the full overlay contract — focus trap with restoration, topmost-only Escape, scroll lock, and an inert background — plus blocked-close shake feedback and an imperative confirmModal() that resolves a Promise."
+      description="The production modal: a sized, animated modal surface with the full overlay contract; focus trap with restoration, topmost-only Escape, scroll lock, and an inert background; plus blocked-close shake feedback and an imperative confirmModal() that resolves a Promise."
       when={[
         "Content that needs the size scale (xs–xl) or custom width/padding control",
         "Flows where an overlay click must NOT dismiss (shake feedback instead)",
@@ -233,7 +233,7 @@ export function ModalDoc() {
       anatomy={
         <div className="flex flex-col gap-2">
           <p>
-            <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Modal open onClose size padding noPadding maxWidth closeOnOverlayClick disableDefaultClose showCloseButton initialFocus ariaLabel&gt;</code> —
+            <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Modal open onClose size padding noPadding maxWidth closeOnOverlayClick disableDefaultClose showCloseButton initialFocus ariaLabel&gt;</code>:
             one element renders the overlay + panel; children are yours.
           </p>
           <p>
@@ -277,7 +277,7 @@ export function ModalDoc() {
 </Modal>
 
 <Modal open={open} onClose={close} disableDefaultClose>
-  {/* no X button; Escape shakes — close only via your action */}
+  {/* no X button; Escape shakes; close only via your action */}
   <Button onClick={forceContinue}>Continue</Button>
 </Modal>`,
         },
@@ -380,15 +380,15 @@ if (ok) await api.remove(row)`,
       ]}
       dos={[
         "noPadding + sectioned content for form dialogs (the Resource pattern)",
-        "Await confirmModal() for destructive confirmations — no state wiring",
+        "Await confirmModal() for destructive confirmations; no state wiring",
         "Keep Escape working; block closes only for real data-loss cases",
         "loading on the primary action during async saves",
       ]}
       donts={[
-        "Don't manage body scroll yourself — the modal locks it",
+        "Don't manage body scroll yourself; the modal locks it",
         "Don't put the only path forward inside a blocked-close modal",
-        "Don't stack modals for the same task — one modal, one flow (nesting works, but split flows read better)",
-        "Don't use a modal for content the user will reference while working — that's a Drawer",
+        "Don't stack modals for the same task; one modal, one flow (nesting works, but split flows read better)",
+        "Don't use a modal for content the user will reference while working; that's a Drawer",
       ]}
       accessibility={
         <ul className="list-disc pl-5">
@@ -396,7 +396,7 @@ if (ok) await api.remove(row)`,
           <li>Tab/Shift+Tab cycle inside the panel; initial focus lands on the first control ("first"), a specific element (ref), or the dialog itself ("container").</li>
           <li>Escape closes only when this modal is the topmost overlay, then focus returns to the invoker.</li>
           <li>The background is aria-hidden + inert while open; body scroll locks (counter-based, nest-safe).</li>
-          <li>Blocked closes (disableDefaultClose) shake — and the shake is disabled under prefers-reduced-motion.</li>
+          <li>Blocked closes (disableDefaultClose) shake; and the shake is disabled under prefers-reduced-motion.</li>
         </ul>
       }
       composition={
@@ -409,26 +409,26 @@ if (ok) await api.remove(row)`,
       customization={
         <p>
           Panel surface, border, radius, and shadow come from tokens (--prui-surface, --prui-line,
-          --prui-shadow-modal); the scrim is --prui-scrim with a blur. className/style land on the panel —
+          --prui-shadow-modal); the scrim is --prui-scrim with a blur. className/style land on the panel:
           width via maxWidth, gutters via padding/noPadding.
         </p>
       }
       edgeCases={[
         "closeOnOverlayClick=false + disableDefaultClose=false: overlay shakes, Escape still closes",
         "disableDefaultClose hides the X button too (there is nothing for it to do)",
-        "noPadding with raw children gives a full-bleed panel — pad everything yourself",
+        "noPadding with raw children gives a full-bleed panel; pad everything yourself",
         "confirmModal resolves false on Escape, cancel, and overlay dismiss alike",
-        "Nested modals stack correctly — only the topmost answers Escape",
+        "Nested modals stack correctly; only the topmost answers Escape",
       ]}
       mistakes={[
         "Passing onClose that does nothing while open is stuck true (the X and Escape become no-ops)",
         "Swapping the modal's children for a loading spinner (losing form state) instead of using loading buttons",
-        "Using maxWidth smaller than the size's minWidth (minWidth wins — lower it deliberately)",
+        "Using maxWidth smaller than the size's minWidth (minWidth wins; lower it deliberately)",
       ]}
       performance={
         <p>
           Renders only while open (plus the exit-animation window). Overlay/listener work happens in the shared
-          overlay infrastructure — one Modal costs one portaled subtree.
+          overlay infrastructure; one Modal costs one portaled subtree.
         </p>
       }
       migration={
@@ -439,10 +439,10 @@ if (ok) await api.remove(row)`,
         </p>
       }
       crossLinks={[
-        { label: "Dialog — the compound alternative", href: "/components/dialog" },
-        { label: "Drawer / Sheet — side and bottom panels", href: "/components/drawer" },
-        { label: "Toast — post-save confirmation", href: "/components/toast" },
-        { label: "Form — the schema form used inside", href: "/forms" },
+        { label: "Dialog; the compound alternative", href: "/components/dialog" },
+        { label: "Drawer / Sheet; side and bottom panels", href: "/components/drawer" },
+        { label: "Toast; post-save confirmation", href: "/components/toast" },
+        { label: "Form; the schema form used inside", href: "/forms" },
       ]}
     />
   )

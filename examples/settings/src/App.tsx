@@ -156,7 +156,7 @@ function Members() {
     <div className="page">
       <div className="page-head">
         <h1>Members</h1>
-        <p>Invite with the tag field — invalid emails stay editable instead of committing. Roles change inline; removals confirm.</p>
+        <p>Invite with the tag field; invalid emails stay editable instead of committing. Roles change inline; removals confirm.</p>
       </div>
 
       <Card className="max-w-lg">
@@ -435,7 +435,7 @@ function Security() {
         <DialogContent>
           <DialogHeader><DialogTitle>Copy your key now</DialogTitle></DialogHeader>
           <DialogBody>
-            <p className="mb-2 text-sm text-[var(--prui-dim)]">This is the only time the full key is shown — the store keeps just the prefix.</p>
+            <p className="mb-2 text-sm text-[var(--prui-dim)]">This is the only time the full key is shown; the store keeps just the prefix.</p>
             <pre className="overflow-x-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] p-3 font-mono text-xs">{freshKey}</pre>
           </DialogBody>
           <DialogFooter>
@@ -465,7 +465,7 @@ function Audit() {
     <div className="page">
       <div className="page-head">
         <h1>Audit log</h1>
-        <p>Every action on the other pages appends here — reload the browser, it survives.</p>
+        <p>Every action on the other pages appends here; reload the browser, it survives.</p>
       </div>
       <Card className="max-w-xl">
         <CardContent className="pt-5">

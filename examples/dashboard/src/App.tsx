@@ -87,7 +87,7 @@ function Overview() {
     <div className="page">
       <div className="page-head">
         <h1>Overview</h1>
-        <p>Live numbers from the local store — edit anything and watch them move. No server: it is all localStorage.</p>
+        <p>Live numbers from the local store; edit anything and watch them move. No server: it is all localStorage.</p>
       </div>
 
       <StatRow
@@ -216,7 +216,7 @@ function Employees() {
             <TagInput
               label="Skills"
               defaultValue={r.skills}
-              helperText="Committed on comma — stored on the employee"
+              helperText="Committed on comma; stored on the employee"
               onChange={(skills) => {
                 setEmployees((prev) => prev.map((e) => (e.id === r.id ? { ...e, skills } : e)))
                 logEvent(`Updated skills for ${r.name}`)
@@ -523,7 +523,7 @@ function Record() {
             <DialogTitle>Delete {employee.name}?</DialogTitle>
           </DialogHeader>
           <DialogBody>
-            <p className="text-sm text-[var(--prui-dim)]">This writes straight to localStorage — no undo, no server holding a copy.</p>
+            <p className="text-sm text-[var(--prui-dim)]">This writes straight to localStorage; no undo, no server holding a copy.</p>
           </DialogBody>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setConfirming(false)}>Cancel</Button>

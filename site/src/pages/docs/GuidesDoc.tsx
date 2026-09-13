@@ -42,7 +42,7 @@ export function TokensDoc() {
       </p>
 
       <h2 id="z-index">Z-index</h2>
-      <p>An ordered overlay contract — never compare raw numbers again:</p>
+      <p>An ordered overlay contract; never compare raw numbers again:</p>
       <CodeView title="css" className="mt-2 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)]" code={`--prui-z-header: 30;      /* sticky app header */
 --prui-z-drawer: 40;      /* mobile navigation drawer */
 --prui-z-overlay: 50;     /* dialogs, palettes, anchored menus */
@@ -91,12 +91,12 @@ export function AccessibilityDoc() {
       <h2 id="overlays">Overlay guarantees</h2>
       <ul>
         <li><strong>Focus trap</strong>: Tab/Shift+Tab cycle inside the overlay (useFocusTrap).</li>
-        <li><strong>Initial focus</strong>: the first focusable, an explicit element, or the container — configurable per surface.</li>
+        <li><strong>Initial focus</strong>: the first focusable, an explicit element, or the container; configurable per surface.</li>
         <li><strong>Focus restoration</strong>: focus returns to the invoker on close.</li>
         <li><strong>Nested dialogs</strong>: an overlay stack registers open surfaces; only the topmost answers Escape.</li>
         <li><strong>aria-hidden + inert</strong>: the background is hidden from assistive tech and made inert where browsers support it.</li>
         <li><strong>Scroll lock</strong>: counter-based, so stacked overlays cannot unlock each other.</li>
-        <li><strong>Portals</strong>: overlays render at the body root — no ancestor overflow or transform can clip them.</li>
+        <li><strong>Portals</strong>: overlays render at the body root; no ancestor overflow or transform can clip them.</li>
       </ul>
 
       <h2 id="keyboard">Keyboard maps</h2>
@@ -134,7 +134,7 @@ export function SSRDoc() {
       <h2 id="guarantees">Guarantees</h2>
       <ul>
         <li><code>typeof document/window</code> guards around every direct access (theme, portal mount, scroll lock).</li>
-        <li><code>Portal</code> mounts to <code>document.body</code> in an effect — server output is empty, client hydration fills it.</li>
+        <li><code>Portal</code> mounts to <code>document.body</code> in an effect; server output is empty, client hydration fills it.</li>
         <li><code>applyTheme()</code> no-ops without a document; call it in a client effect or your root component.</li>
         <li>The dictionary starts synchronously English; async locale loading swaps via <code>setPruiDictionary</code>.</li>
       </ul>
@@ -166,7 +166,7 @@ export function PerformanceDoc() {
         <li>Per-primitive entries: <code>prui/core/button</code> ships only button code (CI guard <code>scripts/bundle-guard.mjs</code>).</li>
         <li>Landing JS budget under 100KB compressed (<code>scripts/landing-budget.mjs</code>).</li>
         <li>No runtime dependencies beyond react, react-router-dom, lucide-react, clsx, tailwind-merge.</li>
-        <li>Date components use plain strings — no date library.</li>
+        <li>Date components use plain strings; no date library.</li>
       </ul>
       <h2 id="rendering">Rendering</h2>
       <ul>
@@ -204,7 +204,7 @@ export function I18nDoc() {
       </p>
       <h2 id="rtl">RTL</h2>
       <p>
-        Set <code>dir="rtl"</code> on the html element. The shell and controls use logical properties (<code>padding-inline</code>, <code>margin-inline-start</code>), so spacing mirrors automatically. Anchored surfaces (Drawer sides, popover sides) stay directional by design — pass <code>side="left"</code> to mirror them.
+        Set <code>dir="rtl"</code> on the html element. The shell and controls use logical properties (<code>padding-inline</code>, <code>margin-inline-start</code>), so spacing mirrors automatically. Anchored surfaces (Drawer sides, popover sides) stay directional by design; pass <code>side="left"</code> to mirror them.
       </p>
     </Guide>
   )
@@ -274,7 +274,7 @@ export function MigrationDoc() {
 />`} />
       <h3>Moving FormButton</h3>
       <p>
-        Render the submit button inside the form (as the schema form does), or keep using FormButton — it keeps working against the deprecated implementation. For modal footers, pass a custom <code>form</code> node to <code>&lt;Resource&gt;</code>.
+        Render the submit button inside the form (as the schema form does), or keep using FormButton; it keeps working against the deprecated implementation. For modal footers, pass a custom <code>form</code> node to <code>&lt;Resource&gt;</code>.
       </p>
 
       <h2 id="variants">Button/Badge vocabulary</h2>
@@ -308,7 +308,7 @@ export function ArchitectureDoc() {
       </ul>
       <h2 id="infrastructure">Shared infrastructure</h2>
       <p>
-        <code>core/overlay.tsx</code> (portal stack, focus trap, escape, scroll lock, inert), <code>core/list-nav.ts</code> (index math + typeahead), <code>core/anchor.ts</code> (viewport-aware positioning). Every floating surface builds on these — no duplicated focus logic anywhere.
+        <code>core/overlay.tsx</code> (portal stack, focus trap, escape, scroll lock, inert), <code>core/list-nav.ts</code> (index math + typeahead), <code>core/anchor.ts</code> (viewport-aware positioning). Every floating surface builds on these; no duplicated focus logic anywhere.
       </p>
       <h2 id="contracts">Contracts under test</h2>
       <ul>

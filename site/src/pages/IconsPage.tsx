@@ -2,7 +2,7 @@ import * as React from "react"
 import { Input } from "prui/core"
 
 /**
- * /icons — the lucide icon catalog. lucide-react ships with the package, so
+ * /icons; the lucide icon catalog. lucide-react ships with the package, so
  * every icon here is one import away. Click a tile to copy its import line.
  */
 

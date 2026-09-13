@@ -12,7 +12,7 @@ export function TagInputDoc() {
     <ComponentDoc
       name="TagInput"
       importPath="@skiddph/prui/core"
-      description="Comma-separated entry as removable chips — tags, keywords, email recipients. Text commits on a separator, Enter, a multi-value paste, or blur; Backspace on an empty field removes the last chip. The chip and the value are separate concerns: labelFor decides what the chip shows while onChange keeps emitting the original strings."
+      description="Comma-separated entry as removable chips; tags, keywords, email recipients. Text commits on a separator, Enter, a multi-value paste, or blur; Backspace on an empty field removes the last chip. The chip and the value are separate concerns: labelFor decides what the chip shows while onChange keeps emitting the original strings."
       when={[
         "Free-form tags and keywords on articles, products, alerts",
         "Email recipients and CC fields with Name <email> values",
@@ -20,14 +20,14 @@ export function TagInputDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;TagInput value onChange separators parseInput validate labelFor renderTag&gt;</code> — an
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;TagInput value onChange separators parseInput validate labelFor renderTag&gt;</code>; an
           input-like box (same sizes, variants, and surface props as Input) that wraps chips plus a text field. Controlled
           with <code>string[]</code>, exactly like the multiple Select.
         </p>
       }
       demos={[
         {
-          title: "Tags — comma, Enter, paste",
+          title: "Tags; comma, Enter, paste",
           desc: "Type and press comma or Enter; paste a comma-separated list to commit it all at once. Backspace on an empty field removes the last chip.",
           render: (
             <div className="w-full max-w-md">
@@ -40,7 +40,7 @@ export function TagInputDoc() {
 <TagInput value={tags} onChange={setTags} placeholder="Add tag…" />`,
         },
         {
-          title: "Email recipients — chip shows the name, value keeps Name <email>",
+          title: "Email recipients; chip shows the name, value keeps Name <email>",
           desc: "labelFor maps a value to its chip display. The field accepts full recipient strings; the chip renders only the name, and onChange emits the originals.",
           render: (
             <div className="w-full max-w-md">
@@ -62,7 +62,7 @@ export function TagInputDoc() {
         },
         {
           title: "Validated emails with a custom chip",
-          desc: "validate rejects a candidate and keeps it editable in the field (nothing is committed); renderTag takes over the chip entirely — here with a status dot for role accounts.",
+          desc: "validate rejects a candidate and keeps it editable in the field (nothing is committed); renderTag takes over the chip entirely; here with a status dot for role accounts.",
           render: (
             <div className="w-full max-w-md">
               <TagInput
@@ -111,14 +111,14 @@ export function TagInputDoc() {
         },
       ]}
       dos={[
-        "Keep labelFor pure and cheap — it renders per chip",
+        "Keep labelFor pure and cheap; it renders per chip",
         "Use validate for format rules; rejected text stays in the field for correction",
-        "Accept separators you expect users to type anyway (, ; ) — Enter always commits too",
+        "Accept separators you expect users to type anyway (, ; ). Enter always commits too",
       ]}
       donts={[
-        "Don't use TagInput when the set of values is known — that's Select multiple with search",
+        "Don't use TagInput when the set of values is known; that's Select multiple with search",
         "Don't mutate values in labelFor; it is display-only (onChange emits the originals)",
-        "Don't build long free text here — that's Textarea",
+        "Don't build long free text here; that's Textarea",
       ]}
       accessibility={
         <ul className="list-disc pl-5">
@@ -146,15 +146,15 @@ export function TagInputDoc() {
         "commitOnBlur={false} leaves pending text as text when the user clicks away",
       ]}
       mistakes={[
-        "Forgetting that chip display (labelFor) and emitted values (onChange) can differ — assert on values in tests",
+        "Forgetting that chip display (labelFor) and emitted values (onChange) can differ; assert on values in tests",
         "Swallowing validation failures silently instead of leaving the text for the user to fix",
       ]}
       performance={
         <p>Chips are simple spans; commits batch all candidates from one paste into a single onChange.</p>
       }
       crossLinks={[
-        { label: "Input — single values", href: "/components/input" },
-        { label: "Select multiple — known options", href: "/components/select" },
+        { label: "Input; single values", href: "/components/input" },
+        { label: "Select multiple; known options", href: "/components/select" },
       ]}
     />
   )

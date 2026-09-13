@@ -255,7 +255,7 @@ export function generateTokenCss(state: DesignerState): string {
   if (state.tokens.brand) rules.push(`  --prui-brand: ${state.tokens.brand};`)
   if (state.tokens.radius) rules.push(`  --prui-radius-2: ${state.tokens.radius}px;`)
   if (state.tokens.density === "compact") rules.push(`  --prui-dim-op: 0.7;`)
-  if (!rules.length) return "/* no overrides — the theme ships sensible defaults */"
+  if (!rules.length) return "/* no overrides; the theme ships sensible defaults */"
   return [".prui-root {", ...rules, "}"].join("\n")
 }
 

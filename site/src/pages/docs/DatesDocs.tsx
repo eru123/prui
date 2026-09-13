@@ -16,7 +16,7 @@ export function CalendarDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Calendar value onSelect month onMonthChange min max disabled weekStartsOn showToday /&gt;</code> —
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Calendar value onSelect month onMonthChange min max disabled weekStartsOn showToday /&gt;</code>:
           header (prev/label/next) plus a 6×7 role=grid.
         </p>
       }
@@ -47,7 +47,7 @@ export function CalendarDoc() {
         },
       ]}
       dos={["Pass aria-label when multiple calendars can appear", "Use weekStartsOn={1} for Monday-first locales"]}
-      donts={["Don't add a date library for arithmetic — toDateKey/fromDateKey are exported"]}
+      donts={["Don't add a date library for arithmetic; toDateKey/fromDateKey are exported"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>role=grid/gridcell with aria-selected, aria-current=date for today, aria-disabled for unreachable days.</li>
@@ -62,11 +62,11 @@ export function CalendarDoc() {
         "min/max clamp keyboard focus movement too",
         "weekStartsOn shifts the weekday header row accordingly",
       ]}
-      mistakes={["Passing Date objects — values are strings", "Uncontrolled month with a controlled value that moves months"]}
+      mistakes={["Passing Date objects; values are strings", "Uncontrolled month with a controlled value that moves months"]}
       performance={<p>One grid; 42 day buttons per view.</p>}
       crossLinks={[
-        { label: "DatePicker — the anchored picker", href: "/components/date-picker" },
-        { label: "DateRangePicker — spans", href: "/components/date-range-picker" },
+        { label: "DatePicker; the anchored picker", href: "/components/date-picker" },
+        { label: "DateRangePicker; spans", href: "/components/date-range-picker" },
       ]}
     />
   )
@@ -87,7 +87,7 @@ export function DatePickerDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;DatePicker value onChange min max timepicker seconds minuteStep /&gt;</code> —
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;DatePicker value onChange min max timepicker seconds minuteStep /&gt;</code>:
           a combobox trigger, a portaled calendar panel, and (optionally) the time panel beside it.
         </p>
       }
@@ -124,7 +124,7 @@ export function DatePickerDoc() {
         },
       ]}
       dos={["Always pass ariaLabel (or bind a visible label)", "Default the time with defaultValue including '00:00' when you need stable payloads"]}
-      donts={["Don't wrap in your own popover — anchoring and dismissal are built in"]}
+      donts={["Don't wrap in your own popover; anchoring and dismissal are built in"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>Combobox trigger semantics (aria-expanded/haspopup) over a role=dialog panel.</li>
@@ -136,15 +136,15 @@ export function DatePickerDoc() {
       customization={<p>Trigger styles are the input tokens; the icon swaps to a clock when timepicker is on.</p>}
       edgeCases={[
         "timepicker=false closes the panel after the day is picked",
-        "timepicker=true stays open — refine the time, then click out or Escape",
+        "timepicker=true stays open; refine the time, then click out or Escape",
         "min/max accept the same string format and clip both typing and the grid",
       ]}
       mistakes={["Expecting a Date object from onChange", "Forgetting ariaLabel on an icon-only trigger"]}
       performance={<p>Panel mounts only while open; positioning re-computes on scroll/resize.</p>}
       crossLinks={[
-        { label: "DateRangePicker — spans", href: "/components/date-range-picker" },
-        { label: "TimePicker — time only", href: "/components/time-picker" },
-        { label: "Calendar — the inline grid", href: "/components/calendar" },
+        { label: "DateRangePicker; spans", href: "/components/date-range-picker" },
+        { label: "TimePicker; time only", href: "/components/time-picker" },
+        { label: "Calendar; the inline grid", href: "/components/calendar" },
       ]}
     />
   )
@@ -165,7 +165,7 @@ export function DateRangePickerDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;DateRangePicker value onChange min max maxRange timepicker /&gt;</code> —
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;DateRangePicker value onChange min max maxRange timepicker /&gt;</code>:
           combobox trigger + portaled panel with the calendar, optional time columns, and a clear/apply footer.
         </p>
       }
@@ -201,7 +201,7 @@ export function DateRangePickerDoc() {
         },
       ]}
       dos={["Offer presets for common spans; the picker handles the custom case", "Use maxRange when your API or pricing bounds the window"]}
-      donts={["Don't hide the trigger value — it is the confirmation of what will run"]}
+      donts={["Don't hide the trigger value; it is the confirmation of what will run"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>Same combobox-over-dialog pattern as DatePicker; clear and apply are labelled buttons.</li>
@@ -219,8 +219,8 @@ export function DateRangePickerDoc() {
       mistakes={["Confusing maxRange with max (max bounds absolute dates; maxRange bounds the span)", "Treating {from} alone as a complete range"]}
       performance={<p>Panel mounts while open; cap computation is memoized on the anchor.</p>}
       crossLinks={[
-        { label: "DatePicker — single dates", href: "/components/date-picker" },
-        { label: "TimeRangePicker — time spans", href: "/components/time-range-picker" },
+        { label: "DatePicker; single dates", href: "/components/date-picker" },
+        { label: "TimeRangePicker; time spans", href: "/components/time-range-picker" },
       ]}
     />
   )
@@ -240,7 +240,7 @@ export function TimePickerDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;TimePicker value onChange minuteStep seconds min max /&gt;</code> —
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;TimePicker value onChange minuteStep seconds min max /&gt;</code>:
           a combobox trigger over a portaled panel of column listboxes.
         </p>
       }
@@ -269,24 +269,24 @@ export function TimePickerDoc() {
         },
       ]}
       dos={["Use minuteStep to shrink the column to real choices (15/30)", "Pick seconds only when the domain needs it"]}
-      donts={["Don't use for durations — that's a number input pair"]}
+      donts={["Don't use for durations; that's a number input pair"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>Each column is a role=listbox with a labelled header; options carry aria-selected/aria-disabled.</li>
           <li>Arrows move within a column; Left/Right move between columns; Enter/Space pick; Escape closes and refocuses.</li>
         </ul>
       }
-      composition={<p>TimePanel (the inline grid) is exported for custom compositions — DatePicker embeds it. Values are zero-padded strings.</p>}
+      composition={<p>TimePanel (the inline grid) is exported for custom compositions. DatePicker embeds it. Values are zero-padded strings.</p>}
       customization={<p>Column width 64px; selection uses brand tokens; the compact variant drops headers for dense panels.</p>}
       edgeCases={[
         "min/max disable out-of-window options rather than hiding them",
         "minuteStep > 1 snaps values to the step grid",
       ]}
-      mistakes={["Passing '9:30' — values are zero-padded '09:30'", "12-hour expectations: this is 24-hour by design (convert at the edges)"]}
+      mistakes={["Passing '9:30'; values are zero-padded '09:30'", "12-hour expectations: this is 24-hour by design (convert at the edges)"]}
       performance={<p>At most 24+60(+60) buttons while open; columns scroll independently.</p>}
       crossLinks={[
-        { label: "TimeRangePicker — spans", href: "/components/time-range-picker" },
-        { label: "DatePicker timepicker — date+time", href: "/components/date-picker" },
+        { label: "TimeRangePicker; spans", href: "/components/time-range-picker" },
+        { label: "DatePicker timepicker; date+time", href: "/components/date-picker" },
       ]}
     />
   )
@@ -298,7 +298,7 @@ export function TimeRangePickerDoc() {
     <ComponentDoc
       name="TimeRangePicker"
       importPath="@skiddph/prui/core"
-      description="A from–to time span on side-by-side column pairs: pick the start, then the end — the end panel constrains itself to after the start so an inverted range can't be built. Clear/apply footer, bounds, and stepped minutes included."
+      description="A from–to time span on side-by-side column pairs: pick the start, then the end; the end panel constrains itself to after the start so an inverted range can't be built. Clear/apply footer, bounds, and stepped minutes included."
       when={[
         "Shift and store-hours windows",
         "On-call and maintenance spans within a day",
@@ -306,7 +306,7 @@ export function TimeRangePickerDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;TimeRangePicker value onChange minuteStep seconds min max /&gt;</code> —
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;TimeRangePicker value onChange minuteStep seconds min max /&gt;</code>:
           combobox trigger over a portaled panel with From/To time grids.
         </p>
       }
@@ -333,11 +333,11 @@ export function TimeRangePickerDoc() {
         },
       ]}
       dos={["Set min/max to the business window", "Use minuteStep to match your slot length"]}
-      donts={["Don't use for multi-day spans — DateRangePicker with timepicker covers those"]}
+      donts={["Don't use for multi-day spans. DateRangePicker with timepicker covers those"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>Two labelled grid groups (From/To) with the TimePicker column semantics.</li>
-          <li>The To panel disables times before From — invalid states are unbuildable, not just rejected.</li>
+          <li>The To panel disables times before From; invalid states are unbuildable, not just rejected.</li>
           <li>Escape/outside click dismiss; clear and apply are labelled buttons.</li>
         </ul>
       }
@@ -347,11 +347,11 @@ export function TimeRangePickerDoc() {
         "Changing From after To constrains/invalidates the To choices accordingly",
         "An out-of-bounds controlled value still renders (external data), but cannot be re-picked",
       ]}
-      mistakes={["Assuming overnight spans (22:00–06:00) — day-crossing needs your own modeling"]}
+      mistakes={["Assuming overnight spans (22:00–06:00); day-crossing needs your own modeling"]}
       performance={<p>Two grid groups while open; identical column rendering to TimePicker.</p>}
       crossLinks={[
-        { label: "TimePicker — single times", href: "/components/time-picker" },
-        { label: "DateRangePicker — date spans", href: "/components/date-range-picker" },
+        { label: "TimePicker; single times", href: "/components/time-picker" },
+        { label: "DateRangePicker; date spans", href: "/components/date-range-picker" },
       ]}
     />
   )

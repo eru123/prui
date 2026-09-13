@@ -8,7 +8,7 @@ export function AlertDoc() {
     <ComponentDoc
       name="Alert"
       importPath="@skiddph/prui/core"
-      description="An inline callout for persistent status feedback. It occupies layout (unlike a toast), announces with the right urgency — role=alert for danger/warning, role=status otherwise — and can host a dismiss action."
+      description="An inline callout for persistent status feedback. It occupies layout (unlike a toast), announces with the right urgency; role=alert for danger/warning, role=status otherwise; and can host a dismiss action."
       when={[
         "Form/validation outcomes the user must see while acting on the page",
         "Quotas, warnings, and degraded-state notices that persist",
@@ -64,7 +64,7 @@ export function AlertDoc() {
           title: "Form-level error banner",
           code: `{error && (
   <Alert variant="danger" title="Save failed">
-    {error.message} — correct the fields below and retry.
+    {error.message}; correct the fields below and retry.
   </Alert>
 )}`,
         },
@@ -77,11 +77,11 @@ export function AlertDoc() {
       ]}
       dos={[
         "Keep one alert per concern; stack related ones with a flex column",
-        "Use danger/warning only for what must interrupt — they announce assertively",
+        "Use danger/warning only for what must interrupt; they announce assertively",
         "Give a title when the body is longer than a line",
       ]}
       donts={[
-        "Don't use Alert for transient feedback — that is toast()'s job",
+        "Don't use Alert for transient feedback; that is toast()'s job",
         "Don't alert the same condition in two places on one screen",
         "Don't rely on color alone; the icon plus title carries the meaning",
       ]}
@@ -95,7 +95,7 @@ export function AlertDoc() {
       }
       composition={
         <p>
-          Alert is a leaf — compose it anywhere in layout: above forms, inside <code>DialogBody</code>, or as an empty-state
+          Alert is a leaf; compose it anywhere in layout: above forms, inside <code>DialogBody</code>, or as an empty-state
           explainer. Children are free-form nodes, so links and buttons can live inside the body.
         </p>
       }
@@ -107,19 +107,19 @@ export function AlertDoc() {
       }
       edgeCases={[
         "Empty children with only a title renders the icon + title row alone",
-        "onDismiss without controlled state dismisses visually but re-mounts on re-render — own the state",
+        "onDismiss without controlled state dismisses visually but re-mounts on re-render; own the state",
         "Long unbroken strings wrap normally; the icon stays top-aligned",
       ]}
       mistakes={[
         "Rendering an Alert per row in a table (use a toast or a column badge instead)",
-        "Using role=alert variants for positive news — it interrupts the screen-reader user unnecessarily",
+        "Using role=alert variants for positive news; it interrupts the screen-reader user unnecessarily",
       ]}
       performance={
         <p>Static markup, no portals, no listeners. Rendering cost is a single element tree; safe in large lists.</p>
       }
       crossLinks={[
-        { label: "Toast — transient feedback", href: "/components/toast" },
-        { label: "Dialog — modal errors", href: "/components/dialog" },
+        { label: "Toast; transient feedback", href: "/components/toast" },
+        { label: "Dialog; modal errors", href: "/components/dialog" },
       ]}
     />
   )
@@ -160,7 +160,7 @@ export function ToastDoc() {
 // mount once, near the app root
 <Toaster />
 
-// fire from anywhere — event handlers, effects, query hooks
+// fire from anywhere; event handlers, effects, query hooks
 const t = toast({ title: 'Saved', description: 'Changes are live.', variant: 'success' })
 t.dismiss()          // hide early
 toast({ title: 'Sticky', variant: 'warning', duration: 0 })  // no auto-dismiss`,
@@ -192,8 +192,8 @@ try {
         "Pair with onDismiss for cleanup (logs, refetches)",
       ]}
       donts={[
-        "Don't toast on page load — that's an Alert or a banner",
-        "Don't queue dozens on a loop — collapse repeated events into one",
+        "Don't toast on page load; that's an Alert or a banner",
+        "Don't queue dozens on a loop; collapse repeated events into one",
         "Don't put critical actions only inside a toast",
       ]}
       accessibility={
@@ -226,13 +226,13 @@ try {
       ]}
       performance={
         <p>
-          The queue updates through a tiny subscription store, not React state in your app — firing a toast never
+          The queue updates through a tiny subscription store, not React state in your app; firing a toast never
           re-renders the app tree.
         </p>
       }
       crossLinks={[
-        { label: "Alert — persistent inline feedback", href: "/components/alert" },
-        { label: "Spinner — in-place loading", href: "/components/spinner" },
+        { label: "Alert; persistent inline feedback", href: "/components/alert" },
+        { label: "Spinner; in-place loading", href: "/components/spinner" },
       ]}
     />
   )
@@ -246,13 +246,13 @@ export function ProgressDoc() {
       importPath="@skiddph/prui/core"
       description="A linear progress indicator with the complete ARIA value triplet, an optional percentage label, an indeterminate mode while the total is unknown, and four color variants."
       when={[
-        "Uploads, exports, multi-step setup — anything with a known total",
+        "Uploads, exports, multi-step setup; anything with a known total",
         "Indeterminate activity: request in flight, background job started",
         "Reading position or quota usage with a labeled meter"
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Progress value min max showValue variant&gt;</code> — a
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Progress value min max showValue variant&gt;</code>; a
           role=progressbar track plus an optional numeric label. Omit <code>value</code> for the indeterminate sweep.
         </p>
       }
@@ -291,7 +291,7 @@ export function ProgressDoc() {
         "Keep one progress line per activity",
       ]}
       donts={[
-        "Don't animate value manually — let the token transition smooth it",
+        "Don't animate value manually; let the token transition smooth it",
         "Don't use red (danger) for routine progress; reserve it for failures",
       ]}
       accessibility={
@@ -308,13 +308,13 @@ export function ProgressDoc() {
         "min === max degenerates to a full bar",
       ]}
       mistakes={[
-        "Confusing a meter (quota) with progress — this component announces as progress",
+        "Confusing a meter (quota) with progress; this component announces as progress",
         "Rendering indeterminate forever after the job finishes",
       ]}
       performance={<p>Pure presentational; value updates animate the bar width only.</p>}
       crossLinks={[
-        { label: "Spinner — compact activity", href: "/components/spinner" },
-        { label: "Skeleton — layout placeholders", href: "/components/skeleton" },
+        { label: "Spinner; compact activity", href: "/components/spinner" },
+        { label: "Skeleton; layout placeholders", href: "/components/skeleton" },
       ]}
     />
   )
@@ -333,7 +333,7 @@ export function SkeletonDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Skeleton variant lines bg&gt;</code> — text lines (with an
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Skeleton variant lines bg&gt;</code>; text lines (with an
           auto-shortened last line), a rect for blocks and media, or a circle for avatars.
         </p>
       }
@@ -374,12 +374,12 @@ export function SkeletonDoc() {
         "Announce loading separately (Spinner label or a status region) when it matters",
       ]}
       donts={[
-        "Don't skeleton everything — a single spinner is better for sub-300ms waits",
+        "Don't skeleton everything; a single spinner is better for sub-300ms waits",
         "Don't leave skeletons up on error; show an Alert",
       ]}
       accessibility={
         <ul className="list-disc pl-5">
-          <li>Always aria-hidden — no announcement, no focus.</li>
+          <li>Always aria-hidden; no announcement, no focus.</li>
           <li>The shimmer animation is disabled under prefers-reduced-motion.</li>
         </ul>
       }
@@ -391,12 +391,12 @@ export function SkeletonDoc() {
       ]}
       mistakes={[
         "Skeletons that never resolve (missing loading=false path)",
-        "Using skeletons for empty states — show an empty message instead",
+        "Using skeletons for empty states; show an empty message instead",
       ]}
       performance={<p>One div per line; the animation is a single opacity keyframe shared by all instances.</p>}
       crossLinks={[
-        { label: "Spinner — labeled activity", href: "/components/spinner" },
-        { label: "Alert — error states", href: "/components/alert" },
+        { label: "Spinner; labeled activity", href: "/components/spinner" },
+        { label: "Alert; error states", href: "/components/alert" },
       ]}
     />
   )
@@ -407,7 +407,7 @@ export function SpinnerDoc() {
     <ComponentDoc
       name="Spinner"
       importPath="@skiddph/prui/core"
-      description="An inline loading indicator with role=status and an accessible label — the announcement-friendly counterpart to Skeleton, sized from xs (inline in text) to lg (empty states)."
+      description="An inline loading indicator with role=status and an accessible label; the announcement-friendly counterpart to Skeleton, sized from xs (inline in text) to lg (empty states)."
       when={[
         "Button-level and inline activity where a skeleton is too much",
         "Empty-state loading panels",
@@ -415,7 +415,7 @@ export function SpinnerDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Spinner label size /&gt;</code> — an animated icon inside a
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Spinner label size /&gt;</code>; an animated icon inside a
           role=status wrapper; the label defaults to the localized “Loading…” string.
         </p>
       }
@@ -447,21 +447,21 @@ export function SpinnerDoc() {
         },
       ]}
       dos={["Give a specific label when the wait has a subject (“Loading chart…”)"]}
-      donts={["Don't pair a Spinner with a Skeleton for the same region", "Don't spin forever — cap and show an error"]}
+      donts={["Don't pair a Spinner with a Skeleton for the same region", "Don't spin forever; cap and show an error"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>role=status announces politely on appearance.</li>
           <li>The label is both the aria-label and a screen-reader-only span.</li>
         </ul>
       }
-      composition={<p>Inline-flex: sits in text, buttons, and table cells without breaking the line box. Button has its own loading spinner — use that one there.</p>}
+      composition={<p>Inline-flex: sits in text, buttons, and table cells without breaking the line box. Button has its own loading spinner; use that one there.</p>}
       customization={<p>Color inherits the dim token; override with className (text-[var(--prui-brand)] etc.).</p>}
       edgeCases={["The spin animation stops under prefers-reduced-motion (the icon remains visible)"]}
       mistakes={["Using aria-hidden spinners with no announcement anywhere in the region"]}
       performance={<p>One icon; the animation is Tailwind's animate-spin on a single element.</p>}
       crossLinks={[
-        { label: "Skeleton — layout placeholders", href: "/components/skeleton" },
-        { label: "Progress — known totals", href: "/components/progress" },
+        { label: "Skeleton; layout placeholders", href: "/components/skeleton" },
+        { label: "Progress; known totals", href: "/components/progress" },
       ]}
     />
   )

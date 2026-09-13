@@ -42,8 +42,8 @@ function FormDemo() {
               <Input id="invite-email" type="email" placeholder="name@company.com" />
             </div>
             <RadioGroup label="Role" defaultValue="member">
-              <Radio value="member" label="Member — can edit" />
-              <Radio value="viewer" label="Viewer — read only" />
+              <Radio value="member" label="Member; can edit" />
+              <Radio value="viewer" label="Viewer; read only" />
             </RadioGroup>
             <Checkbox label="Send a welcome email" defaultChecked />
           </DialogBody>
@@ -67,7 +67,7 @@ function InitialFocusDemo() {
         <DialogContent className="max-w-sm" initialFocus={bodyRef}>
           <DialogHeader>
             <DialogTitle>Terms</DialogTitle>
-            <DialogDescription>initialFocus="container" lands focus on the panel itself — nothing inside is focused.</DialogDescription>
+            <DialogDescription>initialFocus="container" lands focus on the panel itself; nothing inside is focused.</DialogDescription>
           </DialogHeader>
           <DialogBody>
             <div ref={bodyRef} tabIndex={-1} className="text-sm text-[var(--prui-dim)] outline-none">
@@ -92,7 +92,7 @@ function HideCloseDemo() {
         <DialogContent className="max-w-sm" hideClose>
           <DialogHeader>
             <DialogTitle>Mandatory choice</DialogTitle>
-            <DialogDescription>No X — pick one of the actions below (Escape still closes).</DialogDescription>
+            <DialogDescription>No X; pick one of the actions below (Escape still closes).</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setOpen(false)}>Later</Button>
@@ -114,7 +114,7 @@ function NestedDemo() {
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>Publish build</DialogTitle>
-            <DialogDescription>The inner confirm stacks on top — only it answers Escape.</DialogDescription>
+            <DialogDescription>The inner confirm stacks on top; only it answers Escape.</DialogDescription>
           </DialogHeader>
           <DialogBody>
             <p className="text-sm text-[var(--prui-dim)]">Press Escape with the inner dialog open: the inner one closes, this one stays.</p>
@@ -155,7 +155,7 @@ function ScrollDemo() {
           <DialogBody>
             <div className="flex flex-col gap-2 text-sm text-[var(--prui-dim)]">
               {Array.from({ length: 14 }).map((_, i) => (
-                <p key={i}>[{String(i + 1).padStart(2, "0")}:00] batch {i + 1} synced — 42 records, 0 errors.</p>
+                <p key={i}>[{String(i + 1).padStart(2, "0")}:00] batch {i + 1} synced. 42 records, 0 errors.</p>
               ))}
             </div>
           </DialogBody>
@@ -220,11 +220,11 @@ export function DialogDoc() {
             renders the panel and carries the overlay behavior; the rest are layout parts:
           </p>
           <ul className="list-disc pl-5">
-            <li><strong>DialogHeader</strong> — top padding + column stack for Title/Description</li>
-            <li><strong>DialogTitle</strong> — an h2 wired to aria-labelledby (names the dialog)</li>
-            <li><strong>DialogDescription</strong> — the muted explainer line</li>
-            <li><strong>DialogBody</strong> — consistent x/y gutters for content (flush drops vertical padding)</li>
-            <li><strong>DialogFooter</strong> — bottom padding + right-aligned action row</li>
+            <li><strong>DialogHeader</strong>; top padding + column stack for Title/Description</li>
+            <li><strong>DialogTitle</strong>; an h2 wired to aria-labelledby (names the dialog)</li>
+            <li><strong>DialogDescription</strong>; the muted explainer line</li>
+            <li><strong>DialogBody</strong>; consistent x/y gutters for content (flush drops vertical padding)</li>
+            <li><strong>DialogFooter</strong>; bottom padding + right-aligned action row</li>
           </ul>
         </div>
       }
@@ -290,7 +290,7 @@ export function DialogDoc() {
         },
         {
           title: "Inline validation feedback",
-          desc: "an Alert inside DialogBody for server-side errors — the dialog stays open, focus is already inside.",
+          desc: "an Alert inside DialogBody for server-side errors; the dialog stays open, focus is already inside.",
           render: <AlertInDialogDemo />,
           code: `{error && (
   <Alert variant="danger" title="Name taken">That name is already in use.</Alert>
@@ -363,16 +363,16 @@ function MyDialog({ trigger }: { trigger: ReactNode }) {
         },
       ]}
       dos={[
-        "Use DialogTitle + DialogDescription — they name and explain the dialog accessibly",
+        "Use DialogTitle + DialogDescription; they name and explain the dialog accessibly",
         "DialogBody for content gutters; DialogFooter for the action row",
         "One primary action per footer; ghost for cancel",
-        "Return focus is automatic — don't fight it",
+        "Return focus is automatic; don't fight it",
       ]}
       donts={[
         "Don't open dialogs on page load",
         "Don't render DialogContent outside its Dialog (context required)",
-        "Don't build long wizards here — split pages or use a Drawer",
-        "Don't add your own overlay/scroll-lock — it's built in",
+        "Don't build long wizards here; split pages or use a Drawer",
+        "Don't add your own overlay/scroll-lock; it's built in",
       ]}
       accessibility={
         <ul className="list-disc pl-5">
@@ -380,7 +380,7 @@ function MyDialog({ trigger }: { trigger: ReactNode }) {
           <li>Focus traps inside the panel; initial focus is "first" by default and configurable per mode.</li>
           <li>Escape closes only the topmost open overlay; focus returns to the invoker.</li>
           <li>Background aria-hidden + inert; body scroll locked while open.</li>
-          <li>Description is read alongside the title by screen readers — put the stakes there.</li>
+          <li>Description is read alongside the title by screen readers; put the stakes there.</li>
         </ul>
       }
       composition={
@@ -393,7 +393,7 @@ function MyDialog({ trigger }: { trigger: ReactNode }) {
       customization={
         <p>
           Panel tokens are shared with Modal (surface, line, shadow-modal); the scrim is --prui-scrim. Width via
-          className (max-w-*); DialogBody gutters are px-4 — add className to tighten or flush to remove vertical
+          className (max-w-*); DialogBody gutters are px-4; add className to tighten or flush to remove vertical
           padding.
         </p>
       }
@@ -406,7 +406,7 @@ function MyDialog({ trigger }: { trigger: ReactNode }) {
       mistakes={[
         "Skipping DialogDescription on consequential actions (screen-reader users lose the stakes)",
         "Full-width inputs without a Label (or aria-label) inside the body",
-        "Using onOpenChange only to log — it must actually set state in controlled mode",
+        "Using onOpenChange only to log; it must actually set state in controlled mode",
       ]}
       performance={
         <p>Parts are thin layout wrappers; the panel renders only while open. No listeners beyond the shared overlay stack.</p>
@@ -414,14 +414,14 @@ function MyDialog({ trigger }: { trigger: ReactNode }) {
       migration={
         <p>
           Coming from Modal: map size → className max-w-*, Modal padding → DialogBody, and onClose →
-          onOpenChange. Imperative flows (confirmModal) have no Dialog equivalent — keep those on Modal.
+          onOpenChange. Imperative flows (confirmModal) have no Dialog equivalent; keep those on Modal.
         </p>
       }
       crossLinks={[
-        { label: "Modal — sized and imperative modals", href: "/components/modal" },
-        { label: "Drawer / Sheet — side and bottom panels", href: "/components/drawer" },
-        { label: "Alert — inline status inside dialogs", href: "/components/alert" },
-        { label: "Input — controls for dialog forms", href: "/components/input" },
+        { label: "Modal; sized and imperative modals", href: "/components/modal" },
+        { label: "Drawer / Sheet; side and bottom panels", href: "/components/drawer" },
+        { label: "Alert; inline status inside dialogs", href: "/components/alert" },
+        { label: "Input; controls for dialog forms", href: "/components/input" },
       ]}
     />
   )

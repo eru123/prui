@@ -17,7 +17,7 @@ export function CheckboxDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Checkbox checked indeterminate disabled label onChange /&gt;</code> —
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Checkbox checked indeterminate disabled label onChange /&gt;</code>:
           one button with role=checkbox; the label, when given, clicks through to the box.
         </p>
       }
@@ -54,7 +54,7 @@ export function CheckboxDoc() {
         "Controlled + onChange is the norm; uncontrolled works for pure forms",
       ]}
       donts={[
-        "Don't use a checkbox for an immediate-action toggle — Switch fits that",
+        "Don't use a checkbox for an immediate-action toggle. Switch fits that",
         "Don't style over the box; keep the checked state visible",
       ]}
       accessibility={
@@ -65,19 +65,19 @@ export function CheckboxDoc() {
         </ul>
       }
       composition={<p>Pairs with DataTable's select-all header, FacetedFilter rows, and Popover panels. label accepts nodes for rich rows.</p>}
-      customization={<p>Checked colors come from --prui-brand; size is 16px square with token radius — restyle via className on the box.</p>}
+      customization={<p>Checked colors come from --prui-brand; size is 16px square with token radius; restyle via className on the box.</p>}
       edgeCases={[
         "Clicking an indeterminate box checks it (mixed → true)",
         "aria-checked=mixed requires the indeterminate prop, not a third value prop",
       ]}
       mistakes={[
         "Passing checked without onChange (permanently frozen box)",
-        "Emulating mixed with CSS only — screen readers never hear it",
+        "Emulating mixed with CSS only; screen readers never hear it",
       ]}
       performance={<p>One button element; no listeners.</p>}
       crossLinks={[
-        { label: "RadioGroup — single choice", href: "/components/radio" },
-        { label: "Switch — instant toggles", href: "/components/switch" },
+        { label: "RadioGroup; single choice", href: "/components/radio" },
+        { label: "Switch; instant toggles", href: "/components/switch" },
       ]}
     />
   )
@@ -107,9 +107,9 @@ export function RadioDoc() {
           title: "Vertical plan picker",
           render: (
             <RadioGroup label="Plan" value={plan} onChange={setPlan}>
-              <Radio value="free" label="Free — 1 workspace" />
-              <Radio value="pro" label="Pro — unlimited workspaces" />
-              <Radio value="enterprise" label="Enterprise — SSO + audit" />
+              <Radio value="free" label="Free. 1 workspace" />
+              <Radio value="pro" label="Pro; unlimited workspaces" />
+              <Radio value="enterprise" label="Enterprise. SSO + audit" />
             </RadioGroup>
           ),
           code: `<RadioGroup label="Plan" value={plan} onChange={setPlan}>
@@ -139,11 +139,11 @@ export function RadioDoc() {
         {
           title: "Arrow-key quick pick",
           code: `// focus any radio, then ArrowDown/ArrowUp selects the neighbor,
-// Home/End jump to the first/last option — no extra wiring needed`,
+// Home/End jump to the first/last option; no extra wiring needed`,
         },
       ]}
-      dos={["Give the group a label — it names the field for assistive tech", "Keep options under ~7; use Select beyond that"]}
-      donts={["Don't use radios for multi-select — Checkbox", "Don't preselect a destructive option"]}
+      dos={["Give the group a label; it names the field for assistive tech", "Keep options under ~7; use Select beyond that"]}
+      donts={["Don't use radios for multi-select. Checkbox", "Don't preselect a destructive option"]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>role=radiogroup with an accessible name; each option role=radio with aria-checked.</li>
@@ -160,8 +160,8 @@ export function RadioDoc() {
       mistakes={["Nesting interactive content inside a Radio label"]}
       performance={<p>The registry is local state in the group; options re-render on selection as expected.</p>}
       crossLinks={[
-        { label: "Checkbox — multi choice", href: "/components/checkbox" },
-        { label: "Select — long lists", href: "/components/select" },
+        { label: "Checkbox; multi choice", href: "/components/checkbox" },
+        { label: "Select; long lists", href: "/components/select" },
       ]}
     />
   )
@@ -176,12 +176,12 @@ export function ComboboxDoc() {
       description="The editable Select: type to filter, arrows to walk matches, Enter to pick. Full ARIA 1.2 combobox semantics with aria-activedescendant, a portaled listbox anchored under the input, and controlled or uncontrolled values."
       when={[
         "Selectable lists too long for radios (users, tags, cities)",
-        "Choices the user may know by name — typing beats scrolling",
+        "Choices the user may know by name; typing beats scrolling",
         "Anywhere a Select fits but search would speed it up"
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Combobox options value onChange filter /&gt;</code> — an input
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Combobox options value onChange filter /&gt;</code>; an input
           with role=combobox plus a portaled role=listbox of options; the list re-anchors on scroll and closes on
           Escape/outside click/Tab.
         </p>
@@ -231,7 +231,7 @@ export function ComboboxDoc() {
           code: `<Combobox
   aria-label="Search by email"
   noMatchText="No teammate matches."
-  // match on the label OR the value — your predicate, your rules
+  // match on the label OR the value; your predicate, your rules
   filter={(opt, q) => opt.label.includes(q) || opt.value.includes(q)}
   options={teammates}
 />`,
@@ -259,14 +259,14 @@ const options = useDebouncedSearch(q, 300)
         "Return true from filter when the server already filtered",
       ]}
       donts={[
-        "Don't use as a free-text input — it commits option values only",
+        "Don't use as a free-text input; it commits option values only",
         "Don't ship thousands of options without a custom async filter",
       ]}
       accessibility={
         <ul className="list-disc pl-5">
           <li>role=combobox + aria-expanded/controls + aria-autocomplete=list with aria-activedescendant tracking.</li>
           <li>ArrowUp/Down move (disabled options skipped), Home/End jump, Enter picks, Escape closes and refocuses, Tab closes.</li>
-          <li>The listbox portals to the body — no ancestor can clip it.</li>
+          <li>The listbox portals to the body; no ancestor can clip it.</li>
         </ul>
       }
       composition={<p>Drops into forms and toolbars at h-9. Pair with a server search by owning the query yourself and passing prefetched options.</p>}
@@ -277,13 +277,13 @@ const options = useDebouncedSearch(q, 300)
         "Disabled options render but are skipped by navigation and Enter",
       ]}
       mistakes={[
-        "Forgetting aria-label — comboboxes must be named",
+        "Forgetting aria-label; comboboxes must be named",
         "Passing new arrays each render without useMemo for big lists",
       ]}
       performance={<p>Filtering is memoized on options+query; the panel exists only while open.</p>}
       crossLinks={[
-        { label: "Select — closed-list choice", href: "/components/select" },
-        { label: "DatePicker — date choice", href: "/components/date-picker" },
+        { label: "Select; closed-list choice", href: "/components/select" },
+        { label: "DatePicker; date choice", href: "/components/date-picker" },
       ]}
     />
   )
@@ -302,7 +302,7 @@ export function FileUploadDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;FileUpload accept multiple maxSize validate onFiles files hideList /&gt;</code> —
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;FileUpload accept multiple maxSize validate onFiles files hideList /&gt;</code>:
           dropzone button + hidden input + (optional) file list with remove buttons.
         </p>
       }
@@ -350,7 +350,7 @@ export function FileUploadDoc() {
         "Use hideList when you upload immediately and show progress elsewhere",
       ]}
       donts={[
-        "Don't rely on drag alone — keyboard users need the button",
+        "Don't rely on drag alone; keyboard users need the button",
         "Don't validate only on the server if the client can catch it earlier",
       ]}
       accessibility={
@@ -358,10 +358,10 @@ export function FileUploadDoc() {
           <li>The dropzone is a real button; Enter/Space opens the native picker.</li>
           <li>Validation errors render in a role=alert region described by the trigger.</li>
           <li>Remove buttons are labelled “Remove file: name”.</li>
-          <li>The hidden input is aria-hidden — the button is the accessible surface.</li>
+          <li>The hidden input is aria-hidden; the button is the accessible surface.</li>
         </ul>
       }
-      composition={<p>onFiles hands you the full next list (adds and removes) — trivially wired to fetch/upsert logic or Progress bars.</p>}
+      composition={<p>onFiles hands you the full next list (adds and removes); trivially wired to fetch/upsert logic or Progress bars.</p>}
       customization={<p>hint replaces the dropzone copy; dragging/data-dragging attributes and token colors allow full restyling via className.</p>}
       edgeCases={[
         "multiple=false keeps only the latest file",
@@ -374,8 +374,8 @@ export function FileUploadDoc() {
       ]}
       performance={<p>File objects are held by reference; no content is read.</p>}
       crossLinks={[
-        { label: "Progress — upload progress", href: "/components/progress" },
-        { label: "Form — schema forms", href: "/forms" },
+        { label: "Progress; upload progress", href: "/components/progress" },
+        { label: "Form; schema forms", href: "/forms" },
       ]}
     />
   )
