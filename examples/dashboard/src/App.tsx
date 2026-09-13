@@ -177,6 +177,17 @@ function Employees() {
         name="employees"
         rowKey={(r) => r.id}
         pageSize={8}
+        formSchema={{
+          columns: 2,
+          submitLabel: "Save employee",
+          fields: [
+            { name: "name", label: "Full name", required: true, placeholder: "Ada Lovelace" },
+            { name: "email", label: "Email", type: "email", required: true, placeholder: "ada@northwind.io", validate: (v) => (/.+@.+\..+/.test(String(v)) ? null : "Enter a valid email.") },
+            { name: "status", label: "Status", type: "select", options: statusOptions, defaultValue: "onboarding" },
+            { name: "salary", label: "Salary (k)", type: "number", defaultValue: 110 },
+            { name: "hired", label: "Hired", type: "date", colSpan: 2 },
+          ],
+        }}
         columns={[
           {
             key: "name",
