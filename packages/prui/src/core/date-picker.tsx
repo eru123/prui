@@ -56,7 +56,7 @@ function splitValue(v: string | undefined, withTime: boolean): { date: string; t
 function usePickerPopover(anchorRef: React.RefObject<HTMLElement | null>, open: boolean, onClose: () => void) {
   const { setElement, isTop } = useOverlayStack(open)
   useEscapeKey(open, isTop, onClose)
-  const { ref: floatingRef, position } = useAnchoredPosition({ active: open, anchorRef, side: "bottom", align: "start", offsetHeight: 380 })
+  const { ref: floatingRef, position } = useAnchoredPosition({ active: open, anchorRef, side: "bottom", align: "start" })
   React.useEffect(() => {
     if (!open) return
     const onPointer = (e: MouseEvent) => {
@@ -127,7 +127,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
   }
 
   return field.wrap(
-    <>
+    <div className="relative flex w-full items-center">
       <input
         ref={(node) => {
           inputRef.current = node
@@ -165,9 +165,9 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
         )}
       />
       {timepicker ? (
-        <Clock className="pointer-events-none -ml-7 h-4 w-4 text-[var(--prui-dim)]" aria-hidden />
+        <Clock className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
       ) : (
-        <CalendarDays className="pointer-events-none -ml-7 h-4 w-4 text-[var(--prui-dim)]" aria-hidden />
+        <CalendarDays className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
       )}
       {open ? (
         <Portal>
@@ -200,7 +200,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
           </div>
         </Portal>
       ) : null}
-    </>,
+    </div>,
   )
 })
 DatePicker.displayName = "DatePicker"
@@ -361,7 +361,7 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
   const display = from ? (to ? `${value.from} – ${value.to}` : `${value.from} – …`) : ""
 
   return field.wrap(
-    <>
+    <div className="relative flex w-full items-center">
       <input
         ref={(node) => {
           inputRef.current = node
@@ -391,9 +391,9 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
         )}
       />
       {timepicker ? (
-        <Clock className="pointer-events-none -ml-7 h-4 w-4 text-[var(--prui-dim)]" aria-hidden />
+        <Clock className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
       ) : (
-        <CalendarDays className="pointer-events-none -ml-7 h-4 w-4 text-[var(--prui-dim)]" aria-hidden />
+        <CalendarDays className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
       )}
       {open ? (
         <Portal>
@@ -466,7 +466,7 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
           </div>
         </Portal>
       ) : null}
-    </>,
+    </div>,
   )
 })
 DateRangePicker.displayName = "DateRangePicker"

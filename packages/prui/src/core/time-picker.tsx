@@ -230,7 +230,7 @@ export function TimePanel({ value, onSelect, minuteStep = 1, seconds = false, mi
 function useTimePopover(anchorRef: React.RefObject<HTMLElement | null>, open: boolean, onClose: () => void) {
   const { setElement, isTop } = useOverlayStack(open)
   useEscapeKey(open, isTop, onClose)
-  const { ref: floatingRef, position } = useAnchoredPosition({ active: open, anchorRef, side: "bottom", align: "start", offsetHeight: 280 })
+  const { ref: floatingRef, position } = useAnchoredPosition({ active: open, anchorRef, side: "bottom", align: "start" })
   React.useEffect(() => {
     if (!open) return
     const onPointer = (e: MouseEvent) => {
