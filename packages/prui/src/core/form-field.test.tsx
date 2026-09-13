@@ -16,11 +16,12 @@ describe("FormField slots", () => {
         <Input />
       </FormField>,
     )
-    const rows = container.querySelectorAll(".prui-form-field > div")
+    const rows = [...container.querySelectorAll(".prui-form-field > div")]
+    const [labelRow, , helperRow] = rows
     expect(rows.length).toBe(3)
-    expect(rows[0].className).toContain("min-h-[1.25rem]")
-    expect(rows[2].className).toContain("min-h-[1rem]")
-    expect(rows[2].textContent).toBe("")
+    expect(labelRow?.className).toContain("min-h-[1.25rem]")
+    expect(helperRow?.className).toContain("min-h-[1rem]")
+    expect(helperRow?.textContent).toBe("")
   })
 
   it("reserves the label row when only helperText is set", () => {
@@ -29,9 +30,10 @@ describe("FormField slots", () => {
         <Input />
       </FormField>,
     )
-    const rows = container.querySelectorAll(".prui-form-field > div")
-    expect(rows[0].textContent).toBe("")
-    expect(rows[2].textContent).toContain("We never share it.")
+    const rows = [...container.querySelectorAll(".prui-form-field > div")]
+    const [labelRow, , helperRow] = rows
+    expect(labelRow?.textContent).toBe("")
+    expect(helperRow?.textContent).toContain("We never share it.")
   })
 
   it("inline drops both slot rows", () => {
