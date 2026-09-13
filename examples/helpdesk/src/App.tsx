@@ -7,6 +7,7 @@ import {
   confirmModal, toast, Toaster, Breadcrumb, BreadcrumbItem,
 } from "@skiddph/prui/core"
 import { Inbox, Clock, CheckCircle2, Building2, AlertTriangle } from "lucide-react"
+import { Gate, UserMenuSlot } from "./auth"
 import { useLocal, readLocal, writeLocal } from "./store"
 
 /* ------------------------------- model ------------------------------- */
@@ -349,9 +350,10 @@ const nav: NavItem[] = [
   { label: "Customers", href: "/customers", icon: Building2 },
 ]
 
-export default function AppShell() {
+function Shell() {
   return (
-    <App layoutType="B" brand={{ name: "Helpdesk" }} nav={nav} search={{ enabled: true, hotkey: "/" }} theme={false}>
+    <App layoutType="B" header={<UserMenuSlot />}
+      brand={{ name: "Helpdesk" }} nav={nav} search={{ enabled: true, hotkey: "/" }} theme={false}>
       <Routes>
         <Route path="/" element={<SupportInbox />} />
         <Route path="/sla" element={<Sla />} />
@@ -360,5 +362,13 @@ export default function AppShell() {
       </Routes>
       <Toaster />
     </App>
+  )
+}
+
+export default function AppShell() {
+  return (
+    <Gate brand={{ name: "Helpdesk" }}>
+      <Shell />
+    </Gate>
   )
 }

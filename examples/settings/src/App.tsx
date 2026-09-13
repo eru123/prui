@@ -7,6 +7,7 @@ import {
   confirmModal, toast, Toaster,
 } from "@skiddph/prui/core"
 import { Building2, Users, Bell, Shield, ScrollText, Copy, Trash2 } from "lucide-react"
+import { Gate, UserMenuSlot } from "./auth"
 import { useLocal, writeLocal } from "./store"
 
 /* ------------------------------- model ------------------------------- */
@@ -485,9 +486,10 @@ const nav: NavItem[] = [
   { label: "Audit", href: "/audit", icon: ScrollText },
 ]
 
-export default function AppShell() {
+function Shell() {
   return (
-    <App brand={{ name: "Acme / production" }} nav={nav} search={{ enabled: true, hotkey: "/" }} theme={false}>
+    <App header={<UserMenuSlot />}
+      brand={{ name: "Acme / production" }} nav={nav} search={{ enabled: true, hotkey: "/" }} theme={false}>
       <Routes>
         <Route path="/" element={<General />} />
         <Route path="/members" element={<Members />} />
@@ -497,5 +499,13 @@ export default function AppShell() {
       </Routes>
       <Toaster />
     </App>
+  )
+}
+
+export default function AppShell() {
+  return (
+    <Gate brand={{ name: "Acme / production" }}>
+      <Shell />
+    </Gate>
   )
 }

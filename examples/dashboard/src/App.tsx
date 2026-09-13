@@ -9,6 +9,7 @@ import {
   toast, Toaster, Input, Select, Modal,
 } from "@skiddph/prui/core"
 import { Users, DollarSign, CalendarCheck, Percent, LayoutDashboard, Table2, CalendarDays, Settings as SettingsIcon, Trash2 } from "lucide-react"
+import { Gate, UserMenuSlot } from "./auth"
 import { useLocal, readLocal, writeLocal, resetLocal } from "./store"
 
 /* ------------------------------- model ------------------------------- */
@@ -567,9 +568,10 @@ const nav: NavItem[] = [
   { label: "Record", href: "/record", icon: SettingsIcon },
 ]
 
-export default function AppShell() {
+function Shell() {
   return (
-    <App brand={{ name: "Northwind" }} nav={nav} search={{ enabled: true, hotkey: "/" }} theme={false} sidebar={{ width: 230 }}>
+    <App header={<UserMenuSlot />}
+      brand={{ name: "Northwind" }} nav={nav} search={{ enabled: true, hotkey: "/" }} theme={false} sidebar={{ width: 230 }}>
       <Routes>
         <Route path="/" element={<Overview />} />
         <Route path="/employees" element={<Employees />} />
@@ -580,5 +582,13 @@ export default function AppShell() {
       </Routes>
       <Toaster />
     </App>
+  )
+}
+
+export default function AppShell() {
+  return (
+    <Gate brand={{ name: "Northwind" }}>
+      <Shell />
+    </Gate>
   )
 }

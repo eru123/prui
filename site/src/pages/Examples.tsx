@@ -48,7 +48,7 @@ export function ExamplesPage() {
           <code className="rounded bg-[var(--prui-raise)] px-1">examples/</code> at the repo root. Each installs{" "}
           <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui@latest</code> from npm — never the
           workspace copy — so they exercise exactly what you install. Every card links to its live deployment and to
-          the source tree on GitHub. Every example is a complete app whose only backend is localStorage — reload and your data survives — running the fixed daylight theme with no switcher.
+          the source tree on GitHub. Every example is a complete app with login, register, forgot-password, and a header account menu for logout — the only backend is localStorage, so your session and data survive reloads. Fixed daylight theme, no switcher. Sign in with the seeded demo account or register your own.
         </p>
 
         <div className="grid gap-5 sm:grid-cols-2">
