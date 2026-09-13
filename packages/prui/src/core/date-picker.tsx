@@ -179,7 +179,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
             role="dialog"
             aria-label={ariaLabel ?? "Choose date"}
             data-prui-picker-panel
-            className="fixed z-[var(--prui-z-overlay)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-1 shadow-[var(--prui-shadow-lg)]"
+            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-1 shadow-[var(--prui-shadow-lg)]"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
             <div className={cn("flex gap-2", timepicker && "p-1")}>
@@ -405,7 +405,7 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
             role="dialog"
             aria-label={ariaLabel ?? "Choose date range"}
             data-prui-picker-panel
-            className="fixed z-[var(--prui-z-overlay)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] shadow-[var(--prui-shadow-lg)]"
+            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] shadow-[var(--prui-shadow-lg)]"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
             <div className={cn("flex gap-2 p-1", timepicker && "p-2")}>

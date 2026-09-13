@@ -308,7 +308,7 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
             role="dialog"
             aria-label={ariaLabel ?? "Choose time"}
             data-prui-time-panel-wrap
-            className="fixed z-[var(--prui-z-overlay)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-2 shadow-[var(--prui-shadow-lg)]"
+            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-2 shadow-[var(--prui-shadow-lg)]"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
             <TimePanel value={value} onSelect={select} minuteStep={minuteStep} seconds={seconds} min={min} max={max} />
@@ -401,7 +401,7 @@ export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePicke
             role="dialog"
             aria-label={ariaLabel ?? "Choose time range"}
             data-prui-time-panel-wrap
-            className="fixed z-[var(--prui-z-overlay)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-3 shadow-[var(--prui-shadow-lg)]"
+            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-3 shadow-[var(--prui-shadow-lg)]"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
             <div className="flex flex-col gap-3">
