@@ -146,8 +146,11 @@ export function useThemeState(config?: boolean | ThemeConfig) {
   )
 
   React.useEffect(() => {
+    // theme={false} opts out entirely: never clobber a theme the consumer
+    // applied themselves (e.g. a fixed daylight app)
+    if (!enabled) return
     applyTheme({ theme: state.theme, mode: state.mode, storageKey: persist ? "prui:theme" : null })
-  }, [state, persist])
+  }, [state, persist, enabled])
 
   return { enabled, state, setTheme }
 }
