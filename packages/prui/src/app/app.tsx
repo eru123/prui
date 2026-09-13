@@ -783,7 +783,7 @@ export function AppShell(props: AppProps) {
       ) : null}
       <header
         data-testid="app-header"
-        className="prui-shell-header sticky top-0 z-[var(--prui-z-header)] grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:px-6"
+        className="prui-shell-header sticky top-0 z-[var(--prui-z-header)] grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4"
       >
         {collapsible ? (
           <Button
