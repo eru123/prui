@@ -6,8 +6,8 @@ import {
   Progress, Timeline, Drawer, Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter,
   confirmModal, toast, Toaster, Breadcrumb, BreadcrumbItem,
 } from "@skiddph/prui/core"
-import { Inbox, Clock, CheckCircle2, Building2, AlertTriangle } from "lucide-react"
-import { Gate, UserMenuSlot } from "./auth"
+import { Inbox, Clock, CheckCircle2, Building2, AlertTriangle, UserCircle } from "lucide-react"
+import { Gate, UserMenuSlot, ProfilePage } from "./auth"
 import { useLocal, readLocal, writeLocal } from "./store"
 
 /* ------------------------------- model ------------------------------- */
@@ -348,6 +348,7 @@ const nav: NavItem[] = [
   { label: "SLA watch", href: "/sla", icon: Clock },
   { label: "Resolved", href: "/resolved", icon: CheckCircle2 },
   { label: "Customers", href: "/customers", icon: Building2 },
+  { label: "Profile", href: "/profile", icon: UserCircle },
 ]
 
 function Shell() {
@@ -359,6 +360,7 @@ function Shell() {
         <Route path="/sla" element={<Sla />} />
         <Route path="/resolved" element={<SupportInbox resolvedView />} />
         <Route path="/customers" element={<Customers />} />
+              <Route path="/profile" element={<ProfilePage />} />
       </Routes>
       <Toaster />
     </App>

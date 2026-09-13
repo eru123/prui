@@ -8,8 +8,8 @@ import {
   Progress, Timeline, Drawer, Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter,
   toast, Toaster, Input, Select, Modal,
 } from "@skiddph/prui/core"
-import { Users, DollarSign, CalendarCheck, Percent, LayoutDashboard, Table2, CalendarDays, Settings as SettingsIcon, Trash2 } from "lucide-react"
-import { Gate, UserMenuSlot } from "./auth"
+import { Users, DollarSign, CalendarCheck, Percent, LayoutDashboard, Table2, CalendarDays, Settings as SettingsIcon, Trash2, UserCircle } from "lucide-react"
+import { Gate, UserMenuSlot, ProfilePage } from "./auth"
 import { useLocal, readLocal, writeLocal, resetLocal } from "./store"
 
 /* ------------------------------- model ------------------------------- */
@@ -566,6 +566,7 @@ const nav: NavItem[] = [
   { label: "Leave", href: "/leave", icon: CalendarDays },
   { label: "Reports", href: "/reports", icon: Table2 },
   { label: "Record", href: "/record", icon: SettingsIcon },
+  { label: "Profile", href: "/profile", icon: UserCircle },
 ]
 
 function Shell() {
@@ -579,6 +580,7 @@ function Shell() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/record" element={<Record />} />
         <Route path="/record/:id" element={<Record />} />
+              <Route path="/profile" element={<ProfilePage />} />
       </Routes>
       <Toaster />
     </App>

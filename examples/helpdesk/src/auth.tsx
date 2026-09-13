@@ -1,6 +1,9 @@
 import * as React from "react"
 import { LoginPage, RegisterPage, ForgotPasswordPage } from "@skiddph/prui/pages"
-import { Dropdown, Avatar, toast } from "@skiddph/prui/core"
+import {
+  Dropdown, Avatar, Button, Card, CardHeader, CardTitle, CardContent, Input, Separator, Badge,
+  confirmModal, toast,
+} from "@skiddph/prui/core"
 import { useLocal } from "./store"
 
 /**
@@ -44,6 +47,13 @@ export function useAuth() {
       return null
     },
     signOut: () => setAuth((prev) => ({ ...prev, current: null })),
+    updateUser: (patch: Partial<AuthUser>) =>
+      setAuth((prev) => ({
+        users: prev.users.map((u) => (u.email === prev.current ? { ...u, ...patch } : u)),
+        current: patch.email ?? prev.current,
+      })),
+    deleteUser: () =>
+      setAuth((prev) => ({ users: prev.users.filter((u) => u.email !== prev.current), current: null })),
   }
 }
 
@@ -149,10 +159,147 @@ export function UserMenuSlot() {
     <UserMenu
       name={user.name}
       email={user.email}
-      onSignOut={() => {
+      onSignOut={async () => {
+        // confirmation for demonstration: destructive-ish actions confirm
+        const ok = await confirmModal({
+          title: "Sign out?",
+          message: "Your data stays in this browser's localStorage — sign back in anytime.",
+        })
+        if (!ok) return
         signOut()
         toast({ title: "Signed out", variant: "neutral" })
       }}
     />
+  )
+}
+
+/**
+ * The profile page: edit the stored account — display name, password change
+ * with the eye fields and validation, and a danger zone. Every save writes
+ * the auth store (and survives reloads like everything else).
+ */
+export function ProfilePage() {
+  const { user, updateUser, deleteUser, signOut } = useAuth()
+  const [name, setName] = React.useState(user?.name ?? "")
+  const [currentPw, setCurrentPw] = React.useState("")
+  const [newPw, setNewPw] = React.useState("")
+  const [pwError, setPwError] = React.useState<string | null>(null)
+
+  if (!user) return null
+
+  const saveName = () => {
+    updateUser({ name })
+    toast({ title: "Profile updated", variant: "success" })
+  }
+
+  const changePassword = async () => {
+    if (currentPw !== user.password) {
+      setPwError("Current password is wrong.")
+      return
+    }
+    if (newPw.length < 8) {
+      setPwError("New password needs 8+ characters.")
+      return
+    }
+    const ok = await confirmModal({ title: "Change password?", message: "The new password replaces the one in this browser's store." })
+    if (!ok) return
+    updateUser({ password: newPw })
+    setCurrentPw("")
+    setNewPw("")
+    setPwError(null)
+    toast({ title: "Password changed", variant: "success" })
+  }
+
+  return (
+    <div className="page">
+      <div className="page-head">
+        <h1>Profile</h1>
+        <p>Your account lives in localStorage with everything else — edit it and reload to believe it.</p>
+      </div>
+
+      <Card className="max-w-md">
+        <CardContent className="flex items-center gap-4 pt-5">
+          <Avatar fallback={user.name} size="lg" />
+          <div className="min-w-0">
+            <div className="truncate text-sm font-semibold">{user.name}</div>
+            <div className="flex items-center gap-2">
+              <span className="truncate text-xs text-[var(--prui-dim)]">{user.email}</span>
+              <Badge variant="ok">signed in</Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="max-w-md">
+        <CardHeader><CardTitle className="text-sm">Display name</CardTitle></CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} helperText="Shown in the header account menu." />
+          <div>
+            <Button size="sm" variant="primary" disabled={!name.trim() || name === user.name} onClick={saveName}>
+              Save name
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="max-w-md">
+        <CardHeader><CardTitle className="text-sm">Password</CardTitle></CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <Input
+            type="password"
+            label="Current password"
+            value={currentPw}
+            onChange={(e) => { setCurrentPw(e.target.value); setPwError(null) }}
+            helperText=" "
+          />
+          <Input
+            type="password"
+            label="New password"
+            value={newPw}
+            onChange={(e) => { setNewPw(e.target.value); setPwError(null) }}
+            helperText={pwError ?? "8+ characters. The eye toggles never steal your caret."}
+            error={!!pwError || (newPw.length > 0 && newPw.length < 8)}
+          />
+          <div>
+            <Button size="sm" variant="primary" disabled={!currentPw || !newPw} onClick={changePassword}>
+              Change password
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="max-w-md">
+        <CardHeader><CardTitle className="text-sm">Danger zone</CardTitle></CardHeader>
+        <CardContent className="flex flex-col gap-2">
+          <p className="text-xs text-[var(--prui-dim)]">Both actions confirm first — the modal is the point.</p>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="default"
+              onClick={async () => {
+                const ok = await confirmModal({ title: "Sign out?", message: "Your data stays in this browser." })
+                if (!ok) return
+                signOut()
+                toast({ title: "Signed out", variant: "neutral" })
+              }}
+            >
+              Sign out
+            </Button>
+            <Button
+              variant="danger"
+              onClick={async () => {
+                const ok = await confirmModal({ title: "Delete account?", message: "Removes your user from this browser's store and signs you out.", type: "danger" })
+                if (!ok) return
+                deleteUser()
+                toast({ title: "Account deleted", variant: "danger" })
+              }}
+            >
+              Delete account
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Separator />
+    </div>
   )
 }

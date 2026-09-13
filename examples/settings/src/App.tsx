@@ -6,8 +6,8 @@ import {
   Avatar, Separator, Timeline, Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter,
   confirmModal, toast, Toaster,
 } from "@skiddph/prui/core"
-import { Building2, Users, Bell, Shield, ScrollText, Copy, Trash2 } from "lucide-react"
-import { Gate, UserMenuSlot } from "./auth"
+import { Building2, Users, Bell, Shield, ScrollText, Copy, Trash2, UserCircle } from "lucide-react"
+import { Gate, UserMenuSlot, ProfilePage } from "./auth"
 import { useLocal, writeLocal } from "./store"
 
 /* ------------------------------- model ------------------------------- */
@@ -484,6 +484,7 @@ const nav: NavItem[] = [
   { label: "Notifications", href: "/notifications", icon: Bell },
   { label: "Security", href: "/security", icon: Shield },
   { label: "Audit", href: "/audit", icon: ScrollText },
+  { label: "Profile", href: "/profile", icon: UserCircle },
 ]
 
 function Shell() {
@@ -496,6 +497,7 @@ function Shell() {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/security" element={<Security />} />
         <Route path="/audit" element={<Audit />} />
+              <Route path="/profile" element={<ProfilePage />} />
       </Routes>
       <Toaster />
     </App>
