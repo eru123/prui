@@ -1,6 +1,5 @@
 import { LayoutDashboard, Users, CalendarDays, TrendingUp } from "lucide-react"
 import { App, Form, Settings, appPropsMeta, resourcePropsMeta, formPropsMeta, settingsPropsMeta, authShellPropsMeta, sessionTimeoutPropsMeta, type NavItem } from "prui/app"
-import { Button } from "prui/core"
 import type { PropsMeta } from "prui/core"
 import { MetaOnly, PropsTable } from "../../components/Playground"
 import { CodeView } from "../../components/CodeView"
@@ -28,11 +27,9 @@ const SHELL_NAV: NavItem[] = [
   { label: "Reports", href: "/reports", icon: CalendarDays },
 ]
 
-const VARIANTS: { v: "A" | "B" | "C" | "D"; name: string; blurb: string }[] = [
+const VARIANTS: { v: "A" | "B"; name: string; blurb: string }[] = [
   { v: "A", name: "A · full-height sidebar", blurb: "Sidebar spans the full height; the header sits in the content column. Collapses to an icon rail." },
   { v: "B", name: "B · full-width header", blurb: "Header across the top with the sidebar below it. Collapses to an icon rail." },
-  { v: "C", name: "C · header + sidebar header", blurb: "A and B combined: full-width topbar plus a sidebar header row matching its height and the sidebar's width. Collapses to an icon rail." },
-  { v: "D", name: "D · facebook style", blurb: "Full-width topbar, centered container, sticky embedded sidebar beside stacked cards. The sidebar follows the content, never fixed to the viewport left." },
 ]
 
 const APP_TOC = [
@@ -136,17 +133,12 @@ export function AppLayerDoc() {
                         <App
                           router="memory"
                           layoutType={v.v}
-                          sidebarHeader={v.v === "C" ? <span className="prui-nav-label text-sm font-semibold" style={{ color: "var(--prui-fg)" }}>Workspace</span> : undefined}
                           brand={{ name: "Acme" }}
                           nav={SHELL_NAV}
                           search={{ enabled: true, hotkey: "/" }}
                           theme={false}
                           sidebar={{ width: 190 }}
-                          sidebarFooter={
-                            v.v === "D" ? (
-                              <Button variant="primary" size="sm" className="w-full">New project</Button>
-                            ) : undefined
-                          }
+
                         >
                           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                             {[0, 1, 2].map((i) => (
@@ -169,24 +161,11 @@ export function AppLayerDoc() {
 // A (default): sidebar full height, header in the content column
 <App layoutType="A" nav={nav}>{routes}</App>
 
-// B: full-width header, expanded sidebar below it
+// B: full-width header, sidebar below it
 <App layoutType="B" nav={nav}>{routes}</App>
 
-// C: A + B combined. Full-width topbar (brand + collapse toggle) plus an
-//    opt-in sidebar header row (topbar height, sidebar width) for workspace
-//    content; without sidebarHeader there is no second row
-<App layoutType="C" nav={nav} sidebarHeader={<span>Workspace</span>}>
-  {routes}
-</App>
-
-// A, B, C collapse to an icon rail via the sidebar toggle, on desktop
-// and on mobile (the header button switches the phone to rail mode).
-
-// D: facebook style. Full-width topbar, centered sticky sidebar beside
-//    stacked cards; the page scrolls, the sidebar follows the content.
-<App layoutType="D" nav={nav} sidebarFooter={<Button>New project</Button>}>
-  {routes}
-</App>`}
+// both collapse to an icon rail via the header toggle, on desktop and
+// mobile (the header button switches the phone to rail mode).`}
               title="layoutType.tsx"
               height={240}
             />

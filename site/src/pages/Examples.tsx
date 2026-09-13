@@ -30,10 +30,10 @@ const EXAMPLES = [
   {
     name: "settings",
     title: "Workspace settings",
-    layout: "C · header + sidebar header",
+    layout: "A · full-height sidebar",
     icon: Settings,
     blurb:
-      "Layout C with the sidebar header row as a workspace switcher. Tabs over FormField-slotted fields: labeled inputs, select, switch, admin TagInput (chips show names, values keep Name <email>), and an InputGroup budget field.",
+      "Tabs over FormField-slotted fields: labeled inputs, select, switch, admin TagInput (chips show names, values keep Name <email>), and an InputGroup budget field — daylight theme, fixed.",
   },
 ] as const
 
@@ -48,7 +48,7 @@ export function ExamplesPage() {
           <code className="rounded bg-[var(--prui-raise)] px-1">examples/</code> at the repo root. Each installs{" "}
           <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui@latest</code> from npm — never the
           workspace copy — so they exercise exactly what you install. Every card links to its live deployment and to
-          the source tree on GitHub.
+          the source tree on GitHub. Every example runs the fixed daylight theme — no switcher.
         </p>
 
         <div className="grid gap-5 sm:grid-cols-2">

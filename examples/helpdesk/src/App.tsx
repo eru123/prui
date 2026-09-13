@@ -37,7 +37,7 @@ const priorityOptions = [
 const priorityColor = (p: Ticket["priority"]) =>
   p === "urgent" ? "var(--prui-danger)" : p === "normal" ? "var(--prui-fg)" : "var(--prui-dim)"
 
-function Inbox() {
+function SupportInbox() {
   const [, bump] = React.useState(0)
   return (
     <div className="page">
@@ -139,12 +139,12 @@ export default function AppShell() {
       brand={{ name: "Helpdesk" }}
       nav={nav}
       search={{ enabled: true, hotkey: "/" }}
-      theme={{ default: "control", persist: true }}
+      theme={false}
     >
       <Routes>
-        <Route path="/" element={<Inbox />} />
-        <Route path="/sla" element={<Inbox />} />
-        <Route path="/resolved" element={<Inbox />} />
+        <Route path="/" element={<SupportInbox />} />
+        <Route path="/sla" element={<SupportInbox />} />
+        <Route path="/resolved" element={<SupportInbox />} />
       </Routes>
     </App>
   )

@@ -29,7 +29,7 @@ function WorkspaceSettings() {
     <div className="page">
       <div className="page-head">
         <h1>Workspace</h1>
-        <p>Layout C: the sidebar header row is the workspace switcher; fields use the FormField slot system.</p>
+        <p>Settings over the FormField slot system: labeled inputs, switch, admin TagInput, and an InputGroup budget.</p>
       </div>
 
       <Tabs defaultValue="general">
@@ -109,15 +109,9 @@ function WorkspaceSettings() {
 export default function AppShell() {
   return (
     <App
-      layoutType="C"
-      brand={{ name: "Acme" }}
-      sidebarHeader={
-        <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600 }}>
-          <Building2 size={15} aria-hidden /> Acme / production
-        </span>
-      }
+      brand={{ name: "Acme / production" }}
       nav={nav}
-      theme={{ default: "control", persist: true }}
+      theme={false}
     >
       <Routes>
         <Route path="/" element={<WorkspaceSettings />} />

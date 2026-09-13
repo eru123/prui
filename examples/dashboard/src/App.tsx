@@ -128,7 +128,7 @@ export default function AppShell() {
       brand={{ name: "Northwind" }}
       nav={nav}
       search={{ enabled: true, hotkey: "/" }}
-      theme={{ default: "control", persist: true }}
+      theme={false}
       sidebar={{ width: 230 }}
     >
       <Routes>
