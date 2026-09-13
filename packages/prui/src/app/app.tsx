@@ -113,19 +113,12 @@ export interface AppProps {
   /** A pathname (e.g. "/") on which every nav group starts expanded. */
   expandAllOn?: string
   /**
-   * Shell arrangement (A/B/C also work collapsed on mobile via the rail):
+   * Shell arrangement (both collapse to an icon rail on desktop and mobile):
    *  - "A" full-height sidebar, header inside the content column (default)
    *  - "B" full-width header, sidebar below it
-   *  - "C" full-width header PLUS a sidebar header row (topbar height,
-   *    sidebar width), nav below that; the combination of A and B
-   *  - "D" facebook style: full-width topbar, centered sticky embedded
-   *    sidebar beside stacked cards (page scroll, sidebar not fixed left)
-   * A, B and C are collapsible to an icon rail (desktop and mobile).
    */
-  layoutType?: "A" | "B" | "C" | "D"
-  /** Content of the layout-C sidebar header; defaults to the brand. */
-  sidebarHeader?: React.ReactNode
-  /** Prominent action slot pinned to the sidebar bottom (e.g. layout D). */
+  layoutType?: "A" | "B"
+  /** Prominent action slot pinned to the sidebar bottom. */
   sidebarFooter?: React.ReactNode
   children?: React.ReactNode
 }
@@ -619,7 +612,6 @@ export function AppShell(props: AppProps) {
     pagesConfig,
     expandAllOn,
     layoutType = "A",
-    sidebarHeader,
     sidebarFooter,
     children,
   } = props
@@ -700,7 +692,7 @@ export function AppShell(props: AppProps) {
 
   const width = sidebarCfg.width ?? 240
 
-  const railCollapsed = !railExpanded && layoutType !== "D"
+  const railCollapsed = !railExpanded
 
   return (
     <div
@@ -770,17 +762,6 @@ export function AppShell(props: AppProps) {
         </Portal>
       ) : null}
 
-      {/* C's sidebar header row is an opt-in workspace strip (sidebarHeader
-          content, e.g. a workspace switcher): the brand lives in the topbar,
-          so without sidebarHeader there is no second row to duplicate it */}
-      {layoutType === "C" && sidebarHeader ? (
-        <div
-          data-testid="sidebar-header"
-          className="prui-shell-sidehead hidden h-14 min-w-0 items-center gap-2 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 md:flex"
-        >
-          {sidebarHeader}
-        </div>
-      ) : null}
       <header
         data-testid="app-header"
         className="prui-shell-header sticky top-0 z-[var(--prui-z-header)] grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4"
@@ -798,18 +779,16 @@ export function AppShell(props: AppProps) {
           </Button>
         ) : null}
         <div className="flex min-w-0 items-center gap-1 justify-self-start">
-          {layoutType !== "D" ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={railCollapsed ? t.expandSidebar : t.collapseSidebar}
-              className="hidden md:inline-flex"
-              onClick={() => setRailExpanded((r) => !r)}
-              data-testid="sidebar-toggle"
-            >
-              {railCollapsed ? <ChevronsRight className="h-4 w-4" aria-hidden /> : <ChevronsLeft className="h-4 w-4" aria-hidden />}
-            </Button>
-          ) : null}
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={railCollapsed ? t.expandSidebar : t.collapseSidebar}
+            className="hidden md:inline-flex"
+            onClick={() => setRailExpanded((r) => !r)}
+            data-testid="sidebar-toggle"
+          >
+            {railCollapsed ? <ChevronsRight className="h-4 w-4" aria-hidden /> : <ChevronsLeft className="h-4 w-4" aria-hidden />}
+          </Button>
           <BrandMark brand={brand} />
         </div>
         {searchEnabled ? (
@@ -884,8 +863,7 @@ export const appPropsMeta: PropsMeta = {
     { name: "initialEntries", type: "string[]", default: "undefined", control: "object" },
     { name: "pages", type: "'auth' | 'utility' | 'auth+utility'", default: "undefined", control: "select", options: ["auth", "utility", "auth+utility"] },
     { name: "expandAllOn", type: "string (pathname)", default: "undefined", control: "text" },
-    { name: "layoutType", type: "'A' | 'B' | 'C' | 'D'", default: "'A'", control: "select", options: ["A", "B", "C", "D"] },
-    { name: "sidebarHeader", type: "ReactNode (layout C sidebar header)", default: "brand", control: "none" },
+    { name: "layoutType", type: "'A' | 'B'", default: "'A'", control: "select", options: ["A", "B"] },
     { name: "sidebarFooter", type: "ReactNode", default: null, control: "none" },
     { name: "header", type: "ReactNode", default: null, control: "none" },
     { name: "children", type: "ReactNode", default: "Outlet", control: "none" },

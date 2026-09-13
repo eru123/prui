@@ -363,7 +363,7 @@ describe("Settings", () => {
 })
 
 describe("Shell layouts (layoutType)", () => {
-  function shell(layoutType: "A" | "B" | "C" | "D", props: Record<string, unknown> = {}) {
+  function shell(layoutType: "A" | "B", props: Record<string, unknown> = {}) {
     return render(
       <MemoryRouter initialEntries={["/"]}>
         <AppShell brand={{ name: "T" }} nav={nav} layoutType={layoutType} {...props}>
@@ -373,8 +373,8 @@ describe("Shell layouts (layoutType)", () => {
     )
   }
 
-  it("A, B and C start expanded and expose the collapse toggle", () => {
-    for (const v of ["A", "B", "C"] as const) {
+  it("both layouts start expanded and expose the collapse toggle", () => {
+    for (const v of ["A", "B"] as const) {
       const { unmount } = shell(v)
       const el = document.querySelector(".prui-shell")
       expect(el?.getAttribute("data-layout")).toBe(v)
@@ -407,26 +407,16 @@ describe("Shell layouts (layoutType)", () => {
     expect(screen.queryByTestId("rail-toggle-mobile")).toBeNull()
   })
 
-  it("C renders a sidebar header row aligned with the topbar", () => {
-    shell("C", { sidebarHeader: <span>T</span> })
-    const head = screen.getByTestId("sidebar-header")
-    expect(head).toBeInTheDocument()
-    expect(head.className).toContain("h-14")
-    expect(head).toHaveTextContent("T")
-  })
-
-  it("C keeps the brand and toggle in the topbar; the sidehead is opt-in", () => {
-    // without sidebarHeader there is no second row to duplicate the brand
-    const { unmount } = shell("C")
-    expect(screen.queryByTestId("sidebar-header")).toBeNull()
-    const header = screen.getByTestId("app-header")
-    const toggle = within(header).getByTestId("sidebar-toggle")
-    const brand = within(header).getAllByText("T")[0]
-    if (!brand) throw new Error("brand not found in the C topbar")
-    expect(toggle.compareDocumentPosition(brand) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    unmount()
-    shell("C", { sidebarHeader: <span>Workspace</span> })
-    expect(screen.getByTestId("sidebar-header")).toHaveTextContent("Workspace")
+  it("both layouts carry the toggle before the brand in the topbar", () => {
+    for (const v of ["A", "B"] as const) {
+      const { unmount } = shell(v)
+      const header = screen.getByTestId("app-header")
+      const toggle = within(header).getByTestId("sidebar-toggle")
+      const brand = within(header).getAllByText("T")[0]
+      if (!brand) throw new Error(`brand not found in the ${v} topbar`)
+      expect(toggle.compareDocumentPosition(brand) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      unmount()
+    }
   })
 
   it("a collapsed group is one rail item opening a flyout menu", async () => {
@@ -489,10 +479,8 @@ describe("Shell layouts (layoutType)", () => {
     expect(screen.queryByText("Section")).toBeNull()
   })
 
-  it("D has no collapse toggle and renders the sidebar footer slot", () => {
-    shell("D", { sidebarFooter: <button>New project</button> })
-    expect(screen.queryByTestId("sidebar-toggle")).toBeNull()
-    expect(screen.queryByTestId("rail-toggle-mobile")).toBeNull()
-    expect(screen.getByText("New project")).toBeInTheDocument()
+  it("the sidebar footer slot renders above the collapse-free bottom", () => {
+    shell("B", { sidebarFooter: <button>New project</button> })
+    expect(screen.getByTestId("sidebar-footer")).toHaveTextContent("New project")
   })
 })

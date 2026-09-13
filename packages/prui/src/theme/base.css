@@ -197,7 +197,7 @@ body.modal-open { overflow: hidden; }
 }
 .prui-shell-sidebar { display: none; }
 
-/* collapsed rail: applies to A/B/C on every viewport (mobile included) */
+/* collapsed rail: applies on every viewport (mobile included) */
 .prui-shell[data-collapsed="true"] { --prui-shell-sidebar: var(--prui-rail-width, 64px); }
 .prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-nav-label,
 .prui-shell[data-collapsed="true"] .prui-shell-sidebar .prui-nav-chevron { display: none; }
@@ -216,9 +216,6 @@ body.modal-open { overflow: hidden; }
   font-size: 10px;
   font-weight: 600;
 }
-/* collapsed to the rail, the workspace strip hides: its row auto-collapses
-   and the nav rail starts right under the topbar */
-.prui-shell[data-collapsed="true"] .prui-shell-sidehead { display: none; }
 .prui-nav-mono { display: none; }
 
 @media (max-width: 47.99rem) {
@@ -274,39 +271,4 @@ body.modal-open { overflow: hidden; }
       "header header"
       "sidebar content";
   }
-
-  /* C: full-width header + sidebar header (topbar height, sidebar width) */
-  .prui-shell[data-layout="C"] {
-    grid-template-rows: auto auto minmax(0, 1fr);
-    grid-template-areas:
-      "header   header"
-      "sidehead content"
-      "sidebar  content";
-  }
-  .prui-shell-sidehead { grid-area: sidehead; }
-
-  /* D: facebook style. Page-level scroll; centered sidebar+content pair;
-     sidebar sticky beside the content, never fixed to the viewport left. */
-  .prui-shell[data-layout="D"] {
-    height: auto;
-    min-height: 100dvh;
-    overflow: visible;
-    column-gap: 1.5rem;
-    grid-template-columns: minmax(1rem, 1fr) minmax(13rem, 16rem) minmax(0, 56rem) minmax(1rem, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
-    grid-template-areas:
-      "header header header header"
-      ". sidebar content .";
-  }
-  .prui-shell[data-layout="D"] .prui-shell-sidebar {
-    position: sticky;
-    top: 4.5rem; /* topbar (3.5rem) + breathing room */
-    align-self: start;
-    max-height: calc(100dvh - 5.5rem);
-    overflow-y: auto;
-    border-right: none;
-    background: transparent;
-  }
-  .prui-shell[data-layout="D"] .prui-shell-header { border-bottom: none; background: var(--prui-background); }
-  .prui-shell[data-layout="D"] .prui-shell-content { overflow: visible; }
 }
