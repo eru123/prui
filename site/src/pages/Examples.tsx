@@ -13,11 +13,11 @@ const REPO = "https://github.com/eru123/prui"
 const EXAMPLES = [
   {
     name: "dashboard",
-    title: "Northwind dashboard",
+    title: "Northwind HR",
     layout: "A · full-height sidebar",
     icon: LayoutDashboard,
     blurb:
-      "Layout A with StatRow cards and a full CRUD Resource over in-memory data: search, faceted status filter, salary range, hired date range, sort, pagination, create, edit, delete.",
+      "A complete HR app over localStorage: live StatRow, a full CRUD Resource (search, status facet, salary range, hired date range, sort, 8/page, expandable rows with skills and notes), leave approvals, CSV export modal, a record screen with Drawer notes and confirmed deletes, and an activity timeline.",
   },
   {
     name: "helpdesk",
@@ -25,7 +25,7 @@ const EXAMPLES = [
     layout: "B · full-width header",
     icon: LifeBuoy,
     blurb:
-      "Layout B in a real tool: a tickets resource with priority and customer facets, daterange on opened, toast confirmations on resolve and delete, and header actions firing toasts.",
+      "Ticket operations with no server: inbox Resource with customer and priority facets plus a date range, inline ticket workflow in expanded rows (assignee, priority, status, notes), SLA watch with Progress budgets, a resolved archive with confirmed bulk clear, and live customer cards.",
   },
   {
     name: "settings",
@@ -33,7 +33,7 @@ const EXAMPLES = [
     layout: "A · full-height sidebar",
     icon: Settings,
     blurb:
-      "Tabs over FormField-slotted fields: labeled inputs, select, switch, admin TagInput (chips show names, values keep Name <email>), and an InputGroup budget field — daylight theme, fixed.",
+      "Five pages, one store: general settings with inline validation (error fields), member invites through a validated TagInput, a notification matrix, security with shown-once API keys, the password eye field, and confirmModal danger zones — every action lands in an audit Timeline that survives reloads.",
   },
 ] as const
 
@@ -48,7 +48,7 @@ export function ExamplesPage() {
           <code className="rounded bg-[var(--prui-raise)] px-1">examples/</code> at the repo root. Each installs{" "}
           <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui@latest</code> from npm — never the
           workspace copy — so they exercise exactly what you install. Every card links to its live deployment and to
-          the source tree on GitHub. Every example runs the fixed daylight theme — no switcher.
+          the source tree on GitHub. Every example is a complete app whose only backend is localStorage — reload and your data survives — running the fixed daylight theme with no switcher.
         </p>
 
         <div className="grid gap-5 sm:grid-cols-2">
