@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cn } from "./cn"
-import { useOverlayStack, useEscapeKey } from "./overlay"
+import { Portal, useOverlayStack, useEscapeKey } from "./overlay"
+import { useAnchoredPosition } from "./anchor"
 import { moveIndex, homeIndex, endIndex, typeaheadIndex } from "./list-nav"
 import type { PropsMeta } from "./props-meta"
 
@@ -51,6 +52,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(function
   const open = isControlled ? openProp : uncontrolled
   const rootRef = React.useRef<HTMLDivElement>(null)
   const menuRef = React.useRef<HTMLDivElement>(null)
+  const [menuEl, setMenuEl] = React.useState<HTMLDivElement | null>(null)
   const triggerRef = React.useRef<HTMLElement>(null)
   const [activeIndex, setActiveIndex] = React.useState(-1)
   const typeaheadRef = React.useRef({ buffer: "", at: 0 })
@@ -71,12 +73,25 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(function
   useEscapeKey(open, isTop, () => {
     setOpen(false)
   })
+  // the menu floats in a body portal anchored under the trigger; inline
+  // placement would clip inside overflow containers (scrollable sidebars,
+  // table toolbars) and grow them instead of overlaying
+  const { ref: floatingRef, position } = useAnchoredPosition({
+    active: open,
+    anchorRef: triggerRef,
+    side: "bottom",
+    align,
+  })
 
   // outside pointer press closes (non-modal dismiss)
   React.useEffect(() => {
     if (!open) return
     const onDocClick = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false)
+      const target = e.target as Node
+      if (rootRef.current?.contains(target)) return
+      // the menu lives in a portal now; its clicks are inside the dropdown
+      if (menuRef.current?.contains(target)) return
+      setOpen(false)
     }
     document.addEventListener("mousedown", onDocClick)
     return () => document.removeEventListener("mousedown", onDocClick)
@@ -105,7 +120,9 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(function
     } else if (menuRef.current) {
       menuRef.current.focus()
     }
-  }, [open, menuItems])
+    // menuEl in deps: the portaled menu attaches after the open commit,
+    // so the effect must re-run once the element exists
+  }, [open, menuEl, menuItems])
 
   const onMenuKeyDown = (e: React.KeyboardEvent) => {
     const els = menuItems()
@@ -212,18 +229,21 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(function
     }} className={cn("prui-dropdown relative inline-block", className)} data-state={open ? "open" : "closed"}>
       {triggerNode}
       {open ? (
+        <Portal>
         <div
           ref={(node) => {
             menuRef.current = node
-            setElement(node?.parentElement ?? null)
+            setMenuEl(node)
+            floatingRef(node)
+            setElement(node)
           }}
           role="menu"
           tabIndex={-1}
           onKeyDown={onMenuKeyDown}
+          style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           className={cn(
-            "prui-dropdown-menu absolute z-[var(--prui-z-overlay)] mt-1 min-w-40 rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
+            "prui-dropdown-menu fixed z-[calc(var(--prui-z-modal,10000)+1)] min-w-40 rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
             "bg-[var(--prui-surface)] p-1 shadow-[var(--prui-shadow-md)] outline-none",
-            align === "end" ? "right-0" : "left-0",
           )}
         >
           {children ??
@@ -251,6 +271,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(function
               </React.Fragment>
             ))}
         </div>
+        </Portal>
       ) : null}
     </div>
   )
