@@ -1,0 +1,28 @@
+/* Example-local layout CSS. Everything component-level comes from
+   @skiddph/prui/styles.css; custom pages use the same design tokens. */
+
+body {
+  margin: 0;
+  background: var(--prui-background);
+  color: var(--prui-fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-head h1 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.page-head p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--prui-dim);
+}
