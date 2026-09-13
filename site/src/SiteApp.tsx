@@ -63,6 +63,7 @@ const LabelDoc = lazy(() => import("./pages/docs/LabelDoc").then((m) => ({ defau
 const SeparatorDoc = lazy(() => import("./pages/docs/SeparatorDoc").then((m) => ({ default: m.SeparatorDoc })))
 const TextareaDoc = lazy(() => import("./pages/docs/TextareaDoc").then((m) => ({ default: m.TextareaDoc })))
 const TagInputDoc = lazy(() => import("./pages/docs/TagInputDoc").then((m) => ({ default: m.TagInputDoc })))
+const FormFieldDoc = lazy(() => import("./pages/docs/FormFieldDoc").then((m) => ({ default: m.FormFieldDoc })))
 const ScrollAreaDoc = lazy(() => import("./pages/docs/ScrollAreaDoc").then((m) => ({ default: m.ScrollAreaDoc })))
 const AppLayerDoc = lazy(() => import("./pages/docs/AppLayerDoc").then((m) => ({ default: m.AppLayerDoc })))
 const PagesDoc = lazy(() => import("./pages/docs/PagesDoc").then((m) => ({ default: m.PagesDoc })))
@@ -106,6 +107,7 @@ export function SiteApp() {
           <Route path="/components/separator" element={<SeparatorDoc />} />
           <Route path="/components/textarea" element={<TextareaDoc />} />
           <Route path="/components/tag-input" element={<TagInputDoc />} />
+          <Route path="/components/form-field" element={<FormFieldDoc />} />
           <Route path="/components/scroll-area" element={<ScrollAreaDoc />} />
           <Route path="/app-layer" element={<AppLayerDoc />} />
           <Route path="/pages-doc" element={<PagesDoc />} />

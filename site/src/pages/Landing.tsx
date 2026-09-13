@@ -1,16 +1,18 @@
 import { useState, lazy, Suspense } from "react"
 import { Link } from "react-router-dom"
-import { Button, Badge, Switch, Tabs, TabsList, TabsTrigger, TabsContent, Input } from "prui/core"
-import { CopyButton } from "../components/CopyButton"
+import { Button, Badge } from "prui/core"
+// The install terminal's copy affordance streams in its own chunk: it keeps
+// the landing bundle at the AC-6 budget. The fallback keeps the row height.
+const LazyCopyButton = lazy(() => import("../components/CopyButton").then((m) => ({ default: m.CopyButton })))
 
 // The feedback demo (alert, progress, spinner, toast) streams in its own
 // chunk: it carries six lucide icons that would otherwise bloat the landing
 // bundle (AC-6). The placeholder matches the box shape, so no layout shift.
 const LandingFeedback = lazy(() => import("./LandingFeedback").then((m) => ({ default: m.LandingFeedback })))
+const LandingShowcase = lazy(() => import("./LandingShowcase").then((m) => ({ default: m.LandingShowcase })))
 
 export function LandingPage() {
   const [saved, setSaved] = useState(false)
-  const [sw, setSw] = useState(true)
 
   return (
     <div className="mx-auto w-full max-w-[860px] px-4 pb-20 pt-10 md:px-6">
@@ -40,35 +42,22 @@ export function LandingPage() {
             <Button variant="danger">Delete</Button>
           </div>
         </div>
-        <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4">
-          <div className="mb-3 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[var(--prui-dim)]">inputs</div>
-          <div className="flex min-h-9 flex-wrap items-center gap-2.5">
-            <Input placeholder="Search employees" className="h-8 w-44" />
-            <Badge variant="brand">stable</Badge>
-            <Badge variant="ok">new</Badge>
-          </div>
-        </div>
-        <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4">
-          <div className="mb-3 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[var(--prui-dim)]">controls</div>
-          <div className="flex min-h-9 flex-wrap items-center gap-3">
-            <Tabs defaultValue="details">
-              <TabsList className="h-8">
-                <TabsTrigger value="details">Details</TabsTrigger>
-                <TabsTrigger value="activity">Activity</TabsTrigger>
-              </TabsList>
-              <TabsContent value="details">
-                <div className="mt-2 flex flex-col gap-1 text-xs text-[var(--prui-dim)]">
-                  <span>Ada Lovelace · Senior engineer</span>
-                  <span>Joined 2024 · active</span>
-                </div>
-              </TabsContent>
-              <TabsContent value="activity">
-                <div className="mt-2 text-xs text-[var(--prui-dim)]">Recent activity appears here.</div>
-              </TabsContent>
-            </Tabs>
-            <Switch checked={sw} onChange={setSw} aria-label="Demo switch" />
-          </div>
-        </div>
+        <Suspense
+          fallback={
+            <>
+              <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4" aria-hidden>
+                <div className="mb-3 h-3 w-14 animate-pulse rounded bg-[var(--prui-raise)]" />
+                <div className="h-8 w-44 animate-pulse rounded-[var(--prui-radius)] bg-[var(--prui-raise)]" />
+              </div>
+              <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4" aria-hidden>
+                <div className="mb-3 h-3 w-16 animate-pulse rounded bg-[var(--prui-raise)]" />
+                <div className="h-14 w-56 animate-pulse rounded-[var(--prui-radius)] bg-[var(--prui-raise)]" />
+              </div>
+            </>
+          }
+        >
+          <LandingShowcase />
+        </Suspense>
         <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4">
           <div className="mb-3 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[var(--prui-dim)]">feedback</div>
           <Suspense
@@ -127,7 +116,11 @@ export function LandingPage() {
             <div className="flex items-center gap-1.5 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-3 py-2">
               <i className="h-2.5 w-2.5 rounded-full bg-[var(--prui-line)]" /><i className="h-2.5 w-2.5 rounded-full bg-[var(--prui-line)]" /><i className="h-2.5 w-2.5 rounded-full bg-[var(--prui-line)]" />
               <span className="ml-2 font-mono text-[10.5px] text-[var(--prui-dim)]">terminal</span>
-              <span className="ml-auto"><CopyButton text={"pnpm add @skiddph/prui\n\nimport '@skiddph/prui/styles.css'\nimport { App } from '@skiddph/prui/app'"} /></span>
+              <span className="ml-auto">
+                <Suspense fallback={<span className="px-2 py-0.5 font-mono text-[10px] text-[var(--prui-dim)]">copy</span>}>
+                  <LazyCopyButton text={"pnpm add @skiddph/prui\n\nimport '@skiddph/prui/styles.css'\nimport { App } from '@skiddph/prui/app'"} />
+                </Suspense>
+              </span>
             </div>
             <pre className="overflow-x-auto px-4 py-4 font-mono text-[12.5px] leading-7 text-[var(--prui-fg)]">
 {`# install

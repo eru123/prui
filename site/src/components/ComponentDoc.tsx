@@ -43,6 +43,8 @@ import {
   Skeleton,
   Spinner,
   TagInput,
+  FormField,
+  InputGroup,
   Tooltip,
   Popover,
   Checkbox,
@@ -245,6 +247,7 @@ export function CodeBlock({ code, title }: { code: string; title?: string }) {
 /* re-exports for doc pages */
 export {
   Button, Input, Textarea, Label, Select, SelectTrigger, SelectValue, SelectContent, SelectItem, TagInput,
+  FormField, InputGroup,
   Switch, Tabs, TabsList, TabsTrigger, TabsContent, Badge, Card, CardHeader, CardTitle,
   CardDescription, CardContent, CardFooter, Avatar, Separator, Dropdown, Dialog, DialogContent,
   DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter, ScrollArea, Modal, confirmModal,
