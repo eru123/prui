@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cn } from "./cn"
 import { Portal, useOverlayStack, useEscapeKey } from "./overlay"
-import { useAnchoredPosition, type AnchorSide, type AnchorAlign } from "./anchor"
+import { useAnchoredPosition, type Placement, type AnchorSide, type AnchorAlign } from "./anchor"
 import { usePruiI18n } from "../i18n"
 import type { PropsMeta } from "./props-meta"
 
@@ -20,6 +20,13 @@ export interface PopoverProps {
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
+  /**
+   * Preferred placement ("side-align", e.g. "bottom-end"); the engine
+   * shifts/flips it to stay inside the visible boundary. Default
+   * "bottom-end". Wins over the legacy side/align pair.
+   */
+  placement?: Placement
+  /** Legacy pair composing a placement; `placement` wins when both are set. */
   side?: AnchorSide
   align?: AnchorAlign
   /** Focus-trap + inert background instead of a dismissible surface. */
@@ -38,8 +45,9 @@ export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(function P
     open: openProp,
     defaultOpen = false,
     onOpenChange,
-    side = "bottom",
-    align = "start",
+    placement,
+    side,
+    align,
     modal = false,
     ariaLabel,
     minWidth = 200,
@@ -70,7 +78,13 @@ export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(function P
   const { setElement, isTop } = useOverlayStack(open)
   useEscapeKey(open, isTop, () => setOpen(false))
 
-  const { ref: floatingRef, position } = useAnchoredPosition({ active: open, anchorRef, side, align })
+  // bottom-end unless the caller expressed a preference; collision
+  // resolution may still shift or flip it (see anchor.ts)
+  const preferredPlacement: Placement =
+    placement ?? (side !== undefined || align !== undefined ? `${side ?? "bottom"}-${align ?? "start"}` : "bottom-end")
+
+  const { ref: floatingRef, position } = useAnchoredPosition({ active: open, anchorRef, placement: preferredPlacement })
+  const actualPlacement = position?.placement ?? preferredPlacement
 
   // outside pointer closes non-modal popovers
   React.useEffect(() => {
@@ -106,7 +120,8 @@ export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(function P
         anchorRef.current = el
         const original = child.props.ref as React.Ref<HTMLElement> | undefined
         if (typeof original === "function") (original as (v: HTMLElement | null) => void)(el)
-        else if (original && typeof original === "object") (original as React.MutableRefObject<HTMLElement | null>).current = el
+        else if (original && typeof original === "object")
+          (original as React.MutableRefObject<HTMLElement | null>).current = el
       },
       "aria-haspopup": "dialog",
       "aria-expanded": open,
@@ -149,7 +164,9 @@ export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(function P
             aria-label={ariaLabel ?? t.dismiss}
             tabIndex={-1}
             data-state={open ? "open" : "closed"}
-            data-side={position?.side ?? side}
+            data-side={actualPlacement.split("-")[0]}
+            data-align={actualPlacement.split("-")[1]}
+            data-placement={actualPlacement}
             className={cn(
               "prui-popover fixed z-[var(--prui-z-overlay)] rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
               "bg-[var(--prui-surface)] p-4 text-sm text-[var(--prui-fg)] shadow-[var(--prui-shadow-lg)] outline-none",
@@ -183,8 +200,40 @@ export const popoverPropsMeta: PropsMeta = {
     { name: "open", type: "boolean", default: "undefined", control: "boolean" },
     { name: "defaultOpen", type: "boolean", default: "false", control: "boolean" },
     { name: "onOpenChange", type: "(open: boolean) => void", default: null, control: "none" },
-    { name: "side", type: "'top' | 'bottom' | 'left' | 'right'", default: "'bottom'", control: "select", options: ["top", "bottom", "left", "right"] },
-    { name: "align", type: "'start' | 'center' | 'end'", default: "'start'", control: "select", options: ["start", "center", "end"] },
+    {
+      name: "placement",
+      type: "Placement",
+      default: "'bottom-end'",
+      control: "select",
+      options: [
+        "top-start",
+        "top-center",
+        "top-end",
+        "bottom-start",
+        "bottom-center",
+        "bottom-end",
+        "left-start",
+        "left-center",
+        "left-end",
+        "right-start",
+        "right-center",
+        "right-end",
+      ],
+    },
+    {
+      name: "side",
+      type: "'top' | 'bottom' | 'left' | 'right'",
+      default: "undefined",
+      control: "select",
+      options: ["top", "bottom", "left", "right"],
+    },
+    {
+      name: "align",
+      type: "'start' | 'center' | 'end'",
+      default: "undefined",
+      control: "select",
+      options: ["start", "center", "end"],
+    },
     { name: "modal", type: "boolean", default: "false", control: "boolean" },
     { name: "ariaLabel", type: "string", default: "undefined", control: "text" },
   ],

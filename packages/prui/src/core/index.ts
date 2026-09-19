@@ -141,7 +141,20 @@ export {
   type ConfirmModalType,
 } from "./modal"
 
-export { computePosition, useAnchoredPosition, type AnchorSide, type AnchorAlign, type AnchoredPosition } from "./anchor"
+export {
+  computePosition,
+  computePlacement,
+  getClippingBoundary,
+  useAnchoredPosition,
+  PLACEMENTS,
+  DEFAULT_PLACEMENT,
+  type AnchorSide,
+  type AnchorAlign,
+  type Placement,
+  type Rect,
+  type AnchoredPosition,
+  type PositionOptions,
+} from "./anchor"
 
 /* Feedback primitives */
 export { Spinner, spinnerPropsMeta, type SpinnerProps, type SpinnerSize } from "./spinner"

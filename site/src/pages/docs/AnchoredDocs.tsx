@@ -118,8 +118,9 @@ export function PopoverDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Popover trigger side align modal ariaLabel&gt;</code> clones
-          your trigger (aria-haspopup=dialog + aria-expanded) and portals the panel, anchored and viewport-aware.
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Popover trigger placement modal ariaLabel&gt;</code> clones
+          your trigger (aria-haspopup=dialog + aria-expanded) and portals the panel with collision-aware placement
+          (default bottom-end; shifts and flips to stay inside the visible boundary, RTL-aware start/end).
         </p>
       }
       demos={[
@@ -172,8 +173,12 @@ export function PopoverDoc() {
 </Popover>`,
         },
         {
-          title: "Sides and alignment",
-          code: `<Popover side="right" align="center" trigger={<Button>Open</Button>}>…</Popover>`,
+          title: "Placements",
+          desc: "side-align values, all collision-aware: bottom-end (default), top-center, right-start, … start/end follow the writing direction.",
+          code: `<Popover placement="top-center" trigger={<Button>Open</Button>}>…</Popover>
+
+// legacy pair still composes: side + align
+<Popover side="right" align="center" trigger={<Button>Open</Button>}>…</Popover>`,
         },
       ]}
       dos={[
@@ -195,7 +200,8 @@ export function PopoverDoc() {
       composition={
         <p>
           Composes with Checkbox, RadioGroup, Combobox, TimePanel; anything interactive. The panel repositions on
-          scroll/resize and flips sides against the viewport.
+          scroll/resize/trigger move: it shifts along its alignment axis first, flips the side when it must, and
+          never leaves the clipping boundary of its containers.
         </p>
       }
       customization={<p>minWidth defaults to 200px; panel tokens are the standard surface/line/shadow set. Content padding is yours.</p>}
