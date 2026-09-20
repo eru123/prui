@@ -189,6 +189,18 @@ describe("Toolbar and filters", () => {
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ from: expect.stringMatching(/-02$/), to: expect.stringMatching(/-10$/) }))
   })
 
+  it("filter width classes size the input and its wrapper together", () => {
+    // the trigger icon anchors to the picker's wrapper; if a caller width
+    // (w-64 here) only reaches the input, the icon detaches to the
+    // wrapper's far edge
+    render(<DateRangeFilter label="Hired" />)
+    const input = document.querySelector(".prui-date-range-picker")
+    expect(input).not.toBeNull()
+    const wrapper = input!.parentElement
+    expect(input!.className).toContain("w-64")
+    expect(wrapper!.className).toContain("w-64")
+  })
+
   it("NumberRangeFilter reports min/max", async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()

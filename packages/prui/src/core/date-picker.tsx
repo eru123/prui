@@ -127,7 +127,10 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
   }
 
   return field.wrap(
-    <div className="relative flex w-full items-center">
+    // className reaches the wrapper as well as the input: the trigger icon
+    // anchors to the wrapper, so a caller width like w-64 must shrink both
+    // or the icon detaches to the wrapper's far edge
+    <div className={cn("relative flex w-full items-center", className)}>
       <input
         ref={(node) => {
           inputRef.current = node
@@ -361,7 +364,10 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
   const display = from ? (to ? `${value.from} – ${value.to}` : `${value.from} – …`) : ""
 
   return field.wrap(
-    <div className="relative flex w-full items-center">
+    // className reaches the wrapper as well as the input: the trigger icon
+    // anchors to the wrapper, so a caller width like w-64 must shrink both
+    // or the icon detaches to the wrapper's far edge
+    <div className={cn("relative flex w-full items-center", className)}>
       <input
         ref={(node) => {
           inputRef.current = node
