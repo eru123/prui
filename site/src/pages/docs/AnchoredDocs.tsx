@@ -118,9 +118,9 @@ export function PopoverDoc() {
       ]}
       anatomy={
         <p>
-          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Popover trigger placement modal ariaLabel&gt;</code> clones
-          your trigger (aria-haspopup=dialog + aria-expanded) and portals the panel with collision-aware placement
-          (default bottom-end; shifts and flips to stay inside the visible boundary, RTL-aware start/end).
+          <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Popover trigger placement modal ariaLabel&gt;</code>{" "}
+          clones your trigger (aria-haspopup=dialog + aria-expanded) and portals the panel with collision-aware
+          placement (default bottom-end; shifts and flips to stay inside the visible boundary, RTL-aware start/end).
         </p>
       }
       demos={[
@@ -173,11 +173,11 @@ export function PopoverDoc() {
 </Popover>`,
         },
         {
-          title: "Placements",
-          desc: "side-align values, all collision-aware: bottom-end (default), top-center, right-start, … start/end follow the writing direction.",
+          title: "Placements (collision-aware, default bottom-end)",
           code: `<Popover placement="top-center" trigger={<Button>Open</Button>}>…</Popover>
 
-// legacy pair still composes: side + align
+// twelve side-align values; start/end follow the writing direction.
+// the legacy pair still composes: side + align
 <Popover side="right" align="center" trigger={<Button>Open</Button>}>…</Popover>`,
         },
       ]}
