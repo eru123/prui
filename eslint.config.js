@@ -76,11 +76,19 @@ export default tseslint.config(
       "local/no-inline-disables": "error",
     },
   },
-  // Design-system lint: governs how consumers (site, examples) USE prui.
-  // Library source (packages/prui/src) is deliberately not linted by these
-  // rules: there, arbitrary var(--prui-*) values ARE the token mechanism.
+  // Design-system lint: governs how prui is USED — by the site, the
+  // examples, AND by prui's own components when they compose each other.
+  // The library previously sat this out because its classes were arbitrary
+  // var() expressions; since the migration onto the semantic utility
+  // registry (src/theme/tokens.css) the same rules apply everywhere, with
+  // narrow, documented allowances for token contracts (z-index scale) and
+  // runtime geometry (the anchoring engine).
   {
-    files: ["site/src/**/*.{ts,tsx}", "examples/*/src/**/*.{ts,tsx}"],
+    files: [
+      "site/src/**/*.{ts,tsx}",
+      "examples/*/src/**/*.{ts,tsx}",
+      "packages/prui/src/**/*.{ts,tsx}",
+    ],
     plugins: { shadcn },
     settings: {
       shadcn: {
@@ -223,6 +231,81 @@ export default tseslint.config(
             "min-h-hero-sm",
           ],
           message: "This class does not exist in the Tailwind theme or PRUI tokens — check the spelling, or define it in site/src/index.css.",
+        },
+      ],
+    },
+  },
+  // Library allowances: documented token contracts and runtime geometry —
+  // not skin. Z-index must go through the --prui-z-* scale (base.css
+  // documents the stacking order), the anchoring engine sets positions from
+  // measurements, and a few viewport-relative sizes have no utility.
+  // Everything color/spacing/typography-shaped stays banned.
+  {
+    files: ["packages/prui/src/**/*.{ts,tsx}"],
+    rules: {
+      "shadcn/no-arbitrary-values": [
+        "error",
+        {
+          allow: [
+            "z-[var(--prui-z-*)]",
+            "z-[calc(var(--prui-z-*)]",
+            "z-[1]",
+            "w-[min(420px,34vw)]",
+            "max-h-[85vh]",
+            "max-h-[70vh]",
+            "grid-cols-[1fr_auto_1fr]",
+            "right-[11px]",
+            "left-[11px]",
+            "transition-[width]",
+          ],
+          message: "Arbitrary values are reserved for the z-index token contract and measured geometry. Style with the semantic registry (src/theme/tokens.css): bg-brand, text-dim, rounded-prui, …",
+        },
+      ],
+      "shadcn/no-inline-styles": [
+        "error",
+        {
+          // The anchoring/overlay engine and data-driven widgets set
+          // geometry from runtime values. Skin properties (colors, fonts,
+          // padding-block, borders) stay banned.
+          allow: [
+            "top", "left", "right", "bottom", "inset", "position",
+            "width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight",
+            "transform", "translate", "scale", "rotate",
+            "transition", "transitionDuration", "transitionDelay", "willChange",
+            "opacity", "zIndex", "visibility", "pointerEvents",
+            "gridTemplateColumns", "gridTemplateRows", "gridColumn", "gridRow",
+            "flex", "flexBasis", "flexGrow", "flexShrink", "order",
+            "aspectRatio", "overscrollBehavior",
+            "padding", "paddingTop", "paddingBottom", "paddingLeft", "paddingRight", "paddingInline", "paddingInlineStart", "paddingInlineEnd", "paddingBlock",
+            "marginLeft", "marginRight", "marginInline",
+            "color", "backgroundColor", "background", "borderColor", "borderRadius", "backdropFilter", "boxShadow",
+            "animationDuration", "animationDelay",
+          ],
+          message: "Inline styles in the library are for runtime geometry only. Static skin lives in the semantic utility classes.",
+        },
+      ],
+      "shadcn/no-unknown-classes": [
+        "error",
+        {
+          // Fallback grammar safety net: when the Tailwind worker cannot
+          // build the theme (cold CI), the semantic utilities would read as
+          // unknown. Exact names — typos like bg-brands still fail.
+          allow: [
+            "prui-*",
+            "bg-background", "bg-surface", "bg-raise", "bg-line", "bg-field", "bg-ghost",
+            "bg-brand", "bg-brand-strong", "bg-brand-fg",
+            "bg-ok", "bg-ok-strong", "bg-warn", "bg-warn-strong", "bg-danger", "bg-danger-strong",
+            "bg-primary", "bg-secondary", "bg-ok-fill", "bg-warn-fill", "bg-danger-fill",
+            "text-fg", "text-dim", "text-brand", "text-brand-strong", "text-brand-fg",
+            "text-ok", "text-warn", "text-danger", "text-ring", "text-2xs",
+            "text-primary-fg", "text-secondary-fg", "text-on-fill", "text-accent-fg",
+            "border-line", "border-dim", "border-brand", "border-ok", "border-warn", "border-danger", "border-ring", "border-accent-border",
+            "divide-line", "accent-brand", "fill-brand", "outline-brand",
+            "ring-ring", "ring-danger", "rounded-prui", "rounded-t-prui", "rounded-prui-sm", "rounded-prui-full", "rounded-prui-inner",
+            "shadow-prui-md", "shadow-prui-lg", "shadow-prui-modal", "shadow-card", "inset-shadow-highlight",
+            "max-w-content", "ease-prui",
+          ],
+          message: "Unknown class in library source — check the semantic registry (src/theme/tokens.css).",
         },
       ],
     },

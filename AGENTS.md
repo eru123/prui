@@ -53,6 +53,12 @@ garbage without them. Every known bypass is itself an error:
   that is the design decision, made once.
 - **Cards, Labels, Alerts, Inputs** accept typography adjustments via
   contracts (see `eslint.config.js`); controls like Button do not.
+- **The library is not exempt.** `packages/prui/src` composes its own
+  components through the same semantic registry (`src/theme/tokens.css`:
+  `bg-brand`, `text-dim`, `rounded-prui`, …) and passes the same rules.
+  The only allowances are the z-index token contract, runtime geometry
+  (the anchoring engine), and `withSurface()`'s dynamic style spreads —
+  each documented in the config.
 
 ## Where the rules live
 

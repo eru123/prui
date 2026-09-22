@@ -3,6 +3,9 @@
 /* Relative path (not the vite alias) so both vite and @shadcn/lint's theme
    builder resolve the same file; the vite alias maps to this exact path. */
 @import "../../packages/prui/dist/prui.css";
+/* The semantic registry, from source: gives this build's Tailwind (and the
+   linter's theme builder) the prui utility names used in library source. */
+@import "../../packages/prui/src/theme/tokens.css";
 
 /* site-only extras */
 
