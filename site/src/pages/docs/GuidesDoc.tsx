@@ -1,4 +1,5 @@
 import * as React from "react"
+import changelog from "../../../../packages/prui/CHANGELOG.md?raw"
 import { Link } from "react-router-dom"
 import { CodeView } from "../../components/CodeView"
 import { Alert, Badge } from "prui/core"
@@ -221,24 +222,15 @@ const MIGRATIONS: { version: string; date: string; items: string[]; breaking?: b
 ]
 
 export function ChangelogDoc() {
-  const [changelog, setChangelog] = React.useState<string>("")
-  React.useEffect(() => {
-    fetch("https://raw.githubusercontent.com/eru123/prui/main/packages/prui/CHANGELOG.md")
-      .then((r) => (r.ok ? r.text() : ""))
-      .then(setChangelog)
-      .catch(() => setChangelog(""))
-  }, [])
+  // bundled at build time from the repo: the repo is private, so a runtime
+  // fetch of raw.githubusercontent.com 404s — the ?raw import cannot fail
   return (
     <Guide
       section="docs / changelog"
       title="Changelog"
-      intro="Versions are cut with changesets from conventional commits; the library CHANGELOG renders here when reachable, with the current minor stream summarized below."
+      intro="Versions are cut with changesets from conventional commits; the library CHANGELOG ships with the site at build time, with the current minor stream summarized below."
     >
-      {changelog ? (
-        <CodeView title="CHANGELOG.md" className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)]" code={changelog.slice(0, 8000)} />
-      ) : (
-        <p>Fetching the changelog failed (offline?). See <code>packages/prui/CHANGELOG.md</code> in the repo.</p>
-      )}
+      <CodeView title="CHANGELOG.md" className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)]" code={changelog} />
       <h2>Recent stream</h2>
       <ul>
         {MIGRATIONS.flatMap((m) => m.items.map((i) => <li key={m.version + i}><Badge variant="brand">{m.version}</Badge> {i}</li>))}
