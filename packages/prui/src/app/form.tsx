@@ -164,7 +164,7 @@ export function Form({
             <div key={f.name} className={cn("flex flex-col gap-1.5", f.colSpan === 2 && "md:col-span-2", f.className)}>
               <Label htmlFor={common.id}>
                 {f.label}
-                {f.required ? <span className="ml-0.5 text-[var(--prui-danger)]">*</span> : null}
+                {f.required ? <span className="ml-0.5 text-danger">*</span> : null}
               </Label>
               {f.type === "textarea" ? (
                 <Textarea
@@ -210,7 +210,7 @@ export function Form({
                 />
               )}
               {err ? (
-                <p id={`prui-form-${f.name}-error`} role="alert" className="text-xs text-[var(--prui-danger)]">
+                <p id={`prui-form-${f.name}-error`} role="alert" className="text-xs text-danger">
                   {err}
                 </p>
               ) : null}
@@ -219,7 +219,7 @@ export function Form({
         })}
       </div>
       {error ?? internalError ? (
-        <p role="alert" data-testid="form-error" className="rounded-[var(--prui-radius)] border border-[var(--prui-danger)]/40 bg-[var(--prui-danger)]/10 px-3 py-2 text-sm text-[var(--prui-danger)]">
+        <p role="alert" data-testid="form-error" className="rounded-prui border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
           {error ?? internalError}
         </p>
       ) : null}

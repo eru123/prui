@@ -38,9 +38,9 @@ export function StatRow({ items, className }: StatRowProps) {
                 <span
                   className={cn(
                     "text-xs font-medium",
-                    item.trend === "up" && "text-[var(--prui-ok)]",
-                    item.trend === "down" && "text-[var(--prui-danger)]",
-                    (!item.trend || item.trend === "flat") && "text-[var(--prui-dim)]",
+                    item.trend === "up" && "text-ok",
+                    item.trend === "down" && "text-danger",
+                    (!item.trend || item.trend === "flat") && "text-dim",
                   )}
                 >
                   {item.delta}

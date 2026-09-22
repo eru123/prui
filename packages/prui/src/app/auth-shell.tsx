@@ -21,21 +21,21 @@ export interface AuthShellProps {
 
 export function AuthShell({ title, description, brand, width = "max-w-sm", footer, children, className }: AuthShellProps) {
   return (
-    <div className={cn("prui-auth-shell flex min-h-[100dvh] items-center justify-center bg-[var(--prui-background)] p-4", className)} data-testid="auth-shell">
+    <div className={cn("prui-auth-shell flex min-h-dvh items-center justify-center bg-background p-4", className)} data-testid="auth-shell">
       <div className={cn("w-full", width)}>
         {brand ? (
           <div className="mb-6 flex items-center justify-center gap-2" data-testid="auth-shell-brand">
-            {brand.mark ? <img src={brand.mark} alt="" className="h-8 w-8 rounded-[var(--prui-radius-1)] object-cover" /> : null}
-            <span className="text-lg font-semibold text-[var(--prui-fg)]">{brand.name}</span>
+            {brand.mark ? <img src={brand.mark} alt="" className="h-8 w-8 rounded-prui-sm object-cover" /> : null}
+            <span className="text-lg font-semibold text-fg">{brand.name}</span>
           </div>
         ) : null}
-        <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-6">
+        <div className="rounded-prui border border-line bg-surface p-6">
           <div className="mb-4 flex flex-col gap-1 text-center">
-            <h1 className="text-lg font-semibold text-[var(--prui-fg)]">{title}</h1>
-            {description ? <p className="text-sm text-[var(--prui-dim)]">{description}</p> : null}
+            <h1 className="text-lg font-semibold text-fg">{title}</h1>
+            {description ? <p className="text-sm text-dim">{description}</p> : null}
           </div>
           {children}
-          {footer ? <div className="mt-4 text-center text-sm text-[var(--prui-dim)]">{footer}</div> : null}
+          {footer ? <div className="mt-4 text-center text-sm text-dim">{footer}</div> : null}
         </div>
       </div>
     </div>

@@ -319,10 +319,10 @@ export function FormGroup({ label, description, columns = 1, gap = "md", childre
   return (
     <div
       role="group"
-      className={cn("prui-form-group rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4", className)}
+      className={cn("prui-form-group rounded-prui border border-line bg-surface p-4", className)}
     >
-      {label ? <div className="text-sm font-semibold text-[var(--prui-fg)]">{label}</div> : null}
-      {description ? <div className="mb-1 text-xs text-[var(--prui-dim)]">{description}</div> : null}
+      {label ? <div className="text-sm font-semibold text-fg">{label}</div> : null}
+      {description ? <div className="mb-1 text-xs text-dim">{description}</div> : null}
       <div className={cn(...grid, gapClass)}>
         {children}
       </div>
@@ -408,11 +408,11 @@ export function FormInput({
       ? message.type ?? "info"
       : "help"
   const bottomClass = {
-    error: "text-[var(--prui-danger)]",
-    warning: "text-[var(--prui-warn)]",
-    info: "text-[var(--prui-dim)]",
-    success: "text-[var(--prui-ok)]",
-    help: "text-[var(--prui-dim)]",
+    error: "text-danger",
+    warning: "text-warn",
+    info: "text-dim",
+    success: "text-ok",
+    help: "text-dim",
   }[bottomType]
 
   const control = (() => {
@@ -490,7 +490,7 @@ export function FormInput({
       {label ? (
         <Label htmlFor={id}>
           {label}
-          {required ? <span className="ml-0.5 text-[var(--prui-danger)]">*</span> : null}
+          {required ? <span className="ml-0.5 text-danger">*</span> : null}
         </Label>
       ) : null}
       {control}

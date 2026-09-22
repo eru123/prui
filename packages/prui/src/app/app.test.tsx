@@ -485,7 +485,7 @@ describe("Shell layouts (layoutType)", () => {
     const shellEl = document.querySelector(".prui-shell") as HTMLElement
     const column = main.firstElementChild as HTMLElement
     expect(column.className).toContain("mx-auto")
-    expect(column.className).toContain("max-w-[var(--prui-content-max,72rem)]")
+    expect(column.className).toContain("max-w-content")
     expect(shellEl.style.getPropertyValue("--prui-content-max")).toBe("72rem")
     unmount()
     const wide = shell("A", { contentMaxWidth: 960 })

@@ -331,7 +331,7 @@ export function Resource<T extends ResourceRow>({
                   ) : null}
                   {can("delete") ? (
                     <Button variant="ghost" size="icon" aria-label="Delete" disabled={deleteBusy} onClick={() => void openDeleteRef.current?.(row)} data-testid="resource-delete">
-                      <Trash2 className="h-3.5 w-3.5 text-[var(--prui-danger)]" aria-hidden />
+                      <Trash2 className="h-3.5 w-3.5 text-danger" aria-hidden />
                     </Button>
                   ) : null}
                 </div>
@@ -395,7 +395,7 @@ export function Resource<T extends ResourceRow>({
   return (
     <div className={cn("prui-resource flex flex-col gap-2", className)} data-testid="resource">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold capitalize text-[var(--prui-fg)]">{name}</h1>
+        <h1 className="text-xl font-semibold capitalize text-fg">{name}</h1>
       </div>
 
       <DataTableToolbar
@@ -416,7 +416,7 @@ export function Resource<T extends ResourceRow>({
       />
 
       {error ? (
-        <div role="alert" data-testid="resource-error" className="rounded-[var(--prui-radius)] border border-[var(--prui-danger)]/40 bg-[var(--prui-danger)]/10 px-3 py-2 text-sm text-[var(--prui-danger)]">
+        <div role="alert" data-testid="resource-error" className="rounded-prui border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
           {error}
         </div>
       ) : null}

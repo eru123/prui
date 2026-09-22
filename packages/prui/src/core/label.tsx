@@ -9,7 +9,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
     <label
       ref={ref}
       className={cn(
-        "prui-label block text-sm font-medium text-[var(--prui-fg)] select-none",
+        "prui-label block text-sm font-medium text-fg select-none",
         className,
       )}
       {...props}
@@ -37,7 +37,7 @@ export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
       role="separator"
       aria-orientation={orientation}
       className={cn(
-        "prui-separator shrink-0 bg-[var(--prui-line)]",
+        "prui-separator shrink-0 bg-line",
         orientation === "horizontal" ? "h-px w-full" : "w-px h-full min-h-4",
         className,
       )}

@@ -7,9 +7,9 @@ import { useFieldSlots, type FieldSlotProps } from "./form-field"
 import type { PropsMeta } from "./props-meta"
 
 const fieldBase =
-  "prui-f-control prui-input w-full bg-[var(--prui-s-bg,var(--prui-background))] text-[var(--prui-s-fg,var(--prui-fg))] placeholder:text-[var(--prui-dim)] " +
-  "border border-[var(--prui-line)] rounded-[var(--prui-s-radius,var(--prui-radius))] text-sm " +
-  "outline-none transition-colors focus:border-[var(--prui-brand)] focus:ring-2 focus:ring-[var(--prui-brand)]/30 " +
+  "prui-f-control prui-input w-full bg-field text-secondary-fg placeholder:text-dim " +
+  "border border-line rounded-prui text-sm hover:border-dim " +
+  "outline-none transition-colors duration-150 ease-prui focus:border-brand focus:ring-2 focus:ring-ring/30 " +
   "disabled:opacity-50 disabled:cursor-not-allowed"
 
 const inputSizeClasses = {
@@ -48,8 +48,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       cn(
         fieldBase,
         inputSizeClasses[size],
-        variant === "filled" && "bg-[var(--prui-s-bg,var(--prui-raise))] border-transparent",
-        error && "border-[var(--prui-danger)] focus:border-[var(--prui-danger)] focus:ring-[var(--prui-danger)]/30",
+        variant === "filled" && "bg-secondary border-transparent",
+        error && "border-danger focus:border-danger focus:ring-danger/30",
         icon && "pl-9",
         (trailingIcon || showEye) && "pr-9",
         className,
@@ -63,6 +63,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         id={field.id}
         type={showEye && revealed ? "text" : type}
         className={merged.className}
+        // eslint-disable-next-line shadcn/no-inline-styles -- withSurface: per-instance skin overrides are the public SurfaceProps API, driven by props not literals
         style={merged.style}
         {...props}
       />
@@ -70,13 +71,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const body = !icon && !trailingIcon && !showEye ? input : (
       <span className="relative inline-flex w-full">
         {icon ? (
-          <span aria-hidden className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-[var(--prui-dim)] [&>svg]:h-4 [&>svg]:w-4">
+          <span aria-hidden className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-dim [&>svg]:h-4 [&>svg]:w-4">
             {icon}
           </span>
         ) : null}
         {input}
         {trailingIcon ? (
-          <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center text-[var(--prui-dim)] [&>svg]:h-4 [&>svg]:w-4">
+          <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center text-dim [&>svg]:h-4 [&>svg]:w-4">
             {trailingIcon}
           </span>
         ) : showEye ? (
@@ -88,7 +89,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             // keep the caret in the field: focus never leaves the input
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => setRevealed((r) => !r)}
-            className="absolute right-1.5 top-1/2 flex h-6 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-[var(--prui-radius-1)] text-[var(--prui-dim)] hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="absolute right-1.5 top-1/2 flex h-6 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-prui-sm text-dim hover:bg-raise hover:text-fg disabled:cursor-not-allowed disabled:opacity-50"
           >
             {revealed ? <EyeOff className="h-4 w-4" aria-hidden /> : <Eye className="h-4 w-4" aria-hidden />}
           </button>
@@ -136,7 +137,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         className={cn(
           fieldBase,
           "h-auto min-h-20 resize-y px-3 py-2",
-          error && "border-[var(--prui-danger)] focus:border-[var(--prui-danger)] focus:ring-[var(--prui-danger)]/30",
+          error && "border-danger focus:border-danger focus:ring-danger/30",
           className,
         )}
         {...props}
@@ -176,7 +177,7 @@ export const InputGroup = React.forwardRef<HTMLInputElement, InputGroupProps>(
     return field.wrap(
       <div className={cn("relative inline-flex w-full", className)}>
         {leading ? (
-          <span aria-hidden className="pointer-events-none absolute left-3 top-1/2 z-[1] flex -translate-y-1/2 items-center text-sm text-[var(--prui-dim)]">
+          <span aria-hidden className="pointer-events-none absolute left-3 top-1/2 z-[1] flex -translate-y-1/2 items-center text-sm text-dim">
             {leading}
           </span>
         ) : null}
@@ -187,7 +188,7 @@ export const InputGroup = React.forwardRef<HTMLInputElement, InputGroupProps>(
           {...props}
         />
         {trailing ? (
-          <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center text-sm text-[var(--prui-dim)]">
+          <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center text-sm text-dim">
             {trailing}
           </span>
         ) : null}

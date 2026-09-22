@@ -242,14 +242,14 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(function
           onKeyDown={onMenuKeyDown}
           style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           className={cn(
-            "prui-dropdown-menu fixed z-[calc(var(--prui-z-modal,10000)+1)] min-w-40 rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
-            "bg-[var(--prui-surface)] p-1 shadow-[var(--prui-shadow-md)] outline-none",
+            "prui-dropdown-menu fixed z-[calc(var(--prui-z-modal,10000)+1)] min-w-40 rounded-prui border border-line",
+            "bg-surface p-1 shadow-prui-md outline-none",
           )}
         >
           {children ??
             (items ?? []).map((item, i) => (
               <React.Fragment key={`${item.label}-${i}`}>
-                {item.separatorBefore ? <div className="my-1 h-px bg-[var(--prui-line)]" /> : null}
+                {item.separatorBefore ? <div className="my-1 h-px bg-line" /> : null}
                 <button
                   type="button"
                   role="menuitem"
@@ -261,9 +261,9 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(function
                     item.onSelect?.()
                   }}
                   className={cn(
-                    "flex w-full items-center rounded-[calc(var(--prui-radius)-1px)] px-2.5 py-1.5 text-left text-sm",
-                    "hover:bg-[var(--prui-raise)] focus-visible:bg-[var(--prui-raise)] outline-none cursor-pointer disabled:opacity-50 disabled:pointer-events-none",
-                    item.danger ? "text-[var(--prui-danger)]" : "text-[var(--prui-fg)]",
+                    "flex w-full items-center rounded-prui-inner px-2.5 py-1.5 text-left text-sm",
+                    "hover:bg-raise focus-visible:bg-raise outline-none cursor-pointer disabled:opacity-50 disabled:pointer-events-none",
+                    item.danger ? "text-danger" : "text-fg",
                   )}
                 >
                   {item.label}

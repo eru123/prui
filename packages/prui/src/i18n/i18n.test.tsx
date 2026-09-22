@@ -55,7 +55,8 @@ describe("i18n dictionary", () => {
       </Button>,
     )
     const btn = screen.getByRole("button", { name: "Publish" })
-    expect(btn.className).toContain("prui-ok")
+    // the success skin rides the semantic registry (bg-ok-fill -> --prui-ok)
+    expect(btn.className).toContain("bg-ok-fill")
     await user.click(btn)
     expect(onClick).toHaveBeenCalledOnce()
   })

@@ -69,7 +69,7 @@ export function RegisterPage({
           <div key={f.name} className="flex flex-col gap-1.5">
             <Label htmlFor={`register-${f.name}`}>
               {f.label}
-              {f.required ? <span className="ml-0.5 text-[var(--prui-danger)]">*</span> : null}
+              {f.required ? <span className="ml-0.5 text-danger">*</span> : null}
             </Label>
             <Input
               id={`register-${f.name}`}
@@ -85,7 +85,7 @@ export function RegisterPage({
         ))}
         {show.confirm ? (
           <div className="flex flex-col gap-1.5" data-testid="register-confirm">
-            <Label htmlFor="register-confirm-password">Confirm password<span className="ml-0.5 text-[var(--prui-danger)]">*</span></Label>
+            <Label htmlFor="register-confirm-password">Confirm password<span className="ml-0.5 text-danger">*</span></Label>
             <Input
               id="register-confirm-password"
               type="password"
@@ -103,9 +103,9 @@ export function RegisterPage({
       </form>
       <OAuthButtons providers={oauth} />
       {links?.login ? (
-        <div className="mt-3 text-center text-sm text-[var(--prui-dim)]" data-testid="register-login-link">
+        <div className="mt-3 text-center text-sm text-dim" data-testid="register-login-link">
           Already have an account?{" "}
-          <a href={linkHref(links.login)} className="text-[var(--prui-brand)] hover:underline">
+          <a href={linkHref(links.login)} className="text-brand hover:underline">
             {linkLabel(links.login, "Sign in")}
           </a>
         </div>

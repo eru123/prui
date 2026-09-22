@@ -46,12 +46,12 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(funct
       disabled={disabled}
       onClick={toggle}
       className={cn(
-        "prui-checkbox inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-[var(--prui-radius-1)] border",
-        "transition-colors duration-[var(--prui-duration-fast)] cursor-pointer outline-none",
-        "focus-visible:ring-2 focus-visible:ring-[var(--prui-brand)] focus-visible:ring-offset-1",
+        "prui-checkbox inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-prui-sm border",
+        "transition-colors duration-150 cursor-pointer outline-none",
+        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
         checked || indeterminate
-          ? "border-transparent bg-[var(--prui-brand)] text-[var(--prui-brand-fg,#fff)]"
-          : "border-[var(--prui-line)] bg-[var(--prui-background)]",
+          ? "border-transparent bg-brand text-brand-fg"
+          : "border-line bg-background",
         disabled && "opacity-50 cursor-not-allowed",
         className,
       )}
@@ -69,7 +69,7 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(funct
   return (
     <span className="inline-flex items-center gap-2">
       {box}
-      <span className={cn("text-sm select-none", disabled ? "text-[var(--prui-dim)]" : "text-[var(--prui-fg)]", "cursor-pointer")} onClick={(e) => { e.preventDefault(); toggle(e as unknown as React.MouseEvent<HTMLButtonElement>) }}>
+      <span className={cn("text-sm select-none", disabled ? "text-dim" : "text-fg", "cursor-pointer")} onClick={(e) => { e.preventDefault(); toggle(e as unknown as React.MouseEvent<HTMLButtonElement>) }}>
         {label}
       </span>
     </span>

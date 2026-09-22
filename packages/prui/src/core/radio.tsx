@@ -155,8 +155,8 @@ export const Radio = React.forwardRef<HTMLButtonElement, RadioProps>(function Ra
       }}
       className={cn(
         "prui-radio inline-flex items-center gap-2 text-sm cursor-pointer outline-none",
-        "focus-visible:ring-2 focus-visible:ring-[var(--prui-brand)] focus-visible:ring-offset-1 rounded-[var(--prui-radius-1)]",
-        disabled ? "opacity-50 cursor-not-allowed" : "text-[var(--prui-fg)]",
+        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-prui-sm",
+        disabled ? "opacity-50 cursor-not-allowed" : "text-fg",
         className,
       )}
       {...props}
@@ -164,12 +164,12 @@ export const Radio = React.forwardRef<HTMLButtonElement, RadioProps>(function Ra
       <span
         aria-hidden
         className={cn(
-          "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-[var(--prui-radius-full)] border",
-          "transition-colors duration-[var(--prui-duration-fast)]",
-          checked ? "border-[var(--prui-brand)]" : "border-[var(--prui-line)] bg-[var(--prui-background)]",
+          "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
+          "transition-colors duration-150",
+          checked ? "border-brand" : "border-line bg-background",
         )}
       >
-        {checked ? <Circle className="h-2 w-2 fill-[var(--prui-brand)] text-[var(--prui-brand)]" /> : null}
+        {checked ? <Circle className="h-2 w-2 fill-brand text-brand" /> : null}
       </span>
       {label ?? children}
     </button>

@@ -128,7 +128,7 @@ export const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps
       data-state={open ? "open" : "closed"}
       data-disabled={disabled || undefined}
       className={cn(
-        "prui-accordion-item rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]",
+        "prui-accordion-item rounded-prui border border-line bg-surface",
         disabled && "opacity-50",
         className,
       )}
@@ -144,20 +144,20 @@ export const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps
         disabled={disabled}
         onClick={() => toggle(value)}
         className={cn(
-          "flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium text-[var(--prui-fg)]",
-          "cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--prui-brand)] rounded-[var(--prui-radius)]",
+          "flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium text-fg",
+          "cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-prui",
           disabled && "cursor-not-allowed",
         )}
       >
         {children instanceof Array ? children[0] : children}
-        <ChevronDown className={cn("h-4 w-4 shrink-0 text-[var(--prui-dim)] transition-transform", open && "rotate-180")} aria-hidden />
+        <ChevronDown className={cn("h-4 w-4 shrink-0 text-dim transition-transform", open && "rotate-180")} aria-hidden />
       </button>
       <div
         id={panelId}
         role="region"
         aria-labelledby={headerId}
         hidden={!open}
-        className="prui-accordion-panel px-4 pb-3 text-sm text-[var(--prui-dim)]"
+        className="prui-accordion-panel px-4 pb-3 text-sm text-dim"
       >
         {children instanceof Array ? children.slice(1) : null}
       </div>

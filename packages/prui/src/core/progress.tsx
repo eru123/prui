@@ -22,10 +22,10 @@ export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const variantBar: Record<NonNullable<ProgressProps["variant"]>, string> = {
-  brand: "bg-[var(--prui-brand)]",
-  success: "bg-[var(--prui-ok)]",
-  warning: "bg-[var(--prui-warn)]",
-  danger: "bg-[var(--prui-danger)]",
+  brand: "bg-brand",
+  success: "bg-ok",
+  warning: "bg-warn",
+  danger: "bg-danger",
 }
 
 export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
@@ -44,12 +44,12 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
           aria-valuemax={max}
           aria-label={props["aria-label"] ?? "Progress"}
           data-state={indeterminate ? "indeterminate" : "determinate"}
-          className="prui-progress h-2 w-full overflow-hidden rounded-[var(--prui-radius-full)] bg-[var(--prui-raise)]"
+          className="prui-progress h-2 w-full overflow-hidden rounded-full bg-raise"
           {...props}
         >
           <div
             className={cn(
-              "h-full rounded-[var(--prui-radius-full)] transition-[width] duration-[var(--prui-duration-base)] ease-[var(--prui-ease-out)]",
+              "h-full rounded-full transition-[width] duration-200 ease-prui",
               variantBar[variant],
               indeterminate && "prui-progress-indeterminate w-1/3",
             )}
@@ -57,7 +57,7 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
           />
         </div>
         {showValue && pct !== undefined ? (
-          <span className="text-xs tabular-nums text-[var(--prui-dim)]">{Math.round(pct)}%</span>
+          <span className="text-xs tabular-nums text-dim">{Math.round(pct)}%</span>
         ) : null}
       </div>
     )

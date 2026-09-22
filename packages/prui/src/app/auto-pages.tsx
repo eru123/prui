@@ -68,7 +68,7 @@ export function AutoPages({ mode, config, children }: { mode: PagesMode; config?
   }, [])
 
   if (!registry) {
-    return <div className="p-8 text-center text-sm text-[var(--prui-dim)]">Loading…</div>
+    return <div className="p-8 text-center text-sm text-dim">Loading…</div>
   }
 
   return (

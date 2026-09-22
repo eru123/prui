@@ -85,7 +85,7 @@ export function LoginPage({
       <form onSubmit={handleSubmit} className="flex flex-col gap-3" data-testid="login-form">
         {visible.map((f) => (
           <div key={f.name} className="flex flex-col gap-1.5">
-            <Label htmlFor={`login-${f.name}`}>{f.label}{f.required ? <span className="ml-0.5 text-[var(--prui-danger)]">*</span> : null}</Label>
+            <Label htmlFor={`login-${f.name}`}>{f.label}{f.required ? <span className="ml-0.5 text-danger">*</span> : null}</Label>
             <Input
               id={`login-${f.name}`}
               type={f.type ?? "text"}
@@ -99,12 +99,12 @@ export function LoginPage({
           </div>
         ))}
         {show.remember ? (
-          <label className="flex items-center gap-2 text-sm text-[var(--prui-dim)]" data-testid="login-remember">
+          <label className="flex items-center gap-2 text-sm text-dim" data-testid="login-remember">
             <input
               type="checkbox"
               checked={remember}
               onChange={(e) => setRemember(e.target.checked)}
-              className="h-4 w-4 accent-[var(--prui-brand)]"
+              className="h-4 w-4 accent-brand"
             />
             Remember me
           </label>
@@ -116,15 +116,15 @@ export function LoginPage({
       <OAuthButtons providers={oauth} />
       {links?.forgot !== false && links?.forgot ? (
         <div className="mt-3 text-center">
-          <a href={linkHref(links.forgot)} className="text-sm text-[var(--prui-brand)] hover:underline">
+          <a href={linkHref(links.forgot)} className="text-sm text-brand hover:underline">
             {linkLabel(links.forgot, "Forgot password?")}
           </a>
         </div>
       ) : null}
       {(links?.register !== false && links?.register) ? (
-        <div className="mt-1 text-center text-sm text-[var(--prui-dim)]">
+        <div className="mt-1 text-center text-sm text-dim">
           No account?{" "}
-          <a href={linkHref(links.register)} className="text-[var(--prui-brand)] hover:underline">
+          <a href={linkHref(links.register)} className="text-brand hover:underline">
             {linkLabel(links.register, "Register")}
           </a>
         </div>

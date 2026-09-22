@@ -96,7 +96,7 @@ function TypedField({ field }: { field: SettingsField }) {
 export function Settings({ title = "Settings", sections, className }: SettingsProps) {
   return (
     <div className={cn("prui-settings mx-auto flex w-full max-w-4xl flex-col gap-6", className)}>
-      <h1 className="text-xl font-semibold text-[var(--prui-fg)]">{title}</h1>
+      <h1 className="text-xl font-semibold text-fg">{title}</h1>
       <div className="flex flex-col gap-6 md:flex-row">
         <nav aria-label="Settings sections" className="md:w-56 md:shrink-0">
           <ul className="flex flex-row flex-wrap gap-1 md:flex-col">
@@ -104,7 +104,7 @@ export function Settings({ title = "Settings", sections, className }: SettingsPr
               <li key={s.id}>
                 <a
                   href={`#settings-${s.id}`}
-                  className="block rounded-[var(--prui-radius)] px-2.5 py-1.5 text-sm text-[var(--prui-dim)] hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)]"
+                  className="block rounded-prui px-2.5 py-1.5 text-sm text-dim hover:bg-raise hover:text-fg"
                 >
                   {s.title ?? s.label ?? s.id}
                 </a>
@@ -121,12 +121,12 @@ export function Settings({ title = "Settings", sections, className }: SettingsPr
               </CardHeader>
               <CardContent>
                 {s.content ?? (
-                  <dl className="flex flex-col divide-y divide-[var(--prui-line)]">
+                  <dl className="flex flex-col divide-y divide-line">
                     {(s.fields ?? []).map((f, i) => (
                       <div key={`${f.label}-${i}`} className="flex flex-col gap-2 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between">
                         <div className="min-w-0">
-                          <dt className="text-sm font-medium text-[var(--prui-fg)]">{f.label}</dt>
-                          {f.description ? <dd className="text-xs text-[var(--prui-dim)]">{f.description}</dd> : null}
+                          <dt className="text-sm font-medium text-fg">{f.label}</dt>
+                          {f.description ? <dd className="text-xs text-dim">{f.description}</dd> : null}
                         </div>
                         <div className="shrink-0">
                           {f.control ?? <TypedField field={f} />}

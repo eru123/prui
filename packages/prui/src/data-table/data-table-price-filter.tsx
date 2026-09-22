@@ -45,9 +45,9 @@ export function PriceFilter({
   return (
     <FormField label={label} className={className} data-testid="price-filter">
       <div className="flex items-center gap-1.5">
-        <span aria-hidden className="text-xs text-[var(--prui-dim)]">min</span>
+        <span aria-hidden className="text-xs text-dim">min</span>
         <div className="relative">
-          <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-xs text-[var(--prui-dim)]" aria-hidden>
+          <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-xs text-dim" aria-hidden>
             {currency}
           </span>
           <Input
@@ -58,9 +58,9 @@ export function PriceFilter({
             onChange={(e) => set({ ...value, min: parse(e.target.value) })}
           />
         </div>
-        <span aria-hidden className="text-xs text-[var(--prui-dim)]">max</span>
+        <span aria-hidden className="text-xs text-dim">max</span>
         <div className="relative">
-          <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-xs text-[var(--prui-dim)]" aria-hidden>
+          <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-xs text-dim" aria-hidden>
             {currency}
           </span>
           <Input

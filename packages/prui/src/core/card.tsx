@@ -14,16 +14,16 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement>, Surfa
 }
 
 const badgeVariants: Record<BadgeVariant, string> = {
-  default: "bg-[var(--prui-raise)] text-[var(--prui-fg)] border-transparent",
-  neutral: "bg-[var(--prui-raise)] text-[var(--prui-fg)] border-transparent",
-  brand: "bg-[var(--prui-brand)]/15 text-[var(--prui-brand)] border-transparent",
-  info: "bg-[var(--prui-brand)]/15 text-[var(--prui-brand)] border-transparent",
-  ok: "bg-[var(--prui-ok)]/15 text-[var(--prui-ok)] border-transparent",
-  success: "bg-[var(--prui-ok)]/15 text-[var(--prui-ok)] border-transparent",
-  warn: "bg-[var(--prui-warn)]/15 text-[var(--prui-warn)] border-transparent",
-  warning: "bg-[var(--prui-warn)]/15 text-[var(--prui-warn)] border-transparent",
-  danger: "bg-[var(--prui-danger)]/15 text-[var(--prui-danger)] border-transparent",
-  outline: "bg-transparent text-[var(--prui-fg)] border-[var(--prui-line)]",
+  default: "bg-raise text-fg border-transparent",
+  neutral: "bg-raise text-fg border-transparent",
+  brand: "bg-brand/15 text-brand border-transparent",
+  info: "bg-brand/15 text-brand border-transparent",
+  ok: "bg-ok/15 text-ok border-transparent",
+  success: "bg-ok/15 text-ok border-transparent",
+  warn: "bg-warn/15 text-warn border-transparent",
+  warning: "bg-warn/15 text-warn border-transparent",
+  danger: "bg-danger/15 text-danger border-transparent",
+  outline: "bg-transparent text-fg border-line",
 }
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
@@ -31,7 +31,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     const surface = resolveSurface({ bg, fg, radius, texture, textureColor, elevation })
     const merged = withSurface(
       cn(
-        "prui-badge inline-flex items-center gap-1 rounded-[var(--prui-s-radius,var(--prui-radius-full))] border px-2 py-0.5",
+        "prui-badge inline-flex items-center gap-1 rounded-prui-full border px-2 py-0.5",
         "text-xs font-medium whitespace-nowrap",
         badgeVariants[variant],
         className,
@@ -43,6 +43,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         data-variant={variant}
+        // eslint-disable-next-line shadcn/no-inline-styles -- withSurface: per-instance skin overrides are the public SurfaceProps API, driven by props not literals
         style={merged.style}
         className={merged.className}
         {...props}
@@ -71,10 +72,10 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement>, Surface
 }
 
 const cardVariantClasses: Record<CardVariant, string> = {
-  default: "border border-[var(--prui-line)]",
-  outline: "border border-[var(--prui-s-border,var(--prui-brand))] bg-transparent",
+  default: "border border-line shadow-card",
+  outline: "border border-accent-border bg-transparent",
   ghost: "border border-transparent bg-transparent",
-  elevated: "border border-[var(--prui-line)] prui-elev-md",
+  elevated: "border border-line prui-elev-md",
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -82,13 +83,14 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const surface = resolveSurface({ bg, fg, radius, texture, textureColor, elevation })
     const merged = withSurface(
       cn(
-        "prui-card rounded-[var(--prui-s-radius,var(--prui-radius))]",
+        "prui-card rounded-prui",
         unstyled ? [] : [cardVariantClasses[variant]],
         className,
       ),
       style,
       surface,
     )
+    // eslint-disable-next-line shadcn/no-inline-styles -- withSurface: per-instance skin overrides are the public SurfaceProps API, driven by props not literals
     return <div ref={ref} className={merged.className} style={merged.style} {...props} />
   },
 )
@@ -103,14 +105,14 @@ CardHeader.displayName = "CardHeader"
 
 export const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn("prui-card-title text-base font-semibold text-[var(--prui-fg)]", className)} {...props} />
+    <h3 ref={ref} className={cn("prui-card-title text-base font-semibold text-fg", className)} {...props} />
   ),
 )
 CardTitle.displayName = "CardTitle"
 
 export const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("prui-card-description text-sm text-[var(--prui-dim)]", className)} {...props} />
+    <p ref={ref} className={cn("prui-card-description text-sm text-dim", className)} {...props} />
   ),
 )
 CardDescription.displayName = "CardDescription"
@@ -149,7 +151,7 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const avatarSizes = {
-  sm: "h-6 w-6 text-[10px]",
+  sm: "h-6 w-6 text-2xs",
   md: "h-8 w-8 text-xs",
   lg: "h-12 w-12 text-base",
 }
@@ -180,7 +182,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         className={cn(
           "prui-avatar relative inline-flex shrink-0 select-none items-center justify-center overflow-hidden",
           "whitespace-nowrap leading-none",
-          "rounded-[var(--prui-radius-full)] bg-[var(--prui-raise)] text-[var(--prui-dim)] font-medium",
+          "rounded-full bg-raise text-dim font-medium",
           avatarSizes[size],
           className,
         )}

@@ -46,14 +46,14 @@ export function ForgotPasswordPage({
     <PageShell title="Forgot your password?" description="Enter your email and we send you a reset link" brand={brand}>
       <ErrorBanner error={error} />
       {sent ? (
-        <p data-testid="forgot-sent" className="rounded-[var(--prui-radius)] border border-[var(--prui-ok)]/40 bg-[var(--prui-ok)]/10 px-3 py-3 text-center text-sm text-[var(--prui-ok)]">
+        <p data-testid="forgot-sent" className="rounded-prui border border-ok/40 bg-ok/10 px-3 py-3 text-center text-sm text-ok">
           Check your email for the reset link.
         </p>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-3" data-testid="forgot-form">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="forgot-email">
-              Email<span className="ml-0.5 text-[var(--prui-danger)]">*</span>
+              Email<span className="ml-0.5 text-danger">*</span>
             </Label>
             <Input
               id="forgot-email"
@@ -73,7 +73,7 @@ export function ForgotPasswordPage({
       )}
       {links?.login !== false && links?.login ? (
         <div className="mt-3 text-center text-sm">
-          <a href={linkHref(links.login)} className="text-[var(--prui-brand)] hover:underline">
+          <a href={linkHref(links.login)} className="text-brand hover:underline">
             {linkLabel(links.login, "Back to sign in")}
           </a>
         </div>

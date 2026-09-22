@@ -40,28 +40,28 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--prui-s-bg,var(--prui-brand))] text-[var(--prui-s-fg,var(--prui-brand-fg))] hover:brightness-110 active:brightness-95",
+    "bg-primary text-primary-fg inset-shadow-highlight hover:bg-brand-strong active:bg-brand/85",
   secondary:
-    "bg-[var(--prui-s-bg,var(--prui-raise))] text-[var(--prui-s-fg,var(--prui-fg))] border border-[var(--prui-line)] hover:border-[var(--prui-dim)]",
+    "bg-secondary text-secondary-fg border border-line hover:bg-raise hover:border-dim",
   // legacy alias of secondary
   default:
-    "bg-[var(--prui-s-bg,var(--prui-raise))] text-[var(--prui-s-fg,var(--prui-fg))] border border-[var(--prui-line)] hover:border-[var(--prui-dim)]",
+    "bg-secondary text-secondary-fg border border-line hover:bg-raise hover:border-dim",
   neutral:
-    "bg-[var(--prui-s-bg,transparent)] text-[var(--prui-s-fg,var(--prui-fg))] border border-[var(--prui-line)] hover:bg-[var(--prui-raise)]",
+    "bg-ghost text-secondary-fg border border-line hover:bg-raise",
   ghost:
-    "bg-[var(--prui-s-bg,transparent)] text-[var(--prui-s-fg,var(--prui-fg))] hover:bg-[var(--prui-raise)]",
+    "bg-ghost text-secondary-fg hover:bg-raise",
   danger:
-    "bg-[var(--prui-s-bg,var(--prui-danger))] text-[var(--prui-s-fg,#fff)] hover:brightness-110 active:brightness-95",
+    "bg-danger-fill text-on-fill inset-shadow-highlight hover:bg-danger-strong active:bg-danger/85",
   success:
-    "bg-[var(--prui-s-bg,var(--prui-ok))] text-[var(--prui-s-fg,#fff)] hover:brightness-110 active:brightness-95",
+    "bg-ok-fill text-on-fill inset-shadow-highlight hover:bg-ok-strong active:bg-ok/85",
   warning:
-    "bg-[var(--prui-s-bg,var(--prui-warn))] text-[var(--prui-s-fg,#fff)] hover:brightness-110 active:brightness-95",
+    "bg-warn-fill text-on-fill inset-shadow-highlight hover:bg-warn-strong active:bg-warn/85",
   outline:
-    "bg-[var(--prui-s-bg,transparent)] text-[var(--prui-s-fg,var(--prui-brand))] border border-[var(--prui-s-border,var(--prui-brand))] hover:bg-[var(--prui-brand)]/10",
+    "bg-ghost text-accent-fg border border-accent-border hover:bg-brand/10",
   soft:
-    "bg-[var(--prui-brand)]/12 text-[var(--prui-s-fg,var(--prui-brand))] hover:bg-[var(--prui-brand)]/20",
+    "bg-brand/12 text-accent-fg hover:bg-brand/20",
   link:
-    "bg-transparent text-[var(--prui-s-fg,var(--prui-brand))] underline-offset-4 hover:underline p-0",
+    "bg-transparent text-accent-fg underline-offset-4 hover:underline p-0",
 }
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -76,11 +76,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const surface = resolveSurface({ bg, fg, radius, texture, textureColor, elevation })
     const classes = cn(
       "prui-button inline-flex items-center justify-center whitespace-nowrap font-medium select-none",
-      "transition-[filter,background-color,border-color] duration-150 outline-none cursor-pointer",
-      "focus-visible:ring-2 focus-visible:ring-[var(--prui-brand)] focus-visible:ring-offset-1",
+      "transition-colors duration-150 ease-prui outline-none cursor-pointer",
+      "focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       "disabled:pointer-events-none disabled:opacity-50",
       fullWidth && "w-full",
-      "rounded-[var(--prui-s-radius,var(--prui-radius))]",
+      "rounded-prui",
       unstyled ? [] : [variantClasses[variant], sizeClasses[size]],
       className,
     )
@@ -97,6 +97,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     return (
+      // eslint-disable-next-line shadcn/no-inline-styles -- withSurface: per-instance skin overrides are the public SurfaceProps API, driven by props not literals
       <button ref={ref} className={merged.className} style={merged.style} disabled={disabled || loading} data-loading={loading || undefined} {...props}>
         {loading ? (
           <>

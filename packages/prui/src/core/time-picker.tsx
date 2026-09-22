@@ -186,10 +186,10 @@ export function TimePanel({ value, onSelect, minuteStep = 1, seconds = false, mi
           aria-label={col.label}
           tabIndex={-1}
           onKeyDown={(e) => onKeyDown(e, i)}
-          className={cn("flex w-16 flex-col rounded-[var(--prui-radius-1)] outline-none", !compact && "bg-[var(--prui-raise)]/40")}
+          className={cn("flex w-16 flex-col rounded-prui-sm outline-none", !compact && "bg-raise/40")}
         >
           {!compact ? (
-            <div className="px-2 pb-1 pt-2 text-center text-[10px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">
+            <div className="px-2 pb-1 pt-2 text-center text-2xs font-semibold uppercase tracking-wide text-dim">
               {col.label}
             </div>
           ) : null}
@@ -208,9 +208,9 @@ export function TimePanel({ value, onSelect, minuteStep = 1, seconds = false, mi
                   data-testid={`time-${col.unit}`}
                   onClick={() => !isDisabled && pick(col.unit, n)}
                   className={cn(
-                    "rounded-[calc(var(--prui-radius-1))] py-1 text-center text-sm tabular-nums cursor-pointer outline-none",
-                    "focus-visible:bg-[var(--prui-raise)]",
-                    isSel ? "bg-[var(--prui-brand)] text-[var(--prui-brand-fg,#fff)] font-medium" : "text-[var(--prui-fg)] hover:bg-[var(--prui-raise)]",
+                    "rounded-prui-sm py-1 text-center text-sm tabular-nums cursor-pointer outline-none",
+                    "focus-visible:bg-raise",
+                    isSel ? "bg-brand text-brand-fg font-medium" : "text-fg hover:bg-raise",
                     isDisabled && "opacity-40 pointer-events-none",
                   )}
                 >
@@ -291,9 +291,9 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
           if (!disabled && !open) setOpen(true)
         }}
         className={cn(
-          "prui-time-picker h-9 w-full cursor-pointer rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
-          "bg-[var(--prui-background)] px-3 pr-8 text-sm tabular-nums text-[var(--prui-fg)] placeholder:text-[var(--prui-dim)]",
-          "outline-none transition-colors focus:border-[var(--prui-brand)] focus:ring-2 focus:ring-[var(--prui-brand)]/30",
+          "prui-time-picker h-9 w-full cursor-pointer rounded-prui border border-line",
+          "bg-background px-3 pr-8 text-sm tabular-nums text-fg placeholder:text-dim",
+          "outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30",
           "disabled:opacity-50 disabled:cursor-not-allowed",
           className,
         )}
@@ -308,7 +308,7 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
             role="dialog"
             aria-label={ariaLabel ?? "Choose time"}
             data-prui-time-panel-wrap
-            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-2 shadow-[var(--prui-shadow-lg)]"
+            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-prui border border-line bg-surface p-2 shadow-prui-lg"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
             <TimePanel value={value} onSelect={select} minuteStep={minuteStep} seconds={seconds} min={min} max={max} />
@@ -383,14 +383,14 @@ export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePicke
           if (!disabled && !open) setOpen(true)
         }}
         className={cn(
-          "prui-time-range-picker h-9 w-full cursor-pointer rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
-          "bg-[var(--prui-background)] px-3 pr-8 text-sm tabular-nums text-[var(--prui-fg)] placeholder:text-[var(--prui-dim)]",
-          "outline-none transition-colors focus:border-[var(--prui-brand)] focus:ring-2 focus:ring-[var(--prui-brand)]/30",
+          "prui-time-range-picker h-9 w-full cursor-pointer rounded-prui border border-line",
+          "bg-background px-3 pr-8 text-sm tabular-nums text-fg placeholder:text-dim",
+          "outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30",
           "disabled:opacity-50 disabled:cursor-not-allowed",
           className,
         )}
       />
-      <Clock className="pointer-events-none -ml-7 h-4 w-4 text-[var(--prui-dim)]" aria-hidden />
+      <Clock className="pointer-events-none -ml-7 h-4 w-4 text-dim" aria-hidden />
       {open ? (
         <Portal>
           <div
@@ -401,27 +401,27 @@ export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePicke
             role="dialog"
             aria-label={ariaLabel ?? "Choose time range"}
             data-prui-time-panel-wrap
-            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-3 shadow-[var(--prui-shadow-lg)]"
+            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-prui border border-line bg-surface p-3 shadow-prui-lg"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-4">
                 <div>
-                  <div className="mb-1 text-xs font-semibold text-[var(--prui-dim)]">{t.from}</div>
+                  <div className="mb-1 text-xs font-semibold text-dim">{t.from}</div>
                   <TimePanel compact value={value.from} onSelect={(time) => pickSide("from", time)} minuteStep={minuteStep} seconds={seconds} min={min} max={fromMax} />
                 </div>
                 <div>
-                  <div className="mb-1 text-xs font-semibold text-[var(--prui-dim)]">{t.to}</div>
+                  <div className="mb-1 text-xs font-semibold text-dim">{t.to}</div>
                   <TimePanel compact value={value.to} onSelect={(time) => pickSide("to", time)} minuteStep={minuteStep} seconds={seconds} min={toMin} max={max} />
                 </div>
               </div>
-              <div className="flex items-center justify-between border-t border-[var(--prui-line)] pt-2 text-xs text-[var(--prui-dim)]">
+              <div className="flex items-center justify-between border-t border-line pt-2 text-xs text-dim">
                 <span data-testid="timerange-label">{display || t.time}</span>
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={() => setRange({})}
-                    className="cursor-pointer rounded-[var(--prui-radius-1)] px-2 py-1 transition-colors hover:bg-[var(--prui-raise)]"
+                    className="cursor-pointer rounded-prui-sm px-2 py-1 transition-colors hover:bg-raise"
                   >
                     {t.clear}
                   </button>
@@ -431,7 +431,7 @@ export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePicke
                       setOpen(false)
                       inputRef.current?.focus()
                     }}
-                    className="cursor-pointer rounded-[var(--prui-radius-1)] bg-[var(--prui-brand)]/15 px-2 py-1 text-[var(--prui-brand)] transition-colors hover:bg-[var(--prui-brand)]/25"
+                    className="cursor-pointer rounded-prui-sm bg-brand/15 px-2 py-1 text-brand transition-colors hover:bg-brand/25"
                   >
                     {t.apply}
                   </button>

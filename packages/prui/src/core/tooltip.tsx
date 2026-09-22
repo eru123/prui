@@ -112,9 +112,9 @@ export const Tooltip = React.forwardRef<HTMLSpanElement, TooltipProps>(function 
             data-state="open"
             data-side={position?.side ?? side}
             className={cn(
-              "prui-tooltip fixed z-[var(--prui-z-tooltip)] max-w-60 rounded-[var(--prui-radius-1)]",
-              "border border-[var(--prui-line)] bg-[var(--prui-surface)] px-2 py-1 text-xs text-[var(--prui-fg)]",
-              "shadow-[var(--prui-shadow-md)] pointer-events-none",
+              "prui-tooltip fixed z-[var(--prui-z-tooltip)] max-w-60 rounded-prui-sm",
+              "border border-line bg-surface px-2 py-1 text-xs text-fg",
+              "shadow-prui-md pointer-events-none",
               !reduced && "prui-anim-fade",
             )}
             style={

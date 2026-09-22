@@ -25,11 +25,11 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "
 }
 
 const alertStyles: Record<AlertVariant, { icon: typeof Info; box: string }> = {
-  neutral: { icon: Info, box: "bg-[var(--prui-raise)] border-[var(--prui-line)] text-[var(--prui-fg)]" },
-  info: { icon: Info, box: "bg-[var(--prui-brand)]/10 border-[var(--prui-brand)]/30 text-[var(--prui-brand)]" },
-  success: { icon: CheckCircle2, box: "bg-[var(--prui-ok)]/10 border-[var(--prui-ok)]/30 text-[var(--prui-ok)]" },
-  warning: { icon: AlertTriangle, box: "bg-[var(--prui-warn)]/10 border-[var(--prui-warn)]/30 text-[var(--prui-warn)]" },
-  danger: { icon: XCircle, box: "bg-[var(--prui-danger)]/10 border-[var(--prui-danger)]/30 text-[var(--prui-danger)]" },
+  neutral: { icon: Info, box: "bg-raise border-line text-fg" },
+  info: { icon: Info, box: "bg-brand/10 border-brand/30 text-brand" },
+  success: { icon: CheckCircle2, box: "bg-ok/10 border-ok/30 text-ok" },
+  warning: { icon: AlertTriangle, box: "bg-warn/10 border-warn/30 text-warn" },
+  danger: { icon: XCircle, box: "bg-danger/10 border-danger/30 text-danger" },
 }
 
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
@@ -44,7 +44,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         role={urgent ? "alert" : "status"}
         data-variant={variant}
         className={cn(
-          "prui-alert flex items-start gap-3 rounded-[var(--prui-radius)] border px-4 py-3 text-sm",
+          "prui-alert flex items-start gap-3 rounded-prui border px-4 py-3 text-sm",
           reduced ? "" : "prui-anim-fade",
           alertStyles[variant].box,
           className,
@@ -54,14 +54,14 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         {hideIcon ? null : <Icon className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />}
         <div className="min-w-0 flex-1">
           {title ? <div className="font-semibold">{title}</div> : null}
-          {children ? <div className={cn("text-[var(--prui-fg)]", title && "mt-0.5")}>{children}</div> : null}
+          {children ? <div className={cn("text-fg", title && "mt-0.5")}>{children}</div> : null}
         </div>
         {onDismiss ? (
           <button
             type="button"
             aria-label={t.dismiss}
             onClick={onDismiss}
-            className="-m-1 rounded-[var(--prui-radius-1)] p-1 cursor-pointer opacity-70 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--prui-brand)]"
+            className="-m-1 rounded-prui-sm p-1 cursor-pointer opacity-70 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
           >
             <X className="h-4 w-4" aria-hidden />
           </button>

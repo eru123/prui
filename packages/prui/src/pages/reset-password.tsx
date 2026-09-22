@@ -49,7 +49,7 @@ export function ResetPasswordPage({
         {show.password !== false ? (
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="reset-password">
-              New password<span className="ml-0.5 text-[var(--prui-danger)]">*</span>
+              New password<span className="ml-0.5 text-danger">*</span>
             </Label>
             <Input
               id="reset-password"
@@ -65,7 +65,7 @@ export function ResetPasswordPage({
         {show.confirm !== false ? (
           <div className="flex flex-col gap-1.5" data-testid="reset-confirm">
             <Label htmlFor="reset-confirm">
-              Confirm password<span className="ml-0.5 text-[var(--prui-danger)]">*</span>
+              Confirm password<span className="ml-0.5 text-danger">*</span>
             </Label>
             <Input
               id="reset-confirm"
@@ -84,7 +84,7 @@ export function ResetPasswordPage({
       </form>
       {links?.login !== false && links?.login ? (
         <div className="mt-3 text-center text-sm">
-          <a href={linkHref(links.login)} className="text-[var(--prui-brand)] hover:underline">
+          <a href={linkHref(links.login)} className="text-brand hover:underline">
             {linkLabel(links.login, "Back to sign in")}
           </a>
         </div>

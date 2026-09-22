@@ -65,7 +65,7 @@ export function ProfilePage({
       <form onSubmit={handleSubmit} className="flex flex-col gap-4" data-testid="profile-form">
         <div className="flex items-center gap-3" data-testid="profile-avatar">
           <Avatar src={profile.avatar} alt={values.name || "User"} size="lg" />
-          <div className="text-sm text-[var(--prui-dim)]">{values.email || "No email"}</div>
+          <div className="text-sm text-dim">{values.email || "No email"}</div>
         </div>
         {show.name !== false ? (
           <div className="flex flex-col gap-1.5">
@@ -155,9 +155,9 @@ export function SettingsPage({ title = "Settings", toggles = [], brand }: Settin
           <CardTitle>Preferences</CardTitle>
           <CardDescription>Changes apply immediately.</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col divide-y divide-[var(--prui-line)]">
+        <CardContent className="flex flex-col divide-y divide-line">
           {toggles.length === 0 ? (
-            <p className="py-3 text-sm text-[var(--prui-dim)]">No settings available.</p>
+            <p className="py-3 text-sm text-dim">No settings available.</p>
           ) : (
             toggles.map((t) => (
               <SettingsToggleRow key={t.id} toggle={t} />
@@ -165,7 +165,7 @@ export function SettingsPage({ title = "Settings", toggles = [], brand }: Settin
           )}
         </CardContent>
         <CardFooter className="justify-end">
-          <span className="text-xs text-[var(--prui-dim)]" data-testid="settings-page">
+          <span className="text-xs text-dim" data-testid="settings-page">
             {toggles.length} setting{toggles.length === 1 ? "" : "s"}
           </span>
         </CardFooter>
@@ -181,8 +181,8 @@ function SettingsToggleRow({ toggle }: { toggle: SettingsToggle }) {
   return (
     <div className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
       <div className="min-w-0">
-        <p className="text-sm font-medium text-[var(--prui-fg)]">{toggle.label}</p>
-        {toggle.description ? <p className="text-xs text-[var(--prui-dim)]">{toggle.description}</p> : null}
+        <p className="text-sm font-medium text-fg">{toggle.label}</p>
+        {toggle.description ? <p className="text-xs text-dim">{toggle.description}</p> : null}
       </div>
       <Switch
         aria-label={toggle.label}
@@ -245,7 +245,7 @@ export function AdminSetup({
       <form onSubmit={handleSubmit} className="flex flex-col gap-3" data-testid="adminsetup-form">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="admin-name">
-            Name<span className="ml-0.5 text-[var(--prui-danger)]">*</span>
+            Name<span className="ml-0.5 text-danger">*</span>
           </Label>
           <Input
             id="admin-name"
@@ -258,7 +258,7 @@ export function AdminSetup({
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="admin-email">
-            Email<span className="ml-0.5 text-[var(--prui-danger)]">*</span>
+            Email<span className="ml-0.5 text-danger">*</span>
           </Label>
           <Input
             id="admin-email"
@@ -272,7 +272,7 @@ export function AdminSetup({
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="admin-password">
-            Password<span className="ml-0.5 text-[var(--prui-danger)]">*</span>
+            Password<span className="ml-0.5 text-danger">*</span>
           </Label>
           <Input
             id="admin-password"

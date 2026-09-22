@@ -37,11 +37,11 @@ interface ToastEntry extends ToastOptions {
 }
 
 const toastStyles: Record<ToastVariant, { icon: typeof Info; accent: string }> = {
-  neutral: { icon: Info, accent: "text-[var(--prui-brand)]" },
-  info: { icon: Info, accent: "text-[var(--prui-brand)]" },
-  success: { icon: CheckCircle2, accent: "text-[var(--prui-ok)]" },
-  warning: { icon: AlertTriangle, accent: "text-[var(--prui-warn)]" },
-  danger: { icon: XCircle, accent: "text-[var(--prui-danger)]" },
+  neutral: { icon: Info, accent: "text-brand" },
+  info: { icon: Info, accent: "text-brand" },
+  success: { icon: CheckCircle2, accent: "text-ok" },
+  warning: { icon: AlertTriangle, accent: "text-warn" },
+  danger: { icon: XCircle, accent: "text-danger" },
 }
 
 /* ---------------- store (works with or without the hook) ---------------- */
@@ -145,21 +145,21 @@ export function Toaster({ position = "bottom-right", className }: ToasterProps =
             data-testid="toast"
             data-variant={entry.variant ?? "neutral"}
             className={cn(
-              "prui-toast flex items-start gap-3 rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
-              "bg-[var(--prui-surface)] p-4 text-sm shadow-[var(--prui-shadow-md)]",
+              "prui-toast flex items-start gap-3 rounded-prui border border-line",
+              "bg-surface p-4 text-sm shadow-prui-md",
               !reduced && "prui-anim-slide",
             )}
           >
             <Icon className={cn("mt-0.5 h-4 w-4 shrink-0", accent)} aria-hidden />
             <div className="min-w-0 flex-1">
-              <div className="font-medium text-[var(--prui-fg)]">{entry.title}</div>
-              {entry.description ? <div className="mt-0.5 text-[var(--prui-dim)]">{entry.description}</div> : null}
+              <div className="font-medium text-fg">{entry.title}</div>
+              {entry.description ? <div className="mt-0.5 text-dim">{entry.description}</div> : null}
             </div>
             <button
               type="button"
               aria-label={t.dismiss}
               onClick={() => dismissToast(entry.id)}
-              className="-m-1 rounded-[var(--prui-radius-1)] p-1 cursor-pointer text-[var(--prui-dim)] transition-colors hover:text-[var(--prui-fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--prui-brand)]"
+              className="-m-1 rounded-prui-sm p-1 cursor-pointer text-dim transition-colors hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
             >
               <X className="h-4 w-4" aria-hidden />
             </button>

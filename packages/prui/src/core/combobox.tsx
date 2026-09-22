@@ -187,8 +187,8 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
         placeholder={placeholder}
         className={cn(
           "prui-combobox-trigger h-9 w-full pr-8",
-          "bg-[var(--prui-background)] rounded-[var(--prui-radius)] px-3 text-sm text-[var(--prui-fg)] placeholder:text-[var(--prui-dim)]",
-          "outline-none transition-colors focus:border-[var(--prui-brand)] focus:ring-2 focus:ring-[var(--prui-brand)]/30",
+          "bg-background rounded-prui px-3 text-sm text-fg placeholder:text-dim",
+          "outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30",
           "disabled:opacity-50 disabled:cursor-not-allowed cursor-text",
           className,
         )}
@@ -204,7 +204,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
         onKeyDown={handleKeyDown}
         {...props}
       />
-        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
+        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-dim" aria-hidden />
       </div>
       {open ? (
         <Portal>
@@ -221,7 +221,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
             data-state="open"
             className={cn(
               "prui-combobox-content fixed z-[var(--prui-z-overlay)] min-w-40 max-h-60 overflow-auto p-1",
-              "border border-[var(--prui-line)] rounded-[var(--prui-radius)] bg-[var(--prui-surface)] shadow-[var(--prui-shadow-md)]",
+              "border border-line rounded-prui bg-surface shadow-prui-md",
             )}
             style={{
               top: position?.top ?? -9999,
@@ -230,9 +230,9 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
             }}
           >
             {options.length === 0 && emptyText ? (
-              <div className="px-3 py-2 text-sm text-[var(--prui-dim)]">{emptyText}</div>
+              <div className="px-3 py-2 text-sm text-dim">{emptyText}</div>
             ) : filtered.length === 0 ? (
-              <div className="px-3 py-2 text-sm text-[var(--prui-dim)]" role="option" aria-selected="false" aria-disabled="true">
+              <div className="px-3 py-2 text-sm text-dim" role="option" aria-selected="false" aria-disabled="true">
                 {noMatchText}
               </div>
             ) : (
@@ -251,8 +251,8 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
                     onMouseEnter={() => setActiveIndex(i)}
                     onClick={() => pick(opt)}
                     className={cn(
-                      "flex cursor-pointer items-center rounded-[calc(var(--prui-radius)-1px)] px-3 py-1.5 text-sm text-[var(--prui-fg)]",
-                      i === activeIndex && "bg-[var(--prui-raise)]",
+                      "flex cursor-pointer items-center rounded-prui-inner px-3 py-1.5 text-sm text-fg",
+                      i === activeIndex && "bg-raise",
                       isSelected && "font-medium",
                       opt.disabled && "opacity-50 pointer-events-none",
                     )}

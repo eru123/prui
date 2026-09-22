@@ -168,12 +168,9 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
     <Portal>
       <div ref={overlayRef}>
         <div
-          className="prui-modal-overlay fixed inset-0 z-[var(--prui-z-modal)] flex justify-center overflow-y-auto p-4"
+          className="prui-modal-overlay fixed inset-0 z-[var(--prui-z-modal)] flex items-start justify-center overflow-y-auto p-4 bg-scrim backdrop-blur-sm"
           style={{
-            alignItems: "flex-start",
             paddingTop: "10vh",
-            backgroundColor: "var(--prui-scrim)",
-            backdropFilter: "blur(4px)",
             opacity: animating ? 1 : 0,
             transition: `opacity var(--prui-duration-slow) var(--prui-ease-out)`,
           }}
@@ -192,20 +189,15 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
             aria-modal="true"
             aria-label={ariaLabel}
             className={cn(
-              "prui-modal-content relative h-fit m-auto w-full",
+              "prui-modal-content relative h-fit m-auto w-full bg-surface border border-line rounded-prui-md shadow-prui-modal text-fg",
               isShaking && "prui-modal-shake",
               className,
             )}
             style={{
               width: dims.width,
+              padding: pad,
               minWidth: dims.minWidth,
               maxWidth: maxWidth ?? dims.width,
-              padding: pad,
-              backgroundColor: "var(--prui-surface)",
-              border: "1px solid var(--prui-line)",
-              borderRadius: "var(--prui-radius-3)",
-              boxShadow: "var(--prui-shadow-modal)",
-              color: "var(--prui-fg)",
               transform: animating ? "scale(1) translateY(0)" : "scale(0.95) translateY(8px)",
               opacity: animating ? 1 : 0,
               transition: `transform var(--prui-duration-slow) var(--prui-ease-out), opacity var(--prui-duration-slow) var(--prui-ease-out)`,
@@ -221,7 +213,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
                 type="button"
                 onClick={onClose}
                 aria-label="Close modal"
-                className="absolute right-4 top-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-[var(--prui-radius)] text-[var(--prui-dim)] transition-all hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)]"
+                className="absolute right-4 top-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-prui text-dim transition-all hover:bg-raise hover:text-fg"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>
@@ -363,12 +355,9 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
       return (
         <div ref={overlayRef}>
           <div
-            className="prui-modal-overlay fixed inset-0 z-[var(--prui-z-confirm)] flex justify-center overflow-y-auto p-4"
+            className="prui-modal-overlay fixed inset-0 z-[var(--prui-z-confirm)] flex items-start justify-center overflow-y-auto p-4 bg-scrim backdrop-blur-sm"
             style={{
-              alignItems: "flex-start",
               paddingTop: "12vh",
-              backgroundColor: "var(--prui-scrim)",
-              backdropFilter: "blur(4px)",
               opacity: animating ? 1 : 0,
               transition: `opacity var(--prui-duration-slow) var(--prui-ease-out)`,
             }}
@@ -377,15 +366,10 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
               role="alertdialog"
               aria-modal="true"
               aria-label={title}
-              className="prui-modal-content relative m-auto w-full"
+              className="prui-modal-content relative m-auto w-full bg-surface border border-line rounded-prui-md shadow-prui-modal text-fg p-4"
               style={{
                 width: dims.width,
                 minWidth: dims.minWidth,
-                backgroundColor: "var(--prui-surface)",
-                border: "1px solid var(--prui-line)",
-                borderRadius: "var(--prui-radius-3)",
-                boxShadow: "var(--prui-shadow-modal)",
-                color: "var(--prui-fg)",
                 transform: animating ? "scale(1) translateY(0)" : "scale(0.95) translateY(8px)",
                 opacity: animating ? 1 : 0,
                 transition: `transform var(--prui-duration-slow) var(--prui-ease-out), opacity var(--prui-duration-slow) var(--prui-ease-out)`,
@@ -404,7 +388,7 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
                   ref={cancelRef}
                   disabled={isPending}
                   onClick={() => finish(false)}
-                  className="cursor-pointer rounded-[var(--prui-radius)] border px-4 py-2 text-sm font-medium transition-all disabled:opacity-60"
+                  className="cursor-pointer rounded-prui border px-4 py-2 text-sm font-medium transition-all disabled:opacity-60"
                   style={{ background: "transparent", borderColor: "var(--prui-line)", color: "var(--prui-fg)" }}
                 >
                   {cancelText}
@@ -414,7 +398,7 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
                   ref={confirmRef}
                   disabled={isPending}
                   onClick={() => finish(true)}
-                  className="cursor-pointer rounded-[var(--prui-radius)] border border-transparent px-4 py-2 text-sm font-medium text-white transition-all disabled:opacity-60"
+                  className="cursor-pointer rounded-prui border border-transparent px-4 py-2 text-sm font-medium text-white transition-all disabled:opacity-60"
                   style={{ backgroundColor: accent }}
                 >
                   {confirmText}

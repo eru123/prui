@@ -194,9 +194,9 @@ export const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerPr
         disabled={disabled}
         data-state={open ? "open" : "closed"}
         className={cn(
-          "prui-select-trigger flex h-9 w-full items-center justify-between gap-2 border border-[var(--prui-line)]",
-          "bg-[var(--prui-background)] rounded-[var(--prui-radius)] px-3 text-sm text-[var(--prui-fg)]",
-          "outline-none transition-colors focus:border-[var(--prui-brand)] focus:ring-2 focus:ring-[var(--prui-brand)]/30",
+          "prui-select-trigger flex h-9 w-full items-center justify-between gap-2 border border-line",
+          "bg-background rounded-prui px-3 text-sm text-fg",
+          "outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30",
           "disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
           className,
         )}
@@ -215,7 +215,7 @@ export const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerPr
         {...props}
       >
         {children}
-        <ChevronDown className={cn("h-4 w-4 shrink-0 text-[var(--prui-dim)] transition-transform", open && "rotate-180")} aria-hidden />
+        <ChevronDown className={cn("h-4 w-4 shrink-0 text-dim transition-transform", open && "rotate-180")} aria-hidden />
       </button>
     )
   },
@@ -234,11 +234,11 @@ export const SelectValue = React.forwardRef<HTMLSpanElement, SelectValueProps>(
       <span ref={ref} className={cn("truncate", className)} {...props}>
         {children ??
           (empty ? (
-            <span className="text-[var(--prui-dim)]">{placeholder}</span>
+            <span className="text-dim">{placeholder}</span>
           ) : multiple && values.length > 1 ? (
             <>
-              <span className="text-[var(--prui-fg)]">{displayValue?.split(", ")[0] ?? values[0]}</span>
-              <span className="ml-1 rounded-[var(--prui-radius-full)] bg-[var(--prui-raise)] px-1.5 text-xs text-[var(--prui-dim)]">
+              <span className="text-fg">{displayValue?.split(", ")[0] ?? values[0]}</span>
+              <span className="ml-1 rounded-full bg-raise px-1.5 text-xs text-dim">
                 +{values.length - 1}
               </span>
             </>
@@ -446,7 +446,7 @@ export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps
           onKeyDown={onKeyDown}
           className={cn(
             "prui-select-content fixed z-[var(--prui-z-overlay)] max-h-60 overflow-auto p-1",
-            "bg-[var(--prui-surface)] border border-[var(--prui-line)] rounded-[var(--prui-radius)] shadow-[var(--prui-shadow-md)] outline-none",
+            "bg-surface border border-line rounded-prui shadow-prui-md outline-none",
             className,
           )}
           style={{
@@ -457,9 +457,9 @@ export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps
           {...props}
         >
           {searchable ? (
-            <div className="sticky top-0 z-[var(--prui-z-content)] mb-1 bg-[var(--prui-surface)] p-1">
+            <div className="sticky top-0 z-[var(--prui-z-content)] mb-1 bg-surface p-1">
               <div className="relative">
-                <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
+                <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-dim" aria-hidden />
                 <input
                   ref={searchRef}
                   type="text"
@@ -472,13 +472,13 @@ export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps
                   }}
                   onKeyDown={onSearchKeyDown}
                   placeholder={`${t.search}…`}
-                  className="h-8 w-full rounded-[calc(var(--prui-radius)-2px)] border border-[var(--prui-line)] bg-[var(--prui-background)] pl-8 pr-2 text-sm text-[var(--prui-fg)] placeholder:text-[var(--prui-dim)] outline-none focus:border-[var(--prui-brand)]"
+                  className="h-8 w-full rounded-prui-inner border border-line bg-background pl-8 pr-2 text-sm text-fg placeholder:text-dim outline-none focus:border-brand"
                 />
               </div>
             </div>
           ) : null}
           {noMatches ? (
-            <div className="px-3 py-2 text-sm text-[var(--prui-dim)]" role="option" aria-selected="false" aria-disabled="true">
+            <div className="px-3 py-2 text-sm text-dim" role="option" aria-selected="false" aria-disabled="true">
               {t.noResults}
             </div>
           ) : (
@@ -516,8 +516,8 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         data-value={value}
         tabIndex={tabIndex}
         className={cn(
-          "prui-select-item relative flex cursor-pointer items-center gap-2 rounded-[calc(var(--prui-radius)-1px)]",
-          "py-1.5 pl-3 pr-8 text-sm text-[var(--prui-fg)] hover:bg-[var(--prui-raise)] focus-visible:bg-[var(--prui-raise)] outline-none",
+          "prui-select-item relative flex cursor-pointer items-center gap-2 rounded-prui-inner",
+          "py-1.5 pl-3 pr-8 text-sm text-fg hover:bg-raise focus-visible:bg-raise outline-none",
           isSelected && "font-medium",
           disabled && "opacity-50 pointer-events-none",
           className,
@@ -534,7 +534,7 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         {...props}
       >
         {children}
-        {isSelected ? <Check className="absolute right-2 h-4 w-4 text-[var(--prui-brand)]" aria-hidden /> : null}
+        {isSelected ? <Check className="absolute right-2 h-4 w-4 text-brand" aria-hidden /> : null}
       </div>
     )
   },

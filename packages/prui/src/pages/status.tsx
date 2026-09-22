@@ -23,8 +23,8 @@ export function NotFoundPage({
   return (
     <PageShell title={title} description={description} brand={brand} width="max-w-md">
       <div className="flex flex-col items-center gap-4 py-4" data-testid="notfound-page">
-        <FileQuestion className="h-10 w-10 text-[var(--prui-dim)]" aria-hidden />
-        <code className="text-3xl font-bold text-[var(--prui-fg)]">404</code>
+        <FileQuestion className="h-10 w-10 text-dim" aria-hidden />
+        <code className="text-3xl font-bold text-fg">404</code>
         {onGoHome ? (
           <Button variant="primary" onClick={onGoHome} data-testid="notfound-home">
             Go home
@@ -70,13 +70,13 @@ export function ErrorPage({
   return (
     <PageShell title={title} brand={brand} width="max-w-md">
       <div className="flex flex-col items-center gap-4 py-4" data-testid="error-page">
-        <AlertTriangle className="h-10 w-10 text-[var(--prui-warn)]" aria-hidden />
+        <AlertTriangle className="h-10 w-10 text-warn" aria-hidden />
         {message ? (
-          <p role="alert" className="rounded-[var(--prui-radius)] border border-[var(--prui-warn)]/40 bg-[var(--prui-warn)]/10 px-3 py-2 text-sm text-[var(--prui-warn)]">
+          <p role="alert" className="rounded-prui border border-warn/40 bg-warn/10 px-3 py-2 text-sm text-warn">
             {message}
           </p>
         ) : (
-          <p className="text-sm text-[var(--prui-dim)]">An unexpected error occurred.</p>
+          <p className="text-sm text-dim">An unexpected error occurred.</p>
         )}
         {onRetry ? (
           <Button variant="primary" onClick={onRetry} data-testid="error-retry">
@@ -115,11 +115,11 @@ export function EmptyState({
   className,
 }: EmptyStateProps) {
   return (
-    <div className={className ?? "flex flex-col items-center justify-center gap-3 rounded-[var(--prui-radius)] border border-dashed border-[var(--prui-line)] px-6 py-12 text-center"} data-testid="empty-state">
-      <Icon className="h-8 w-8 text-[var(--prui-dim)]" aria-hidden />
+    <div className={className ?? "flex flex-col items-center justify-center gap-3 rounded-prui border border-dashed border-line px-6 py-12 text-center"} data-testid="empty-state">
+      <Icon className="h-8 w-8 text-dim" aria-hidden />
       <div>
-        <p className="text-sm font-medium text-[var(--prui-fg)]">{title}</p>
-        {description ? <p className="mt-1 text-sm text-[var(--prui-dim)]">{description}</p> : null}
+        <p className="text-sm font-medium text-fg">{title}</p>
+        {description ? <p className="mt-1 text-sm text-dim">{description}</p> : null}
       </div>
       {action}
     </div>

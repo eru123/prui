@@ -25,11 +25,11 @@ export interface TimelineProps extends React.HTMLAttributes<HTMLOListElement> {
 }
 
 const dotColors: Record<TimelineVariant, string> = {
-  brand: "border-[var(--prui-brand)] bg-[var(--prui-brand)]/20 text-[var(--prui-brand)]",
-  success: "border-[var(--prui-ok)] bg-[var(--prui-ok)]/20 text-[var(--prui-ok)]",
-  warning: "border-[var(--prui-warn)] bg-[var(--prui-warn)]/20 text-[var(--prui-warn)]",
-  danger: "border-[var(--prui-danger)] bg-[var(--prui-danger)]/20 text-[var(--prui-danger)]",
-  neutral: "border-[var(--prui-line)] bg-[var(--prui-raise)] text-[var(--prui-dim)]",
+  brand: "border-brand bg-brand/20 text-brand",
+  success: "border-ok bg-ok/20 text-ok",
+  warning: "border-warn bg-warn/20 text-warn",
+  danger: "border-danger bg-danger/20 text-danger",
+  neutral: "border-line bg-raise text-dim",
 }
 
 export const Timeline = React.forwardRef<HTMLOListElement, TimelineProps>(function Timeline(
@@ -46,7 +46,7 @@ export const Timeline = React.forwardRef<HTMLOListElement, TimelineProps>(functi
             <span
               aria-hidden
               className={cn(
-                "absolute top-5 bottom-0 w-px bg-[var(--prui-line)]",
+                "absolute top-5 bottom-0 w-px bg-line",
                 align === "right" ? "right-[11px]" : "left-[11px]",
                 i === items.length - 1 && "hidden",
               )}
@@ -54,18 +54,18 @@ export const Timeline = React.forwardRef<HTMLOListElement, TimelineProps>(functi
             <span
               aria-hidden
               className={cn(
-                "relative z-[var(--prui-z-content)] flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--prui-radius-full)] border",
+                "relative z-[var(--prui-z-content)] flex h-6 w-6 shrink-0 items-center justify-center rounded-full border",
                 dotColors[variant],
               )}
             >
-              {item.icon ?? <span className="h-1.5 w-1.5 rounded-[var(--prui-radius-full)] bg-current" />}
+              {item.icon ?? <span className="h-1.5 w-1.5 rounded-full bg-current" />}
             </span>
             <div className={cn("min-w-0 flex-1", align === "right" && "text-right")}>
               <div className={cn("flex flex-wrap items-baseline gap-x-2", align === "right" && "flex-row-reverse")}>
-                <span className="text-sm font-medium text-[var(--prui-fg)]">{item.title}</span>
-                {item.time ? <span className="text-xs text-[var(--prui-dim)]">{item.time}</span> : null}
+                <span className="text-sm font-medium text-fg">{item.title}</span>
+                {item.time ? <span className="text-xs text-dim">{item.time}</span> : null}
               </div>
-              {item.description ? <div className="mt-0.5 text-sm text-[var(--prui-dim)]">{item.description}</div> : null}
+              {item.description ? <div className="mt-0.5 text-sm text-dim">{item.description}</div> : null}
             </div>
           </li>
         )

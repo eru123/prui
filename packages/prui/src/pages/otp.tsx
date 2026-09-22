@@ -113,7 +113,7 @@ export function OtpPage({
           <button
             type="button"
             onClick={() => void onResend()}
-            className="text-[var(--prui-brand)] hover:underline cursor-pointer"
+            className="text-brand hover:underline cursor-pointer"
           >
             {resendLabel}
           </button>

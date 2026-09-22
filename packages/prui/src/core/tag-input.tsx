@@ -173,11 +173,11 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
   const merged = withSurface(
     cn(
       "prui-f-control prui-taginput flex w-full flex-wrap items-center gap-1 px-1.5 py-1",
-      "border border-[var(--prui-line)] rounded-[var(--prui-s-radius,var(--prui-radius))]",
-      "bg-[var(--prui-s-bg,var(--prui-background))] text-[var(--prui-s-fg,var(--prui-fg))] placeholder:text-[var(--prui-dim)]",
-      "outline-none transition-colors focus-within:border-[var(--prui-brand)] focus-within:ring-2 focus-within:ring-[var(--prui-brand)]/30",
+      "border border-line rounded-prui",
+      "bg-field text-secondary-fg placeholder:text-dim",
+      "outline-none transition-colors focus-within:border-brand focus-within:ring-2 focus-within:ring-ring/30",
       boxSizeClasses[size],
-      variant === "filled" && "bg-[var(--prui-s-bg,var(--prui-raise))] border-transparent",
+      variant === "filled" && "bg-secondary border-transparent",
       disabled && "opacity-50 cursor-not-allowed",
       className,
     ),
@@ -186,14 +186,15 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
   )
 
   return field.wrap(
-    <div className={merged.className} style={merged.style}>
+    // eslint-disable-next-line shadcn/no-inline-styles -- withSurface: per-instance skin overrides are the public SurfaceProps API, driven by props not literals
+      <div className={merged.className} style={merged.style}>
       {tags.map((tag, i) =>
         renderTag ? (
           <React.Fragment key={`${tag}-${i}`}>{renderTag(tag, { remove: () => removeAt(i) })}</React.Fragment>
         ) : (
           <span
             key={`${tag}-${i}`}
-            className="inline-flex max-w-full items-center gap-1 rounded-[var(--prui-radius-full)] border border-[var(--prui-line)] bg-[var(--prui-raise)] py-0.5 pl-2 pr-1 text-xs text-[var(--prui-fg)]"
+            className="inline-flex max-w-full items-center gap-1 rounded-full border border-line bg-raise py-0.5 pl-2 pr-1 text-xs text-fg"
           >
             <span className="max-w-64 truncate">{labelFor ? labelFor(tag) : tag}</span>
             <button
@@ -201,7 +202,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
               aria-label={t.removeTag.replace("{label}", tag)}
               disabled={disabled}
               onClick={() => removeAt(i)}
-              className="flex h-4 w-4 cursor-pointer items-center justify-center rounded-full text-[var(--prui-dim)] hover:bg-[var(--prui-line)] hover:text-[var(--prui-fg)] disabled:cursor-not-allowed"
+              className="flex h-4 w-4 cursor-pointer items-center justify-center rounded-full text-dim hover:bg-line hover:text-fg disabled:cursor-not-allowed"
             >
               <X className="h-3 w-3" aria-hidden />
             </button>
@@ -218,7 +219,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(functi
         onBlur={onBlur}
         disabled={disabled}
         {...props}
-        className="h-7 min-w-16 flex-1 bg-transparent text-sm outline-none placeholder:text-[var(--prui-dim)] disabled:cursor-not-allowed"
+        className="h-7 min-w-16 flex-1 bg-transparent text-sm outline-none placeholder:text-dim disabled:cursor-not-allowed"
       />
     </div>,
   )

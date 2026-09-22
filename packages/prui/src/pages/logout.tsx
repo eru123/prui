@@ -21,7 +21,7 @@ export function LogoutPage({ onLogout, brand, message, loading = false }: Logout
 
   return (
     <PageShell title="Signing out" brand={brand} width="max-w-xs">
-      <div className="flex flex-col items-center gap-3 py-4 text-[var(--prui-dim)]" data-testid="logout-page">
+      <div className="flex flex-col items-center gap-3 py-4 text-dim" data-testid="logout-page">
         <LogOut className="h-6 w-6" aria-hidden />
         <p className="text-sm text-center">{message ?? (loading ? "Signing you out..." : "You have been signed out.")}</p>
       </div>

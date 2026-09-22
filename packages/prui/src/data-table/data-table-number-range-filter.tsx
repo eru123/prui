@@ -42,7 +42,7 @@ export function NumberRangeFilter({
   return (
     <FormField label={label} className={className} data-testid="numberrange-filter">
       <div className="flex items-center gap-1.5">
-        <span aria-hidden className="text-xs text-[var(--prui-dim)]">min</span>
+        <span aria-hidden className="text-xs text-dim">min</span>
         <Input
           type="number"
           aria-label={`${label} min`}
@@ -50,7 +50,7 @@ export function NumberRangeFilter({
           value={value.min ?? ""}
           onChange={(e) => set({ ...value, min: parse(e.target.value) })}
         />
-        <span aria-hidden className="text-xs text-[var(--prui-dim)]">max</span>
+        <span aria-hidden className="text-xs text-dim">max</span>
         <Input
           type="number"
           aria-label={`${label} max`}

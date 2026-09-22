@@ -78,6 +78,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(function Dra
   const panelStyle: React.CSSProperties = {
     transform: shown ? enterTransform[side] : exitTransform[side],
     transition: `transform var(--prui-duration-slow) var(--prui-ease-out)`,
+    // eslint-disable-next-line shadcn/no-inline-styles -- slide-in geometry is oriented at runtime (side, size); no static equivalent
     ...(side === "left" || side === "right" ? { width: typeof size === "number" ? `${size}px` : (size ?? "400px") } : { maxHeight: typeof size === "number" ? `${size}px` : (size ?? "80vh") }),
     ...style,
   }
@@ -86,9 +87,8 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(function Dra
     <Portal>
       <div ref={overlayRef}>
         <div
-          className="prui-drawer-overlay fixed inset-0 z-[var(--prui-z-modal)]"
+          className="prui-drawer-overlay fixed inset-0 z-[var(--prui-z-modal)] bg-scrim"
           style={{
-            backgroundColor: "var(--prui-scrim)",
             opacity: shown ? 1 : 0,
             transition: `opacity var(--prui-duration-slow) var(--prui-ease-out)`,
           }}
@@ -103,15 +103,15 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(function Dra
             aria-label={ariaLabel}
             data-state={shown ? "open" : "closed"}
             className={cn(
-              "absolute flex flex-col overflow-y-auto border border-[var(--prui-line)] bg-[var(--prui-surface)]",
-              "text-[var(--prui-fg)] shadow-[var(--prui-shadow-modal)] outline-none",
+              "absolute flex flex-col overflow-y-auto border border-line bg-surface",
+              "text-fg shadow-prui-modal outline-none",
               sideClasses[side],
               className,
             )}
             style={panelStyle}
           >
             {side === "bottom" ? (
-              <div aria-hidden className="mx-auto mt-2 mb-1 h-1 w-10 shrink-0 rounded-[var(--prui-radius-full)] bg-[var(--prui-line)]" />
+              <div aria-hidden className="mx-auto mt-2 mb-1 h-1 w-10 shrink-0 rounded-full bg-line" />
             ) : null}
             {children}
             {!hideClose ? (
@@ -119,7 +119,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(function Dra
                 type="button"
                 aria-label={t.close}
                 onClick={() => setOpen(false)}
-                className="absolute right-3 top-3 rounded-[var(--prui-radius-1)] p-1 text-[var(--prui-dim)] transition-colors hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)] cursor-pointer"
+                className="absolute right-3 top-3 rounded-prui-sm p-1 text-dim transition-colors hover:bg-raise hover:text-fg cursor-pointer"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>

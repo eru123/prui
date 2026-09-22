@@ -21,9 +21,9 @@ interface SurfacePropsLike {
 }
 
 const variantClasses = {
-  text: "rounded-[var(--prui-radius-1)] h-4",
-  rect: "rounded-[var(--prui-radius)]",
-  circle: "rounded-[var(--prui-radius-full)] aspect-square",
+  text: "rounded-prui-sm h-4",
+  rect: "rounded-prui",
+  circle: "rounded-full aspect-square",
 } as const
 
 export const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(

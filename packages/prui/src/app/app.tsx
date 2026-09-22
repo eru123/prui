@@ -173,7 +173,7 @@ function ThemeToggle({ config }: { config?: boolean | ThemeConfig }) {
           aria-label={t.switchTheme}
           title={`Theme: ${state.theme}`}
           data-testid="theme-toggle"
-          className="inline-flex h-8 w-8 items-center justify-center rounded-[var(--prui-radius)] text-[var(--prui-dim)] hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)] cursor-pointer"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-prui text-dim hover:bg-raise hover:text-fg cursor-pointer"
         >
           <Palette className="h-4 w-4" aria-hidden />
         </button>
@@ -311,14 +311,14 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
           }}
           data-testid="rail-group-trigger"
           className={cn(
-            "flex w-full items-center justify-center rounded-[var(--prui-radius)] px-2.5 py-1.5 text-sm cursor-pointer",
-            active || menuOpen ? "text-[var(--prui-brand)]" : "text-[var(--prui-dim)] hover:text-[var(--prui-fg)]",
+            "flex w-full items-center justify-center rounded-prui px-2.5 py-1.5 text-sm cursor-pointer",
+            active || menuOpen ? "text-brand" : "text-dim hover:text-fg",
           )}
         >
           {Icon ? (
             <Icon className="h-4 w-4 shrink-0" aria-hidden />
           ) : (
-            <span className="prui-nav-mono text-[10px] font-semibold">{item.label.slice(0, 2).toUpperCase()}</span>
+            <span className="prui-nav-mono text-2xs font-semibold">{item.label.slice(0, 2).toUpperCase()}</span>
           )}
         </button>
         {menuOpen && menuPos
@@ -335,13 +335,13 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
                   tabIndex={-1}
                   onKeyDown={onMenuKeyDown}
                   data-testid="rail-flyout"
-                  className="fixed z-[calc(var(--prui-z-flyout)+1)] flex w-56 max-h-80 flex-col overflow-y-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] py-1.5 shadow-[var(--prui-shadow-lg)] outline-none"
+                  className="fixed z-[calc(var(--prui-z-flyout)+1)] flex w-56 max-h-80 flex-col overflow-y-auto rounded-prui border border-line bg-surface py-1.5 shadow-prui-lg outline-none"
                   style={{ top: menuPos.top, left: menuPos.left }}
                 >
-                  <div className="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--prui-dim)]">{item.label}</div>
+                  <div className="px-3 pb-1 pt-1 text-2xs font-semibold uppercase tracking-widest text-dim">{item.label}</div>
                   {flyout.map((fi, i) =>
                     fi.heading ? (
-                      <div key={`h-${i}`} className="px-3 pb-0.5 pt-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--prui-dim)]">
+                      <div key={`h-${i}`} className="px-3 pb-0.5 pt-2 text-2xs font-semibold uppercase tracking-widest text-dim">
                         {fi.heading}
                       </div>
                     ) : (
@@ -352,10 +352,10 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
                         tabIndex={-1}
                         data-testid="rail-flyout-item"
                         className={cn(
-                          "flex cursor-pointer items-center rounded-[calc(var(--prui-radius)-1px)] px-3 py-1.5 text-left text-sm",
+                          "flex cursor-pointer items-center rounded-prui-inner px-3 py-1.5 text-left text-sm",
                           fi.href && isActivePath(pathname, fi.href)
-                            ? "bg-[var(--prui-brand)]/15 text-[var(--prui-brand)]"
-                            : "text-[var(--prui-fg)] hover:bg-[var(--prui-raise)] focus-visible:bg-[var(--prui-raise)] outline-none",
+                            ? "bg-brand/15 text-brand"
+                            : "text-fg hover:bg-raise focus-visible:bg-raise outline-none",
                         )}
                         onClick={() => {
                           closeMenu()
@@ -383,16 +383,16 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "flex w-full items-center gap-2 rounded-[var(--prui-radius)] px-2.5 py-1.5 text-sm cursor-pointer",
-          active ? "text-[var(--prui-fg)]" : "text-[var(--prui-dim)] hover:text-[var(--prui-fg)]",
+          "flex w-full items-center gap-2 rounded-prui px-2.5 py-1.5 text-sm cursor-pointer",
+          active ? "text-fg" : "text-dim hover:text-fg",
         )}
       >
-        {Icon ? <Icon className="h-4 w-4 shrink-0" aria-hidden /> : <span className={cn("prui-nav-mono text-[10px] font-semibold")}>{item.label.slice(0, 2).toUpperCase()}</span>}
+        {Icon ? <Icon className="h-4 w-4 shrink-0" aria-hidden /> : <span className={cn("prui-nav-mono text-2xs font-semibold")}>{item.label.slice(0, 2).toUpperCase()}</span>}
         <span className={cn("flex-1 text-left truncate", "prui-nav-label")}>{item.label}</span>
         <ChevronDown className={cn("prui-nav-chevron h-4 w-4 transition-transform", !open && "-rotate-90")} aria-hidden />
       </button>
       {open ? (
-        <ul className="ml-4 mt-0.5 flex flex-col gap-0.5 border-l border-[var(--prui-line)] pl-2">
+        <ul className="ml-4 mt-0.5 flex flex-col gap-0.5 border-l border-line pl-2">
           {(item.items ?? []).map((child) => (
             <NavItemLink key={child.href ?? child.label} item={child} onNavigate={onNavigate} nested expandAllOn={expandAllOn} collapsed={collapsed} />
           ))}
@@ -404,7 +404,7 @@ function NavGroup({ item, onNavigate, expandAllOn, collapsed }: { item: NavItem;
 
 function NavSubgroupLabel({ label }: { label: string }) {
   return (
-    <li className="px-2.5 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--prui-dim)]" data-testid="nav-subgroup">
+    <li className="px-2.5 pb-1 pt-3 text-2xs font-semibold uppercase tracking-widest text-dim" data-testid="nav-subgroup">
       {label}
     </li>
   )
@@ -421,18 +421,18 @@ function NavItemLink({ item, onNavigate, nested, expandAllOn, collapsed }: { ite
         onClick={onNavigate}
         className={({ isActive }) =>
           cn(
-            "flex items-center gap-2 rounded-[var(--prui-radius)] px-2.5 py-1.5 text-sm",
+            "flex items-center gap-2 rounded-prui px-2.5 py-1.5 text-sm",
             nested && "pl-2.5",
             isActive
-              ? "bg-[var(--prui-brand)]/15 text-[var(--prui-brand)] font-medium"
-              : "text-[var(--prui-dim)] hover:text-[var(--prui-fg)] hover:bg-[var(--prui-raise)]",
+              ? "bg-brand/15 text-brand font-medium"
+              : "text-dim hover:text-fg hover:bg-raise",
           )
         }
       >
         {item.icon && !nested ? (
           <item.icon className="h-4 w-4 shrink-0" aria-hidden />
         ) : collapsed ? (
-          <span className={cn("prui-nav-mono text-[10px] font-semibold")}>{item.label.slice(0, 2).toUpperCase()}</span>
+          <span className={cn("prui-nav-mono text-2xs font-semibold")}>{item.label.slice(0, 2).toUpperCase()}</span>
         ) : null}
         <span className={cn("truncate", collapsed && nested && "prui-nav-label", "prui-nav-label")}>{item.label}</span>
       </NavLink>
@@ -457,8 +457,8 @@ function BrandMark({ brand }: { brand?: BrandConfig }) {
   if (!brand) return null
   const content = (
     <>
-      {brand.mark ? <img src={brand.mark} alt="" className="h-6 w-6 rounded-[var(--prui-radius-1)] object-cover" /> : null}
-      <span className="prui-nav-label truncate font-semibold text-[var(--prui-fg)]">{brand.name}</span>
+      {brand.mark ? <img src={brand.mark} alt="" className="h-6 w-6 rounded-prui-sm object-cover" /> : null}
+      <span className="prui-nav-label truncate font-semibold text-fg">{brand.name}</span>
     </>
   )
   const classes = "flex items-center gap-2 px-1 py-1 min-w-0"
@@ -527,8 +527,7 @@ export function CommandPalette({
     <Portal>
       <div ref={overlayRef}>
         <div
-          className="prui-dialog-overlay fixed inset-0 z-[var(--prui-z-overlay)] flex items-start justify-center pt-24"
-          style={{ backgroundColor: "var(--prui-scrim)" }}
+          className="prui-dialog-overlay fixed inset-0 z-[var(--prui-z-overlay)] flex items-start justify-center pt-24 bg-scrim"
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) onOpenChange(false)
           }}
@@ -538,7 +537,7 @@ export function CommandPalette({
             aria-modal="true"
             aria-label="Command palette"
             data-testid="command-palette"
-            className="w-full max-w-md rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] shadow-[var(--prui-shadow-lg)]"
+            className="w-full max-w-md rounded-prui border border-line bg-surface shadow-prui-lg"
           >
             <input
               ref={inputRef}
@@ -573,11 +572,11 @@ export function CommandPalette({
                   if (entry) go(entry)
                 }
               }}
-              className="w-full bg-transparent px-4 py-3 text-sm text-[var(--prui-fg)] placeholder:text-[var(--prui-dim)] outline-none border-b border-[var(--prui-line)] rounded-t-[var(--prui-radius)]"
+              className="w-full bg-transparent px-4 py-3 text-sm text-fg placeholder:text-dim outline-none border-b border-line rounded-t-prui"
             />
             <ul id="prui-palette-listbox" role="listbox" aria-label="Commands" className="max-h-64 overflow-auto p-1">
               {filtered.length === 0 ? (
-                <li className="px-3 py-2 text-sm text-[var(--prui-dim)]" role="option" aria-selected="false" aria-disabled="true">{t.commandNoMatches}</li>
+                <li className="px-3 py-2 text-sm text-dim" role="option" aria-selected="false" aria-disabled="true">{t.commandNoMatches}</li>
               ) : (
                 filtered.map((entry, i) => (
                   <li
@@ -588,11 +587,11 @@ export function CommandPalette({
                     onMouseEnter={() => setActive(i)}
                     onClick={() => go(entry)}
                     className={cn(
-                      "cursor-pointer rounded-[calc(var(--prui-radius)-1px)] px-3 py-2 text-sm text-[var(--prui-fg)]",
-                      i === active && "bg-[var(--prui-raise)]",
+                      "cursor-pointer rounded-prui-inner px-3 py-2 text-sm text-fg",
+                      i === active && "bg-raise",
                     )}
                   >
-                    {entry.group ? <span className="mr-2 text-xs text-[var(--prui-dim)]">{entry.group}</span> : null}
+                    {entry.group ? <span className="mr-2 text-xs text-dim">{entry.group}</span> : null}
                     {entry.label}
                   </li>
                 ))
@@ -705,7 +704,7 @@ export function AppShell(props: AppProps) {
 
   return (
     <div
-      className="prui-app prui-shell min-h-dvh bg-[var(--prui-background)] text-[var(--prui-fg)]"
+      className="prui-app prui-shell min-h-dvh bg-background text-fg"
       data-layout={layoutType}
       data-collapsed={railCollapsed ? "true" : undefined}
       style={{
@@ -720,7 +719,7 @@ export function AppShell(props: AppProps) {
         </div>
         {sidebarFooter ? (
           <div
-            className={cn("border-t border-[var(--prui-line)] p-2", railCollapsed && "flex justify-center px-1")}
+            className={cn("border-t border-line p-2", railCollapsed && "flex justify-center px-1")}
             data-testid="sidebar-footer"
           >
             {typeof sidebarFooter === "function" ? sidebarFooter({ collapsed: railCollapsed }) : sidebarFooter}
@@ -733,9 +732,8 @@ export function AppShell(props: AppProps) {
         <Portal>
           <div ref={drawerOverlayRef} className="md:hidden fixed inset-0 z-[var(--prui-z-drawer)]" data-testid="mobile-drawer">
             <div
-              className="absolute inset-0 prui-drawer-overlay"
+              className="absolute inset-0 prui-drawer-overlay bg-scrim"
               style={{
-                backgroundColor: "var(--prui-scrim)",
                 opacity: drawerShown ? 1 : 0,
                 transition: "opacity var(--prui-duration-slow) var(--prui-ease-out)",
               }}
@@ -743,7 +741,7 @@ export function AppShell(props: AppProps) {
               data-testid="drawer-backdrop"
             />
             <aside
-              className="absolute left-0 top-0 h-full w-64 overflow-y-auto border-r border-[var(--prui-line)] bg-[var(--prui-surface)] p-2 prui-drawer-panel"
+              className="absolute left-0 top-0 h-full w-64 overflow-y-auto border-r border-line bg-surface p-2 prui-drawer-panel"
               style={{
                 transform: drawerShown ? "translateX(0)" : "translateX(-100%)",
                 transition: "transform var(--prui-duration-slow) var(--prui-ease-out)",
@@ -763,7 +761,7 @@ export function AppShell(props: AppProps) {
                   ref={drawerCloseRef}
                   aria-label={t.closeNavigation}
                   onClick={() => setDrawerOpen(false)}
-                  className="rounded-[var(--prui-radius)] p-1 text-[var(--prui-dim)] hover:text-[var(--prui-fg)] cursor-pointer"
+                  className="rounded-prui p-1 text-dim hover:text-fg cursor-pointer"
                 >
                   <X className="h-4 w-4" aria-hidden />
                 </button>
@@ -776,7 +774,7 @@ export function AppShell(props: AppProps) {
 
       <header
         data-testid="app-header"
-        className="prui-shell-header sticky top-0 z-[var(--prui-z-header)] grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-4"
+        className="prui-shell-header sticky top-0 z-[var(--prui-z-header)] grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-line bg-surface px-4"
       >
         {collapsible ? (
           <Button
@@ -808,11 +806,11 @@ export function AppShell(props: AppProps) {
             type="button"
             onClick={() => setPaletteOpen(true)}
             data-testid="search-trigger"
-            className="hidden h-8 w-[min(420px,34vw)] items-center gap-2 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] px-3.5 text-sm text-[var(--prui-dim)] hover:border-[var(--prui-dim)] cursor-pointer md:flex"
+            className="hidden h-8 w-[min(420px,34vw)] items-center gap-2 rounded-prui border border-line bg-background px-3.5 text-sm text-dim hover:border-dim cursor-pointer md:flex"
           >
             <Search className="h-4 w-4" aria-hidden />
             <span className="flex-1 text-left">{searchCfg.placeholder ?? `${t.search}...`}</span>
-            <kbd className="ml-auto rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] bg-[var(--prui-raise)] px-1.5 py-0.5 text-xs">{hotkey}</kbd>
+            <kbd className="ml-auto rounded-prui-sm border border-line bg-raise px-1.5 py-0.5 text-xs">{hotkey}</kbd>
           </button>
         ) : null}
         <div className="flex items-center gap-2 justify-self-end">
@@ -827,7 +825,7 @@ export function AppShell(props: AppProps) {
       >
         {/* the body column caps and centers on wide viewports; override per
             app with contentMaxWidth (or --prui-content-max globally) */}
-        <div className="mx-auto w-full max-w-[var(--prui-content-max,72rem)]">
+        <div className="mx-auto w-full max-w-content">
           {pages ? (
             <AutoPages mode={pages} config={pagesConfig}>
               {children}

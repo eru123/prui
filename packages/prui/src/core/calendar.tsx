@@ -184,24 +184,24 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function
   }
 
   return (
-    <div ref={ref} className={cn("prui-calendar inline-flex flex-col gap-2 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-3", className)} onKeyDown={handleKeyDown} {...props}>
+    <div ref={ref} className={cn("prui-calendar inline-flex flex-col gap-2 rounded-prui border border-line bg-surface p-3", className)} onKeyDown={handleKeyDown} {...props}>
       <div className="flex items-center justify-between gap-2">
         <button
           type="button"
           aria-label="Previous month"
           onClick={() => shiftMonth(-1)}
-          className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-[var(--prui-radius-1)] text-[var(--prui-dim)] transition-colors hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)]"
+          className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-prui-sm text-dim transition-colors hover:bg-raise hover:text-fg"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
         </button>
-        <span aria-live="polite" className="text-sm font-medium text-[var(--prui-fg)]">
+        <span aria-live="polite" className="text-sm font-medium text-fg">
           {monthLabel}
         </span>
         <button
           type="button"
           aria-label="Next month"
           onClick={() => shiftMonth(1)}
-          className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-[var(--prui-radius-1)] text-[var(--prui-dim)] transition-colors hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)]"
+          className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-prui-sm text-dim transition-colors hover:bg-raise hover:text-fg"
         >
           <ChevronRight className="h-4 w-4" aria-hidden />
         </button>
@@ -209,7 +209,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function
       <div role="grid" aria-label={monthLabel} className="flex flex-col gap-1">
         <div
           role="row"
-          className="grid grid-cols-7 text-center text-xs font-medium text-[var(--prui-dim)]"
+          className="grid grid-cols-7 text-center text-xs font-medium text-dim"
           style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}
         >
           {weekdays.map((wd) => (
@@ -242,10 +242,10 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function
                   tabIndex={selected || (!value && key === todayKey) || (!value && week === 0 && i === 0 && cells[0] === key) ? 0 : -1}
                   onClick={() => select(key)}
                   className={cn(
-                    "flex h-8 w-8 cursor-pointer items-center justify-center rounded-[var(--prui-radius-1)] text-sm outline-none",
-                    "focus-visible:ring-2 focus-visible:ring-[var(--prui-brand)]",
-                    selected ? "bg-[var(--prui-brand)] text-[var(--prui-brand-fg,#fff)] font-medium" : "text-[var(--prui-fg)] hover:bg-[var(--prui-raise)]",
-                    isToday && !selected && "border border-[var(--prui-brand)]/50",
+                    "flex h-8 w-8 cursor-pointer items-center justify-center rounded-prui-sm text-sm outline-none",
+                    "focus-visible:ring-2 focus-visible:ring-ring",
+                    selected ? "bg-brand text-brand-fg font-medium" : "text-fg hover:bg-raise",
+                    isToday && !selected && "border border-brand/50",
                     dayDisabled && "opacity-40 pointer-events-none",
                   )}
                 >
@@ -263,7 +263,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function
             setMonth(monthKeyOf(new Date()))
             select(todayKey)
           }}
-          className="cursor-pointer self-center rounded-[var(--prui-radius-1)] px-2 py-1 text-xs text-[var(--prui-brand)] transition-colors hover:bg-[var(--prui-brand)]/10"
+          className="cursor-pointer self-center rounded-prui-sm px-2 py-1 text-xs text-brand transition-colors hover:bg-brand/10"
         >
           {t.today}
         </button>

@@ -201,14 +201,14 @@ export function DataTable<T extends Record<string, unknown>>({
       ref={scrollRef}
       onScroll={useWindowing ? recomputeWindow : undefined}
       className={cn(
-        "prui-data-table w-full overflow-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
+        "prui-data-table w-full overflow-auto rounded-prui border border-line",
         useWindowing && "max-h-[70vh]",
         className,
       )}
     >
       <table className="w-full text-sm">
         <thead className="sticky top-0 z-[var(--prui-z-content)]">
-          <tr className="border-b border-[var(--prui-line)] bg-[var(--prui-raise)]">
+          <tr className="border-b border-line bg-raise">
             {renderExpandedRow ? (
               <th scope="col" className="w-8 px-3 py-2" aria-label={undefined}>
                 <span className="sr-only">Toggle row</span>
@@ -225,7 +225,7 @@ export function DataTable<T extends Record<string, unknown>>({
                       if (el) el.indeterminate = someSelected
                     }}
                     onChange={toggleAllSelected}
-                    className="h-4 w-4 cursor-pointer accent-[var(--prui-brand)]"
+                    className="h-4 w-4 cursor-pointer accent-brand"
                   />
                 ) : (
                   <span className="sr-only">Selected</span>
@@ -242,7 +242,7 @@ export function DataTable<T extends Record<string, unknown>>({
                   aria-sort={active ? (sort?.direction === "asc" ? "ascending" : "descending") : col.sortable ? "none" : undefined}
                   style={col.width !== undefined ? { width: col.width } : undefined}
                   className={cn(
-                    "px-3 py-2 text-xs font-medium uppercase tracking-wide text-[var(--prui-dim)]",
+                    "px-3 py-2 text-xs font-medium uppercase tracking-wide text-dim",
                     col.align === "right" && "text-right",
                     col.align === "center" && "text-center",
                   )}
@@ -252,8 +252,8 @@ export function DataTable<T extends Record<string, unknown>>({
                       type="button"
                       onClick={() => toggleSort(col.key)}
                       className={cn(
-                        "inline-flex items-center gap-1 hover:text-[var(--prui-fg)] cursor-pointer uppercase",
-                        active && "text-[var(--prui-fg)]",
+                        "inline-flex items-center gap-1 hover:text-fg cursor-pointer uppercase",
+                        active && "text-fg",
                       )}
                     >
                       {col.label}
@@ -270,13 +270,13 @@ export function DataTable<T extends Record<string, unknown>>({
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan={visible.length + (selectableEnabled ? 1 : 0) + (renderExpandedRow ? 1 : 0)} className="px-3 py-8 text-center text-[var(--prui-dim)]" data-testid="data-table-loading">
+              <td colSpan={visible.length + (selectableEnabled ? 1 : 0) + (renderExpandedRow ? 1 : 0)} className="px-3 py-8 text-center text-dim" data-testid="data-table-loading">
                 {t.loading}
               </td>
             </tr>
           ) : sortedRows.length === 0 ? (
             <tr>
-              <td colSpan={visible.length + (selectableEnabled ? 1 : 0) + (renderExpandedRow ? 1 : 0)} className="px-3 py-8 text-center text-[var(--prui-dim)]" data-testid="data-table-empty">
+              <td colSpan={visible.length + (selectableEnabled ? 1 : 0) + (renderExpandedRow ? 1 : 0)} className="px-3 py-8 text-center text-dim" data-testid="data-table-empty">
                 <span className="inline-flex items-center gap-2">
                   <Inbox className="h-4 w-4" aria-hidden />
                   {emptyMessage ?? t.noResults}
@@ -287,7 +287,7 @@ export function DataTable<T extends Record<string, unknown>>({
             <>
               {padTop > 0 ? (
                 <tr aria-hidden style={{ height: padTop }}>
-                  <td colSpan={visible.length + 2} style={{ padding: 0, border: 0 }} />
+                  <td colSpan={visible.length + 2} className="p-0 border-0" />
                 </tr>
               ) : null}
               {slicedRows.map((row, i) => (
@@ -311,7 +311,7 @@ export function DataTable<T extends Record<string, unknown>>({
               ))}
               {padBottom > 0 ? (
                 <tr aria-hidden style={{ height: padBottom }}>
-                  <td colSpan={visible.length + 2} style={{ padding: 0, border: 0 }} />
+                  <td colSpan={visible.length + 2} className="p-0 border-0" />
                 </tr>
               ) : null}
             </>
@@ -366,9 +366,9 @@ function DataTableRowImpl<T extends Record<string, unknown>>({
         aria-selected={selectable ? selected : undefined}
         onClick={onRowClick ? () => onRowClick(row, index) : undefined}
         className={cn(
-          "border-b border-[var(--prui-line)] last:border-b-0 text-[var(--prui-fg)]",
-          onRowClick && "cursor-pointer hover:bg-[var(--prui-raise)]",
-          selected && "bg-[var(--prui-brand)]/8",
+          "border-b border-line last:border-b-0 text-fg",
+          onRowClick && "cursor-pointer hover:bg-raise",
+          selected && "bg-brand/8",
         )}
       >
         {expandable ? (
@@ -381,7 +381,7 @@ function DataTableRowImpl<T extends Record<string, unknown>>({
                 e.stopPropagation()
                 onToggleExpanded(rowKeyValue)
               }}
-              className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded-[var(--prui-radius-1)] text-[var(--prui-dim)] hover:bg-[var(--prui-raise)] hover:text-[var(--prui-fg)]"
+              className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded-prui-sm text-dim hover:bg-raise hover:text-fg"
             >
               <ChevronRight className={cn("h-3.5 w-3.5 transition-transform", expanded && "rotate-90")} aria-hidden />
             </button>
@@ -395,7 +395,7 @@ function DataTableRowImpl<T extends Record<string, unknown>>({
               checked={selected}
               onChange={() => onToggleSelected(rowKeyValue, row)}
               onClick={(e) => e.stopPropagation()}
-              className="h-4 w-4 cursor-pointer accent-[var(--prui-brand)]"
+              className="h-4 w-4 cursor-pointer accent-brand"
             />
           </td>
         ) : null}
@@ -415,7 +415,7 @@ function DataTableRowImpl<T extends Record<string, unknown>>({
       </tr>
       {expandable && expanded && renderExpandedRow ? (
         <tr data-expanded-row={String(rowKeyValue)}>
-          <td colSpan={colCount} className="border-b border-[var(--prui-line)] bg-[var(--prui-raise)]/40 px-4 py-3">
+          <td colSpan={colCount} className="border-b border-line bg-raise/40 px-4 py-3">
             {renderExpandedRow(row)}
           </td>
         </tr>
@@ -433,7 +433,7 @@ function TableCellValue({ value }: { value: unknown }) {
 }
 
 function formatCell(value: unknown): React.ReactNode {
-  if (value == null || value === "") return <span className="text-[var(--prui-dim)]">-</span>
+  if (value == null || value === "") return <span className="text-dim">-</span>
   if (value instanceof Date) return value.toLocaleDateString()
   return String(value)
 }

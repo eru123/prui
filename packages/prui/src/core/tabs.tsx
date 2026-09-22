@@ -92,7 +92,7 @@ export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
         aria-orientation="horizontal"
         onKeyDown={handleKeyDown}
         className={cn(
-          "prui-tabs-list inline-flex h-9 items-center gap-1 rounded-[var(--prui-radius)] bg-[var(--prui-raise)] p-1",
+          "prui-tabs-list inline-flex h-9 items-center gap-1 rounded-prui bg-raise p-1",
           className,
         )}
         {...props}
@@ -123,12 +123,12 @@ export const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>
         data-state={selected ? "active" : "inactive"}
         tabIndex={selected ? 0 : -1}
         className={cn(
-          "prui-tabs-trigger inline-flex items-center justify-center whitespace-nowrap rounded-[calc(var(--prui-radius)-1px)]",
+          "prui-tabs-trigger inline-flex items-center justify-center whitespace-nowrap rounded-prui-inner",
           "px-3 py-1 text-sm font-medium transition-colors cursor-pointer outline-none",
-          "focus-visible:ring-2 focus-visible:ring-[var(--prui-brand)]",
+          "focus-visible:ring-2 focus-visible:ring-ring",
           selected
-            ? "bg-[var(--prui-background)] text-[var(--prui-fg)] shadow"
-            : "text-[var(--prui-dim)] hover:text-[var(--prui-fg)]",
+            ? "bg-background text-fg shadow"
+            : "text-dim hover:text-fg",
           className,
         )}
         onClick={(e) => {

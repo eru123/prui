@@ -75,8 +75,7 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
       <Portal>
         <div ref={overlayRef}>
           <div
-            className="prui-dialog-overlay fixed inset-0 z-[var(--prui-z-overlay)] flex items-center justify-center p-4"
-            style={{ backgroundColor: "var(--prui-scrim)" }}
+            className="prui-dialog-overlay fixed inset-0 z-[var(--prui-z-overlay)] flex items-center justify-center p-4 bg-scrim"
             onMouseDown={(e) => {
               if (e.target === e.currentTarget) setOpen(false)
             }}
@@ -89,8 +88,8 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
               aria-labelledby={ariaLabel ? undefined : labelId}
               tabIndex={-1}
               className={cn(
-                "prui-dialog-content relative z-[var(--prui-z-content)] w-full max-w-lg rounded-[var(--prui-radius)]",
-                "border border-[var(--prui-line)] bg-[var(--prui-surface)] shadow-[var(--prui-shadow-lg)]",
+                "prui-dialog-content relative z-[var(--prui-z-content)] w-full max-w-lg rounded-prui",
+                "border border-line bg-surface shadow-prui-lg",
                 "max-h-[85vh] overflow-auto outline-none",
                 className,
               )}
@@ -103,7 +102,7 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
                   type="button"
                   aria-label={t.close}
                   onClick={() => setOpen(false)}
-                  className="absolute right-3 top-3 rounded-[var(--prui-radius-1)] p-1 text-[var(--prui-dim)] hover:text-[var(--prui-fg)] hover:bg-[var(--prui-raise)] cursor-pointer"
+                  className="absolute right-3 top-3 rounded-prui-sm p-1 text-dim hover:text-fg hover:bg-raise cursor-pointer"
                 >
                   <X className="h-4 w-4" aria-hidden />
                 </button>
@@ -125,7 +124,7 @@ export const DialogTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttrib
   ({ className, ...props }, ref) => {
     const { labelId } = useDialog()
     return (
-      <h2 ref={ref} id={labelId} className={cn("prui-dialog-title text-base font-semibold text-[var(--prui-fg)]", className)} {...props} />
+      <h2 ref={ref} id={labelId} className={cn("prui-dialog-title text-base font-semibold text-fg", className)} {...props} />
     )
   },
 )
@@ -150,7 +149,7 @@ DialogBody.displayName = "DialogBody"
 
 export const DialogDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("prui-dialog-description text-sm text-[var(--prui-dim)]", className)} {...props} />
+    <p ref={ref} className={cn("prui-dialog-description text-sm text-dim", className)} {...props} />
   ),
 )
 DialogDescription.displayName = "DialogDescription"

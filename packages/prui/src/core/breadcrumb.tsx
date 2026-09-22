@@ -37,7 +37,7 @@ export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(functio
   }
   return (
     <nav ref={ref} aria-label={label ?? "Breadcrumb"} className={cn("prui-breadcrumb", className)} {...props}>
-      <ol className="flex flex-wrap items-center gap-1.5 text-sm text-[var(--prui-dim)]">
+      <ol className="flex flex-wrap items-center gap-1.5 text-sm text-dim">
         {React.Children.map(rendered, (child, i) => (
           <li className="flex items-center gap-1.5">
             {child}
@@ -67,12 +67,12 @@ export const BreadcrumbItem = React.forwardRef<HTMLDivElement, BreadcrumbItemPro
         <Link
           to={href}
           aria-current={current ? "page" : undefined}
-          className="cursor-pointer transition-colors hover:text-[var(--prui-fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--prui-brand)] rounded-[var(--prui-radius-1)]"
+          className="cursor-pointer transition-colors hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand rounded-prui-sm"
         >
           {children}
         </Link>
       ) : (
-        <span aria-current={current ? "page" : undefined} className={cn(current && "font-medium text-[var(--prui-fg)]")}>
+        <span aria-current={current ? "page" : undefined} className={cn(current && "font-medium text-fg")}>
           {children}
         </span>
       )}
@@ -88,7 +88,7 @@ export const BreadcrumbEllipsis = ({ onExpand }: { onExpand?: () => void }) => {
       type="button"
       aria-label="Show more breadcrumbs"
       onClick={onExpand}
-      className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-[var(--prui-radius-1)] text-[var(--prui-dim)] transition-colors hover:text-[var(--prui-fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--prui-brand)]"
+      className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-prui-sm text-dim transition-colors hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
     >
       <MoreHorizontal className="h-4 w-4" aria-hidden />
       <span className="sr-only">{t.of}</span>

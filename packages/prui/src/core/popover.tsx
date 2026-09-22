@@ -168,8 +168,8 @@ export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(function P
             data-align={actualPlacement.split("-")[1]}
             data-placement={actualPlacement}
             className={cn(
-              "prui-popover fixed z-[var(--prui-z-overlay)] rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
-              "bg-[var(--prui-surface)] p-4 text-sm text-[var(--prui-fg)] shadow-[var(--prui-shadow-lg)] outline-none",
+              "prui-popover fixed z-[var(--prui-z-overlay)] rounded-prui border border-line",
+              "bg-surface p-4 text-sm text-fg shadow-prui-lg outline-none",
               className,
             )}
             style={{

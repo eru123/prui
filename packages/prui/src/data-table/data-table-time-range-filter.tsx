@@ -36,7 +36,7 @@ export function TimeRangeFilter({
   return (
     <FormField label={label} className={className} data-testid="time-filter">
       <div className="flex items-center gap-1.5">
-        <span aria-hidden className="text-xs text-[var(--prui-dim)]">from</span>
+        <span aria-hidden className="text-xs text-dim">from</span>
         <Input
           type="time"
           aria-label={`${label} from`}
@@ -44,7 +44,7 @@ export function TimeRangeFilter({
           value={value.from ?? ""}
           onChange={(e) => set({ ...value, from: e.target.value || undefined })}
         />
-        <span aria-hidden className="text-xs text-[var(--prui-dim)]">to</span>
+        <span aria-hidden className="text-xs text-dim">to</span>
         <Input
           type="time"
           aria-label={`${label} to`}

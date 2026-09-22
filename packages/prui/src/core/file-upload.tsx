@@ -92,11 +92,11 @@ export const FileUpload = React.forwardRef<HTMLInputElement, FileUploadProps>(fu
         data-dragging={dragging || undefined}
         data-disabled={disabled || undefined}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-[var(--prui-radius)] border border-dashed p-8 text-sm",
-          "transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[var(--prui-brand)]",
+          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-prui border border-dashed p-8 text-sm",
+          "transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
           dragging
-            ? "border-[var(--prui-brand)] bg-[var(--prui-brand)]/10 text-[var(--prui-brand)]"
-            : "border-[var(--prui-line)] bg-[var(--prui-background)] text-[var(--prui-dim)] hover:border-[var(--prui-dim)]",
+            ? "border-brand bg-brand/10 text-brand"
+            : "border-line bg-background text-dim hover:border-dim",
           disabled && "opacity-50 cursor-not-allowed",
         )}
       >
@@ -122,7 +122,7 @@ export const FileUpload = React.forwardRef<HTMLInputElement, FileUploadProps>(fu
         }}
       />
       {errors.length > 0 ? (
-        <div id="prui-file-upload-errors" role="alert" className="flex flex-col gap-1 text-xs text-[var(--prui-danger)]">
+        <div id="prui-file-upload-errors" role="alert" className="flex flex-col gap-1 text-xs text-danger">
           {errors.map((err, i) => (
             <span key={i}>{err}</span>
           ))}
@@ -131,15 +131,15 @@ export const FileUpload = React.forwardRef<HTMLInputElement, FileUploadProps>(fu
       {!hideList && files.length > 0 ? (
         <ul className="flex flex-col gap-1" data-testid="file-upload-list">
           {files.map((file, i) => (
-            <li key={`${file.name}-${i}`} className="flex items-center gap-2 rounded-[var(--prui-radius-1)] bg-[var(--prui-raise)] px-3 py-2 text-sm text-[var(--prui-fg)]">
-              <FileIcon className="h-4 w-4 shrink-0 text-[var(--prui-dim)]" aria-hidden />
+            <li key={`${file.name}-${i}`} className="flex items-center gap-2 rounded-prui-sm bg-raise px-3 py-2 text-sm text-fg">
+              <FileIcon className="h-4 w-4 shrink-0 text-dim" aria-hidden />
               <span className="min-w-0 flex-1 truncate">{file.name}</span>
-              <span className="text-xs text-[var(--prui-dim)]">{formatBytes(file.size)}</span>
+              <span className="text-xs text-dim">{formatBytes(file.size)}</span>
               <button
                 type="button"
                 aria-label={`${t.removeFile}: ${file.name}`}
                 onClick={() => removeAt(i)}
-                className="rounded-[var(--prui-radius-1)] p-1 text-[var(--prui-dim)] transition-colors hover:text-[var(--prui-danger)] cursor-pointer"
+                className="rounded-prui-sm p-1 text-dim transition-colors hover:text-danger cursor-pointer"
               >
                 <X className="h-3.5 w-3.5" aria-hidden />
               </button>

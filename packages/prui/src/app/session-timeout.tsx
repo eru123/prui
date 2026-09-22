@@ -112,12 +112,12 @@ export function SessionTimeout({
       ariaLabel={title}
     >
       <div className="flex flex-col items-center gap-1 px-8 pb-2 pt-8 text-center">
-        <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--prui-warn)]/15">
-          <Clock className="h-6 w-6 text-[var(--prui-warn)]" aria-hidden />
+        <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-warn/15">
+          <Clock className="h-6 w-6 text-warn" aria-hidden />
         </div>
-        <h2 className="text-lg font-semibold text-[var(--prui-fg)]">{title}</h2>
-        <p className="text-sm text-[var(--prui-dim)]">{message}</p>
-        <div className="py-4 font-mono text-4xl font-bold text-[var(--prui-fg)]" data-testid="session-countdown">
+        <h2 className="text-lg font-semibold text-fg">{title}</h2>
+        <p className="text-sm text-dim">{message}</p>
+        <div className="py-4 font-mono text-4xl font-bold text-fg" data-testid="session-countdown">
           {clock}
         </div>
       </div>

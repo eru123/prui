@@ -41,7 +41,7 @@ export function DataTablePagination({
   const { t } = usePruiI18n()
   return (
     <div className={className ?? "flex items-center justify-between gap-2 py-2"}>
-      <div className="flex items-center gap-2 text-sm text-[var(--prui-dim)]">
+      <div className="flex items-center gap-2 text-sm text-dim">
         <span>{t.rowsPerPage}</span>
         <div className="w-20">
           <Select
@@ -63,7 +63,7 @@ export function DataTablePagination({
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="text-sm text-[var(--prui-dim)]" data-testid="pagination-page">
+        <span className="text-sm text-dim" data-testid="pagination-page">
           {`${t.page} ${page}`}
         </span>
         <Button

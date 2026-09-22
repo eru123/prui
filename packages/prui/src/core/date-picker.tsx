@@ -160,17 +160,17 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
           }
         }}
         className={cn(
-          "prui-date-picker h-9 w-full cursor-pointer rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
-          "bg-[var(--prui-background)] px-3 pr-8 text-sm text-[var(--prui-fg)] placeholder:text-[var(--prui-dim)]",
-          "outline-none transition-colors focus:border-[var(--prui-brand)] focus:ring-2 focus:ring-[var(--prui-brand)]/30",
+          "prui-date-picker h-9 w-full cursor-pointer rounded-prui border border-line",
+          "bg-background px-3 pr-8 text-sm text-fg placeholder:text-dim",
+          "outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30",
           "disabled:opacity-50 disabled:cursor-not-allowed",
           className,
         )}
       />
       {timepicker ? (
-        <Clock className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
+        <Clock className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-dim" aria-hidden />
       ) : (
-        <CalendarDays className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
+        <CalendarDays className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-dim" aria-hidden />
       )}
       {open ? (
         <Portal>
@@ -182,7 +182,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
             role="dialog"
             aria-label={ariaLabel ?? "Choose date"}
             data-prui-picker-panel
-            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-1 shadow-[var(--prui-shadow-lg)]"
+            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-prui border border-line bg-surface p-1 shadow-prui-lg"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
             <div className={cn("flex gap-2", timepicker && "p-1")}>
@@ -195,7 +195,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
                 className="border-0 shadow-none"
               />
               {timepicker ? (
-                <div className="flex flex-col gap-1 border-l border-[var(--prui-line)] pl-2">
+                <div className="flex flex-col gap-1 border-l border-line pl-2">
                   <TimePanel value={time} onSelect={pickTime} seconds={seconds} minuteStep={minuteStep} />
                 </div>
               ) : null}
@@ -389,17 +389,17 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
           if (!disabled && !open) setOpen(true)
         }}
         className={cn(
-          "prui-date-range-picker h-9 w-full cursor-pointer rounded-[var(--prui-radius)] border border-[var(--prui-line)]",
-          "bg-[var(--prui-background)] px-3 pr-8 text-sm text-[var(--prui-fg)] placeholder:text-[var(--prui-dim)]",
-          "outline-none transition-colors focus:border-[var(--prui-brand)] focus:ring-2 focus:ring-[var(--prui-brand)]/30",
+          "prui-date-range-picker h-9 w-full cursor-pointer rounded-prui border border-line",
+          "bg-background px-3 pr-8 text-sm text-fg placeholder:text-dim",
+          "outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/30",
           "disabled:opacity-50 disabled:cursor-not-allowed",
           className,
         )}
       />
       {timepicker ? (
-        <Clock className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
+        <Clock className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-dim" aria-hidden />
       ) : (
-        <CalendarDays className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
+        <CalendarDays className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-dim" aria-hidden />
       )}
       {open ? (
         <Portal>
@@ -411,12 +411,12 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
             role="dialog"
             aria-label={ariaLabel ?? "Choose date range"}
             data-prui-picker-panel
-            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] shadow-[var(--prui-shadow-lg)]"
+            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-prui border border-line bg-surface shadow-prui-lg"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
             <div className={cn("flex gap-2 p-1", timepicker && "p-2")}>
               <div>
-                <div className="px-1 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{t.from}</div>
+                <div className="px-1 pb-1 pt-1 text-2xs font-semibold uppercase tracking-wide text-dim">{t.from}</div>
                 <Calendar
                   value={from?.date}
                   month={viewMonth}
@@ -429,29 +429,29 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
                   className="border-0 shadow-none"
                 />
               </div>
-              <div className="flex flex-col gap-1 border-l border-[var(--prui-line)] pl-2">
+              <div className="flex flex-col gap-1 border-l border-line pl-2">
                 {timepicker ? (
                   <div>
-                    <div className="mb-1 px-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{t.time}</div>
+                    <div className="mb-1 px-1 text-2xs font-semibold uppercase tracking-wide text-dim">{t.time}</div>
                     <div className="flex gap-2">
                       <div>
-                        <div className="mb-1 px-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{t.from}</div>
+                        <div className="mb-1 px-1 text-2xs font-semibold uppercase tracking-wide text-dim">{t.from}</div>
                         <TimePanel compact value={from?.time} onSelect={(tm) => pickTime("from", tm)} seconds={seconds} minuteStep={minuteStep} />
                       </div>
                       <div>
-                        <div className="mb-1 px-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{t.to}</div>
+                        <div className="mb-1 px-1 text-2xs font-semibold uppercase tracking-wide text-dim">{t.to}</div>
                         <TimePanel compact value={to?.time} onSelect={(tm) => pickTime("to", tm)} seconds={seconds} minuteStep={minuteStep} />
                       </div>
                     </div>
                   </div>
                 ) : null}
-                <div className="mt-auto flex items-center justify-between gap-2 border-t border-[var(--prui-line)] px-1 pb-1 pt-2 text-xs text-[var(--prui-dim)]">
+                <div className="mt-auto flex items-center justify-between gap-2 border-t border-line px-1 pb-1 pt-2 text-xs text-dim">
                   <span data-testid="range-label">{display || t.today}</span>
                   <div className="flex gap-1">
                     <button
                       type="button"
                       onClick={() => setRange({})}
-                      className="cursor-pointer rounded-[var(--prui-radius-1)] px-2 py-1 transition-colors hover:bg-[var(--prui-raise)]"
+                      className="cursor-pointer rounded-prui-sm px-2 py-1 transition-colors hover:bg-raise"
                     >
                       {t.clear}
                     </button>
@@ -461,7 +461,7 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
                         setOpen(false)
                         inputRef.current?.focus()
                       }}
-                      className="cursor-pointer rounded-[var(--prui-radius-1)] bg-[var(--prui-brand)]/15 px-2 py-1 text-[var(--prui-brand)] transition-colors hover:bg-[var(--prui-brand)]/25"
+                      className="cursor-pointer rounded-prui-sm bg-brand/15 px-2 py-1 text-brand transition-colors hover:bg-brand/25"
                     >
                       {t.apply}
                     </button>

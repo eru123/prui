@@ -33,7 +33,7 @@ export const Spinner = React.forwardRef<HTMLSpanElement, SpinnerProps>(
         ref={ref}
         role="status"
         aria-label={label ?? t.loading}
-        className={cn("prui-spinner inline-flex items-center justify-center text-[var(--prui-dim)]", className)}
+        className={cn("prui-spinner inline-flex items-center justify-center text-dim", className)}
         {...props}
       >
         <Loader2 className={cn("animate-spin", spinnerSizes[size])} aria-hidden />

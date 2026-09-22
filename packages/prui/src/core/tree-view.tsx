@@ -158,7 +158,7 @@ export const TreeView = React.forwardRef<HTMLUListElement, TreeViewProps>(functi
             aria-expanded={node.hasChildren ? isOpen : undefined}
             aria-selected={isSelected}
             aria-disabled={node.item.disabled || undefined}
-            className="rounded-[var(--prui-radius-1)]"
+            className="rounded-prui-sm"
             style={{ paddingInlineStart: `${(node.level - 1) * 16}px` }}
           >
             <button
@@ -176,14 +176,14 @@ export const TreeView = React.forwardRef<HTMLUListElement, TreeViewProps>(functi
               }}
               onKeyDown={(e) => handleKeyDown(e, node)}
               className={cn(
-                "flex w-full cursor-pointer items-center gap-1.5 rounded-[var(--prui-radius-1)] px-2 py-1 text-left outline-none",
-                "focus-visible:ring-2 focus-visible:ring-[var(--prui-brand)]",
-                isSelected ? "bg-[var(--prui-brand)]/15 text-[var(--prui-brand)]" : "text-[var(--prui-fg)] hover:bg-[var(--prui-raise)]",
+                "flex w-full cursor-pointer items-center gap-1.5 rounded-prui-sm px-2 py-1 text-left outline-none",
+                "focus-visible:ring-2 focus-visible:ring-ring",
+                isSelected ? "bg-brand/15 text-brand" : "text-fg hover:bg-raise",
                 node.item.disabled && "opacity-50 cursor-not-allowed",
               )}
             >
               <ChevronRight
-                className={cn("h-3.5 w-3.5 shrink-0 text-[var(--prui-dim)] transition-transform", isOpen && "rotate-90", !node.hasChildren && "invisible")}
+                className={cn("h-3.5 w-3.5 shrink-0 text-dim transition-transform", isOpen && "rotate-90", !node.hasChildren && "invisible")}
                 aria-hidden
               />
               {node.item.label}

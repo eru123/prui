@@ -75,7 +75,7 @@ export function DataTableToolbar({
           collapse the label rows too — see the toolbar rules in base.css */}
       <FormField label="Search" className="w-56 max-w-full">
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--prui-dim)]" aria-hidden />
+          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-dim" aria-hidden />
           <Input
             type="search"
             aria-label="Search"

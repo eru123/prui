@@ -19,8 +19,8 @@ describe("FormField slots", () => {
     const rows = [...container.querySelectorAll(".prui-form-field > div")]
     const [labelRow, , helperRow] = rows
     expect(rows.length).toBe(3)
-    expect(labelRow?.className).toContain("min-h-[1.25rem]")
-    expect(helperRow?.className).toContain("min-h-[1rem]")
+    expect(labelRow?.className).toContain("min-h-5")
+    expect(helperRow?.className).toContain("min-h-4")
     expect(helperRow?.textContent).toBe("")
   })
 
@@ -52,7 +52,7 @@ describe("FormField slots", () => {
         <Input />
       </FormField>,
     )
-    expect(container.querySelector(".prui-form-field > div:last-child")!.className).toContain("text-[var(--prui-danger)]")
+    expect(container.querySelector(".prui-form-field > div:last-child")!.className).toContain("text-danger")
   })
 })
 
@@ -134,7 +134,7 @@ describe("Input validation state", () => {
   it("error renders the danger border and focus ring", () => {
     render(<Input error aria-label="Bad" />)
     const input = screen.getByLabelText("Bad")
-    expect(input.className).toContain("border-[var(--prui-danger)]")
-    expect(input.className).toContain("focus:ring-[var(--prui-danger)]/30")
+    expect(input.className).toContain("border-danger")
+    expect(input.className).toContain("focus:ring-danger/30")
   })
 })

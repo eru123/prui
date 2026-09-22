@@ -46,20 +46,20 @@ export function FacetedFilter({
           <button
             type="button"
             aria-label={label}
-            className="prui-faceted-filter inline-flex h-8 items-center gap-1.5 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] px-2.5 text-sm cursor-pointer hover:border-[var(--prui-dim)]"
+            className="prui-faceted-filter inline-flex h-8 items-center gap-1.5 rounded-prui border border-line bg-background px-2.5 text-sm cursor-pointer hover:border-dim"
             data-testid="faceted-filter"
           >
-            <PlusCircle className="h-3.5 w-3.5 text-[var(--prui-dim)]" aria-hidden />
+            <PlusCircle className="h-3.5 w-3.5 text-dim" aria-hidden />
             {selected.length > 0 ? (
-              <span className="rounded-[var(--prui-radius-full)] bg-[var(--prui-raise)] px-1.5 text-xs">{selected.length}</span>
+              <span className="rounded-full bg-raise px-1.5 text-xs">{selected.length}</span>
             ) : null}
-            <ChevronDown className="h-3.5 w-3.5 text-[var(--prui-dim)]" aria-hidden />
+            <ChevronDown className="h-3.5 w-3.5 text-dim" aria-hidden />
           </button>
         }
       >
       <div role="menu" className="min-w-44">
         {options.length === 0 ? (
-          <div className="px-2 py-1.5 text-sm text-[var(--prui-dim)]">No options</div>
+          <div className="px-2 py-1.5 text-sm text-dim">No options</div>
         ) : (
           options.map((opt) => {
             const checked = selected.includes(opt.value)
@@ -71,10 +71,10 @@ export function FacetedFilter({
                 aria-checked={checked}
                 onClick={() => toggle(opt.value)}
                 data-selected={checked || undefined}
-                className="flex w-full cursor-pointer items-center gap-2 rounded-[calc(var(--prui-radius)-1px)] px-2 py-1.5 text-left text-sm text-[var(--prui-fg)] hover:bg-[var(--prui-raise)]"
+                className="flex w-full cursor-pointer items-center gap-2 rounded-prui-inner px-2 py-1.5 text-left text-sm text-fg hover:bg-raise"
               >
                 <span
-                  className="flex h-4 w-4 items-center justify-center rounded-[var(--prui-radius-1)] border border-[var(--prui-line)]"
+                  className="flex h-4 w-4 items-center justify-center rounded-prui-sm border border-line"
                   style={checked ? { backgroundColor: "var(--prui-brand)", borderColor: "var(--prui-brand)" } : undefined}
                 >
                   {checked ? <Check className="h-3 w-3 text-white" aria-hidden /> : null}
@@ -96,7 +96,7 @@ export function FacetedFilter({
               if (!isControlled) setUncontrolled([])
               onChange?.([])
             }}
-            className="mt-1 w-full cursor-pointer rounded-[calc(var(--prui-radius)-1px)] border-t border-[var(--prui-line)] px-2 py-1.5 text-left text-xs text-[var(--prui-dim)] hover:text-[var(--prui-fg)]"
+            className="mt-1 w-full cursor-pointer rounded-prui-inner border-t border-line px-2 py-1.5 text-left text-xs text-dim hover:text-fg"
           >
             Clear ({selected.length})
           </button>

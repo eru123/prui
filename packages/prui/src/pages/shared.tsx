@@ -76,21 +76,21 @@ export interface PageShellProps {
 
 export function PageShell({ title, description, brand, width = "max-w-sm", children, footer }: PageShellProps) {
   return (
-    <div className="prui-page flex min-h-[100dvh] items-center justify-center bg-[var(--prui-background)] p-4">
+    <div className="prui-page flex min-h-dvh items-center justify-center bg-background p-4">
       <div className={cn("w-full", width)}>
         {brand ? (
           <div className="mb-6 flex items-center justify-center gap-2" data-testid="page-brand">
-            {brand.mark ? <img src={brand.mark} alt="" className="h-8 w-8 rounded-[var(--prui-radius-1)] object-cover" /> : null}
-            <span className="text-lg font-semibold text-[var(--prui-fg)]">{brand.name}</span>
+            {brand.mark ? <img src={brand.mark} alt="" className="h-8 w-8 rounded-prui-sm object-cover" /> : null}
+            <span className="text-lg font-semibold text-fg">{brand.name}</span>
           </div>
         ) : null}
-        <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-6">
+        <div className="rounded-prui border border-line bg-surface p-6">
           <div className="mb-4 flex flex-col gap-1 text-center">
-            <h1 className="text-lg font-semibold text-[var(--prui-fg)]">{title}</h1>
-            {description ? <p className="text-sm text-[var(--prui-dim)]">{description}</p> : null}
+            <h1 className="text-lg font-semibold text-fg">{title}</h1>
+            {description ? <p className="text-sm text-dim">{description}</p> : null}
           </div>
           {children}
-          {footer ? <div className="mt-4 text-center text-sm text-[var(--prui-dim)]">{footer}</div> : null}
+          {footer ? <div className="mt-4 text-center text-sm text-dim">{footer}</div> : null}
         </div>
       </div>
     </div>
@@ -103,7 +103,7 @@ export function ErrorBanner({ error }: { error?: string | null }) {
     <p
       role="alert"
       data-testid="page-error"
-      className="mb-3 rounded-[var(--prui-radius)] border border-[var(--prui-danger)]/40 bg-[var(--prui-danger)]/10 px-3 py-2 text-sm text-[var(--prui-danger)]"
+      className="mb-3 rounded-prui border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger"
     >
       {error}
     </p>
@@ -125,9 +125,9 @@ export function OAuthButtons({ providers: rawProviders }: { providers?: OAuthPro
   return (
     <div className="mt-4" data-testid="oauth-providers">
       <div className="relative my-3">
-        <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-[var(--prui-line)]" /></div>
+        <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-line" /></div>
         <div className="relative flex justify-center text-xs">
-          <span className="bg-[var(--prui-surface)] px-2 text-[var(--prui-dim)]">or continue with</span>
+          <span className="bg-surface px-2 text-dim">or continue with</span>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -142,7 +142,7 @@ export function OAuthButtons({ providers: rawProviders }: { providers?: OAuthPro
                 handler?.()
                 e.preventDefault()
               }}
-              className="inline-flex h-9 items-center justify-center gap-2 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] text-sm text-[var(--prui-fg)] hover:border-[var(--prui-dim)] cursor-pointer"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-prui border border-line bg-background text-sm text-fg hover:border-dim cursor-pointer"
             >
               {Icon ? <Icon className="h-4 w-4" aria-hidden /> : null}
               {p.label}

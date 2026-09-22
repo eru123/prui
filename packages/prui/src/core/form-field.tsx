@@ -34,11 +34,11 @@ export function FormField({ label, helperText, htmlFor, error, inline, children,
   }
   return (
     <div className={cn("prui-form-field flex flex-col gap-1", className)} {...rest}>
-      <div className="flex min-h-[1.25rem] items-center">
+      <div className="flex min-h-5 items-center">
         {label ? (
           // the prui-label class carries the Label component's base styling
           // without importing it: Input (which embeds this) stays lean
-          <label htmlFor={htmlFor} className="prui-label text-sm font-medium text-[var(--prui-fg)]">
+          <label htmlFor={htmlFor} className="prui-label text-sm font-medium text-fg">
             {label}
           </label>
         ) : null}
@@ -46,8 +46,8 @@ export function FormField({ label, helperText, htmlFor, error, inline, children,
       <div className="flex w-full flex-col">{children}</div>
       <div
         className={cn(
-          "flex min-h-[1rem] items-start gap-1 text-xs leading-4",
-          error ? "text-[var(--prui-danger)]" : "text-[var(--prui-dim)]",
+          "flex min-h-4 items-start gap-1 text-xs leading-4",
+          error ? "text-danger" : "text-dim",
         )}
       >
         {helperText ?? null}
