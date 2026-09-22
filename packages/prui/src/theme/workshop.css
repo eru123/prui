@@ -1,4 +1,5 @@
-/* Theme: workshop. Dark warm neutral, amber accent. */
+/* Theme: workshop. Dark warm neutral, amber accent.
+   `-strong` tokens are the hover targets (lighter on dark themes). */
 .prui-theme-workshop {
   color-scheme: dark;
   --prui-background: #14120e;
@@ -8,9 +9,13 @@
   --prui-fg: #f0e9dd;
   --prui-dim: #a89c88;
   --prui-brand: #d97706;
+  --prui-brand-strong: #eb8f1e;
   --prui-brand-fg: #ffffff;
   --prui-ok: #4ade80;
+  --prui-ok-strong: #6ee79b;
   --prui-warn: #fbbf24;
+  --prui-warn-strong: #fcd34d;
   --prui-danger: #f87171;
-  --prui-radius: 6px;
+  --prui-danger-strong: #fa9090;
+  --prui-radius: 8px;
 }

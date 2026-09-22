@@ -1,0 +1,74 @@
+/*
+PRUI semantic token registry (Tailwind v4 `@theme inline`).
+
+Maps design-system utility names onto the runtime `--prui-*` variables.
+`inline` is the load-bearing word: utilities compile to the raw var()
+expression (bg-brand → background-color: var(--prui-brand)), so themes
+keep switching at runtime by swapping variables on a root class — no
+rebuild, no duplicated palettes.
+
+Consumed in two places:
+- scripts/tw-input.css → dist/prui.css (self-compiled utilities; consumers
+  need no Tailwind setup)
+- site/src/index.css → so the site's own Tailwind build and @shadcn/lint's
+  theme builder resolve prui component classes from source.
+
+Surface-flexibility roles (`primary`, `secondary`, `ghost`, `field`,
+`*-fill`, `on-fill`, `accent-*`) fall back through `--prui-s-*`, which
+`withSurface()` sets per instance: an unset property degrades to the
+theme default, exactly like the arbitrary expressions they replace.
+*/
+@theme inline {
+  /* ---- palette ---------------------------------------------------- */
+  --color-background: var(--prui-background);
+  --color-surface: var(--prui-surface);
+  --color-raise: var(--prui-raise);
+  --color-line: var(--prui-line);
+  --color-fg: var(--prui-fg);
+  --color-dim: var(--prui-dim);
+  --color-brand: var(--prui-brand);
+  --color-brand-strong: var(--prui-brand-strong, var(--prui-brand));
+  --color-brand-fg: var(--prui-brand-fg);
+  --color-ok: var(--prui-ok);
+  --color-ok-strong: var(--prui-ok-strong, var(--prui-ok));
+  --color-warn: var(--prui-warn);
+  --color-warn-strong: var(--prui-warn-strong, var(--prui-warn));
+  --color-danger: var(--prui-danger);
+  --color-danger-strong: var(--prui-danger-strong, var(--prui-danger));
+  --color-ring: var(--prui-ring, var(--prui-brand));
+  --color-scrim: var(--prui-scrim);
+
+  /* ---- surface roles (withSurface overrides) ----------------------- */
+  --color-primary: var(--prui-s-bg, var(--prui-brand));
+  --color-primary-fg: var(--prui-s-fg, var(--prui-brand-fg));
+  --color-secondary: var(--prui-s-bg, var(--prui-raise));
+  --color-secondary-fg: var(--prui-s-fg, var(--prui-fg));
+  --color-field: var(--prui-s-bg, var(--prui-background));
+  --color-ghost: var(--prui-s-bg, transparent);
+  --color-ok-fill: var(--prui-s-bg, var(--prui-ok));
+  --color-warn-fill: var(--prui-s-bg, var(--prui-warn));
+  --color-danger-fill: var(--prui-s-bg, var(--prui-danger));
+  --color-on-fill: var(--prui-s-fg, #fff);
+  --color-accent-fg: var(--prui-s-fg, var(--prui-brand));
+  --color-accent-border: var(--prui-s-border, var(--prui-brand));
+
+  /* ---- radii -------------------------------------------------------- */
+  --radius-prui: var(--prui-s-radius, var(--prui-radius));
+  --radius-prui-md: var(--prui-s-radius, var(--prui-radius-3));
+  --radius-prui-sm: var(--prui-s-radius, var(--prui-radius-1));
+  --radius-prui-full: var(--prui-s-radius, var(--prui-radius-full));
+  --radius-prui-inner: calc(var(--prui-s-radius, var(--prui-radius)) - 1px);
+
+  /* ---- elevation ------------------------------------------------------ */
+  --shadow-prui-md: var(--prui-shadow-md);
+  --shadow-prui-lg: var(--prui-shadow-lg);
+  --shadow-prui-modal: var(--prui-shadow-modal);
+  --shadow-card: var(--prui-card-shadow, 0 0 #0000);
+  --inset-shadow-highlight: inset 0 1px 0 0 rgb(255 255 255 / 0.14);
+
+  /* ---- type + layout -------------------------------------------------- */
+  --text-2xs: var(--prui-text-2xs);
+  --text-2xs--line-height: var(--prui-text-2xs-lh);
+  --container-content: var(--prui-content-max, 72rem);
+  --ease-prui: var(--prui-ease-out);
+}

@@ -42,6 +42,9 @@ ever reference the variables, so a single override file re-skins everything.
   /* ---- scrim (overlay backdrop color) ------------------------------- */
   --prui-scrim: rgba(0, 0, 0, 0.55);
 
+  /* resting card elevation: dark themes stay flat, light mode adds a whisper */
+  --prui-card-shadow: 0 0 #0000;
+
   /* ---- spacing scale ------------------------------------------------ */
   --prui-space-0: 0px;
   --prui-space-1: 4px;
@@ -79,6 +82,7 @@ ever reference the variables, so a single override file re-skins everything.
 
 /* Light mode: softer shadows and a lighter scrim */
 .prui-mode-light {
+  --prui-card-shadow: 0 1px 2px rgb(16 24 40 / 0.05), 0 1px 3px rgb(16 24 40 / 0.07);
   --prui-shadow-sm: 0 1px 2px rgb(16 24 40 / 0.08);
   --prui-shadow-md: 0 4px 12px rgb(16 24 40 / 0.12);
   --prui-shadow-lg: 0 12px 32px rgb(16 24 40 / 0.16);

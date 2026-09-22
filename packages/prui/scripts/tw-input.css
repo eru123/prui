@@ -2,3 +2,5 @@
    files into dist/prui.css so consumers need no tailwind setup (AC-1). */
 @import "tailwindcss" source(none);
 @source "../src";
+/* Semantic utility registry: maps bg-brand/rounded-prui/… onto --prui-* vars. */
+@import "../src/theme/tokens.css";

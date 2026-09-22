@@ -1,16 +1,21 @@
-/* Theme: ember. Deep dark red-black, ember accent. */
+/* Theme: ember. Deep dark red-black, ember accent.
+   `-strong` tokens are the hover targets (lighter on dark themes). */
 .prui-theme-ember {
   color-scheme: dark;
   --prui-background: #120c0c;
   --prui-surface: #1a1112;
-  --prui-raise: #251719;
+  --prui-raise: #261719;
   --prui-line: #3a2124;
   --prui-fg: #f3e4e4;
   --prui-dim: #b09090;
   --prui-brand: #f05252;
+  --prui-brand-strong: #f47070;
   --prui-brand-fg: #ffffff;
   --prui-ok: #34d399;
+  --prui-ok-strong: #5ee0ad;
   --prui-warn: #fb923c;
+  --prui-warn-strong: #fcaa66;
   --prui-danger: #ef4444;
-  --prui-radius: 6px;
+  --prui-danger-strong: #f36666;
+  --prui-radius: 8px;
 }
