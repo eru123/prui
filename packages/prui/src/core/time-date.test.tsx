@@ -10,16 +10,41 @@ afterEach(() => {
 })
 
 describe("TimePicker", () => {
-  it("opens on click, picks hour and minute, reports HH:mm", async () => {
+  it("opens on click, picks 2:30 PM, reports 14:30 (12-hour default)", async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
     render(<TimePicker ariaLabel="Meeting time" onChange={onChange} />)
     await user.click(screen.getByRole("combobox", { name: "Meeting time" }))
     expect(screen.getByRole("dialog", { name: "Meeting time" })).toBeInTheDocument()
+    await user.click(screen.getAllByTestId("time-h").find((el) => el.textContent === "02")!)
+    expect(onChange).toHaveBeenLastCalledWith("02:00")
+    await user.click(screen.getAllByTestId("time-p").find((el) => el.textContent === "PM")!)
+    expect(onChange).toHaveBeenLastCalledWith("14:00")
+    await user.click(screen.getAllByTestId("time-m").find((el) => el.textContent === "30")!)
+    expect(onChange).toHaveBeenLastCalledWith("14:30")
+    // the trigger shows the formatted 12-hour time; the wire value stays 24h
+    expect(screen.getByRole("combobox", { name: "Meeting time" })).toHaveValue("2:30 PM")
+  })
+
+  it("hour12=false keeps the 24-hour grid", async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<TimePicker ariaLabel="Meeting time" hour12={false} onChange={onChange} />)
+    await user.click(screen.getByRole("combobox", { name: "Meeting time" }))
+    expect(screen.queryByTestId("time-p")).toBeNull()
     await user.click(screen.getAllByTestId("time-h").find((el) => el.textContent === "14")!)
     expect(onChange).toHaveBeenLastCalledWith("14:00")
     await user.click(screen.getAllByTestId("time-m").find((el) => el.textContent === "30")!)
     expect(onChange).toHaveBeenLastCalledWith("14:30")
+  })
+
+  it("flipping the period keeps the hour (09:30 -> 21:30)", async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<TimePicker ariaLabel="Shift" defaultValue="09:30" onChange={onChange} />)
+    await user.click(screen.getByRole("combobox", { name: "Shift" }))
+    await user.click(screen.getAllByTestId("time-p").find((el) => el.textContent === "PM")!)
+    expect(onChange).toHaveBeenLastCalledWith("21:30")
   })
 
   it("seconds mode produces HH:mm:ss values", async () => {
@@ -29,16 +54,32 @@ describe("TimePicker", () => {
     await user.click(screen.getByRole("combobox", { name: "Precise" }))
     await user.click(screen.getAllByTestId("time-s").find((el) => el.textContent === "59")!)
     expect(onChange).toHaveBeenLastCalledWith("10:20:59")
+    expect(screen.getByRole("combobox", { name: "Precise" })).toHaveValue("10:20:59 AM")
   })
 
   it("respects min/max bounds (out-of-range options disable)", async () => {
     const user = userEvent.setup()
-    render(<TimePicker ariaLabel="Window" min="09:00" max="17:00" />)
+    render(<TimePicker ariaLabel="Window" hour12={false} min="09:00" max="17:00" />)
     await user.click(screen.getByRole("combobox", { name: "Window" }))
     const hour8 = screen.getAllByTestId("time-h").find((el) => el.textContent === "08")!
     const hour12 = screen.getAllByTestId("time-h").find((el) => el.textContent === "12")!
     expect(hour8).toHaveAttribute("aria-disabled", "true")
     expect(hour12).not.toHaveAttribute("aria-disabled")
+  })
+
+  it("12-hour bounds disable per period (min 09:00, max 17:00)", async () => {
+    const user = userEvent.setup()
+    render(<TimePicker ariaLabel="Window" min="09:00" max="17:00" />)
+    await user.click(screen.getByRole("combobox", { name: "Window" }))
+    // 08 AM (08:00) is out of range; 09 AM is the lower edge
+    const hour8am = screen.getAllByTestId("time-h").find((el) => el.textContent === "08")!
+    expect(hour8am).toHaveAttribute("aria-disabled", "true")
+    const hour9am = screen.getAllByTestId("time-h").find((el) => el.textContent === "09")!
+    expect(hour9am).not.toHaveAttribute("aria-disabled")
+    // flipping to PM is possible (12:00-17:00 overlap), but 06 PM (18:00) is not
+    await user.click(screen.getAllByTestId("time-p").find((el) => el.textContent === "PM")!)
+    const hour6pm = screen.getAllByTestId("time-h").find((el) => el.textContent === "06")!
+    expect(hour6pm).toHaveAttribute("aria-disabled", "true")
   })
 
   it("minuteStep lists only stepped minutes", async () => {
@@ -70,32 +111,46 @@ describe("TimePicker", () => {
 })
 
 describe("TimeRangePicker", () => {
-  it("picks from then to and reports the pair", async () => {
+  it("picks from then to and reports the pair (12-hour display)", async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
     render(<TimeRangePicker ariaLabel="Shift" onChange={onChange} />)
     await user.click(screen.getByRole("combobox", { name: "Shift" }))
     await user.click(screen.getAllByTestId("time-h").find((el) => el.textContent === "09")!)
     expect(onChange).toHaveBeenLastCalledWith({ from: "09:00", to: undefined })
-    // the "to" column is the second hours column
-    const toHours = screen.getAllByTestId("time-h").filter((el) => el.textContent === "17")
+    // flip the "to" panel to PM (keeps the 12 o'clock hour: 12:00 in range),
+    // then pick 05 for 17:00; the panels sit side-by-side, take the last
+    const toPm = screen.getAllByTestId("time-p").filter((el) => el.textContent === "PM")
+    await user.click(toPm[toPm.length - 1]!)
+    const toHours = screen.getAllByTestId("time-h").filter((el) => el.textContent === "05")
     await user.click(toHours[toHours.length - 1]!)
     expect(onChange).toHaveBeenLastCalledWith({ from: "09:00", to: "17:00" })
-    expect(screen.getByTestId("timerange-label")).toHaveTextContent("09:00 – 17:00")
+    expect(screen.getByTestId("timerange-label")).toHaveTextContent("9:00 AM – 5:00 PM")
   })
 
   it("the to-panel constrains picks to after the from time", async () => {
     const user = userEvent.setup()
-    render(<TimeRangePicker ariaLabel="Window" />)
+    const onChange = vi.fn()
+    render(<TimeRangePicker ariaLabel="Window" onChange={onChange} />)
     await user.click(screen.getByRole("combobox", { name: "Window" }))
     const hours = (n: string) => screen.getAllByTestId("time-h").filter((el) => el.textContent === n)
-    await user.click(hours("14")[0]!)
-    // 08:00 in the to column is disabled once from = 14:00
+    const periods = (v: string) => screen.getAllByTestId("time-p").filter((el) => el.textContent === v)
+    // from = 2:00 PM (14:00): 02 then PM on the first (from) panel
+    await user.click(hours("02")[0]!)
+    await user.click(periods("PM")[0]!)
+    expect(onChange).toHaveBeenLastCalledWith({ from: "14:00", to: undefined })
+    // 08 stays disabled in the to-panel while it reads AM (08:00 < 14:00)
     const toEight = hours("08")[hours("08").length - 1]!
     expect(toEight).toHaveAttribute("aria-disabled", "true")
-    // while 16:00 stays selectable
-    const toSixteen = hours("16")[hours("16").length - 1]!
-    expect(toSixteen).not.toHaveAttribute("aria-disabled")
+    // and the to-panel can still flip to PM: 12:00-23:xx overlaps the
+    // remaining range, so there is no AM/PM dead-end after noon
+    const toPm = periods("PM")[periods("PM").length - 1]!
+    expect(toPm).not.toHaveAttribute("aria-disabled")
+    // picking 03 after the flip lands at 15:00
+    await user.click(toPm)
+    const toThree = hours("03")[hours("03").length - 1]!
+    await user.click(toThree)
+    expect(onChange).toHaveBeenLastCalledWith({ from: "14:00", to: "15:00" })
   })
 })
 
@@ -120,7 +175,8 @@ describe("DatePicker + timepicker composition", () => {
     expect(onChange).toHaveBeenLastCalledWith(expect.stringMatching(/^\d{4}-\d{2}-10 00:00$/))
     // panel stays open to refine the time
     expect(screen.getByRole("dialog", { name: "Starts" })).toBeInTheDocument()
-    await user.click(screen.getAllByTestId("time-h").find((el) => el.textContent === "14")!)
+    await user.click(screen.getAllByTestId("time-h").find((el) => el.textContent === "02")!)
+    await user.click(screen.getAllByTestId("time-p").find((el) => el.textContent === "PM")!)
     await user.click(screen.getAllByTestId("time-m").find((el) => el.textContent === "30")!)
     expect(onChange).toHaveBeenLastCalledWith(expect.stringMatching(/^\d{4}-\d{2}-10 14:30$/))
   })

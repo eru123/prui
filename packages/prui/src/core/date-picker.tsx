@@ -40,6 +40,8 @@ export interface DatePickerProps extends FieldSlotProps {
   seconds?: boolean
   /** Minute step for the time panel (requires timepicker). */
   minuteStep?: number
+  /** 12-hour time panel with AM/PM (the default, requires timepicker). */
+  hour12?: boolean
 }
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
@@ -87,6 +89,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
     timepicker = false,
     seconds = false,
     minuteStep,
+    hour12 = true,
   },
   ref,
 ) {
@@ -196,7 +199,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
               />
               {timepicker ? (
                 <div className="flex flex-col gap-1 border-l border-line pl-2">
-                  <TimePanel value={time} onSelect={pickTime} seconds={seconds} minuteStep={minuteStep} />
+                  <TimePanel value={time} onSelect={pickTime} seconds={seconds} minuteStep={minuteStep} hour12={hour12} />
                 </div>
               ) : null}
             </div>
@@ -242,6 +245,8 @@ export interface DateRangePickerProps extends FieldSlotProps {
   timepicker?: boolean
   seconds?: boolean
   minuteStep?: number
+  /** 12-hour time panels with AM/PM (the default, requires timepicker). */
+  hour12?: boolean
 }
 
 function addRange(from: Date, spec: MaxRange): Date {
@@ -286,6 +291,7 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
     timepicker = false,
     seconds = false,
     minuteStep,
+    hour12 = true,
   },
   ref,
 ) {
@@ -436,11 +442,11 @@ export const DateRangePicker = React.forwardRef<HTMLInputElement, DateRangePicke
                     <div className="flex gap-2">
                       <div>
                         <div className="mb-1 px-1 text-2xs font-semibold uppercase tracking-wide text-dim">{t.from}</div>
-                        <TimePanel compact value={from?.time} onSelect={(tm) => pickTime("from", tm)} seconds={seconds} minuteStep={minuteStep} />
+                        <TimePanel compact value={from?.time} onSelect={(tm) => pickTime("from", tm)} seconds={seconds} minuteStep={minuteStep} hour12={hour12} />
                       </div>
                       <div>
                         <div className="mb-1 px-1 text-2xs font-semibold uppercase tracking-wide text-dim">{t.to}</div>
-                        <TimePanel compact value={to?.time} onSelect={(tm) => pickTime("to", tm)} seconds={seconds} minuteStep={minuteStep} />
+                        <TimePanel compact value={to?.time} onSelect={(tm) => pickTime("to", tm)} seconds={seconds} minuteStep={minuteStep} hour12={hour12} />
                       </div>
                     </div>
                   </div>
@@ -488,6 +494,7 @@ export const datePickerPropsMeta: PropsMeta = {
     { name: "timepicker", type: "boolean", default: "false", control: "boolean", description: "Adds a time panel; values become 'YYYY-MM-DD HH:mm(:ss)'." },
     { name: "seconds", type: "boolean", default: "false", control: "boolean", description: "Seconds column (needs timepicker)." },
     { name: "minuteStep", type: "number", default: "1", control: "number", description: "Minute step (needs timepicker)." },
+    { name: "hour12", type: "boolean", default: "true", control: "boolean", description: "12-hour time panel with AM/PM (needs timepicker)." },
   ],
 }
 
@@ -503,5 +510,6 @@ export const dateRangePickerPropsMeta: PropsMeta = {
     { name: "timepicker", type: "boolean", default: "false", control: "boolean" },
     { name: "seconds", type: "boolean", default: "false", control: "boolean" },
     { name: "minuteStep", type: "number", default: "1", control: "number" },
+    { name: "hour12", type: "boolean", default: "true", control: "boolean" },
   ],
 }

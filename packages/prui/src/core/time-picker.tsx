@@ -29,6 +29,9 @@ export interface TimePickerProps extends FieldSlotProps {
   minuteStep?: number
   /** Include a seconds column ("HH:mm:ss" values). */
   seconds?: boolean
+  /** 12-hour grid with AM/PM (the default). false shows the 24-hour grid.
+   * Values stay "HH:mm(:ss)" on the wire either way. */
+  hour12?: boolean
   /** Earliest selectable time, inclusive. */
   min?: string
   /** Latest selectable time, inclusive. */
@@ -49,6 +52,9 @@ export interface TimeRangePickerProps extends FieldSlotProps {
   onChange?: (range: TimeRange) => void
   minuteStep?: number
   seconds?: boolean
+  /** 12-hour grid with AM/PM (the default). false shows the 24-hour grid.
+   * Values stay "HH:mm(:ss)" on the wire either way. */
+  hour12?: boolean
   min?: string
   max?: string
   disabled?: boolean
@@ -71,6 +77,27 @@ function toTime(h: number, m: number, s = 0, withSeconds: boolean): string {
   return withSeconds ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(h)}:${pad(m)}`
 }
 
+/** 12-hour display number for an internal 0-23 hour ("0" -> 12). */
+function hour12Of(h: number): number {
+  const h12 = h % 12
+  return h12 === 0 ? 12 : h12
+}
+
+function isPm(h: number): boolean {
+  return h >= 12
+}
+
+/** Trigger display. Values stay "HH:mm(:ss)" on the wire; hour12 only
+ * changes how they are shown ("7:30 PM"). */
+function formatDisplay(time: string | undefined, hour12: boolean): string {
+  if (!time) return ""
+  if (!hour12) return time
+  const t = parseTime(time)
+  if (!t) return time
+  const base = `${hour12Of(t.h)}:${pad(t.m)}${time.length > 5 ? `:${pad(t.s)}` : ""}`
+  return `${base} ${isPm(t.h) ? "PM" : "AM"}`
+}
+
 function timeKey(v: string): number {
   const t = parseTime(v)
   return t ? t.h * 3600 + t.m * 60 + t.s : -1
@@ -89,6 +116,8 @@ interface TimePanelProps {
   onSelect: (time: string) => void
   minuteStep?: number
   seconds?: boolean
+  /** 12-hour grid with an AM/PM column (the default). */
+  hour12?: boolean
   min?: string
   max?: string
   /** Hide the column headers (used by the range picker's side-by-side pair). */
@@ -101,31 +130,75 @@ interface TimePanelProps {
  * in a popover; DatePicker composes it directly; it is exported for
  * custom compositions.
  */
-export function TimePanel({ value, onSelect, minuteStep = 1, seconds = false, min, max, compact, className }: TimePanelProps) {
+export function TimePanel({ value, onSelect, minuteStep = 1, seconds = false, hour12 = true, min, max, compact, className }: TimePanelProps) {
   const { t } = usePruiI18n()
   const current = parseTime(value)
   const minKey = min ? timeKey(min) : -Infinity
   const maxKey = max ? timeKey(max) : Infinity
-  const columns: { label: string; items: number[]; selected: number | null; unit: "h" | "m" | "s" }[] = [
-    { label: t.hours, items: Array.from({ length: 24 }, (_, h) => h), selected: current?.h ?? null, unit: "h" },
+  // Internal hours are always 0-23; hour12 is a view. The period column
+  // keeps the selected hour and flips AM/PM; an hour click keeps the
+  // current period (AM when nothing is picked yet).
+  const pm = current ? isPm(current.h) : false
+  type Unit = "h" | "m" | "s" | "p"
+  const columns: { label: string; items: number[]; selected: number | null; unit: Unit }[] = [
+    {
+      label: t.hours,
+      items: hour12 ? Array.from({ length: 12 }, (_, i) => i + 1) : Array.from({ length: 24 }, (_, h) => h),
+      selected: current ? (hour12 ? hour12Of(current.h) : current.h) : null,
+      unit: "h",
+    },
     { label: t.minutes, items: minutesList(minuteStep), selected: current?.m ?? null, unit: "m" },
   ]
   if (seconds) {
     columns.push({ label: t.seconds, items: Array.from({ length: 60 }, (_, s) => s), selected: current?.s ?? null, unit: "s" })
   }
+  if (hour12) {
+    columns.push({ label: `${t.am}/${t.pm}`, items: [0, 1], selected: current ? (pm ? 1 : 0) : null, unit: "p" })
+  }
 
-  const disabled = (unit: "h" | "m" | "s", n: number) => {
-    const h = unit === "h" ? n : (current?.h ?? 0)
+  const candidateHour = (unit: Unit, n: number): number => {
+    if (unit === "h") return hour12 ? (n % 12) + (pm ? 12 : 0) : n
+    if (unit === "p") return (hour12Of(current?.h ?? 0) % 12) + n * 12
+    return current?.h ?? 0
+  }
+
+  const keyOf = (h: number, m: number, s: number) => h * 3600 + m * 60 + s
+
+  const disabled = (unit: Unit, n: number) => {
+    // A period stays selectable while ANY hour of that period is in range —
+    // otherwise a range starting after noon would dead-end the AM/PM flip.
+    if (unit === "p") {
+      const m = current?.m ?? 0
+      const s = current?.s ?? 0
+      for (let h12 = 0; h12 < 12; h12++) {
+        const key = keyOf(h12 + n * 12, m, s)
+        if (key >= minKey && key <= maxKey) return false
+      }
+      return true
+    }
+    const h = unit === "s" ? (current?.h ?? 0) : candidateHour(unit, n)
     const m = unit === "m" ? n : (current?.m ?? 0)
     const s = unit === "s" ? n : (current?.s ?? 0)
-    const key = h * 3600 + m * 60 + s
+    const key = keyOf(h, m, s)
     return key < minKey || key > maxKey
   }
 
-  const pick = (unit: "h" | "m" | "s", n: number) => {
-    const h = unit === "h" ? n : (current?.h ?? 0)
+  const pick = (unit: Unit, n: number) => {
     const m = unit === "m" ? n : (current?.m ?? 0)
     const s = unit === "s" ? n : (current?.s ?? 0)
+    let h = unit === "s" ? (current?.h ?? 0) : candidateHour(unit, n)
+    if (unit === "p" && (keyOf(h, m, s) < minKey || keyOf(h, m, s) > maxKey)) {
+      // the kept hour is out of range in this period: commit the first
+      // in-range hour of the period instead (e.g. 1:00 PM for min 13:00)
+      for (let h12 = 1; h12 <= 12; h12++) {
+        const candidate = (h12 % 12) + n * 12
+        const key = keyOf(candidate, m, s)
+        if (key >= minKey && key <= maxKey) {
+          h = candidate
+          break
+        }
+      }
+    }
     onSelect(toTime(h, m, s, seconds))
   }
 
@@ -206,6 +279,7 @@ export function TimePanel({ value, onSelect, minuteStep = 1, seconds = false, mi
                   aria-disabled={isDisabled || undefined}
                   tabIndex={isSel ? 0 : -1}
                   data-testid={`time-${col.unit}`}
+                  aria-label={col.unit === "p" ? (n === 1 ? t.pm : t.am) : undefined}
                   onClick={() => !isDisabled && pick(col.unit, n)}
                   className={cn(
                     "rounded-prui-sm py-1 text-center text-sm tabular-nums cursor-pointer outline-none",
@@ -214,7 +288,7 @@ export function TimePanel({ value, onSelect, minuteStep = 1, seconds = false, mi
                     isDisabled && "opacity-40 pointer-events-none",
                   )}
                 >
-                  {pad(n)}
+                  {col.unit === "p" ? (n === 1 ? t.pm : t.am) : pad(n)}
                 </button>
               )
             })}
@@ -247,9 +321,10 @@ function useTimePopover(anchorRef: React.RefObject<HTMLElement | null>, open: bo
 /* ---------------- TimePicker ---------------- */
 
 export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(function TimePicker(
-  { value: valueProp, defaultValue, onChange, minuteStep, seconds, min, max, disabled, placeholder = "HH:mm", ariaLabel, className, label, helperText, id },
+  { value: valueProp, defaultValue, onChange, minuteStep, seconds, hour12 = true, min, max, disabled, placeholder, ariaLabel, className, label, helperText, id },
   ref,
 ) {
+  const effectivePlaceholder = placeholder ?? (hour12 ? "hh:mm am/pm" : "HH:mm")
   const field = useFieldSlots({ id, label, helperText })
   const [uncontrolled, setUncontrolled] = React.useState(defaultValue ?? "")
   const [open, setOpen] = React.useState(false)
@@ -283,9 +358,9 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={ariaLabel}
-        placeholder={placeholder}
+        placeholder={effectivePlaceholder}
         disabled={disabled}
-        value={value}
+        value={formatDisplay(value, hour12)}
         onClick={() => setOpen(true)}
         onFocus={() => {
           if (!disabled && !open) setOpen(true)
@@ -311,7 +386,7 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
             className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-prui border border-line bg-surface p-2 shadow-prui-lg"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
-            <TimePanel value={value} onSelect={select} minuteStep={minuteStep} seconds={seconds} min={min} max={max} />
+            <TimePanel value={value} onSelect={select} minuteStep={minuteStep} seconds={seconds} hour12={hour12} min={min} max={max} />
           </div>
         </Portal>
       ) : null}
@@ -323,9 +398,10 @@ TimePicker.displayName = "TimePicker"
 /* ---------------- TimeRangePicker ---------------- */
 
 export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePickerProps>(function TimeRangePicker(
-  { value: valueProp, defaultValue, onChange, minuteStep, seconds, min, max, disabled, placeholder = "HH:mm – HH:mm", ariaLabel, className, label, helperText, id },
+  { value: valueProp, defaultValue, onChange, minuteStep, seconds, hour12 = true, min, max, disabled, placeholder, ariaLabel, className, label, helperText, id },
   ref,
 ) {
+  const effectivePlaceholder = placeholder ?? (hour12 ? "hh:mm am/pm – hh:mm am/pm" : "HH:mm – HH:mm")
   const field = useFieldSlots({ id, label, helperText })
   const { t } = usePruiI18n()
   const [uncontrolled, setUncontrolled] = React.useState<TimeRange>(defaultValue ?? {})
@@ -356,7 +432,8 @@ export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePicke
     setRange({ from, to })
   }
 
-  const display = value.from ? (value.to ? `${value.from} – ${value.to}` : `${value.from} – …`) : ""
+  const fmt = (v: string | undefined, empty: string) => (formatDisplay(v, hour12) || empty)
+  const display = value.from ? `${fmt(value.from, "…")} – ${fmt(value.to, "…")}` : ""
   const fromMax = value.to ?? max
   const toMin = value.from ?? min
 
@@ -375,7 +452,7 @@ export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePicke
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={ariaLabel}
-        placeholder={placeholder}
+        placeholder={effectivePlaceholder}
         disabled={disabled}
         value={display}
         onClick={() => setOpen(true)}
@@ -408,11 +485,11 @@ export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePicke
               <div className="flex gap-4">
                 <div>
                   <div className="mb-1 text-xs font-semibold text-dim">{t.from}</div>
-                  <TimePanel compact value={value.from} onSelect={(time) => pickSide("from", time)} minuteStep={minuteStep} seconds={seconds} min={min} max={fromMax} />
+                  <TimePanel compact value={value.from} onSelect={(time) => pickSide("from", time)} minuteStep={minuteStep} seconds={seconds} hour12={hour12} min={min} max={fromMax} />
                 </div>
                 <div>
                   <div className="mb-1 text-xs font-semibold text-dim">{t.to}</div>
-                  <TimePanel compact value={value.to} onSelect={(time) => pickSide("to", time)} minuteStep={minuteStep} seconds={seconds} min={toMin} max={max} />
+                  <TimePanel compact value={value.to} onSelect={(time) => pickSide("to", time)} minuteStep={minuteStep} seconds={seconds} hour12={hour12} min={toMin} max={max} />
                 </div>
               </div>
               <div className="flex items-center justify-between border-t border-line pt-2 text-xs text-dim">
@@ -456,6 +533,7 @@ export const timePickerPropsMeta: PropsMeta = {
     { name: "onChange", type: "(time: string) => void", default: null, control: "none" },
     { name: "minuteStep", type: "number (minutes)", default: "1", control: "number" },
     { name: "seconds", type: "boolean", default: "false", control: "boolean", description: "Adds a seconds column ('HH:mm:ss')." },
+    { name: "hour12", type: "boolean", default: "true", control: "boolean", description: "12-hour grid with AM/PM. false shows the 24-hour grid. Values stay 'HH:mm(:ss)'." },
     { name: "min", type: "string 'HH:mm'", default: "undefined", control: "text" },
     { name: "max", type: "string 'HH:mm'", default: "undefined", control: "text" },
   ],
@@ -469,6 +547,7 @@ export const timeRangePickerPropsMeta: PropsMeta = {
     { name: "onChange", type: "(range: TimeRange) => void", default: null, control: "none" },
     { name: "minuteStep", type: "number (minutes)", default: "1", control: "number" },
     { name: "seconds", type: "boolean", default: "false", control: "boolean" },
+    { name: "hour12", type: "boolean", default: "true", control: "boolean", description: "12-hour grid with AM/PM. false shows the 24-hour grid. Values stay 'HH:mm(:ss)'." },
     { name: "min", type: "string 'HH:mm'", default: "undefined", control: "text" },
     { name: "max", type: "string 'HH:mm'", default: "undefined", control: "text" },
   ],

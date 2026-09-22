@@ -73,6 +73,8 @@ export interface PruiDictionary {
   hours: string
   minutes: string
   seconds: string
+  am: string
+  pm: string
   from: string
   to: string
   /* file upload */
@@ -144,6 +146,8 @@ export const defaultDictionary: PruiDictionary = {
   hours: "Hours",
   minutes: "Minutes",
   seconds: "Seconds",
+  am: "AM",
+  pm: "PM",
   from: "From",
   to: "To",
 
