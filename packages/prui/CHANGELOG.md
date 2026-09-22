@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.17.2
+
+### Patch Changes
+
+- - fail on any warning across the repo
+
 ## 0.17.1
 
 ### Patch Changes
