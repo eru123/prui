@@ -10,8 +10,9 @@ After making any change, run:
 pnpm lint
 ```
 
-Fix **all** errors before considering the work done. Warnings in
-`packages/prui/src` are pre-existing and not yours to expand.
+Fix **all** errors — and all warnings: the script runs with
+`--max-warnings 0`, so a single warning is a red check. There are no
+"acceptable" warnings to hide behind.
 
 ## Do not cheat the linter
 
@@ -59,5 +60,20 @@ garbage without them. Every known bypass is itself an error:
 disable ban, and the anti-cheat notes. The error messages tell you the
 correct fix; read them instead of guessing.
 
-CI (`.github/workflows/ci.yml`) runs lint, typecheck, tests, build, and
-the bundle/landing budgets on every push. Nothing merges red.
+## Nothing releases on a red check
+
+CI (`.github/workflows/ci.yml`) runs, on every push and PR:
+
+1. `pnpm lint` — zero errors AND zero warnings (`--max-warnings 0`)
+2. `pnpm -r typecheck`
+3. `pnpm -r test`
+4. `pnpm -r build` + bundle guard + landing budget
+5. **e2e** — real-browser smoke + accessibility suites against the built
+   site (`npx playwright test --grep-invert "visual regression"`; the
+   visual suite has win32 baselines, so run and update it locally on
+   Windows with `pnpm test:e2e --update-snapshots`)
+
+The release chain is strictly downstream: `ci` + `e2e` → `changesets` →
+`release`. If any check is red, versioning and npm publishing are skipped
+entirely. Do not declare work done while any check is yellow or red —
+watch the run to completion (`gh run watch`) and fix what fails.

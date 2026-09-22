@@ -31,13 +31,40 @@ jobs:
           name: site-dist
           path: site/dist
 
+  e2e:
+    # Real-browser gate: the docs site is built with prui itself, so the
+    # smoke + a11y suites double as prui's integration harness. The visual
+    # regression suite is excluded here on purpose: its baselines are
+    # win32-specific; run and update it locally (`npx playwright test
+    # --update-snapshots`) on a Windows machine.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -r build
+      - run: npx playwright install --with-deps chromium
+      - name: E2E smoke + accessibility (visual suite excluded — win32 baselines)
+        run: npx playwright test --grep-invert "visual regression"
+      - name: Upload playwright traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results
+
   changesets:
     # Auto-version: when packages/prui changed since the last release tag, generate a
     # version bump (patch default; "feat:" commits bump minor; "BREAKING CHANGE"/"!" major).
     # Hand-written .changeset/*.md files take precedence. Release only runs if a new
     # version was actually cut; site-only or workflow-only pushes never release.
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: ci
+    needs: [ci, e2e]
     runs-on: ubuntu-latest
     outputs:
       released: ${{ steps.result.outputs.released }}
