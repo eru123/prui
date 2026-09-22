@@ -199,9 +199,29 @@ export default tseslint.config(
       "shadcn/no-unknown-classes": [
         "error",
         {
-          // Site-defined CSS classes (index.css extras, prui's own compiled
-          // component classes) are known to the app but not to Tailwind.
-          allow: ["prui-*", "toc-*", "grid-*", "input-mono"],
+          // Site-defined CSS classes and @theme utilities: known to the app
+          // but not to Tailwind's defaults, and therefore invisible to the
+          // plugin's fallback grammar when its Tailwind worker cannot build
+          // the theme (cold CI runners). Exact names (not wildcards, except
+          // the CSS-class families) keep typo detection for real utilities:
+          // text-heroo or max-w-sit still fail.
+          allow: [
+            "prui-*",
+            "toc-*",
+            "grid-*",
+            "input-mono",
+            "text-micro",
+            "text-caption",
+            "text-lede",
+            "text-title",
+            "text-hero",
+            "max-w-site",
+            "max-w-wide",
+            "max-w-content",
+            "max-w-read",
+            "min-h-hero",
+            "min-h-hero-sm",
+          ],
           message: "This class does not exist in the Tailwind theme or PRUI tokens — check the spelling, or define it in site/src/index.css.",
         },
       ],
