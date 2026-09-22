@@ -232,7 +232,7 @@ export function TimePickerDoc() {
     <ComponentDoc
       name="TimePicker"
       importPath="@skiddph/prui/core"
-      description="A 24-hour time picker with hour/minute(/second) columns, listbox semantics, arrow navigation, min/max bounds, and a stepped minute grid ('HH:mm' values, 'HH:mm:ss' with seconds). Outside clicks and Escape close it."
+      description="A 12-hour time picker by default: hour/minute(/second) columns plus an AM/PM column, listbox semantics, arrow navigation, min/max bounds, and a stepped minute grid. Pass hour12={false} for the 24-hour grid. Values are always wire-format 'HH:mm' ('HH:mm:ss' with seconds) no matter the display."
       when={[
         "Meeting and reminder times",
         "Business-hours windows and cutoffs",
@@ -241,14 +241,19 @@ export function TimePickerDoc() {
       anatomy={
         <p>
           <code className="rounded bg-[var(--prui-raise)] px-1">&lt;TimePicker value onChange minuteStep seconds min max /&gt;</code>:
-          a combobox trigger over a portaled panel of column listboxes.
+          a combobox trigger over a portaled panel of column listboxes. Add hour12={false} for the 24-hour grid.
         </p>
       }
       demos={[
         {
-          title: "Basic",
+          title: "Basic (12-hour default)",
           render: <div className="w-32"><TimePicker value={time} onChange={setTime} ariaLabel="Meeting time" /></div>,
-          code: `<TimePicker value={time} onChange={setTime} ariaLabel="Meeting time" />`,
+          code: `<TimePicker value={time} onChange={setTime} ariaLabel="Meeting time" />   // shows 9:30 AM, onChange still gets "09:30"`,
+        },
+        {
+          title: "24-hour grid",
+          render: <div className="w-32"><TimePicker hour12={false} ariaLabel="Server time" /></div>,
+          code: `<TimePicker hour12={false} ariaLabel="Server time" />`,
         },
         {
           title: "Quarter-hour steps",
@@ -279,11 +284,11 @@ export function TimePickerDoc() {
       composition={<p>TimePanel (the inline grid) is exported for custom compositions. DatePicker embeds it. Values are zero-padded strings.</p>}
       customization={<p>Column width 64px; selection uses brand tokens; the compact variant drops headers for dense panels.</p>}
       edgeCases={[
-        "min/max disable out-of-window options rather than hiding them",
+        "min/max disable out-of-window options rather than hiding them; the AM/PM column stays usable whenever any hour of that period is in range",
         "minuteStep > 1 snaps values to the step grid",
       ]}
-      mistakes={["Passing '9:30'; values are zero-padded '09:30'", "12-hour expectations: this is 24-hour by design (convert at the edges)"]}
-      performance={<p>At most 24+60(+60) buttons while open; columns scroll independently.</p>}
+      mistakes={["Passing '9:30'; values are zero-padded '09:30'", "Storing the display string: hour12 only changes the trigger/panel view, onChange always reports 'HH:mm(:ss)'"]}
+      performance={<p>At most 12|24+60(+60)+2 buttons while open; columns scroll independently.</p>}
       crossLinks={[
         { label: "TimeRangePicker; spans", href: "/components/time-range-picker" },
         { label: "DatePicker timepicker; date+time", href: "/components/date-picker" },
@@ -298,7 +303,7 @@ export function TimeRangePickerDoc() {
     <ComponentDoc
       name="TimeRangePicker"
       importPath="@skiddph/prui/core"
-      description="A from–to time span on side-by-side column pairs: pick the start, then the end; the end panel constrains itself to after the start so an inverted range can't be built. Clear/apply footer, bounds, and stepped minutes included."
+      description="A from–to time span on side-by-side column pairs: pick the start, then the end; the end panel constrains itself to after the start so an inverted range can't be built. Clear/apply footer, bounds, and stepped minutes included. 12-hour with AM/PM by default (hour12={false} for 24-hour); values stay 'HH:mm'."
       when={[
         "Shift and store-hours windows",
         "On-call and maintenance spans within a day",
