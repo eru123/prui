@@ -388,6 +388,7 @@ export function FormInput({
   React.useEffect(() => {
     ctx.registerField(name, { label, required, validate, minLength, maxLength, min, max, pattern, patternMessage })
     return () => ctx.unregisterField(name)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- a field registers once per name; re-running on every config prop would churn registrations
   }, [name])
 
   const value = ctx.getValue(name)
