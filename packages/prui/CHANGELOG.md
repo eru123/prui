@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.19.0
+
+### Minor Changes
+
+- - 12-hour TimePicker by default with hour12 option
+
 ## 0.18.0
 
 ### Minor Changes
