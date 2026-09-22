@@ -179,14 +179,14 @@ function ColorRow({ label, token, value, onChange }: { label: string; token: str
         className="h-7 w-9 shrink-0 cursor-pointer rounded border border-[var(--prui-line)] bg-transparent"
       />
       <div className="min-w-0 flex-1">
-        <div className="font-mono text-[11px] text-[var(--prui-fg)]">{token}</div>
-        <div className="text-[10px] text-[var(--prui-dim)]">{label}</div>
+        <div className="font-mono text-caption text-[var(--prui-fg)]">{token}</div>
+        <div className="text-micro text-[var(--prui-dim)]">{label}</div>
       </div>
       <Input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-label={`${token} value`}
-        className="h-7 w-24 shrink-0 font-mono text-[11px]"
+        className="input-mono h-7 w-24 shrink-0"
       />
     </div>
   )
@@ -206,9 +206,10 @@ export function ThemeBuilderPage() {
 
   React.useEffect(() => {
     const encoded = encodeTokens(tokens)
+    // the guard keeps the params dep from looping: once the URL matches,
+    // setParams is a no-op on the next pass
     if (params.get("t") !== encoded) setParams({ t: encoded }, { replace: true })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokens])
+  }, [tokens, params, setParams])
 
   const set = <K extends keyof BuilderTokens>(k: K, v: BuilderTokens[K]) => setTokens((s) => ({ ...s, [k]: v }))
 
@@ -235,7 +236,7 @@ export function ThemeBuilderPage() {
   ]
 
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 pb-20 pt-6 md:px-6">
+    <div className="mx-auto w-full max-w-wide px-4 pb-20 pt-6 md:px-6">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <div className="font-mono text-xs text-[var(--prui-dim)]">theming / theme builder</div>
         <div className="flex items-center gap-2">
@@ -254,7 +255,7 @@ export function ThemeBuilderPage() {
         </div>
       </div>
       <h1 className="mb-1 text-2xl font-bold tracking-tight text-[var(--prui-fg)]">Theme builder</h1>
-      <p className="mb-5 max-w-[62ch] text-sm text-[var(--prui-dim)]">
+      <p className="mb-5 max-w-read text-sm text-[var(--prui-dim)]">
         Every overridable token, one screen. Changes apply to this entire site as you make them and survive a reload.
         Reset removes the overlay and puts the current theme back.
       </p>
@@ -269,7 +270,7 @@ export function ThemeBuilderPage() {
         <Card>
           <CardContent className="flex flex-col gap-5">
             <div>
-              <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">presets</div>
+              <div className="mb-2 font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">presets</div>
               <div className="flex flex-wrap gap-1.5">
                 {PRESETS.map((p) => (
                   <Button key={p.name} size="sm" variant="default" onClick={() => setTokens({ ...p.tokens })}>
@@ -280,7 +281,7 @@ export function ThemeBuilderPage() {
               </div>
             </div>
 
-            <div className="grid gap-x-6 gap-y-1" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
+            <div className="grid grid-forms gap-x-6 gap-y-1">
               {colorFields.map((f) => (
                 <ColorRow key={f.token} token={f.token} label={f.label} value={tokens[f.key] as string} onChange={(v) => set(f.key, v as never)} />
               ))}

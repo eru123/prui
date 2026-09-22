@@ -56,21 +56,15 @@ export function DesignerPreview({ state }: { state: DesignerState }) {
             theme={false}
             sidebar={{ width: state.sidebarWidth, collapsible: state.sidebarCollapsible }}
           >
-              <div style={{ padding: 24 }}>
-                <p style={{ color: "var(--prui-dim)", fontSize: 13, margin: "0 0 12px" }}>
+              <div className="p-6">
+                <p className="mb-3 text-xs text-[var(--prui-dim)]">
                   Content outlet: your routes render here.
                 </p>
-                <div style={{ display: "flex", gap: 8 }}>
+                <div className="flex gap-2">
                   {[0, 1, 2].map((i) => (
                     <div
                       key={i}
-                      style={{
-                        height: 64,
-                        flex: 1,
-                        borderRadius: "var(--prui-radius)",
-                        border: "1px solid var(--prui-line)",
-                        background: "var(--prui-surface)",
-                      }}
+                      className="h-16 flex-1 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]"
                     />
                   ))}
                 </div>

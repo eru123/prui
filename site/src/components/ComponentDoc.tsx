@@ -136,13 +136,13 @@ export function ComponentDoc({
   ]
 
   return (
-    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
-      <div className="min-w-0 max-w-[780px] flex-1">
+    <div className="mx-auto flex w-full max-w-site justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-content flex-1">
         <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">
           <Link to="/components" className="hover:text-[var(--prui-fg)]">components</Link> / {name.toLowerCase()}
         </div>
-        <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">{name}</h1>
-        <p className="mb-6 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">{description}</p>
+        <h1 className="mb-1.5 text-title font-bold tracking-tight text-[var(--prui-fg)]">{name}</h1>
+        <p className="mb-6 max-w-read text-lede text-[var(--prui-dim)]">{description}</p>
 
         <CodeBlock title="import" code={`import { ${name} } from '${importPath}'`} />
 

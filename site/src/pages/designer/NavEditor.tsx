@@ -16,7 +16,7 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { Button, Input, Badge } from "prui/core"
+import { Button, Input, Badge, cn } from "prui/core"
 import { CodeView } from "../../components/CodeView"
 import { GripVertical, Trash2, IndentIncrease, IndentDecrease, Code2, ListTree } from "lucide-react"
 import { canDrop, type FlatNav } from "./state"
@@ -73,8 +73,7 @@ function Row({
         <Input
           value={entry.label}
           onChange={(e) => onLabel(e.target.value)}
-          className="h-7 flex-1"
-          style={{ marginLeft: entry.depth === 1 ? 20 : 0 }}
+          className={cn("h-7 flex-1", entry.depth === 1 && "ml-5")}
           aria-label={`Nav item ${index + 1} label`}
         />
         {entry.depth === 1 || entry.href !== undefined ? (
@@ -105,7 +104,7 @@ function Row({
           ref={droppable.setNodeRef}
           data-testid={`nest-zone-${index}`}
           className={
-            "mb-0.5 h-5 rounded border border-dashed text-center font-mono text-[9px] leading-5 transition-colors " +
+            "mb-0.5 h-5 rounded border border-dashed text-center font-mono text-micro leading-5 transition-colors " +
             (isNestTarget
               ? "border-[var(--prui-brand)] bg-[var(--prui-brand)]/15 text-[var(--prui-brand)]"
               : "border-transparent text-transparent")
@@ -184,7 +183,7 @@ export function NavEditor({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">navigation</div>
+        <div className="font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">navigation</div>
         <div className="flex gap-1">
           <Button variant={mode === "tree" ? "default" : "ghost"} size="sm" onClick={() => setMode("tree")} aria-label="Tree editor mode">
             <ListTree className="h-3.5 w-3.5" aria-hidden /> tree

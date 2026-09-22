@@ -25,7 +25,7 @@ function Control({ meta, value, onChange }: { meta: PropMeta; value: unknown; on
     case "select":
       return (
         <div className="flex w-40 flex-col gap-1">
-          <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{meta.name}</span>
+          <span className="text-micro font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{meta.name}</span>
           <Select
             aria-label={meta.name}
             value={String(value ?? "")}
@@ -37,7 +37,7 @@ function Control({ meta, value, onChange }: { meta: PropMeta; value: unknown; on
     case "number":
       return (
         <div className="flex w-28 flex-col gap-1">
-          <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{meta.name}</span>
+          <span className="text-micro font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{meta.name}</span>
           <Input type="number" value={String(value ?? "")} onChange={(e) => onChange(Number(e.target.value))} className="h-7" />
         </div>
       )
@@ -52,7 +52,7 @@ function Control({ meta, value, onChange }: { meta: PropMeta; value: unknown; on
     default:
       return (
         <div className="flex w-44 flex-col gap-1">
-          <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{meta.name}</span>
+          <span className="text-micro font-semibold uppercase tracking-wide text-[var(--prui-dim)]">{meta.name}</span>
           <Input
             value={String(value ?? "")}
             onChange={(e) => onChange(e.target.value)}
@@ -186,16 +186,16 @@ export function Playground({
     <section id={title.toLowerCase().replace(/\s+/g, "-")} className="mb-8 scroll-mt-20" data-testid="playground">
       <div className="mb-3 flex items-baseline justify-between">
         <h2 className="font-mono text-sm font-semibold text-[var(--prui-brand)]">{title}</h2>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">live playground</span>
+        <span className="font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">live playground</span>
       </div>
       <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
-        <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-2 font-mono text-[11px] text-[var(--prui-dim)]">
+        <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-2 font-mono text-caption text-[var(--prui-dim)]">
           <span>demo</span>
           <span>props from propsMeta</span>
         </div>
         <div className="flex min-h-24 flex-wrap items-center gap-3 p-5">{render(values)}</div>
         <div className="border-t border-[var(--prui-line)] px-4 py-3">
-          <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">controls</div>
+          <div className="mb-2 font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">controls</div>
           {panel}
         </div>
         <div className="border-t border-[var(--prui-line)] bg-[var(--prui-background)]">
@@ -218,7 +218,7 @@ export function Playground({
           </div>
         ) : (
           <div className="border-t border-[var(--prui-line)] px-4 py-2.5">
-            <p className="text-[11px] text-[var(--prui-dim)]">
+            <p className="text-caption text-[var(--prui-dim)]">
               The editor drives this demo. Props are checked against the spec table below as you type; reset puts the
               original snippet back.
             </p>
@@ -244,16 +244,16 @@ export function PropsTable({ meta }: { meta: PropsMeta }) {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-[var(--prui-line)] bg-[var(--prui-raise)] text-left">
-            <th className="px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">Prop</th>
-            <th className="px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">Type</th>
-            <th className="px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-wide text-[var(--prui-dim)]">Default</th>
+            <th className="px-3 py-2 font-mono text-caption font-semibold uppercase tracking-wide text-[var(--prui-dim)]">Prop</th>
+            <th className="px-3 py-2 font-mono text-caption font-semibold uppercase tracking-wide text-[var(--prui-dim)]">Type</th>
+            <th className="px-3 py-2 font-mono text-caption font-semibold uppercase tracking-wide text-[var(--prui-dim)]">Default</th>
           </tr>
         </thead>
         <tbody>
           {meta.props.map((p) => (
             <tr key={p.name} className="border-b border-[var(--prui-line)] last:border-0">
               <td className="whitespace-nowrap px-3 py-2 font-mono text-xs text-[var(--prui-brand)]">{p.name}</td>
-              <td className="whitespace-nowrap px-3 py-2 font-mono text-[11px] text-[var(--prui-warn)]">{p.type}</td>
+              <td className="whitespace-nowrap px-3 py-2 font-mono text-caption text-[var(--prui-warn)]">{p.type}</td>
               <td className="px-3 py-2 font-mono text-xs text-[var(--prui-dim)]">{String(p.default)}</td>
             </tr>
           ))}

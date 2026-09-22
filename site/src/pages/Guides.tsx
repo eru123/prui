@@ -27,12 +27,12 @@ const INSTALL_TOC = [{ id: "install", label: "Installation" }]
 
 export function InstallationPage() {
   return (
-    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
-      <div className="min-w-0 max-w-[780px] flex-1">
+    <div className="mx-auto flex w-full max-w-site justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-content flex-1">
         <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">
           <Link to="/guides" className="hover:text-[var(--prui-fg)]">guides</Link> / installation
         </div>
-        <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Installation</h1>
+        <h1 className="mb-1.5 text-title font-bold tracking-tight text-[var(--prui-fg)]">Installation</h1>
 
         <Section id="install" title="Installation">
           <p>react, react-dom, and react-router-dom arrive with the package. lucide-react is a peer, so add both:</p>
@@ -72,12 +72,12 @@ const ADOPTION_TOC = [
 
 export function AdoptionPage() {
   return (
-    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
-      <div className="min-w-0 max-w-[780px] flex-1">
+    <div className="mx-auto flex w-full max-w-site justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-content flex-1">
         <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">
           <Link to="/guides" className="hover:text-[var(--prui-fg)]">guides</Link> / progressive adoption
         </div>
-        <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Progressive adoption</h1>
+        <h1 className="mb-1.5 text-title font-bold tracking-tight text-[var(--prui-fg)]">Progressive adoption</h1>
 
         <Section id="adoption" title="The three rungs">
           <p>Three rungs, mix freely:</p>
@@ -129,11 +129,11 @@ export function AdoptionPage() {
 
 export function AgentsPage() {
   return (
-    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
-      <div className="min-w-0 max-w-[780px] flex-1">
+    <div className="mx-auto flex w-full max-w-site justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-content flex-1">
         <div id="agents" className="mb-2 scroll-mt-20 font-mono text-xs text-[var(--prui-dim)]">guides / agents</div>
-        <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Agent quickstart</h1>
-        <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
+        <h1 className="mb-1.5 text-title font-bold tracking-tight text-[var(--prui-fg)]">Agent quickstart</h1>
+        <p className="mb-8 max-w-read text-lede text-[var(--prui-dim)]">
           The whole PRUI vocabulary, packed as a skill folder in this repo. An agent with it builds a working admin app
           without reading these docs.
         </p>

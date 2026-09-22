@@ -15,7 +15,7 @@ export function CopyButton({ text }: { text: string }) {
           /* clipboard unavailable */
         }
       }}
-      className="cursor-pointer rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] px-2 py-0.5 font-mono text-[10px] text-[var(--prui-dim)] hover:text-[var(--prui-fg)]"
+      className="cursor-pointer rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] px-2 py-0.5 font-mono text-micro text-[var(--prui-dim)] hover:text-[var(--prui-fg)]"
     >
       {copied ? "copied" : "copy"}
     </button>

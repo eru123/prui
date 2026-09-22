@@ -71,7 +71,7 @@ const ThemeBuilderPage = lazy(() => import("./pages/ThemeBuilder").then((m) => (
 
 function Loading() {
   return (
-    <div className="flex min-h-[50vh] items-center justify-center font-mono text-xs text-[var(--prui-dim)]">loading…</div>
+    <div className="flex min-h-hero-sm items-center justify-center font-mono text-xs text-[var(--prui-dim)]">loading…</div>
   )
 }
 

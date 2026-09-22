@@ -43,10 +43,10 @@ export function FormsPage() {
   const [savedName, setSavedName] = React.useState<string | null>(null)
 
   return (
-    <div className="mx-auto w-full max-w-[900px] px-4 pb-20 pt-8 md:px-6">
+    <div className="mx-auto w-full max-w-content px-4 pb-20 pt-8 md:px-6">
       <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">forms</div>
-      <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Forms</h1>
-      <p className="mb-8 max-w-[62ch] text-[15px] text-[var(--prui-dim)]">
+      <h1 className="mb-1.5 text-title font-bold tracking-tight text-[var(--prui-fg)]">Forms</h1>
+      <p className="mb-8 max-w-read text-lede text-[var(--prui-dim)]">
         Higher-order form components from <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui/forms</code>:
         one input component for every type, groups with responsive columns, validation with an optional zod-shaped
         schema, and buttons that can live outside the form they control.
@@ -128,8 +128,7 @@ export function FormsPage() {
         </Hint>
         <div className="flex items-center gap-3">
           <button
-            className="prui-button inline-flex h-9 items-center rounded-[var(--prui-radius)] px-3.5 text-sm font-medium cursor-pointer"
-            style={{ background: "var(--prui-brand)", color: "var(--prui-brand-fg)" }}
+            className="prui-button inline-flex h-9 items-center rounded-[var(--prui-radius)] bg-[var(--prui-brand)] px-3.5 text-sm font-medium text-[var(--prui-brand-fg)] cursor-pointer"
             onClick={() => setModalOpen(true)}
             data-testid="open-invite"
           >
@@ -144,8 +143,8 @@ export function FormsPage() {
 
         <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="sm" ariaLabel="Invite teammate" noPadding>
           <div className="px-6 pt-6 pb-2">
-            <h2 className="text-lg font-semibold" style={{ color: "var(--prui-fg)" }}>Invite teammate</h2>
-            <p className="text-sm" style={{ color: "var(--prui-dim)" }}>They get an email invitation.</p>
+            <h2 className="text-lg font-semibold text-[var(--prui-fg)]">Invite teammate</h2>
+            <p className="text-sm text-[var(--prui-dim)]">They get an email invitation.</p>
           </div>
           <div className="px-6">
             <Form id="invite" initialValues={{ email: "" }} onSubmit={async (v) => {

@@ -32,7 +32,7 @@ export function TagInputDoc() {
           render: (
             <div className="w-full max-w-md">
               <TagInput aria-label="Tags" value={tags} onChange={setTags} placeholder="Add tag…" />
-              <p className="mt-1.5 font-mono text-[10px] text-[var(--prui-dim)]">value: {JSON.stringify(tags)}</p>
+              <p className="mt-1.5 font-mono text-micro text-[var(--prui-dim)]">value: {JSON.stringify(tags)}</p>
             </div>
           ),
           code: `const [tags, setTags] = useState(["react", "ui"])
@@ -51,7 +51,7 @@ export function TagInputDoc() {
                 placeholder="Name <email>…"
                 labelFor={(t) => t.replace(/\s*<.*$/, "")}
               />
-              <p className="mt-1.5 font-mono text-[10px] text-[var(--prui-dim)]">value: {JSON.stringify(recipients)}</p>
+              <p className="mt-1.5 font-mono text-micro text-[var(--prui-dim)]">value: {JSON.stringify(recipients)}</p>
             </div>
           ),
           code: `<TagInput
@@ -79,7 +79,7 @@ export function TagInputDoc() {
                   </span>
                 )}
               />
-              <p className="mt-1.5 font-mono text-[10px] text-[var(--prui-dim)]">try pasting: a@x.io, b@y.io</p>
+              <p className="mt-1.5 font-mono text-micro text-[var(--prui-dim)]">try pasting: a@x.io, b@y.io</p>
             </div>
           ),
           code: `<TagInput

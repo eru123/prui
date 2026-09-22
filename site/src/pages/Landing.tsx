@@ -15,11 +15,11 @@ export function LandingPage() {
   const [saved, setSaved] = useState(false)
 
   return (
-    <div className="mx-auto w-full max-w-[860px] px-4 pb-20 pt-10 md:px-6">
-      <h1 className="text-[clamp(28px,3.6vw,40px)] font-bold leading-[1.15] tracking-tight text-[var(--prui-fg)]">
+    <div className="mx-auto w-full max-w-content px-4 pb-20 pt-10 md:px-6">
+      <h1 className="text-hero font-bold tracking-tight text-[var(--prui-fg)]">
         Ship your interface once. <span className="text-[var(--prui-brand)]">Update it everywhere.</span>
       </h1>
-      <p className="mt-4 max-w-[54ch] text-base text-[var(--prui-dim)]">
+      <p className="mt-4 max-w-read text-base text-[var(--prui-dim)]">
         PRUI is a React component system you install as a dependency: app shells, data tables, forms, and theming,
         versioned and maintained in one place. Stop copying button fixes between projects. Bump a version, get the
         improvements.
@@ -31,9 +31,9 @@ export function LandingPage() {
       </div>
 
       {/* live showcase grid */}
-      <div className="mb-6 grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-3">
+      <div className="mb-6 grid grid-cards gap-3">
         <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4">
-          <div className="mb-3 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[var(--prui-dim)]">buttons</div>
+          <div className="mb-3 text-micro font-semibold uppercase tracking-widest text-[var(--prui-dim)]">buttons</div>
           <div className="flex min-h-9 flex-wrap items-center gap-2.5">
             <Button variant="primary" onClick={() => { setSaved(true); setTimeout(() => setSaved(false), 1200) }}>
               {saved ? "Saved" : "Save changes"}
@@ -59,10 +59,10 @@ export function LandingPage() {
           <LandingShowcase />
         </Suspense>
         <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4">
-          <div className="mb-3 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[var(--prui-dim)]">feedback</div>
+          <div className="mb-3 text-micro font-semibold uppercase tracking-widest text-[var(--prui-dim)]">feedback</div>
           <Suspense
             fallback={
-              <div className="flex min-h-[136px] flex-col justify-center gap-2.5" aria-hidden>
+              <div className="flex min-h-36 flex-col justify-center gap-2.5" aria-hidden>
                 <div className="h-9 animate-pulse rounded-[var(--prui-radius)] bg-[var(--prui-raise)]" />
                 <div className="h-1.5 animate-pulse rounded-full bg-[var(--prui-raise)]" />
                 <div className="h-7 w-40 animate-pulse rounded-[var(--prui-radius)] bg-[var(--prui-raise)]" />
@@ -76,15 +76,15 @@ export function LandingPage() {
 
       {/* live data table panel */}
       <div className="mb-6 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
-        <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-3 font-mono text-[11px] text-[var(--prui-dim)]">
+        <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-3 font-mono text-caption text-[var(--prui-dim)]">
           <span>data-table / live demo</span>
           <span>seeded data</span>
         </div>
-        <table className="w-full text-[13px]">
+        <table className="w-full text-xs">
           <thead>
             <tr className="text-left">
               {["Component", "Origin", "Status", "Version"].map((h) => (
-                <th key={h} className="border-b border-[var(--prui-line)] px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--prui-dim)]">{h}</th>
+                <th key={h} className="border-b border-[var(--prui-line)] px-4 py-2.5 text-caption font-semibold uppercase tracking-wider text-[var(--prui-dim)]">{h}</th>
               ))}
             </tr>
           </thead>
@@ -107,7 +107,7 @@ export function LandingPage() {
 
       {/* install terminal */}
       <div id="install" className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
-        <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-3 font-mono text-[11px] text-[var(--prui-dim)]">
+        <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-3 font-mono text-caption text-[var(--prui-dim)]">
           <span>install</span>
           <span>one dependency</span>
         </div>
@@ -115,14 +115,14 @@ export function LandingPage() {
           <div className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)]">
             <div className="flex items-center gap-1.5 border-b border-[var(--prui-line)] bg-[var(--prui-surface)] px-3 py-2">
               <i className="h-2.5 w-2.5 rounded-full bg-[var(--prui-line)]" /><i className="h-2.5 w-2.5 rounded-full bg-[var(--prui-line)]" /><i className="h-2.5 w-2.5 rounded-full bg-[var(--prui-line)]" />
-              <span className="ml-2 font-mono text-[10.5px] text-[var(--prui-dim)]">terminal</span>
+              <span className="ml-2 font-mono text-micro text-[var(--prui-dim)]">terminal</span>
               <span className="ml-auto">
-                <Suspense fallback={<span className="px-2 py-0.5 font-mono text-[10px] text-[var(--prui-dim)]">copy</span>}>
+                <Suspense fallback={<span className="px-2 py-0.5 font-mono text-micro text-[var(--prui-dim)]">copy</span>}>
                   <LazyCopyButton text={"pnpm add @skiddph/prui\n\nimport '@skiddph/prui/styles.css'\nimport { App } from '@skiddph/prui/app'"} />
                 </Suspense>
               </span>
             </div>
-            <pre className="overflow-x-auto px-4 py-4 font-mono text-[12.5px] leading-7 text-[var(--prui-fg)]">
+            <pre className="overflow-x-auto px-4 py-4 font-mono text-xs leading-7 text-[var(--prui-fg)]">
 {`# install
 pnpm add @skiddph/prui
 
@@ -131,7 +131,7 @@ import '@skiddph/prui/styles.css'
 import { App } from '@skiddph/prui/app'`}
             </pre>
           </div>
-          <p className="mt-3.5 text-[13px] text-[var(--prui-dim)]">
+          <p className="mt-3.5 text-xs text-[var(--prui-dim)]">
             Three lines and your app has the shell, the theme, and every primitive.{" "}
             <Link to="/guides" className="text-[var(--prui-brand)] hover:underline">Full installation guide</Link>
           </p>

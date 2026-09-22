@@ -22,12 +22,12 @@ const TRACE = [
 
 export function ProvenancePage() {
   return (
-    <div className="mx-auto w-full max-w-[780px] px-4 pb-20 pt-8 md:px-6">
+    <div className="mx-auto w-full max-w-content px-4 pb-20 pt-8 md:px-6">
       <div className="mb-2 flex items-center gap-2 font-mono text-xs text-[var(--prui-dim)]">
         internal / provenance <Badge variant="warn">internal-only</Badge>
       </div>
-      <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Where it comes from</h1>
-      <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
+      <h1 className="mb-1.5 text-title font-bold tracking-tight text-[var(--prui-fg)]">Where it comes from</h1>
+      <p className="mb-8 max-w-read text-lede text-[var(--prui-dim)]">
         Every shared component from the four source apps traces to a prui export (AC-9).
       </p>
       <div className="flex flex-col gap-3">

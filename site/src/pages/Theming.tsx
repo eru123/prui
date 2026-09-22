@@ -33,23 +33,23 @@ const THEME_DESC: Record<string, string> = {
 
 export function ThemingPage() {
   return (
-    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
-      <div className="min-w-0 max-w-[780px] flex-1">
+    <div className="mx-auto flex w-full max-w-site justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-content flex-1">
         <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">theming / tokens</div>
-      <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Theming</h1>
-      <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
+      <h1 className="mb-1.5 text-title font-bold tracking-tight text-[var(--prui-fg)]">Theming</h1>
+      <p className="mb-8 max-w-read text-lede text-[var(--prui-dim)]">
         Components read CSS variables only. Override one file to re-skin everything, and switch live from the header.
       </p>
 
       <section id="tokens" className="mb-10 scroll-mt-20">
         <h2 className="mb-3 text-base font-semibold text-[var(--prui-fg)]">Token reference</h2>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-2.5">
+        <div className="grid grid-tiles gap-2.5">
           {TOKENS.map((t) => (
             <div key={t.name} className="flex items-center gap-2.5 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-3">
-              <span className="h-6 w-6 shrink-0 rounded-[7px] border border-[var(--prui-line)]" style={{ background: t.color }} />
+              <span className="h-6 w-6 shrink-0 rounded-md border border-[var(--prui-line)]" style={{ background: t.color }} />
               <div className="min-w-0">
                 <div className="font-mono text-xs font-semibold text-[var(--prui-fg)]">{t.name}</div>
-                <div className="font-mono text-[11px] text-[var(--prui-dim)]">{t.value}</div>
+                <div className="font-mono text-caption text-[var(--prui-dim)]">{t.value}</div>
               </div>
             </div>
           ))}
@@ -111,13 +111,13 @@ applyTheme({ theme: 'daylight' })      // light mode`}
 
       <section id="custom" className="mb-10 scroll-mt-20">
         <h2 className="mb-3 text-base font-semibold text-[var(--prui-fg)]">Custom themes: three ways in</h2>
-        <p className="mb-4 max-w-[60ch] text-sm text-[var(--prui-dim)]">
+        <p className="mb-4 max-w-read text-sm text-[var(--prui-dim)]">
           Every component reads token variables, so a theme is just a set of values. Pick the way that fits how you
           work, or use all three together.
         </p>
 
         <h3 className="mb-2 mt-6 text-sm font-semibold text-[var(--prui-fg)]">1. Override CSS: a file of variables</h3>
-        <p className="mb-3 max-w-[60ch] text-sm text-[var(--prui-dim)]">
+        <p className="mb-3 max-w-read text-sm text-[var(--prui-dim)]">
           Write your values into a file and load it after ours. No JavaScript, works with static rendering, easy to
           hand to a designer.
         </p>
@@ -138,7 +138,7 @@ applyTheme({ theme: 'daylight' })      // light mode`}
         </p>
 
         <h3 className="mb-2 mt-6 text-sm font-semibold text-[var(--prui-fg)]">2. defineTheme(): register a named theme at runtime</h3>
-        <p className="mb-3 max-w-[60ch] text-sm text-[var(--prui-dim)]">
+        <p className="mb-3 max-w-read text-sm text-[var(--prui-dim)]">
           Registered themes behave exactly like the built-ins: they appear in the header switcher, they persist, and
           applyTheme accepts them by name. Re-calling defineTheme updates the theme live.
         </p>
@@ -160,7 +160,7 @@ applyTheme({ theme: 'midnight' })`}
         />
 
         <h3 className="mb-2 mt-6 text-sm font-semibold text-[var(--prui-fg)]">3. applyThemeTokens(): overlay values at runtime</h3>
-        <p className="mb-3 max-w-[60ch] text-sm text-[var(--prui-dim)]">
+        <p className="mb-3 max-w-read text-sm text-[var(--prui-dim)]">
           Re-skins the running app without registering anything: useful for a user-chosen accent, a per-tenant palette
           fetched from an API, or a preview. clearAppliedTokens() reverts; a storage key persists the overlay across
           reloads.
@@ -180,7 +180,7 @@ clearAppliedTokens()
 // scope an overlay to one element instead of the whole page
 applyThemeTokens({ brand: '#16a34a' }, { target: panelEl })`}
         />
-        <p className="mt-3 max-w-[60ch] text-sm text-[var(--prui-dim)]">
+        <p className="mt-3 max-w-read text-sm text-[var(--prui-dim)]">
           Or skip the code entirely: the{" "}
           <a href="/theme-builder" className="text-[var(--prui-brand)] hover:underline">theme builder</a> generates
           both outputs for you and lets you try the result on this site.
@@ -189,7 +189,7 @@ applyThemeTokens({ brand: '#16a34a' }, { target: panelEl })`}
 
       <section id="builder" className="mb-10 scroll-mt-20">
         <h2 className="mb-3 text-base font-semibold text-[var(--prui-fg)]">Theme builder</h2>
-        <p className="max-w-[60ch] text-sm text-[var(--prui-dim)]">
+        <p className="max-w-read text-sm text-[var(--prui-dim)]">
           Pick colors with real pickers, drag the radius, and the whole site re-skins in real time. Your tokens persist
           across reloads until you press Reset, and the generated CSS or JS is yours to keep.
         </p>

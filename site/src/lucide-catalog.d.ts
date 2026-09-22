@@ -2,7 +2,6 @@ import type { ComponentType } from "react"
 
 declare global {
   // set once the icons page's lazy catalog chunk has loaded
-  // eslint-disable-next-line no-var
   var __lucideIcons: Record<string, ComponentType<{ className?: string }>> | undefined
 }
 

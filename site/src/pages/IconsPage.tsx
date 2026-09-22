@@ -63,10 +63,10 @@ export function IconsPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1080px] px-4 pb-20 pt-8 md:px-6">
+    <div className="mx-auto w-full max-w-site px-4 pb-20 pt-8 md:px-6">
       <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">appearance / icons</div>
-      <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Icons</h1>
-      <p className="mb-5 max-w-[62ch] text-[15px] text-[var(--prui-dim)]">
+      <h1 className="mb-1.5 text-title font-bold tracking-tight text-[var(--prui-fg)]">Icons</h1>
+      <p className="mb-5 max-w-read text-lede text-[var(--prui-dim)]">
         Every lucide-react icon, ready to import. Click a tile to copy its import line.
       </p>
 
@@ -93,11 +93,7 @@ export function IconsPage() {
       ) : filtered.length === 0 ? (
         <p className="text-sm text-[var(--prui-dim)]">No icons match "{query}".</p>
       ) : (
-        <div
-          className="grid gap-2"
-          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(104px, 1fr))" }}
-          data-testid="icon-grid"
-        >
+        <div className="grid grid-icons gap-2" data-testid="icon-grid">
           {filtered.map(({ name, component: Icon, kebab: k }) => (
             <button
               key={name}
@@ -107,11 +103,11 @@ export function IconsPage() {
               className="group flex cursor-pointer flex-col items-center gap-1.5 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] px-2 py-3 hover:border-[var(--prui-brand)]"
             >
               <Icon className="h-5 w-5 text-[var(--prui-fg)] group-hover:text-[var(--prui-brand)]" />
-              <span className="w-full truncate text-center font-mono text-[10px] text-[var(--prui-dim)] group-hover:text-[var(--prui-fg)]">
+              <span className="w-full truncate text-center font-mono text-micro text-[var(--prui-dim)] group-hover:text-[var(--prui-fg)]">
                 {k}
               </span>
               {copied === name ? (
-                <span className="font-mono text-[9px] text-[var(--prui-ok)]">copied</span>
+                <span className="font-mono text-micro text-[var(--prui-ok)]">copied</span>
               ) : null}
             </button>
           ))}

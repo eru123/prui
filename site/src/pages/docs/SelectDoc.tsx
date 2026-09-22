@@ -67,7 +67,7 @@ export function SelectDoc() {
                   { label: "Member", value: "member" },
                 ]}
               />
-              <p className="mt-1 font-mono text-[10px] text-[var(--prui-dim)]">value: {role || "empty"}</p>
+              <p className="mt-1 font-mono text-micro text-[var(--prui-dim)]">value: {role || "empty"}</p>
             </div>
           ),
           code: `<Select

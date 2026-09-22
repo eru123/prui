@@ -35,15 +35,16 @@ import {
 
 export function DesignerPage() {
   const [params, setParams] = useSearchParams()
-  const initial = React.useMemo(() => {
+  // Decode once per mount (URL first, then the localStorage mirror). A ref
+  // holds the result so both lazy state initializers see the same value.
+  const initialRef = React.useRef<DesignerState | null>(null)
+  if (initialRef.current === null) {
     const fromUrl = params.get("c")
-    if (fromUrl) return decodeState(fromUrl)
     const saved = typeof localStorage !== "undefined" ? localStorage.getItem("prui:designer") : null
-    return saved ? decodeState(saved) : DEFAULT_STATE
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  const [state, setState] = React.useState<DesignerState>(initial)
-  const [history, setHistory] = React.useState<History<DesignerState>>(() => initHistory(initial))
+    initialRef.current = fromUrl ? decodeState(fromUrl) : saved !== null ? decodeState(saved) : DEFAULT_STATE
+  }
+  const [state, setState] = React.useState<DesignerState>(initialRef.current)
+  const [history, setHistory] = React.useState<History<DesignerState>>(() => initHistory(initialRef.current!))
   const [monacoReady, setMonacoReady] = React.useState(false)
 
   // Monaco loads lazily on this page only; the landing never touches it (AC-6)
@@ -59,7 +60,8 @@ export function DesignerPage() {
 
   const shareLink = React.useMemo(() => encodeState(state), [state])
 
-  // URL round-trip (AC-13) + localStorage mirror
+  // URL round-trip (AC-13) + localStorage mirror. The guard keeps the
+  // params dep from looping: after setParams lands, the link matches.
   React.useEffect(() => {
     if (params.get("c") !== shareLink) setParams({ c: shareLink }, { replace: true })
     try {
@@ -67,8 +69,7 @@ export function DesignerPage() {
     } catch {
       /* storage unavailable */
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shareLink])
+  }, [shareLink, params, setParams])
 
   const set = <K extends keyof DesignerState>(key: K, value: DesignerState[K]) => setState((s) => ({ ...s, [key]: value }))
 
@@ -81,16 +82,16 @@ export function DesignerPage() {
     })
   }
 
-  const onUndo = () => {
+  const onUndo = React.useCallback(() => {
     const result = undoHistory(history)
     setHistory(result.history)
     if (result.state) setState(result.state)
-  }
-  const onRedo = () => {
+  }, [history, setHistory, setState])
+  const onRedo = React.useCallback(() => {
     const result = redoHistory(history)
     setHistory(result.history)
     if (result.state) setState(result.state)
-  }
+  }, [history, setHistory, setState])
 
   // Ctrl+Z / Ctrl+Y (and cmd variants)
   React.useEffect(() => {
@@ -106,8 +107,7 @@ export function DesignerPage() {
     }
     document.addEventListener("keydown", onKey)
     return () => document.removeEventListener("keydown", onKey)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history])
+  }, [onUndo, onRedo])
 
   const onMarkUpload = (file: File) => {
     const reader = new FileReader()
@@ -122,7 +122,7 @@ export function DesignerPage() {
   const canRedo = history.index < history.stack.length - 1
 
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 pb-20 pt-6 md:px-6">
+    <div className="mx-auto w-full max-w-wide px-4 pb-20 pt-6 md:px-6">
       <div className="mb-2 flex items-center justify-between font-mono text-xs text-[var(--prui-dim)]">
         <span>designer / visual app builder</span>
         <span className="flex items-center gap-1">
@@ -135,7 +135,7 @@ export function DesignerPage() {
         </span>
       </div>
       <h1 className="mb-1 text-2xl font-bold tracking-tight text-[var(--prui-fg)]">Designer</h1>
-      <p className="mb-6 max-w-[60ch] text-sm text-[var(--prui-dim)]">
+      <p className="mb-6 max-w-read text-sm text-[var(--prui-dim)]">
         The canvas renders the real <code className="rounded bg-[var(--prui-raise)] px-1">&lt;App&gt;</code> from the package.
         Configure it on the right, drag nav items to reorder or nest, and copy the generated code. State lives in the URL.
       </p>
@@ -144,7 +144,7 @@ export function DesignerPage() {
         {/* canvas + generate */}
         <div className="min-w-0 flex-1">
           <div className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]">
-            <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-2 font-mono text-[11px] text-[var(--prui-dim)]">
+            <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-2 font-mono text-caption text-[var(--prui-dim)]">
               <span>canvas / live preview: the real &lt;App&gt;</span>
               <Badge variant="ok">live</Badge>
             </div>
@@ -166,7 +166,7 @@ export function DesignerPage() {
             <CardContent className="flex flex-col gap-5">
               {/* branding */}
               <div className="flex flex-col gap-3">
-                <div className="font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">branding</div>
+                <div className="font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">branding</div>
                 <div className="flex flex-col gap-1">
                   <Label className="text-xs" htmlFor="designer-name">App name</Label>
                   <Input id="designer-name" value={state.name} onChange={(e) => set("name", e.target.value)} className="h-8" />
@@ -194,7 +194,7 @@ export function DesignerPage() {
 
               {/* structure */}
               <div className="flex flex-col gap-3">
-                <div className="font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">structure</div>
+                <div className="font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">structure</div>
                 <label className="flex items-center justify-between text-sm text-[var(--prui-fg)]">
                   Sidebar
                   <Switch checked={state.sidebar} onChange={(c) => set("sidebar", c)} aria-label="Sidebar" />
@@ -241,7 +241,7 @@ export function DesignerPage() {
 
               {/* design */}
               <div className="flex flex-col gap-2">
-                <div className="font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">design</div>
+                <div className="font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">design</div>
                 <div className="flex flex-wrap gap-1.5">
                   {PRUI_THEMES.map((t) => (
                     <Button key={t} variant={state.theme === t ? "primary" : "default"} size="sm"
@@ -256,7 +256,7 @@ export function DesignerPage() {
                     onChange={(e) => set("tokens", { ...state.tokens, brand: e.target.value })}
                     className="h-7 w-10 cursor-pointer rounded border border-[var(--prui-line)] bg-transparent" />
                   <Input value={state.tokens.brand} onChange={(e) => set("tokens", { ...state.tokens, brand: e.target.value })}
-                    placeholder="#7c9cff" className="h-7 w-28 font-mono text-[11px]" aria-label="Brand color value" />
+                    placeholder="#7c9cff" className="input-mono h-7 w-28" aria-label="Brand color value" />
                   {state.tokens.brand ? (
                     <Button variant="ghost" size="sm" onClick={() => set("tokens", { ...state.tokens, brand: "" })}>reset</Button>
                   ) : null}
@@ -295,10 +295,10 @@ export function DesignerPage() {
 
               {/* share */}
               <div className="flex flex-col gap-1.5">
-                <div className="font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">share link</div>
+                <div className="font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">share link</div>
                 <div className="flex items-center gap-2">
                   <Input readOnly value={`${typeof window !== "undefined" ? window.location.origin + window.location.pathname : ""}?c=${shareLink.slice(0, 64)}…`}
-                    className="h-7 flex-1 font-mono text-[10px]" aria-label="Share link" />
+                    className="input-mono h-7 flex-1" aria-label="Share link" />
                   <CopyButton text={`${typeof window !== "undefined" ? window.location.origin + window.location.pathname : ""}?c=${shareLink}`} />
                 </div>
               </div>
@@ -314,7 +314,7 @@ function GenTabs({ appCode, agentPrompt, tokenCss, monacoReady }: { appCode: str
   const [tab, setTab] = React.useState<"app" | "agent">("app")
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-2 font-mono text-[11px] text-[var(--prui-dim)]">
+      <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-4 py-2 font-mono text-caption text-[var(--prui-dim)]">
         <div className="flex gap-1">
           <Button variant={tab === "app" ? "default" : "ghost"} size="sm" onClick={() => setTab("app")}>paste into my app</Button>
           <Button variant={tab === "agent" ? "default" : "ghost"} size="sm" onClick={() => setTab("agent")}>hand to my agent</Button>

@@ -100,14 +100,14 @@ export function CodeView({
 
   return (
     <div className={className ?? "relative mb-4 mt-2 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]"}>
-      <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">
+      <div className="flex items-center justify-between border-b border-[var(--prui-line)] px-3 py-1.5 font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">
         <span>{title}</span>
         <span className="flex items-center gap-1.5">
           {editable ? (
             <button
               type="button"
               onClick={reset}
-              className="cursor-pointer rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] px-2 py-0.5 font-mono text-[10px] text-[var(--prui-dim)] hover:text-[var(--prui-fg)]"
+              className="cursor-pointer rounded-[var(--prui-radius-1)] border border-[var(--prui-line)] px-2 py-0.5 font-mono text-micro text-[var(--prui-dim)] hover:text-[var(--prui-fg)]"
               aria-label="Reset code"
             >
               reset

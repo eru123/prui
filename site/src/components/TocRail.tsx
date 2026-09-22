@@ -29,8 +29,8 @@ export function TocRail({ items }: { items: { id: string; label: string }[] }) {
   if (items.length < 2) return null
 
   return (
-    <nav aria-label="On this page" className="toc-rail sticky top-[73px] hidden max-h-[calc(100vh-90px)] w-[200px] shrink-0 self-start overflow-y-auto py-10 pr-4 lg:block" data-testid="toc-rail">
-      <div className="mb-2.5 pl-3 font-semibold uppercase tracking-[0.12em] text-[var(--prui-dim)]" style={{ fontSize: "10.5px" }}>
+    <nav aria-label="On this page" className="toc-rail sticky hidden shrink-0 self-start overflow-y-auto py-10 pr-4 lg:block" data-testid="toc-rail">
+      <div className="mb-2.5 pl-3 font-semibold uppercase tracking-widest text-micro text-[var(--prui-dim)]">
         on this page
       </div>
       <ul>
@@ -40,7 +40,7 @@ export function TocRail({ items }: { items: { id: string; label: string }[] }) {
               href={`#${item.id}`}
               aria-current={active === item.id ? "location" : undefined}
               className={
-                "block border-l-2 py-1 pl-3 text-[12.5px] no-underline transition-colors " +
+                "block border-l-2 py-1 pl-3 text-xs no-underline transition-colors " +
                 (active === item.id
                   ? "border-[var(--prui-brand)] text-[var(--prui-brand)]"
                   : "border-[var(--prui-line)] text-[var(--prui-dim)] hover:text-[var(--prui-fg)]")

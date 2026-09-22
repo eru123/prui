@@ -12,7 +12,7 @@ export function LandingShowcase() {
   return (
     <>
       <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4">
-        <div className="mb-3 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[var(--prui-dim)]">inputs</div>
+        <div className="mb-3 text-micro font-semibold uppercase tracking-widest text-[var(--prui-dim)]">inputs</div>
         <div className="flex min-h-9 flex-wrap items-center gap-2.5">
           <Input placeholder="Search employees" className="h-8 w-44" />
           <Badge variant="brand">stable</Badge>
@@ -20,7 +20,7 @@ export function LandingShowcase() {
         </div>
       </div>
       <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] p-4">
-        <div className="mb-3 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[var(--prui-dim)]">controls</div>
+        <div className="mb-3 text-micro font-semibold uppercase tracking-widest text-[var(--prui-dim)]">controls</div>
         <div className="flex min-h-9 flex-wrap items-center gap-3">
           <Tabs defaultValue="details">
             <TabsList className="h-8">

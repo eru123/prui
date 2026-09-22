@@ -43,11 +43,11 @@ const APP_TOC = [
 
 export function AppLayerDoc() {
   return (
-    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
-      <div className="min-w-0 max-w-[820px] flex-1">
+    <div className="mx-auto flex w-full max-w-site justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-content flex-1">
         <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">components / app layer</div>
-        <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">App layer</h1>
-        <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
+        <h1 className="mb-1.5 text-title font-bold tracking-tight text-[var(--prui-fg)]">App layer</h1>
+        <p className="mb-8 max-w-read text-lede text-[var(--prui-dim)]">
           Config-driven super-components: the whole admin surface from props. Import from{" "}
           <code className="rounded bg-[var(--prui-raise)] px-1">@skiddph/prui/app</code>.
         </p>
@@ -111,7 +111,7 @@ export function AppLayerDoc() {
         {/* Shell layouts */}
         <section id="shell-layouts" className="mb-10 scroll-mt-20">
           <h2 className="mb-3 font-mono text-sm font-semibold text-[var(--prui-brand)]">Shell layouts</h2>
-          <p className="mb-4 max-w-[62ch] text-sm text-[var(--prui-dim)]">
+          <p className="mb-4 max-w-read text-sm text-[var(--prui-dim)]">
             One prop, four desktop arrangements, driven by CSS grid areas. Mobile always uses the drawer.
           </p>
           <div className="flex flex-col gap-8">
@@ -119,7 +119,7 @@ export function AppLayerDoc() {
               <div key={v.v}>
                 <div className="mb-2 flex items-baseline justify-between">
                   <div className="font-mono text-xs text-[var(--prui-fg)]">{v.name}</div>
-                  <div className="font-mono text-[10px] text-[var(--prui-dim)]">layoutType='{v.v}'</div>
+                  <div className="font-mono text-micro text-[var(--prui-dim)]">layoutType='{v.v}'</div>
                 </div>
                 <div className="overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)]">
                   <IframePortal title={`Shell ${v.v}`} height={360}>
@@ -140,9 +140,9 @@ export function AppLayerDoc() {
                           sidebar={{ width: 190 }}
 
                         >
-                          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                          <div className="flex flex-col gap-3">
                             {[0, 1, 2].map((i) => (
-                              <div key={i} style={{ height: 56, borderRadius: "var(--prui-radius)", border: "1px solid var(--prui-line)", background: "var(--prui-surface)" }} />
+                              <div key={i} className="h-14 rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)]" />
                             ))}
                           </div>
                         </App>
@@ -257,11 +257,11 @@ export function AppLayerDoc() {
           </p>
           <div className="grid gap-3 md:grid-cols-2">
             <div>
-              <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">AuthShell</div>
+              <div className="mb-2 font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">AuthShell</div>
               <PropsTable meta={authShellPropsMeta as PropsMeta} />
             </div>
             <div>
-              <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[var(--prui-dim)]">SessionTimeout</div>
+              <div className="mb-2 font-mono text-micro uppercase tracking-widest text-[var(--prui-dim)]">SessionTimeout</div>
               <PropsTable meta={sessionTimeoutPropsMeta as PropsMeta} />
             </div>
           </div>
@@ -275,7 +275,7 @@ export function AppLayerDoc() {
 
 function DemoHome() {
   return (
-    <div style={{ padding: 20 }}>
+    <div className="p-5">
       <div className="grid gap-3 sm:grid-cols-3">
         {[
           { label: "Headcount", value: 142, delta: "+3", icon: Users },
@@ -287,7 +287,7 @@ function DemoHome() {
               <s.icon className="h-3.5 w-3.5" aria-hidden /> {s.label}
             </div>
             <div className="pt-1 text-2xl font-semibold text-[var(--prui-fg)]">{s.value}</div>
-            <div className="text-xs" style={{ color: s.delta.startsWith("+") ? "var(--prui-ok)" : "var(--prui-danger)" }}>{s.delta}</div>
+            <div className={s.delta.startsWith("+") ? "text-xs text-[var(--prui-ok)]" : "text-xs text-[var(--prui-danger)]"}>{s.delta}</div>
           </div>
         ))}
       </div>

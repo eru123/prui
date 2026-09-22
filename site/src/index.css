@@ -1,8 +1,62 @@
 @import "tailwindcss";
 @source "../../packages/prui/src";
-@import "prui/styles.css";
+/* Relative path (not the vite alias) so both vite and @shadcn/lint's theme
+   builder resolve the same file; the vite alias maps to this exact path. */
+@import "../../packages/prui/dist/prui.css";
 
 /* site-only extras */
+
+/* Named design tokens for the site surface. Consumers must scale through
+   these (or prui tokens), never per-use arbitrary values — @shadcn/lint
+   enforces this (see eslint.config.js). */
+@theme {
+  /* Docs chrome type: micro hints (kbd, mono labels) and captions. */
+  --text-micro: 10px;
+  --text-caption: 11px;
+  /* Page scales: page lede, docs page title, and the landing hero. */
+  --text-lede: 15px;
+  --text-title: 27px;
+  --text-hero: clamp(28px, 3.6vw, 40px);
+  --text-hero--line-height: 1.15;
+  /* Layout containers: site shell, wide landing rows, docs content
+     column, and the reading measure for prose. */
+  --container-site: 1080px;
+  --container-wide: 1200px;
+  --container-content: 780px;
+  --container-read: 60ch;
+  /* Hero section minimums. */
+  --spacing-hero: 60vh;
+  --spacing-hero-sm: 50vh;
+}
+
+/* Sticky table-of-contents rail: offset clears the site header. */
+.toc-rail {
+  top: 73px;
+  max-height: calc(100vh - 90px);
+  width: 200px;
+}
+
+/* Responsive tile grids shared across pages (template only; pair with the
+   `grid` utility for display). */
+.grid-cards {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+.grid-tiles {
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+.grid-icons {
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+}
+.grid-forms {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Compact mono input chrome for tool panels (designer, theme builder). */
+.input-mono {
+  font-family: var(--prui-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  font-size: 10.5px;
+}
+
 .prui-prose p { margin-bottom: 0.75rem; }
 .prui-prose h2 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.5rem; color: var(--prui-fg); }
 .prui-prose h3 { font-size: 1rem; font-weight: 600; margin: 1rem 0 0.4rem; color: var(--prui-fg); }

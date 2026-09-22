@@ -35,7 +35,7 @@ export function TextareaDoc() {
                 placeholder="Type a message (max 140)"
                 rows={3}
               />
-              <span className="text-right font-mono text-[10px] text-[var(--prui-dim)]">{value.length}/140</span>
+              <span className="text-right font-mono text-micro text-[var(--prui-dim)]">{value.length}/140</span>
             </div>
           ),
           code: `const [value, setValue] = useState("")

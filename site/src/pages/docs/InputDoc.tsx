@@ -34,7 +34,7 @@ export function InputDoc() {
             <div className="w-72">
               <Label htmlFor="demo-email" className="mb-1.5">Email</Label>
               <Input id="demo-email" type="email" placeholder="you@example.com" value={value} onChange={(e) => setValue(e.target.value)} />
-              <p className="mt-1 font-mono text-[10px] text-[var(--prui-dim)]">value: {value || "empty"}</p>
+              <p className="mt-1 font-mono text-micro text-[var(--prui-dim)]">value: {value || "empty"}</p>
             </div>
           ),
           code: `const [value, setValue] = useState("")

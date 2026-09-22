@@ -16,11 +16,11 @@ function Guide({
   children: React.ReactNode
 }) {
   return (
-    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
-      <div className="min-w-0 max-w-[780px] flex-1 text-sm text-[var(--prui-dim)] [&_a]:text-[var(--prui-brand)] [&_a]:hover:underline [&_code]:rounded [&_code]:bg-[var(--prui-raise)] [&_code]:px-1 [&_h2]:mb-2 [&_h2]:mt-8 [&_h2]:scroll-mt-20 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-[var(--prui-fg)] [&_h3]:mb-1 [&_h3]:mt-5 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-[var(--prui-fg)] [&_li]:mb-1 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5">
+    <div className="mx-auto flex w-full max-w-site justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-content flex-1 text-sm text-[var(--prui-dim)] [&_a]:text-[var(--prui-brand)] [&_a]:hover:underline [&_code]:rounded [&_code]:bg-[var(--prui-raise)] [&_code]:px-1 [&_h2]:mb-2 [&_h2]:mt-8 [&_h2]:scroll-mt-20 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-[var(--prui-fg)] [&_h3]:mb-1 [&_h3]:mt-5 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-[var(--prui-fg)] [&_li]:mb-1 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5">
         <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">{section}</div>
-        <h1 className="mb-2 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">{title}</h1>
-        <p className="mb-6 max-w-[60ch] text-[15px]">{intro}</p>
+        <h1 className="mb-2 text-title font-bold tracking-tight text-[var(--prui-fg)]">{title}</h1>
+        <p className="mb-6 max-w-read text-lede">{intro}</p>
         {children}
       </div>
     </div>

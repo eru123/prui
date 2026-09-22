@@ -50,11 +50,11 @@ const COMPONENTS_TOC = [
 
 export function ComponentsPage() {
   return (
-    <div className="mx-auto flex w-full max-w-[1080px] justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
-      <div className="min-w-0 max-w-[780px] flex-1">
+    <div className="mx-auto flex w-full max-w-site justify-center gap-6 px-4 pb-20 pt-8 md:px-6">
+      <div className="min-w-0 max-w-content flex-1">
       <div className="mb-2 font-mono text-xs text-[var(--prui-dim)]">components / catalog</div>
-      <h1 className="mb-1.5 text-[27px] font-bold tracking-tight text-[var(--prui-fg)]">Components</h1>
-      <p className="mb-8 max-w-[60ch] text-[15px] text-[var(--prui-dim)]">
+      <h1 className="mb-1.5 text-title font-bold tracking-tight text-[var(--prui-fg)]">Components</h1>
+      <p className="mb-8 max-w-read text-lede text-[var(--prui-dim)]">
         Both layers, live. Every demo has a control panel generated from the same propsMeta that renders the props
         table and the snippet: configure it, copy it. In-depth pages live under each component in the sidebar; the
         super-components are documented in the <a href="/app-layer" className="text-[var(--prui-brand)] underline hover:underline">app layer</a>{" "}
