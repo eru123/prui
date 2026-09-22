@@ -1,5 +1,12 @@
 # @skiddph/prui
 
+## 0.18.0
+
+### Minor Changes
+
+- - rewrite component skins on the semantic utilities
+  - semantic token registry and refreshed theme palettes
+
 ## 0.17.2
 
 ### Patch Changes
