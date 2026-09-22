@@ -194,7 +194,7 @@ function Employees() {
             label: "Name",
             sortable: true,
             render: (r) => (
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <span className="inline-flex items-center gap-2">
                 <Avatar size="sm" fallback={r.name} />
                 {r.name}
               </span>

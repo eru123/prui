@@ -3,12 +3,11 @@ import { Routes, Route } from "react-router-dom"
 import { App, Resource, StatRow, type ResourceRow, type NavItem } from "@skiddph/prui/app"
 import {
   Button, Badge, Card, CardContent, Avatar, Separator, Textarea, Select, Input,
-  Progress, Timeline, Drawer, Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter,
-  confirmModal, toast, Toaster, Breadcrumb, BreadcrumbItem,
+  Progress, confirmModal, toast, Toaster,
 } from "@skiddph/prui/core"
 import { Inbox, Clock, CheckCircle2, Building2, AlertTriangle, UserCircle } from "lucide-react"
 import { Gate, SidebarUserMenu, ProfilePage } from "./auth"
-import { useLocal, readLocal, writeLocal } from "./store"
+import { useLocal, readLocal } from "./store"
 
 /* ------------------------------- model ------------------------------- */
 
@@ -247,7 +246,7 @@ function Sla() {
         {[...live]
           .sort((a, b) => (a.priority === "urgent" ? -1 : b.priority === "urgent" ? 1 : 0))
           .map((t) => {
-            const days = Math.max(0, (Date.now() - new Date(t.opened).getTime()) / 86400000)
+            const days = Math.max(0, (now - new Date(t.opened).getTime()) / 86400000)
             const budget = Math.min(100, Math.round((days / (t.slaHours / 24)) * 100))
             return (
               <Card key={t.id}>
