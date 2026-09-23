@@ -190,7 +190,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
           style={{
             paddingTop: "10vh",
             opacity: animating ? 1 : 0,
-            transition: `opacity var(--prui-duration-slow) var(--prui-ease-out)`,
+            transition: `opacity var(--prui-duration-modal, var(--prui-duration-slow)) var(--prui-ease-out)`,
           }}
           onClick={handleOverlayClick}
           onMouseDown={(e) => {
@@ -220,7 +220,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
               maxWidth: maxWidth ?? dims.width,
               transform: animating ? "scale(1) translateY(0)" : "scale(0.95) translateY(8px)",
               opacity: animating ? 1 : 0,
-              transition: `transform var(--prui-duration-slow) var(--prui-ease-out), opacity var(--prui-duration-slow) var(--prui-ease-out)`,
+              transition: `transform var(--prui-duration-modal, var(--prui-duration-slow)) var(--prui-ease-out), opacity var(--prui-duration-modal, var(--prui-duration-slow)) var(--prui-ease-out)`,
               ...style,
             }}
             onTransitionEnd={() => {
@@ -378,7 +378,7 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
         setTimeout(() => {
           cleanup()
           resolve(result)
-        }, reducedMotion ? 0 : 300)
+        }, reducedMotion ? 0 : 220)
       }
 
       const { ref: overlayRef } = useOverlay({
@@ -399,7 +399,7 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
             style={{
               paddingTop: "12vh",
               opacity: animating ? 1 : 0,
-              transition: `opacity var(--prui-duration-slow) var(--prui-ease-out)`,
+              transition: `opacity var(--prui-duration-modal, var(--prui-duration-slow)) var(--prui-ease-out)`,
             }}
           >
             <div
@@ -412,7 +412,7 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
                 minWidth: dims.minWidth,
                 transform: animating ? "scale(1) translateY(0)" : "scale(0.95) translateY(8px)",
                 opacity: animating ? 1 : 0,
-                transition: `transform var(--prui-duration-slow) var(--prui-ease-out), opacity var(--prui-duration-slow) var(--prui-ease-out)`,
+                transition: `transform var(--prui-duration-modal, var(--prui-duration-slow)) var(--prui-ease-out), opacity var(--prui-duration-modal, var(--prui-duration-slow)) var(--prui-ease-out)`,
               }}
             >
               <div className="flex items-start gap-3 p-4 pb-2">

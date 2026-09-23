@@ -207,6 +207,20 @@ describe("Modal accessibility infrastructure", () => {
     expect(onClose).toHaveBeenCalledOnce()
   })
 
+  it("modal choreography runs on the modal-scoped 200ms token", () => {
+    render(
+      <Modal open onClose={vi.fn()} ariaLabel="Timed">
+        <p>body</p>
+      </Modal>,
+    )
+    const content = screen.getByRole("dialog", { name: "Timed" })
+    expect(content.style.transition).toContain("var(--prui-duration-modal")
+    // overlay fades on the same token so fade and transform stay in sync
+    const overlay = document.querySelector(".prui-modal-overlay") as HTMLElement
+    expect(overlay.style.transition).toContain("var(--prui-duration-modal")
+
+  })
+
   it("confirmModal resolves true on confirm and false on Escape", async () => {
     const user = userEvent.setup()
     const promise = confirmModal({ title: "Sure?", message: "Really?" })
