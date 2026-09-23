@@ -141,12 +141,14 @@ export function FormsPage() {
           ) : null}
         </div>
 
-        <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="sm" ariaLabel="Invite teammate" noPadding>
-          <div className="px-6 pt-6 pb-2">
-            <h2 className="text-lg font-semibold text-[var(--prui-fg)]">Invite teammate</h2>
-            <p className="text-sm text-[var(--prui-dim)]">They get an email invitation.</p>
-          </div>
-          <div className="px-6">
+        <Modal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          size="sm"
+          title="Invite teammate"
+          description="They get an email invitation."
+        >
+          <div className="pb-1">
             <Form id="invite" initialValues={{ email: "" }} onSubmit={async (v) => {
               setSavedName(String(v.email))
               await new Promise((r) => setTimeout(r, 400))
@@ -155,7 +157,7 @@ export function FormsPage() {
               <FormInput name="email" label="Email" type="email" required placeholder="name@company.com" />
             </Form>
           </div>
-          <div className="flex items-center justify-end gap-2 px-6 pb-6 pt-4">
+          <div className="flex items-center justify-end gap-2 pt-4">
             <FormButton form="invite" action="clear" variant="ghost" size="sm">Clear</FormButton>
             <FormButton form="invite" action="submit" variant="primary" size="sm" disableWhen="invalid">Send invite</FormButton>
           </div>

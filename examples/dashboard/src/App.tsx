@@ -420,10 +420,14 @@ function Reports() {
         </Card>
       </div>
 
-      <Modal open={open} onClose={() => setOpen(false)} ariaLabel="Export" size="md" noPadding>
-        <div className="p-4">
-          <h2 className="mb-1 text-lg font-semibold">Export preview</h2>
-          <p className="mb-3 text-sm text-[var(--prui-dim)]">{employees.length} employees, generated from the store.</p>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Export preview"
+        description={`${employees.length} employees, generated from the store.`}
+        size="md"
+      >
+        <div className="p-1">
           <pre className="max-h-56 overflow-auto rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-background)] p-3 font-mono text-xs">{csv}</pre>
           <div className="mt-3 flex justify-end gap-2">
             <Button variant="ghost" onClick={() => setOpen(false)}>Close</Button>
