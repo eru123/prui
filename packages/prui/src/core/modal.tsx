@@ -36,6 +36,10 @@ export interface ModalProps {
   disableDefaultClose?: boolean
   /** When false, an overlay click shakes instead of closing. Default true. */
   closeOnOverlayClick?: boolean
+  /** Dismiss resistance. When false, overlay clicks and Escape shake the
+   * modal instead of closing it — only the close button (or a programmatic
+   * onClose from an action) dismisses. Default true. */
+  dismissible?: boolean
   size?: ModalSize
   xs?: boolean
   sm?: boolean
@@ -82,6 +86,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
     description,
     disableDefaultClose = false,
     closeOnOverlayClick = true,
+    dismissible = true,
     size,
     xs,
     sm,
@@ -102,6 +107,10 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
   const resolvedSize: ModalSize = size ?? (xs ? "xs" : sm ? "sm" : lg ? "lg" : xl ? "xl" : md ? "md" : "md")
   const headingId = React.useId()
   const descriptionId = React.useId()
+  // dismissible={false} composes the resistance: overlay AND Escape shake
+  // instead of closing; the X and programmatic onClose still work.
+  const blocksEscape = disableDefaultClose || !dismissible
+  const blocksOverlay = disableDefaultClose || !dismissible || !closeOnOverlayClick
   const [isVisible, setIsVisible] = React.useState(open)
   const [animating, setAnimating] = React.useState(false)
   const [isShaking, setIsShaking] = React.useState(false)
@@ -149,7 +158,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
   const { ref: overlayRef } = useOverlay({
     open,
     onEscape: () => {
-      if (disableDefaultClose) {
+      if (blocksEscape) {
         shake()
         return false
       }
@@ -162,7 +171,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget) return
-    if (disableDefaultClose || !closeOnOverlayClick) {
+    if (blocksOverlay) {
       // shake feedback: modal cannot be dismissed this way
       shake()
       return
@@ -456,6 +465,7 @@ export const modalPropsMeta: PropsMeta = {
     { name: "description", type: "ReactNode", default: "undefined", control: "text", description: "Second header line (needs title); wired as aria-describedby." },
     { name: "size", type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", control: "select", options: ["xs", "sm", "md", "lg", "xl"] },
     { name: "closeOnOverlayClick", type: "boolean", default: "true", control: "boolean" },
+    { name: "dismissible", type: "boolean", default: "true", control: "boolean", description: "false: overlay clicks and Escape shake instead of closing; the X and onClose still dismiss." },
     { name: "disableDefaultClose", type: "boolean", default: "false", control: "boolean" },
     { name: "noPadding", type: "boolean", default: "false", control: "boolean" },
     { name: "showCloseButton", type: "boolean", default: "true", control: "boolean" },

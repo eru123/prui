@@ -225,11 +225,12 @@ export function ModalDoc() {
     <ComponentDoc
       name="Modal"
       importPath="@skiddph/prui/core"
-      description="The production modal: a sized, animated modal surface with the full overlay contract; focus trap with restoration, topmost-only Escape, scroll lock, and an inert background; plus blocked-close shake feedback and an imperative confirmModal() that resolves a Promise."
+      description="The production modal: a sized, animated modal surface with the full overlay contract; focus trap with restoration, topmost-only Escape, scroll lock, and an inert background; plus dismiss-resistance with shake feedback (dismissible / closeOnOverlayClick / disableDefaultClose) and an imperative confirmModal() that resolves a Promise."
       when={[
         "Form dialogs that need a real header: title/description reserve the corner for the close button",
         "Content that needs the size scale (xs–xl) or custom width/padding control",
         "Flows where an overlay click must NOT dismiss (shake feedback instead)",
+        "Sensitive create forms and confirm prompts: dismissible={false} so reflex Esc/overlay clicks can't lose work",
         "Hard blockers: wizard steps where closing means losing work (disableDefaultClose)",
         "Destructive confirmations fired from anywhere: await confirmModal(...)",
         "Form dialogs with the app-layer Form (the Resource create/edit flow uses exactly this)",
@@ -274,10 +275,15 @@ export function ModalDoc() {
         },
         {
           title: "Blocking close (shake feedback)",
-          desc: "closeOnOverlayClick=false shakes on overlay clicks; disableDefaultClose also blocks Escape and hides the X.",
+          desc: "Three resistance levels: closeOnOverlayClick=false blocks overlay clicks; dismissible={false} blocks overlay AND Escape while keeping the X; disableDefaultClose also removes the X.",
           render: <BlockedDemo />,
           code: `<Modal open={open} onClose={close} closeOnOverlayClick={false}>
   <p>Overlay clicks shake instead of closing.</p>
+</Modal>
+
+{/* create forms / confirm prompts: overlay + Esc shake, only the X or an action closes */}
+<Modal open={open} onClose={close} dismissible={false} title="Create API key">
+  <Form ... />
 </Modal>
 
 <Modal open={open} onClose={close} disableDefaultClose>

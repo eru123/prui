@@ -170,6 +170,43 @@ describe("Modal accessibility infrastructure", () => {
     expect(close.className).toContain("absolute")
   })
 
+  it("dismissible=false: overlay click and Escape shake and stay open; the X still closes", async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    function Demo() {
+      const [open, setOpen] = React.useState(true)
+      return (
+        <Modal
+          open={open}
+          onClose={() => {
+            onClose()
+            setOpen(false)
+          }}
+          dismissible={false}
+          ariaLabel="Guarded"
+        >
+          <button>Body</button>
+        </Modal>
+      )
+    }
+    render(<Demo />)
+    const dialog = () => screen.getByRole("dialog", { name: "Guarded" })
+    // overlay click shakes, does not close
+    const overlay = document.querySelector(".prui-modal-overlay")!
+    await user.click(overlay)
+    expect(dialog().className).toContain("prui-modal-shake")
+    expect(dialog()).toBeInTheDocument()
+    // Escape shakes, does not close
+    await user.keyboard("{Escape}")
+    expect(dialog()).toBeInTheDocument()
+    // neither path invoked the consumer's onClose
+    expect(onClose).not.toHaveBeenCalled()
+    // the X still dismisses (the consumer onClose runs; the panel then
+    // animates out, so element removal is asserted via onClose here)
+    await user.click(screen.getByRole("button", { name: "Close modal" }))
+    expect(onClose).toHaveBeenCalledOnce()
+  })
+
   it("confirmModal resolves true on confirm and false on Escape", async () => {
     const user = userEvent.setup()
     const promise = confirmModal({ title: "Sure?", message: "Really?" })
