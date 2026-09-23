@@ -1,5 +1,13 @@
 # @skiddph/prui
 
+## 0.20.0
+
+### Minor Changes
+
+- - modal-scoped 200ms open/close animation
+  - dismissible prop — shake instead of close on overlay/Esc
+  - title/description header reserves the close-button corner
+
 ## 0.19.0
 
 ### Minor Changes
