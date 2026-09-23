@@ -41,6 +41,32 @@ export function TokensDoc() {
       <p>
         Each theme defines <code>background surface raise line fg dim brand brand-fg ok warn danger</code> plus <code>radius</code> and <code>dim-op</code>. See <Link to="/theming">Theming</Link> for overrides and custom themes.
       </p>
+      <h3 id="semantic-utilities">Semantic utilities</h3>
+      <p>
+        Since 0.18 the library's own components are styled through a semantic registry (<code>src/theme/tokens.css</code>, a Tailwind v4{' '}
+        <code>@theme inline</code> block) instead of raw <code>var()</code> classes. Projects that run Tailwind alongside prui can use the same
+        names — they compile to the runtime variables, so themes keep switching without a rebuild:
+      </p>
+      <CodeView title="css" className="mt-2 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)]" code={`/* palette — always bound to the active theme's variables */
+bg-background  bg-surface  bg-raise  bg-line     text-fg  text-dim
+bg-brand  text-brand  border-brand        bg-ok/warn/danger (+ -strong hover targets)
+
+/* surface roles — fall back through withSurface()'s --prui-s-* overrides */
+bg-primary  text-primary-fg      /* fills: brand (or the surface override) */
+bg-secondary  text-secondary-fg  /* fills: raise */
+bg-field                        /* form-control surface: background */
+bg-ghost                        /* transparent fills */
+bg-ok-fill bg-warn-fill bg-danger-fill text-on-fill
+text-accent-fg border-accent-border
+
+/* radii, elevation, type */
+rounded-prui  rounded-prui-sm  rounded-prui-md  rounded-prui-full  rounded-prui-inner
+shadow-prui-md  shadow-prui-lg  shadow-prui-modal  shadow-card  inset-shadow-highlight
+text-2xs  max-w-content  ease-prui`} />
+      <p>
+        Consumers without Tailwind get every one of these pre-compiled in <code>prui/styles.css</code>; the linter rules that keep
+        markup on this vocabulary (and out of one-off arbitrary values) are documented in the repo's <code>AGENTS.md</code>.
+      </p>
 
       <h2 id="z-index">Z-index</h2>
       <p>An ordered overlay contract; never compare raw numbers again:</p>
@@ -56,7 +82,8 @@ export function TokensDoc() {
 
       <h2 id="motion">Motion</h2>
       <p>
-        <code>duration-fast/base/slow</code> (150/200/300ms) and <code>ease-out/ease-in-out/ease-spring</code>. Components reference the tokens; the <code>prui-anim-fade/slide</code> presets and every inline transition honor <code>prefers-reduced-motion</code> (a media query zeroes animations and transitions with <code>!important</code>, and the <code>useReducedMotion()</code> hook lets components skip choreography that depends on transitionend).
+        <code>duration-fast/base/slow</code> (150/200/300ms), a modal-scoped <code>duration-modal</code> (200ms — the Modal and
+        confirmModal choreography, deliberately not the shared slow token), and <code>ease-out/ease-in-out/ease-spring</code>. Components reference the tokens; the <code>prui-anim-fade/slide</code> presets and every inline transition honor <code>prefers-reduced-motion</code> (a media query zeroes animations and transitions with <code>!important</code>, and the <code>useReducedMotion()</code> hook lets components skip choreography that depends on transitionend).
       </p>
 
       <h2 id="typography">Typography</h2>

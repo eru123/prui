@@ -170,6 +170,36 @@ skill/
 </App>`}</Code>
           </CardContent>
         </Card>
+
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Agents can't drift: the design-system linter</CardTitle>
+            <CardDescription>@shadcn/lint wired to the prui vocabulary — violations name the correct fix</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-3 text-sm text-[var(--prui-dim)]">
+              This repo lints markup with <code className="rounded bg-[var(--prui-raise)] px-1">@shadcn/lint</code>. The rules
+              recognize prui imports and reject the classic generated-UI garbage — one-off arbitrary values, raw palette colors,
+              inline styles, restyled components — and each error names the prop, variant, or token to use instead. Inline{' '}
+              <code className="rounded bg-[var(--prui-raise)] px-1">eslint-disable</code> comments are themselves errors, so an
+              agent can't silence its way to green; CI reruns the linter and releases stay blocked while anything is red.
+            </p>
+            <Code>{`// eslint.config.js (excerpt)
+"shadcn/no-restyle": ["error", { allow: ["layout"], contracts: [...] }],
+"shadcn/no-raw-colors": "error",        // bg-pink-500 -> variant or var(--prui-*)
+"shadcn/no-arbitrary-values": "error",  // p-[13px] -> scale or token class
+"shadcn/no-inline-styles": "error",
+"shadcn/require-static-classes": "error", // bg-\${color} is unlintable
+
+// run it after every change and fix everything it names
+pnpm lint   // zero errors, zero warnings`}</Code>
+            <p className="mt-3 text-sm text-[var(--prui-dim)]">
+              Copy the <code className="rounded bg-[var(--prui-raise)] px-1">shadcn/*</code> block plus{' '}
+              <code className="rounded bg-[var(--prui-raise)] px-1">componentImports: ["^@skiddph/prui(/|$)"]</code> into your own
+              project's ESLint flat config to give your agents the same guardrails.
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       <TocRail items={[{ id: "agents", label: "Agent quickstart" }]} />
