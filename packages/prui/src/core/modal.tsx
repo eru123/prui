@@ -27,6 +27,11 @@ export interface ModalProps {
   open: boolean
   onClose: () => void
   children?: React.ReactNode
+  /** Header title. When set, the close button joins an in-flow header row
+   * (title left, X right) instead of overlaying the content corner. */
+  title?: React.ReactNode
+  /** Second header line under the title (requires title). */
+  description?: React.ReactNode
   /** Block overlay/esc close (still shows the X unless hideClose). */
   disableDefaultClose?: boolean
   /** When false, an overlay click shakes instead of closing. Default true. */
@@ -73,6 +78,8 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
     open,
     onClose,
     children,
+    title,
+    description,
     disableDefaultClose = false,
     closeOnOverlayClick = true,
     size,
@@ -93,6 +100,8 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
   ref,
 ) {
   const resolvedSize: ModalSize = size ?? (xs ? "xs" : sm ? "sm" : lg ? "lg" : xl ? "xl" : md ? "md" : "md")
+  const headingId = React.useId()
+  const descriptionId = React.useId()
   const [isVisible, setIsVisible] = React.useState(open)
   const [animating, setAnimating] = React.useState(false)
   const [isShaking, setIsShaking] = React.useState(false)
@@ -188,6 +197,8 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
             role="dialog"
             aria-modal="true"
             aria-label={ariaLabel}
+            aria-labelledby={title ? headingId : undefined}
+            aria-describedby={description ? descriptionId : undefined}
             className={cn(
               "prui-modal-content relative h-fit m-auto w-full bg-surface border border-line rounded-prui-md shadow-prui-modal text-fg",
               isShaking && "prui-modal-shake",
@@ -207,13 +218,33 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
               if (!open) setIsVisible(false)
             }}
           >
+            {title ? (
+              <div className={cn("flex items-start justify-between gap-4", (children || description) && "mb-4")}>
+                <div className="min-w-0">
+                  <h2 id={headingId} className="m-0 text-lg font-semibold leading-normal text-fg">{title}</h2>
+                  {description ? (
+                    <p id={descriptionId} className="mb-0 mt-1 text-sm leading-normal text-dim">{description}</p>
+                  ) : null}
+                </div>
+                {showCloseButton && !disableDefaultClose ? (
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label="Close modal"
+                    className="-me-1 -ms-2 -mt-1 flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-prui text-dim transition-colors hover:bg-raise hover:text-fg"
+                  >
+                    <X className="h-4 w-4" aria-hidden />
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
             {children}
-            {showCloseButton && !disableDefaultClose ? (
+            {!title && showCloseButton && !disableDefaultClose ? (
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close modal"
-                className="absolute right-4 top-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-prui text-dim transition-all hover:bg-raise hover:text-fg"
+                className="absolute right-4 top-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-prui text-dim transition-colors hover:bg-raise hover:text-fg"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>
@@ -421,6 +452,8 @@ export const modalPropsMeta: PropsMeta = {
   props: [
     { name: "open", type: "boolean", default: null, control: "boolean" },
     { name: "onClose", type: "() => void", default: null, control: "none" },
+    { name: "title", type: "ReactNode", default: "undefined", control: "text", description: "In-flow header: title left, close button right; the X never overlays content." },
+    { name: "description", type: "ReactNode", default: "undefined", control: "text", description: "Second header line (needs title); wired as aria-describedby." },
     { name: "size", type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", control: "select", options: ["xs", "sm", "md", "lg", "xl"] },
     { name: "closeOnOverlayClick", type: "boolean", default: "true", control: "boolean" },
     { name: "disableDefaultClose", type: "boolean", default: "false", control: "boolean" },

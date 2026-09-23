@@ -143,6 +143,33 @@ describe("Modal accessibility infrastructure", () => {
     expect(screen.getByRole("dialog", { name: "Blocked" }).className).toContain("prui-modal-shake")
   })
 
+  it("title renders an in-flow header and the close button joins it (no overlay)", async () => {
+    render(
+      <Modal open onClose={vi.fn()} title="Edit employee" description="Changes apply immediately.">
+        <p>form body</p>
+      </Modal>,
+    )
+    const dialog = screen.getByRole("dialog", { name: "Edit employee" })
+    expect(dialog).toBeInTheDocument()
+    // title + description wired for assistive tech
+    expect(screen.getByRole("heading", { name: "Edit employee" })).toBeInTheDocument()
+    expect(dialog).toHaveAttribute("aria-describedby")
+    // the close button sits inside the header row, not absolutely positioned
+    const close = screen.getByRole("button", { name: "Close modal" })
+    expect(close.className).not.toContain("absolute")
+  })
+
+  it("without a title the close button keeps the legacy overlay corner", () => {
+    render(
+      <Modal open onClose={vi.fn()} ariaLabel="Plain">
+        <p>body</p>
+      </Modal>,
+    )
+    expect(screen.getByRole("dialog", { name: "Plain" })).toBeInTheDocument()
+    const close = screen.getByRole("button", { name: "Close modal" })
+    expect(close.className).toContain("absolute")
+  })
+
   it("confirmModal resolves true on confirm and false on Escape", async () => {
     const user = userEvent.setup()
     const promise = confirmModal({ title: "Sure?", message: "Really?" })

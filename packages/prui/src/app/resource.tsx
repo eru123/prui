@@ -452,11 +452,8 @@ export function Resource<T extends ResourceRow>({
         }}
       />
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="sm" ariaLabel={editing ? t.editEntity.replace("{name}", singular) : t.newEntity.replace("{name}", singular)} noPadding>
-          <div className="px-8 pt-8 pb-2">
-            <h2 className="text-lg font-semibold" style={{ color: "var(--prui-fg)" }}>{editing ? t.editEntity.replace("{name}", singular) : t.newEntity.replace("{name}", singular)}</h2>
-          </div>
-          <div className="px-8 pb-8">
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="sm" title={editing ? t.editEntity.replace("{name}", singular) : t.newEntity.replace("{name}", singular)}>
+          <div className="pb-2">
             {form ?? (
               <Form
                 schema={effectiveSchema}

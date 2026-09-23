@@ -121,11 +121,14 @@ function FormDemo() {
   return (
     <>
       <Button size="sm" onClick={() => setOpen(true)}>Edit employee</Button>
-      <Modal open={open} onClose={() => setOpen(false)} size="sm" noPadding ariaLabel="Edit employee">
-        <div className="px-8 pb-2 pt-8">
-          <h2 className="text-lg font-semibold">Edit employee</h2>
-        </div>
-        <div className="px-8 pb-8">
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        size="sm"
+        title="Edit employee"
+        description="Changes apply immediately."
+      >
+        <div className="pb-2">
           <Form
             schema={{
               fields: [
@@ -224,6 +227,7 @@ export function ModalDoc() {
       importPath="@skiddph/prui/core"
       description="The production modal: a sized, animated modal surface with the full overlay contract; focus trap with restoration, topmost-only Escape, scroll lock, and an inert background; plus blocked-close shake feedback and an imperative confirmModal() that resolves a Promise."
       when={[
+        "Form dialogs that need a real header: title/description reserve the corner for the close button",
         "Content that needs the size scale (xs–xl) or custom width/padding control",
         "Flows where an overlay click must NOT dismiss (shake feedback instead)",
         "Hard blockers: wizard steps where closing means losing work (disableDefaultClose)",
@@ -233,7 +237,7 @@ export function ModalDoc() {
       anatomy={
         <div className="flex flex-col gap-2">
           <p>
-            <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Modal open onClose size padding noPadding maxWidth closeOnOverlayClick disableDefaultClose showCloseButton initialFocus ariaLabel&gt;</code>:
+            <code className="rounded bg-[var(--prui-raise)] px-1">&lt;Modal open onClose title description size padding noPadding maxWidth closeOnOverlayClick dismissible disableDefaultClose showCloseButton initialFocus ariaLabel&gt;</code>:
             one element renders the overlay + panel; children are yours.
           </p>
           <p>
@@ -297,15 +301,17 @@ const save = async () => {
 <Button variant="primary" size="sm" loading={saving} onClick={save}>Save</Button>`,
         },
         {
-          title: "Form dialog (noPadding + sections)",
-          desc: "the Resource pattern: header and body as separately padded sections with the schema Form.",
+          title: "Form dialog with a title header",
+          desc: "the Resource pattern: title (and optional description) reserve the corner in-flow, so the close button never overlays the first field.",
           render: <FormDemo />,
-          code: `<Modal open={open} onClose={close} size="sm" noPadding ariaLabel="Edit employee">
-  <div className="px-8 pb-2 pt-8"><h2 className="text-lg font-semibold">Edit employee</h2></div>
-  <div className="px-8 pb-8">
-    <Form schema={schema} initialValues={row} onCancel={close} onSubmit={save} />
-  </div>
-</Modal>`,
+          code: `<Modal open={open} onClose={close} size="sm"
+  title="Edit employee"
+  description="Changes apply immediately."
+>
+  <Form schema={schema} initialValues={row} onCancel={close} onSubmit={save} />
+</Modal>
+
+{/* no title -> the X overlays the corner like before (backward compatible) */}`,
         },
         {
           title: "Long content scrolls",
