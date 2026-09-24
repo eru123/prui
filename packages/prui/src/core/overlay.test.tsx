@@ -241,6 +241,29 @@ describe("Modal accessibility infrastructure", () => {
     expect(screen.getByRole("dialog", { name: "Add product" })).toBeInTheDocument()
   })
 
+  it("DropdownItem renders a leading icon that inherits the row color", async () => {
+    const user = userEvent.setup()
+    const onSelect = vi.fn()
+    render(
+      <Dropdown
+        trigger={<button>Actions</button>}
+        items={[
+          { label: "Edit", icon: <svg data-testid="edit-icon" />, onSelect },
+          { label: "Delete", icon: <svg data-testid="delete-icon" />, danger: true, onSelect },
+        ]}
+      />,
+    )
+    await user.click(screen.getByText("Actions"))
+    const edit = screen.getByRole("menuitem", { name: "Edit" })
+    expect(edit.querySelector("[data-testid=edit-icon]")).toBeInTheDocument()
+    // the icon span carries no color of its own: currentColor flows from the row
+    const iconSlot = edit.querySelector("span[aria-hidden]")!
+    expect(iconSlot.className).not.toMatch(/text-(danger|fg|dim)/)
+    const del = screen.getByRole("menuitem", { name: "Delete" })
+    expect(del.querySelector("[data-testid=delete-icon]")).toBeInTheDocument()
+    expect(del.className).toContain("text-danger")
+  })
+
   it("confirmModal resolves true on confirm and false on Escape", async () => {
     const user = userEvent.setup()
     const promise = confirmModal({ title: "Sure?", message: "Really?" })

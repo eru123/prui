@@ -16,6 +16,9 @@ import type { PropsMeta } from "./props-meta"
 export interface DropdownItem {
   label: string
   onSelect?: () => void
+  /** Leading slot (e.g. a lucide icon), sized to the row; inherits the
+   * item's text color (muted rows, danger rows). */
+  icon?: React.ReactNode
   danger?: boolean
   disabled?: boolean
   separatorBefore?: boolean
@@ -261,12 +264,17 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(function
                     item.onSelect?.()
                   }}
                   className={cn(
-                    "flex w-full items-center rounded-prui-inner px-2.5 py-1.5 text-left text-sm",
+                    "flex w-full items-center gap-2 rounded-prui-inner px-2.5 py-1.5 text-left text-sm",
                     "hover:bg-raise focus-visible:bg-raise outline-none cursor-pointer disabled:opacity-50 disabled:pointer-events-none",
                     item.danger ? "text-danger" : "text-fg",
                   )}
                 >
-                  {item.label}
+                  {item.icon ? (
+                    <span aria-hidden className="inline-flex shrink-0 opacity-80 [&>svg]:h-4 [&>svg]:w-4">
+                      {item.icon}
+                    </span>
+                  ) : null}
+                  <span className="min-w-0 truncate">{item.label}</span>
                 </button>
               </React.Fragment>
             ))}
