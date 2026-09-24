@@ -25,6 +25,27 @@ test.describe("docs site smoke (built with prui)", () => {
     await expect(page.getByRole("heading", { name: "Button", exact: true })).toBeVisible()
   })
 
+  test("a tall nav never spills into the document scrollbar (issue #6)", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 480 })
+    await page.goto("/components")
+    await page.waitForLoadState("networkidle")
+    // expand every nav group so the tree far exceeds the viewport
+    for (const g of await page.locator("[data-testid=sidebar] button[aria-expanded='false']").all()) {
+      await g.click().catch(() => {})
+    }
+    await page.waitForTimeout(300)
+    const m = await page.evaluate(() => ({
+      doc: document.documentElement.scrollHeight,
+      inner: window.innerHeight,
+      navScrolls: (() => {
+        const el = document.querySelector(".prui-shell-sidebar .overflow-y-auto")
+        return (el?.scrollHeight ?? 0) > (el?.clientHeight ?? 0)
+      })(),
+    }))
+    expect(m.doc).toBeLessThanOrEqual(m.inner + 1)
+    expect(m.navScrolls).toBe(true)
+  })
+
   test("command palette opens on / and filters", async ({ page }) => {
     await page.goto("/")
     await page.waitForLoadState("networkidle")

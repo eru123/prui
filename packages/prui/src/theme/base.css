@@ -257,6 +257,7 @@ body.modal-open { overflow: hidden; }
     display: flex;
     flex-direction: column;
     min-height: 0;
+    max-height: 100dvh;
     border-right: 1px solid var(--prui-line);
     background: var(--prui-surface);
   }
@@ -281,6 +282,10 @@ body.modal-open { overflow: hidden; }
     flex-direction: column;
     grid-area: sidebar;
     min-height: 0;
+    /* the sidebar never outgrows the viewport, even when a consumer wrapper
+       breaks the shell's height contract: a tall nav scrolls inside the
+       sidebar instead of spilling into the document scrollbar */
+    max-height: 100dvh;
     border-right: 1px solid var(--prui-line);
     background: var(--prui-surface);
   }
