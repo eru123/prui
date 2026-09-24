@@ -169,14 +169,16 @@ export function RadioDoc() {
 
 export function ComboboxDoc() {
   const [assignee, setAssignee] = React.useState("")
+  const [category, setCategory] = React.useState("")
   return (
     <ComponentDoc
       name="Combobox"
       importPath="@skiddph/prui/core"
-      description="The editable Select: type to filter, arrows to walk matches, Enter to pick. Full ARIA 1.2 combobox semantics with aria-activedescendant, a portaled listbox anchored under the input, and controlled or uncontrolled values."
+      description="The editable Select: type to filter, arrows to walk matches, Enter to pick. Full ARIA 1.2 combobox semantics with aria-activedescendant, a portaled listbox anchored under the input, and controlled or uncontrolled values. Select-or-create mode (allowCreate) also accepts typed values that match no option."
       when={[
         "Selectable lists too long for radios (users, tags, cities)",
         "Choices the user may know by name; typing beats scrolling",
+        "Free-text fields that should still suggest existing values (categories, tags) — allowCreate",
         "Anywhere a Select fits but search would speed it up"
       ]}
       anatomy={
@@ -211,6 +213,31 @@ export function ComboboxDoc() {
   value={assignee}
   onChange={setAssignee}
   options={users.map(u => ({ label: u.name, value: u.id }))}
+/>`,
+        },
+        {
+          title: "Select-or-create (allowCreate)",
+          desc: "typed values that match no option show a Create row; Enter/click/Tab/blur commit the typed string via onChange — picked or typed, the field ends up with the final value.",
+          render: (
+            <div className="w-64">
+              <Combobox
+                aria-label="Category"
+                placeholder="Pick or type a category…"
+                value={category}
+                onChange={setCategory}
+                allowCreate
+                createText="Create category"
+                options={["mlbb", "hoyo", "riot"].map((c) => ({ label: c, value: c }))}
+              />
+            </div>
+          ),
+          code: `<Combobox
+  aria-label="Category"
+  value={category}
+  onChange={setCategory}          // fires with "mlbb" (picked) OR "my-new-cat" (typed)
+  allowCreate                     // a Create row appears for non-matches
+  createText="Create category"
+  options={existing.map(c => ({ label: c, value: c }))}
 />`,
         },
         {

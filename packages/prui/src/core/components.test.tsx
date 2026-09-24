@@ -1,3 +1,70 @@
+describe("Combobox select-or-create (allowCreate)", () => {
+  const options = [
+    { label: "mlbb", value: "mlbb" },
+    { label: "hoyo", value: "hoyo" },
+  ]
+
+  it("typing a non-match shows a create row; Enter commits the typed value", async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<Combobox options={options} allowCreate onChange={onChange} aria-label="Category" />)
+    const input = screen.getByRole("combobox", { name: "Category" })
+    await user.click(input)
+    await user.type(input, "my-new-cat")
+    const create = await screen.findByTestId("combobox-create")
+    expect(create).toHaveTextContent('Create "my-new-cat"')
+    await user.type(input, "{Enter}")
+    expect(onChange).toHaveBeenLastCalledWith("my-new-cat")
+    // the field keeps the free-typed value after the listbox closes
+    expect(input).toHaveValue("my-new-cat")
+    expect(screen.queryByRole("listbox")).toBeNull()
+  })
+
+  it("picking an existing option still fires onChange with its value", async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<Combobox options={options} allowCreate onChange={onChange} aria-label="Category" />)
+    const input = screen.getByRole("combobox", { name: "Category" })
+    await user.click(input)
+    await user.click(screen.getByRole("option", { name: "hoyo" }))
+    expect(onChange).toHaveBeenLastCalledWith("hoyo")
+  })
+
+  it("Tab commits the typed free text like a native datalist input", async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<Combobox options={options} allowCreate onChange={onChange} aria-label="Category" />)
+    const input = screen.getByRole("combobox", { name: "Category" })
+    await user.click(input)
+    await user.type(input, "riot")
+    await user.tab()
+    expect(onChange).toHaveBeenLastCalledWith("riot")
+    expect(input).toHaveValue("riot")
+  })
+
+  it("without allowCreate there is no create row and typed text stays a filter", async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<Combobox options={options} onChange={onChange} aria-label="Category" />)
+    const input = screen.getByRole("combobox", { name: "Category" })
+    await user.click(input)
+    await user.type(input, "my-new-cat")
+    expect(screen.queryByTestId("combobox-create")).toBeNull()
+    await user.tab()
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it("an exact option match never offers to create it", async () => {
+    const user = userEvent.setup()
+    render(<Combobox options={options} allowCreate onChange={vi.fn()} aria-label="Category" />)
+    const input = screen.getByRole("combobox", { name: "Category" })
+    await user.click(input)
+    await user.type(input, "MLBB")
+    expect(screen.queryByTestId("combobox-create")).toBeNull()
+    expect(screen.getByRole("option", { name: "mlbb" })).toBeInTheDocument()
+  })
+})
+
 import * as React from "react"
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { render, screen, cleanup, act, waitFor } from "@testing-library/react"
