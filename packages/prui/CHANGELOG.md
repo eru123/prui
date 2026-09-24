@@ -1,5 +1,17 @@
 # @skiddph/prui
 
+## 0.21.0
+
+### Minor Changes
+
+- - contracts for the six issue fixes
+  - optional totalPages/totalRows on DataTablePagination
+  - leading icon slot on DropdownItem
+  - the visible title wins the accessible name over ariaLabel
+  - router=react-router reuses the ambient router
+  - tall nav can no longer spill into the document scrollbar
+  - headers align with their column by default
+
 ## 0.20.0
 
 ### Minor Changes
