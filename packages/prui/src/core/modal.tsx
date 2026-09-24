@@ -220,7 +220,12 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
               padding: pad,
               minWidth: dims.minWidth,
               maxWidth: maxWidth ?? dims.width,
-              transform: animating ? "scale(1) translateY(0)" : "scale(0.95) translateY(8px)",
+              // settled panels carry NO transform: even an identity transform
+              // creates a containing block and breaks native popup anchoring
+              // (datalist/autocomplete) inside the modal. Transitions
+              // interpolate transform <-> none (identity), so the open/close
+              // choreography is unchanged for viewers.
+              transform: animating ? undefined : "scale(0.95) translateY(8px)",
               opacity: animating ? 1 : 0,
               transition: `transform var(--prui-duration-modal, var(--prui-duration-slow)) var(--prui-ease-out), opacity var(--prui-duration-modal, var(--prui-duration-slow)) var(--prui-ease-out)`,
               ...style,
@@ -412,7 +417,12 @@ export function confirmModal(options: ConfirmModalOptions): Promise<boolean> {
               style={{
                 width: dims.width,
                 minWidth: dims.minWidth,
-                transform: animating ? "scale(1) translateY(0)" : "scale(0.95) translateY(8px)",
+                // settled panels carry NO transform: even an identity transform
+              // creates a containing block and breaks native popup anchoring
+              // (datalist/autocomplete) inside the modal. Transitions
+              // interpolate transform <-> none (identity), so the open/close
+              // choreography is unchanged for viewers.
+              transform: animating ? undefined : "scale(0.95) translateY(8px)",
                 opacity: animating ? 1 : 0,
                 transition: `transform var(--prui-duration-modal, var(--prui-duration-slow)) var(--prui-ease-out), opacity var(--prui-duration-modal, var(--prui-duration-slow)) var(--prui-ease-out)`,
               }}

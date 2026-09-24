@@ -264,6 +264,25 @@ describe("Modal accessibility infrastructure", () => {
     expect(del.className).toContain("text-danger")
   })
 
+  it("a settled modal carries no inline transform (native popup anchoring)", async () => {
+    const user = userEvent.setup()
+    render(
+      <Modal open onClose={vi.fn()} ariaLabel="Form modal">
+        <input list="regions" aria-label="Region" />
+      </Modal>,
+    )
+    const dialog = screen.getByRole("dialog", { name: "Form modal" })
+    // entry: the from-state is on the element until the animation settles…
+    expect(dialog.style.transform).toContain("scale(0.95)")
+    // …(the settle timer fires 10ms after open) then the transform is
+    // dropped entirely: an identity transform would still create a
+    // containing block and break datalist popup anchoring
+    await new Promise((r) => setTimeout(r, 60))
+    expect(dialog.style.transform).toBe("")
+    expect(dialog.style.opacity).toBe("1")
+    void user
+  })
+
   it("confirmModal resolves true on confirm and false on Escape", async () => {
     const user = userEvent.setup()
     const promise = confirmModal({ title: "Sure?", message: "Really?" })
