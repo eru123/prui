@@ -18,10 +18,19 @@ export interface DataTablePaginationProps {
   /** 1-based logical page number, maintained by the caller from cursor movements. */
   page: number
   pageSize?: number
-  /** Whether a next page exists (nextCursor truthy). */
+  /** Whether a next page exists (nextCursor truthy). Superseded for the
+   * next button when totalPages is provided. */
   hasNextPage: boolean
   /** Whether a previous page exists. */
   hasPreviousPage: boolean
+  /** When the server count is known: renders "Page N of M" and disables
+   * next on the last page. Omit for cursor mode (renders "Page N"). */
+  totalPages?: number
+  /** When the row count is known: renders the total beside the page-size
+   * select ("1,024 items" — pair with rowsLabel to rename the unit). */
+  totalRows?: number
+  /** Unit word after totalRows. Default "items". */
+  rowsLabel?: string
   onPageChange?: (page: number, direction: "next" | "prev") => void
   onPageSizeChange?: (size: number) => void
   pageSizeOptions?: number[]
@@ -33,12 +42,16 @@ export function DataTablePagination({
   pageSize = 20,
   hasNextPage,
   hasPreviousPage,
+  totalPages,
+  totalRows,
+  rowsLabel = "items",
   onPageChange,
   onPageSizeChange,
   pageSizeOptions = [10, 20, 50, 100],
   className,
 }: DataTablePaginationProps) {
   const { t } = usePruiI18n()
+  const nextPageDisabled = totalPages !== undefined ? page >= totalPages : !hasNextPage
   return (
     <div className={className ?? "flex items-center justify-between gap-2 py-2"}>
       <div className="flex items-center gap-2 text-sm text-dim">
@@ -61,10 +74,15 @@ export function DataTablePagination({
             </SelectContent>
           </Select>
         </div>
+        {totalRows !== undefined ? (
+          <span className="text-sm text-dim" data-testid="pagination-total">
+            {totalRows.toLocaleString()} {rowsLabel}
+          </span>
+        ) : null}
       </div>
       <div className="flex items-center gap-2">
         <span className="text-sm text-dim" data-testid="pagination-page">
-          {`${t.page} ${page}`}
+          {totalPages !== undefined ? `${t.page} ${page} ${t.of} ${totalPages}` : `${t.page} ${page}`}
         </span>
         <Button
           variant="default"
@@ -79,7 +97,7 @@ export function DataTablePagination({
           variant="default"
           size="icon"
           aria-label={t.nextPage}
-          disabled={!hasNextPage}
+          disabled={nextPageDisabled}
           onClick={() => onPageChange?.(page + 1, "next")}
         >
           <ChevronRight className="h-4 w-4" aria-hidden />
@@ -96,6 +114,9 @@ export const dataTablePaginationPropsMeta: PropsMeta = {
     { name: "pageSize", type: "number", default: "20", control: "select", options: ["10", "20", "50", "100"] },
     { name: "hasNextPage", type: "boolean", default: null, control: "boolean" },
     { name: "hasPreviousPage", type: "boolean", default: null, control: "boolean" },
+    { name: "totalPages", type: "number", default: "undefined", control: "number", description: "Renders 'Page N of M'; next disables on the last page." },
+    { name: "totalRows", type: "number", default: "undefined", control: "number", description: "Row total beside the page-size select." },
+    { name: "rowsLabel", type: "string", default: "'items'", control: "text" },
     { name: "onPageChange", type: "(page, direction) => void", default: null, control: "none" },
     { name: "onPageSizeChange", type: "(size) => void", default: null, control: "none" },
   ],

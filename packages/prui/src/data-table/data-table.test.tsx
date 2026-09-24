@@ -56,6 +56,29 @@ describe("DataTable", () => {
     expect(ths[0]!.className).not.toContain("text-center")
   })
 
+  it("pagination: totals render Page N of M and the row count; cursor mode unchanged", async () => {
+    const user = userEvent.setup()
+    const onNext = vi.fn()
+    const { rerender } = render(
+      <DataTablePagination page={2} hasNextPage hasPreviousPage totalPages={4} onPageChange={onNext} />,
+    )
+    expect(screen.getByTestId("pagination-page")).toHaveTextContent("Page 2 of 4")
+    // next disables on the last page even if a stale cursor claims more
+    rerender(<DataTablePagination page={4} hasNextPage hasPreviousPage totalPages={4} onPageChange={onNext} />)
+    expect(screen.getByRole("button", { name: /next page/i })).toBeDisabled()
+    // row total beside the page-size select
+    rerender(
+      <DataTablePagination page={4} hasNextPage={false} hasPreviousPage totalPages={4} totalRows={1024} onPageChange={onNext} />,
+    )
+    expect(screen.getByTestId("pagination-total")).toHaveTextContent("1,024 items")
+    // cursor mode: no totals anywhere
+    rerender(<DataTablePagination page={2} hasNextPage hasPreviousPage onPageChange={onNext} />)
+    expect(screen.getByTestId("pagination-page")).toHaveTextContent(/^Page 2$/)
+    expect(screen.queryByTestId("pagination-total")).toBeNull()
+    await user.click(screen.getByRole("button", { name: /next page/i }))
+    expect(onNext).toHaveBeenCalledWith(3, "next")
+  })
+
   it("uncontrolled sorting: asc then desc then cleared", async () => {
     const user = userEvent.setup()
     render(<DataTable columns={columns} rows={rows} />)
