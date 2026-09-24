@@ -37,6 +37,25 @@ describe("DataTable", () => {
     expect(screen.getByText("Cara")).toBeInTheDocument()
   })
 
+  it("headers align with their column (left default, right/center respected)", () => {
+    render(
+      <DataTable
+        columns={[
+          { key: "a", header: "Plain" },
+          { key: "b", header: "Right", align: "right" },
+          { key: "c", header: "Center", align: "center" },
+        ]}
+        rows={[{ a: 1, b: 2, c: 3 }]}
+      />,
+    )
+    const ths = screen.getAllByRole("columnheader")
+    expect(ths[0]!.className).toContain("text-left")
+    expect(ths[1]!.className).toContain("text-right")
+    expect(ths[2]!.className).toContain("text-center")
+    // the cells keep their own default; the header now matches it
+    expect(ths[0]!.className).not.toContain("text-center")
+  })
+
   it("uncontrolled sorting: asc then desc then cleared", async () => {
     const user = userEvent.setup()
     render(<DataTable columns={columns} rows={rows} />)

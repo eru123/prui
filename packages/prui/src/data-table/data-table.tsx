@@ -243,6 +243,9 @@ export function DataTable<T extends Record<string, unknown>>({
                   style={col.width !== undefined ? { width: col.width } : undefined}
                   className={cn(
                     "px-3 py-2 text-xs font-medium uppercase tracking-wide text-dim",
+                    // <th> defaults to center in the UA stylesheet; a header
+                    // sits over its cells, which are left-aligned by default
+                    !col.align && "text-left",
                     col.align === "right" && "text-right",
                     col.align === "center" && "text-center",
                   )}
