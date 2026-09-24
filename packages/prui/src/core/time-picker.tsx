@@ -383,7 +383,7 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
             role="dialog"
             aria-label={ariaLabel ?? "Choose time"}
             data-prui-time-panel-wrap
-            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-prui border border-line bg-surface p-2 shadow-prui-lg"
+            className="fixed z-[var(--prui-z-floating)] rounded-prui border border-line bg-surface p-2 shadow-prui-lg"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
             <TimePanel value={value} onSelect={select} minuteStep={minuteStep} seconds={seconds} hour12={hour12} min={min} max={max} />
@@ -478,7 +478,7 @@ export const TimeRangePicker = React.forwardRef<HTMLInputElement, TimeRangePicke
             role="dialog"
             aria-label={ariaLabel ?? "Choose time range"}
             data-prui-time-panel-wrap
-            className="fixed z-[calc(var(--prui-z-modal,10000)+1)] rounded-prui border border-line bg-surface p-3 shadow-prui-lg"
+            className="fixed z-[var(--prui-z-floating)] rounded-prui border border-line bg-surface p-3 shadow-prui-lg"
             style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           >
             <div className="flex flex-col gap-3">

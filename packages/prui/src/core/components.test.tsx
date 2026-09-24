@@ -63,6 +63,84 @@ describe("Combobox select-or-create (allowCreate)", () => {
     expect(screen.queryByTestId("combobox-create")).toBeNull()
     expect(screen.getByRole("option", { name: "mlbb" })).toBeInTheDocument()
   })
+
+  it("keyboard highlight moves onto the options past the create row", async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<Combobox options={options} allowCreate onChange={onChange} aria-label="Category" />)
+    const input = screen.getByRole("combobox", { name: "Category" })
+    await user.click(input)
+    await user.type(input, "h") // filters to hoyo; index 0 is the create row
+    expect(screen.getByTestId("combobox-create")).toHaveAttribute("data-active")
+    await user.keyboard("{ArrowDown}") // onto hoyo
+    expect(screen.getByRole("option", { name: "hoyo" }).className).toContain("bg-raise")
+    expect(screen.getByTestId("combobox-create")).not.toHaveAttribute("data-active")
+    await user.keyboard("{Enter}")
+    expect(onChange).toHaveBeenLastCalledWith("hoyo")
+  })
+
+  it("aria-activedescendant tracks the create row, then the options", async () => {
+    const user = userEvent.setup()
+    render(<Combobox options={options} allowCreate onChange={vi.fn()} aria-label="Category" />)
+    const input = screen.getByRole("combobox", { name: "Category" })
+    await user.click(input)
+    await user.type(input, "h")
+    const listboxId = input.getAttribute("aria-controls")!
+    expect(input).toHaveAttribute("aria-activedescendant", `${listboxId}-option-create`)
+    await user.keyboard("{ArrowDown}")
+    expect(input).toHaveAttribute("aria-activedescendant", `${listboxId}-option-1`)
+  })
+})
+
+describe("Floating surfaces layer above Modal (--prui-z-floating)", () => {
+  // every portaled surface must reference the floating layer token, so it
+  // clears Modal (10000) and Confirm (10010) instead of the old overlay (50)
+  const floating = (selector: string) =>
+    expect(document.querySelector(selector)!.className).toContain("z-[var(--prui-z-floating)]")
+
+  it("combobox listbox", async () => {
+    const user = userEvent.setup()
+    render(<Combobox options={[{ label: "A", value: "a" }]} aria-label="Cat" />)
+    await user.click(screen.getByRole("combobox", { name: "Cat" }))
+    floating(".prui-combobox-content")
+  })
+
+  it("select listbox", async () => {
+    const user = userEvent.setup()
+    render(<Select options={[{ label: "A", value: "a" }]} aria-label="Pick" />)
+    await user.click(screen.getByRole("combobox", { name: "Pick" }))
+    floating(".prui-select-content")
+  })
+
+  it("popover panel", async () => {
+    const user = userEvent.setup()
+    render(
+      <Popover ariaLabel="Filters" trigger={<button>Filter</button>}>
+        Body
+      </Popover>,
+    )
+    await user.click(screen.getByRole("button", { name: "Filter" }))
+    floating(".prui-popover")
+  })
+
+  it("tooltip", async () => {
+    const user = userEvent.setup()
+    render(
+      <Tooltip content="Save the document">
+        <button>Save</button>
+      </Tooltip>,
+    )
+    await user.hover(screen.getByRole("button", { name: "Save" }))
+    await screen.findByRole("tooltip")
+    floating(".prui-tooltip")
+  })
+
+  it("dropdown menu", async () => {
+    const user = userEvent.setup()
+    render(<Dropdown trigger={<button>Actions</button>} items={[{ label: "A", onSelect: vi.fn() }]} />)
+    await user.click(screen.getByRole("button", { name: "Actions" }))
+    floating(".prui-dropdown-menu")
+  })
 })
 
 import * as React from "react"
@@ -76,6 +154,8 @@ import { Progress } from "./progress"
 import { Toaster, toast, dismissAllToasts } from "./toast"
 import { Tooltip } from "./tooltip"
 import { Popover } from "./popover"
+import { Dropdown } from "./dropdown"
+import { Select } from "./select"
 import { Checkbox } from "./checkbox"
 import { RadioGroup, Radio } from "./radio"
 import { Combobox } from "./combobox"

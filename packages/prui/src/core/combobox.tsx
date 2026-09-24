@@ -217,7 +217,13 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-controls={open ? listboxId : undefined}
-        aria-activedescendant={open && (canCreate || filtered[activeIndex - (canCreate ? 1 : 0)]) ? `${listboxId}-option-${activeIndex}` : undefined}
+        aria-activedescendant={
+          open && (canCreate || filtered[activeIndex - (canCreate ? 1 : 0)])
+            ? canCreate && activeIndex === 0
+              ? `${listboxId}-option-create`
+              : `${listboxId}-option-${activeIndex}`
+            : undefined
+        }
         aria-autocomplete="list"
         autoComplete="off"
         disabled={disabled}
@@ -260,7 +266,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
             tabIndex={-1}
             data-state="open"
             className={cn(
-              "prui-combobox-content fixed z-[var(--prui-z-overlay)] min-w-40 max-h-60 overflow-auto p-1",
+              "prui-combobox-content fixed z-[var(--prui-z-floating)] min-w-40 max-h-60 overflow-auto p-1",
               "border border-line rounded-prui bg-surface shadow-prui-md",
             )}
             style={{
@@ -312,7 +318,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
                     onClick={() => pick(opt)}
                     className={cn(
                       "flex cursor-pointer items-center rounded-prui-inner px-3 py-1.5 text-sm text-fg",
-                      i === activeIndex && "bg-raise",
+                      row === activeIndex && "bg-raise",
                       isSelected && "font-medium",
                       opt.disabled && "opacity-50 pointer-events-none",
                     )}

@@ -15,13 +15,14 @@ ever reference the variables, so a single override file re-skins everything.
      Never hardcode a z value in a component; reference one of these so
      overlay stacking stays an ordered, documented contract.
      header 30 < drawer 40 < overlay 50 < flyout 60 < tooltip 70
-     < modal 10000 < confirm 10010 < toast 10100                        */
+     < modal 10000 < floating 10001 < confirm 10010 < toast 10100       */
   --prui-z-header: 30;        /* sticky app header */
   --prui-z-drawer: 40;        /* mobile navigation drawer */
-  --prui-z-overlay: 50;       /* dialogs, palettes, anchored menus */
+  --prui-z-overlay: 50;       /* non-modal dialogs and palettes */
   --prui-z-flyout: 60;        /* collapsed-rail nav flyout */
-  --prui-z-tooltip: 70;       /* tooltips above overlays */
+  --prui-z-tooltip: 70;       /* reserved: tooltips above non-modal overlays */
   --prui-z-modal: 10000;      /* Modal + Sheet + Drawer surfaces */
+  --prui-z-floating: 10001;   /* anchored menus, listboxes, popovers and tooltips — portaled, so it must clear every modal surface */
   --prui-z-confirm: 10010;    /* imperative confirmModal */
   --prui-z-toast: 10100;      /* toasts always win */
   --prui-z-content: 1;        /* content above its own backdrop/header (intra-surface) */

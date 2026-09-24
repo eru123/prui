@@ -320,7 +320,7 @@ export function useBreakpointAtLeast(name: BreakpointName): boolean {
 /** The named semantic token groups PRUI ships in base.css. */
 export const PRUI_DESIGN_TOKENS = {
   radius: ["--prui-radius-1", "--prui-radius-2", "--prui-radius-3", "--prui-radius-full"],
-  zIndex: ["--prui-z-header", "--prui-z-drawer", "--prui-z-overlay", "--prui-z-flyout", "--prui-z-tooltip", "--prui-z-modal", "--prui-z-confirm", "--prui-z-toast", "--prui-z-content"],
+  zIndex: ["--prui-z-header", "--prui-z-drawer", "--prui-z-overlay", "--prui-z-flyout", "--prui-z-tooltip", "--prui-z-modal", "--prui-z-floating", "--prui-z-confirm", "--prui-z-toast", "--prui-z-content"],
   motion: ["--prui-duration-fast", "--prui-duration-base", "--prui-duration-slow", "--prui-ease-out", "--prui-ease-in-out", "--prui-ease-spring"],
   spacing: ["--prui-space-1", "--prui-space-2", "--prui-space-3", "--prui-space-4", "--prui-space-5", "--prui-space-6", "--prui-space-8", "--prui-space-10", "--prui-space-12"],
   typography: ["--prui-text-xs", "--prui-text-sm", "--prui-text-base", "--prui-text-lg", "--prui-text-xl", "--prui-text-2xl", "--prui-text-3xl"],

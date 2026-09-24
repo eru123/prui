@@ -112,7 +112,7 @@ export const Tooltip = React.forwardRef<HTMLSpanElement, TooltipProps>(function 
             data-state="open"
             data-side={position?.side ?? side}
             className={cn(
-              "prui-tooltip fixed z-[var(--prui-z-tooltip)] max-w-60 rounded-prui-sm",
+              "prui-tooltip fixed z-[var(--prui-z-floating)] max-w-60 rounded-prui-sm",
               "border border-line bg-surface px-2 py-1 text-xs text-fg",
               "shadow-prui-md pointer-events-none",
               !reduced && "prui-anim-fade",

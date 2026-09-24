@@ -69,13 +69,17 @@ text-2xs  max-w-content  ease-prui`} />
       </p>
 
       <h2 id="z-index">Z-index</h2>
-      <p>An ordered overlay contract; never compare raw numbers again:</p>
+      <p>
+        An ordered overlay contract; never compare raw numbers again. Portaled floating surfaces reference{" "}
+        <code>--prui-z-floating</code>, so pickers, menus and tooltips opened inside a Modal still clear it:
+      </p>
       <CodeView title="css" className="mt-2 overflow-hidden rounded-[var(--prui-radius)] border border-[var(--prui-line)]" code={`--prui-z-header: 30;      /* sticky app header */
 --prui-z-drawer: 40;      /* mobile navigation drawer */
---prui-z-overlay: 50;     /* dialogs, palettes, anchored menus */
+--prui-z-overlay: 50;     /* non-modal dialogs and palettes */
 --prui-z-flyout: 60;      /* collapsed-rail nav flyout */
---prui-z-tooltip: 70;     /* tooltips above overlays */
+--prui-z-tooltip: 70;     /* reserved: tooltips above non-modal overlays */
 --prui-z-modal: 10000;    /* Modal + Sheet + Drawer */
+--prui-z-floating: 10001; /* anchored menus, listboxes, popovers, tooltips */
 --prui-z-confirm: 10010;  /* imperative confirmModal */
 --prui-z-toast: 10100;    /* toasts always win */
 --prui-z-content: 1;      /* content above its own backdrop */`} />

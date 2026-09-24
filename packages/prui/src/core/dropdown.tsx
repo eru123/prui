@@ -245,7 +245,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(function
           onKeyDown={onMenuKeyDown}
           style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}
           className={cn(
-            "prui-dropdown-menu fixed z-[calc(var(--prui-z-modal,10000)+1)] min-w-40 rounded-prui border border-line",
+            "prui-dropdown-menu fixed z-[var(--prui-z-floating)] min-w-40 rounded-prui border border-line",
             "bg-surface p-1 shadow-prui-md outline-none",
           )}
         >

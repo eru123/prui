@@ -445,7 +445,7 @@ export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps
           data-state={open ? "open" : "closed"}
           onKeyDown={onKeyDown}
           className={cn(
-            "prui-select-content fixed z-[var(--prui-z-overlay)] max-h-60 overflow-auto p-1",
+            "prui-select-content fixed z-[var(--prui-z-floating)] max-h-60 overflow-auto p-1",
             "bg-surface border border-line rounded-prui shadow-prui-md outline-none",
             className,
           )}
