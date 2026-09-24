@@ -29,10 +29,12 @@ test.describe("docs site smoke (built with prui)", () => {
     await page.setViewportSize({ width: 1280, height: 480 })
     await page.goto("/components")
     await page.waitForLoadState("networkidle")
-    // expand every nav group so the tree far exceeds the viewport
-    for (const g of await page.locator("[data-testid=sidebar] button[aria-expanded='false']").all()) {
-      await g.click().catch(() => {})
-    }
+    // expand every nav group so the tree far exceeds the viewport; one
+    // in-page pass (per-click round-trips race group navigations and go
+    // through stale handles)
+    await page.evaluate(() => {
+      document.querySelectorAll("[data-testid=sidebar] button[aria-expanded='false']").forEach((b) => (b as HTMLElement).click())
+    })
     await page.waitForTimeout(300)
     const m = await page.evaluate(() => ({
       doc: document.documentElement.scrollHeight,
