@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@skiddph/prui':
-        specifier: ^0.21.0
-        version: 0.21.0(lucide-react@1.47.0(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: ^0.22.0
+        version: 0.22.0(lucide-react@1.47.0(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       lucide-react:
         specifier: latest
         version: 1.47.0(react@19.3.0)
@@ -832,8 +832,8 @@ packages:
     resolution: {integrity: sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw==}
     engines: {node: '>=18'}
 
-  '@skiddph/prui@0.21.0':
-    resolution: {integrity: sha512-xXFLG01B0uo8OHk9HTdANAJkTPm1E5r4P/XhiDfgdQcelp1cx3GuUddeW3FeXO/5gQU8TBsRKeM+E/jPkxy21A==}
+  '@skiddph/prui@0.22.0':
+    resolution: {integrity: sha512-cI4xBcV8jfsSXLMZy4My+J7GFB19yvJvArOHdUFAy0QDxOKczsvrnQ+ySyIQ8r7oWYXTnnX809XnSRaKW2d4IQ==}
     engines: {node: '>=18'}
     peerDependencies:
       lucide-react: ^0.525.0
@@ -1708,7 +1708,7 @@ snapshots:
 
   '@sindresorhus/is@7.2.0': {}
 
-  '@skiddph/prui@0.21.0(lucide-react@1.47.0(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@skiddph/prui@0.22.0(lucide-react@1.47.0(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       clsx: 2.1.1
       lucide-react: 1.47.0(react@19.3.0)
