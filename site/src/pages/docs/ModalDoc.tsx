@@ -404,11 +404,11 @@ if (ok) await api.remove(row)`,
       ]}
       accessibility={
         <ul className="list-disc pl-5">
-          <li>role=dialog aria-modal=true, named by ariaLabel.</li>
+          <li>role=dialog aria-modal=true. With title, the visible heading names the dialog (aria-labelledby); without one, ariaLabel does. Never both.</li>
           <li>Tab/Shift+Tab cycle inside the panel; initial focus lands on the first control ("first"), a specific element (ref), or the dialog itself ("container").</li>
           <li>Escape closes only when this modal is the topmost overlay, then focus returns to the invoker.</li>
           <li>The background is aria-hidden + inert while open; body scroll locks (counter-based, nest-safe).</li>
-          <li>Blocked closes (disableDefaultClose) shake; and the shake is disabled under prefers-reduced-motion.</li>
+          <li>Blocked closes shake: closeOnOverlayClick=false (overlay), dismissible={false} (overlay + Escape), disableDefaultClose (Escape, no X). The shake is disabled under prefers-reduced-motion.</li>
         </ul>
       }
       composition={

@@ -26,7 +26,7 @@ export function DataTableDoc() {
     <ComponentDoc
       name="DataTable"
       importPath="@skiddph/prui/data-table"
-      description="Column-configured table with sorting, loading/empty states, and the whole filter family: toolbar search, faceted select, date-range, number-range, plus cursor pagination: the same parts <Resource> orchestrates."
+      description="Column-configured table with sorting, loading/empty states, and the whole filter family: toolbar search, faceted select, date-range, number-range, plus cursor pagination (with optional totals for countable servers): the same parts <Resource> orchestrates. Headers align with their column by default."
       when={[
         "Any listing screen; usually reach for <Resource> first",
         "Direct composition when you need custom data flow",
@@ -128,8 +128,9 @@ export function DataTableDoc() {
         "hidden columns still feed filters",
       ]}
       donts={[
-        "Don't hand-roll pagination: DataTablePagination takes cursors",
+        "Don't hand-roll pagination: DataTablePagination takes cursors, and totalPages/totalRows when your server counts",
         "Don't sort client-side when the API sorts; pass sort through",
+        "Don't set text-align on headers from app CSS: column align flows to the header automatically",
       ]}
     />
   )

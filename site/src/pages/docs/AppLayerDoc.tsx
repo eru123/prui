@@ -129,6 +129,9 @@ export function AppLayerDoc() {
                       body.style.margin = "0"
                       body.style.background = "var(--prui-background)"
                       // <App router="memory"> brings its own MemoryRouter
+                      // router="react-router": reuse the AMBIENT router — embed
+                      // <App> under /admin/* of an existing <BrowserRouter>;
+                      // nav paths are authored under the mount prefix
                       return (
                         <App
                           router="memory"
