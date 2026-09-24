@@ -1,5 +1,11 @@
 # @skiddph/prui
 
+## 0.22.1
+
+### Patch Changes
+
+- - portaled floats clear Modal (--prui-z-floating)
+
 ## 0.22.0
 
 ### Minor Changes
