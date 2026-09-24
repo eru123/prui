@@ -118,6 +118,41 @@ describe("App nav rendering", () => {
   })
 })
 
+describe("App router modes", () => {
+  it("router=react-router reuses the ambient router (no nested-router throw)", async () => {
+    const user = userEvent.setup()
+    // embedded under /admin/*: nav paths are authored under the mount
+    // prefix, exactly like any react-router link in the host app
+    const embeddedNav: NavItem[] = [
+      { label: "Home", href: "/admin/home" },
+      { label: "Employees", href: "/admin/employees" },
+    ]
+    render(
+      <MemoryRouter initialEntries={["/admin/home"]}>
+        <Routes>
+          <Route
+            path="/admin/*"
+            element={
+              <App router="react-router" brand={{ name: "Embedded" }} nav={embeddedNav}>
+                <Routes>
+                  <Route path="home" element={<div>EMBEDDED HOME</div>} />
+                  <Route path="employees" element={<div>EMBEDDED EMPLOYEES</div>} />
+                </Routes>
+              </App>
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+    )
+    // the shell renders inside the ambient router without crashing
+    expect(screen.getByText("EMBEDDED HOME")).toBeInTheDocument()
+    expect(screen.getByTestId("sidebar")).toBeInTheDocument()
+    // navigation goes through the ambient history (deep link + link click)
+    await user.click(screen.getByRole("link", { name: "Employees" }))
+    expect(screen.getByText("EMBEDDED EMPLOYEES")).toBeInTheDocument()
+  })
+})
+
 describe("SidebarNav standalone", () => {
   it("renders groups and items", () => {
     render(

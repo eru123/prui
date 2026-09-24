@@ -86,6 +86,9 @@ export interface AuthConfig {
   loginPath?: string
 }
 
+/** "browser" owns a BrowserRouter, "memory" a MemoryRouter (tests, previews),
+ * "react-router" reuses the ambient router context — for embedding <App>
+ * inside an app that already has a router. */
 export type RouterMode = "browser" | "memory" | "react-router"
 
 export interface AppProps {
@@ -855,7 +858,11 @@ export function AppShell(props: AppProps) {
 
 export function App(props: AppProps) {
   const { router = "browser", initialEntries } = props
-  // "react-router" is an accepted alias of "browser"
+  // "react-router": the ambient router owns the URL. Render the shell bare
+  // so <App> can live inside an existing <BrowserRouter> (e.g. mounted under
+  // /admin/*) without nesting routers — react-router throws on that. The
+  // shell's Links and useLocation bind to the ambient context instead.
+  if (router === "react-router") return <AppShell {...props} />
   const Router = router === "memory" ? MemoryRouter : BrowserRouter
   return (
     <Router initialEntries={initialEntries}>
@@ -873,7 +880,7 @@ export const appPropsMeta: PropsMeta = {
     { name: "theme", type: "boolean | { default?: ThemeName | 'dark' | 'light', persist? }", default: "true", control: "boolean" },
     { name: "auth", type: "boolean | { sessionTimeout?, warningTime?, onTimeout?, loginPath? }", default: "false", control: "boolean" },
     { name: "sidebar", type: "{ width?, collapsible?, defaultOpen? }", default: "{}", control: "object" },
-    { name: "router", type: "'browser' | 'memory'", default: "'browser'", control: "select", options: ["browser", "memory", "react-router"] },
+    { name: "router", type: "'browser' | 'memory' | 'react-router'", default: "'browser'", control: "select", options: ["browser", "memory", "react-router"], description: "react-router: reuse the ambient router (embed inside an existing BrowserRouter); the others create their own." },
     { name: "initialEntries", type: "string[]", default: "undefined", control: "object" },
     { name: "pages", type: "'auth' | 'utility' | 'auth+utility'", default: "undefined", control: "select", options: ["auth", "utility", "auth+utility"] },
     { name: "expandAllOn", type: "string (pathname)", default: "undefined", control: "text" },
