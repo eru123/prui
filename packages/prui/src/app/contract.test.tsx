@@ -133,15 +133,25 @@ describe("App theme shorthand and sidebar config", () => {
     expect(screen.getByTestId("mobile-drawer")).toBeInTheDocument()
   })
 
-  it("router 'react-router' is an alias of browser mode", () => {
-    // browser mode requires a DOM document/window; render should not throw
+  it("router 'react-router' requires an ambient router and reuses it", () => {
+    // outside any router the mode fails fast (the shell binds to the
+    // ambient context); inside one it renders without nesting routers
     expect(() =>
       render(
         <App router="react-router" brand={{ name: "T" }} nav={nav}>
           <div>HOME</div>
         </App>,
       ),
-    ).not.toThrow()
+    ).toThrow(/useLocation|render a <Router>/i)
+    cleanup()
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <App router="react-router" brand={{ name: "T" }} nav={nav}>
+          <div>HOME</div>
+        </App>
+      </MemoryRouter>,
+    )
+    expect(screen.getByText("HOME")).toBeInTheDocument()
   })
 })
 

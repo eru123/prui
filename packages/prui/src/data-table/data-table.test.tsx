@@ -41,9 +41,9 @@ describe("DataTable", () => {
     render(
       <DataTable
         columns={[
-          { key: "a", header: "Plain" },
-          { key: "b", header: "Right", align: "right" },
-          { key: "c", header: "Center", align: "center" },
+          { key: "a", label: "Plain" },
+          { key: "b", label: "Right", align: "right" },
+          { key: "c", label: "Center", align: "center" },
         ]}
         rows={[{ a: 1, b: 2, c: 3 }]}
       />,
