@@ -205,7 +205,9 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal
             }}
             role="dialog"
             aria-modal="true"
-            aria-label={ariaLabel}
+            // never emit both: aria-label would override the visible
+            // heading's labelledby reference in the accessibility name
+            aria-label={title ? undefined : ariaLabel}
             aria-labelledby={title ? headingId : undefined}
             aria-describedby={description ? descriptionId : undefined}
             className={cn(

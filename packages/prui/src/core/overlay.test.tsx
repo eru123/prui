@@ -221,6 +221,26 @@ describe("Modal accessibility infrastructure", () => {
 
   })
 
+  it("the visible title wins the accessible name over ariaLabel (never both)", () => {
+    render(
+      <Modal open onClose={vi.fn()} title="Add API key" ariaLabel="Add product">
+        <p>body</p>
+      </Modal>,
+    )
+    const dialog = screen.getByRole("dialog", { name: "Add API key" })
+    expect(dialog).toBeInTheDocument()
+    expect(dialog).toHaveAttribute("aria-labelledby")
+    expect(dialog).not.toHaveAttribute("aria-label")
+    // without a title, ariaLabel keeps naming the dialog
+    cleanup()
+    render(
+      <Modal open onClose={vi.fn()} ariaLabel="Add product">
+        <p>body</p>
+      </Modal>,
+    )
+    expect(screen.getByRole("dialog", { name: "Add product" })).toBeInTheDocument()
+  })
+
   it("confirmModal resolves true on confirm and false on Escape", async () => {
     const user = userEvent.setup()
     const promise = confirmModal({ title: "Sure?", message: "Really?" })
