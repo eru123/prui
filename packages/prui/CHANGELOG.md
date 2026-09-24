@@ -1,5 +1,12 @@
 # @skiddph/prui
 
+## 0.22.0
+
+### Minor Changes
+
+- - select-or-create mode (allowCreate)
+  - drop the settled panel's inline transform
+
 ## 0.21.0
 
 ### Minor Changes
