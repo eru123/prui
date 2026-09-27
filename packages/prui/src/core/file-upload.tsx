@@ -72,8 +72,12 @@ export const FileUpload = React.forwardRef<HTMLInputElement, FileUploadProps>(fu
     onFiles?.(next)
   }
 
+  // `relative` on the root makes this box the containing block for the sr-only
+  // file input; without it the input's containing block is <body>, it escapes
+  // every ancestor overflow clip, and a below-the-fold upload grows the page a
+  // scrollbar that scrolls an app shell locked to the viewport.
   return (
-    <div className={cn("prui-file-upload flex flex-col gap-2", className)} {...props}>
+    <div className={cn("prui-file-upload relative flex flex-col gap-2", className)} {...props}>
       <button
         type="button"
         disabled={disabled}
