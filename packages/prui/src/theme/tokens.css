@@ -48,7 +48,7 @@ theme default, exactly like the arbitrary expressions they replace.
   --color-ok-fill: var(--prui-s-bg, var(--prui-ok));
   --color-warn-fill: var(--prui-s-bg, var(--prui-warn));
   --color-danger-fill: var(--prui-s-bg, var(--prui-danger));
-  --color-on-fill: var(--prui-s-fg, #fff);
+  --color-on-fill: var(--prui-s-fg, var(--prui-on-fill, #fff));
   --color-accent-fg: var(--prui-s-fg, var(--prui-brand));
   --color-accent-border: var(--prui-s-border, var(--prui-brand));
 

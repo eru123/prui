@@ -17,7 +17,7 @@ const customThemes = new Map<string, ThemeTokens>()
 /** Token names understood by defineTheme / applyThemeTokens. */
 export const PRUI_TOKENS = [
   "background", "surface", "raise", "line", "fg", "dim",
-  "brand", "brand-fg", "ok", "warn", "danger",
+  "brand", "brand-fg", "on-fill", "ok", "warn", "danger",
 ] as const
 
 export type ThemeTokenName = (typeof PRUI_TOKENS)[number]
@@ -31,6 +31,8 @@ export interface ThemeTokens {
   dim?: string
   brand?: string
   "brand-fg"?: string
+  /** Text on status fills (ok/warn/danger backgrounds). */
+  "on-fill"?: string
   ok?: string
   warn?: string
   danger?: string

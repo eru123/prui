@@ -23,13 +23,13 @@ test.describe("real-browser axe audits", () => {
       await page.goto(path)
       await page.waitForLoadState("networkidle")
       const violations = await axeScan(page)
-      const serious = violations.filter((v) => v.id !== "color-contrast-enhanced" || v.count > 0)
-      // allow only minor/contrast findings, surface them in the report
-      const blocking = violations.filter((v) => !["color-contrast", "color-contrast-enhanced"].includes(v.id))
+      // AA contrast (color-contrast) is blocking — themes pair fills with
+      // readable inks (--prui-brand-fg / --prui-on-fill). AAA
+      // (color-contrast-enhanced) stays advisory: report it, don't fail on it.
+      const blocking = violations.filter((v) => v.id !== "color-contrast-enhanced")
       expect(
         blocking.map((v) => `${v.id}(${v.count})`).join(", ") || "none",
       ).toBe("none")
-      void serious
       if (violations.length) {
         console.log(`[axe ${path}]`, JSON.stringify(violations))
       }

@@ -39,7 +39,7 @@ export function TokensDoc() {
     >
       <h2 id="color">Color</h2>
       <p>
-        Each theme defines <code>background surface raise line fg dim brand brand-fg ok warn danger</code> plus <code>radius</code> and <code>dim-op</code>. See <Link to="/theming">Theming</Link> for overrides and custom themes.
+        Each theme defines <code>background surface raise line fg dim brand brand-fg on-fill ok warn danger</code> plus <code>radius</code> and <code>dim-op</code>. Every fill is paired with a readable text token (<code>brand-fg</code> on brand, <code>on-fill</code> on status fills), and a solid <code>bg</code> surface prop auto-picks its ink. See <Link to="/theming">Theming</Link> for overrides and custom themes.
       </p>
       <h3 id="semantic-utilities">Semantic utilities</h3>
       <p>

@@ -13,6 +13,7 @@ import { CodeView } from "../components/CodeView"
 interface BuilderTokens {
   brand: string
   brandFg: string
+  onFill: string
   background: string
   surface: string
   raise: string
@@ -29,6 +30,7 @@ interface BuilderTokens {
 const DEFAULT_TOKENS: BuilderTokens = {
   brand: "#7c9cff",
   brandFg: "#0b0c10",
+  onFill: "#0a0f24",
   background: "#050506",
   surface: "#0f0f10",
   raise: "#1a1a1c",
@@ -50,13 +52,14 @@ const PRESETS: { name: string; tokens: BuilderTokens }[] = [
       ...DEFAULT_TOKENS,
       brand: "#4f46e5",
       brandFg: "#ffffff",
+      onFill: "#ffffff",
       background: "#f6f6f8",
       surface: "#ffffff",
       raise: "#ececf0",
       line: "#d9d9e0",
       fg: "#18181b",
       dim: "#6b6b74",
-      ok: "#059669",
+      ok: "#15803d",
       warn: "#b45309",
       danger: "#dc2626",
     },
@@ -67,6 +70,7 @@ const PRESETS: { name: string; tokens: BuilderTokens }[] = [
       ...DEFAULT_TOKENS,
       brand: "#34d399",
       brandFg: "#06281b",
+      onFill: "#06281b",
       background: "#071410",
       surface: "#0c2018",
       raise: "#143024",
@@ -84,6 +88,7 @@ const PRESETS: { name: string; tokens: BuilderTokens }[] = [
       ...DEFAULT_TOKENS,
       brand: "#fb7185",
       brandFg: "#2b0710",
+      onFill: "#2b0710",
       background: "#0d0508",
       surface: "#180a0f",
       raise: "#241017",
@@ -100,6 +105,7 @@ const PRESETS: { name: string; tokens: BuilderTokens }[] = [
 const toThemeTokens = (t: BuilderTokens): ThemeTokens => ({
   brand: t.brand,
   "brand-fg": t.brandFg,
+  "on-fill": t.onFill,
   background: t.background,
   surface: t.surface,
   raise: t.raise,
@@ -117,6 +123,7 @@ const toCssVars = (t: BuilderTokens): string => {
   const rows = [
     ["--prui-brand", t.brand],
     ["--prui-brand-fg", t.brandFg],
+    ["--prui-on-fill", t.onFill],
     ["--prui-background", t.background],
     ["--prui-surface", t.surface],
     ["--prui-raise", t.raise],
@@ -224,6 +231,7 @@ export function ThemeBuilderPage() {
   const colorFields: { token: string; label: string; key: keyof BuilderTokens }[] = [
     { token: "--prui-brand", label: "Brand accent", key: "brand" },
     { token: "--prui-brand-fg", label: "Text on brand", key: "brandFg" },
+    { token: "--prui-on-fill", label: "Text on status fills", key: "onFill" },
     { token: "--prui-background", label: "Page background", key: "background" },
     { token: "--prui-surface", label: "Cards, sidebar", key: "surface" },
     { token: "--prui-raise", label: "Hover, wells", key: "raise" },

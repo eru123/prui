@@ -1,6 +1,6 @@
 /** PRUI primitives layer: standard composition building blocks plus cn(). */
 export { cn } from "./cn"
-export { resolveSurface, withSurface, type SurfaceProps, type SurfaceRadius, type SurfaceTexture, type SurfaceElevation } from "./surface"
+export { resolveSurface, withSurface, readableInk, type SurfaceProps, type SurfaceRadius, type SurfaceTexture, type SurfaceElevation } from "./surface"
 export type { PropsMeta, PropMeta, PropControl } from "./props-meta"
 
 /* Shared overlay + keyboard-navigation infrastructure (used by every

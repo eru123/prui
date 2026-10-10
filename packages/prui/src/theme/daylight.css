@@ -11,10 +11,12 @@
   --prui-brand: #4f46e5;
   --prui-brand-strong: #4338ca;
   --prui-brand-fg: #ffffff;
-  --prui-ok: #16a34a;
-  --prui-ok-strong: #15803d;
-  --prui-warn: #d97706;
-  --prui-warn-strong: #b45309;
+  --prui-on-fill: #ffffff;
+  /* ok/warn sit one step darker than raw 500/600 so white text clears WCAG AA on fills */
+  --prui-ok: #15803d;
+  --prui-ok-strong: #166534;
+  --prui-warn: #b45309;
+  --prui-warn-strong: #92400e;
   --prui-danger: #dc2626;
   --prui-danger-strong: #b91c1c;
   --prui-radius: 8px;

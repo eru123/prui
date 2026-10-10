@@ -19,6 +19,8 @@ const TOKENS = [
   { name: "--prui-fg", value: "primary text", color: "#f4f4f5" },
   { name: "--prui-dim", value: "secondary text", color: "#9b9ba4" },
   { name: "--prui-brand", value: "accent", color: "#7c9cff" },
+  { name: "--prui-brand-fg", value: "text on brand", color: "#0a0f24" },
+  { name: "--prui-on-fill", value: "text on status fills", color: "#0a0f24" },
   { name: "--prui-ok", value: "success", color: "#3ddc97" },
   { name: "--prui-warn", value: "warning", color: "#ffc15e" },
   { name: "--prui-danger", value: "destructive", color: "#f87171" },
