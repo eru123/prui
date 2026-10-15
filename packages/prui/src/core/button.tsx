@@ -38,14 +38,15 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   fullWidth?: boolean
 }
 
+const SECONDARY_VARIANT =
+  "bg-secondary text-secondary-fg border border-line hover:bg-raise hover:border-dim"
+
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
     "bg-primary text-primary-fg inset-shadow-highlight hover:bg-brand-strong active:bg-brand/85",
-  secondary:
-    "bg-secondary text-secondary-fg border border-line hover:bg-raise hover:border-dim",
+  secondary: SECONDARY_VARIANT,
   // legacy alias of secondary
-  default:
-    "bg-secondary text-secondary-fg border border-line hover:bg-raise hover:border-dim",
+  default: SECONDARY_VARIANT,
   neutral:
     "bg-ghost text-secondary-fg border border-line hover:bg-raise",
   ghost:

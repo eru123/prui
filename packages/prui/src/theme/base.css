@@ -169,6 +169,10 @@ body.modal-open { overflow: hidden; }
   width: 12px;
   height: 12px;
 }
+.prui-avatar-presence[data-presence="online"] { background-color: var(--prui-ok); }
+.prui-avatar-presence[data-presence="busy"] { background-color: var(--prui-danger); }
+.prui-avatar-presence[data-presence="away"] { background-color: var(--prui-warn); }
+.prui-avatar-presence[data-presence="offline"] { background-color: var(--prui-dim); }
 
 /* FloatingLabel: the label floats on focus or filled (data-driven) */
 .prui-float-label {

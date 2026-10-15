@@ -152,13 +152,6 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   presence?: "online" | "busy" | "away" | "offline"
 }
 
-const presenceDotTone: Record<NonNullable<AvatarProps["presence"]>, string> = {
-  online: "bg-ok",
-  busy: "bg-danger",
-  away: "bg-warn",
-  offline: "bg-dim",
-}
-
 const avatarSizes = {
   sm: "h-6 w-6 text-2xs",
   md: "h-8 w-8 text-xs",
@@ -205,14 +198,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
             initials
           )}
         </span>
-        {presence ? (
-          <span
-            role="img"
-            aria-label={presence}
-            data-presence={presence}
-            className={cn("prui-avatar-presence", presenceDotTone[presence])}
-          />
-        ) : null}
+        {presence ? <span role="img" aria-label={presence} data-presence={presence} className="prui-avatar-presence" /> : null}
       </span>
     )
   },

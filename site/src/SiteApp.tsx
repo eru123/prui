@@ -50,6 +50,7 @@ const InputDoc = lazy(() => import("./pages/docs/InputDoc").then((m) => ({ defau
 const ModalDoc = lazy(() => import("./pages/docs/ModalDoc").then((m) => ({ default: m.ModalDoc })))
 const SelectDoc = lazy(() => import("./pages/docs/SelectDoc").then((m) => ({ default: m.SelectDoc })))
 const SwitchDoc = lazy(() => import("./pages/docs/SwitchDoc").then((m) => ({ default: m.SwitchDoc })))
+const InteractionsDoc = lazy(() => import("./pages/docs/InteractionsDoc"))
 const TabsDoc = lazy(() => import("./pages/docs/TabsDoc").then((m) => ({ default: m.TabsDoc })))
 const BadgeDoc = lazy(() => import("./pages/docs/BadgeDoc").then((m) => ({ default: m.BadgeDoc })))
 const DropdownDoc = lazy(() => import("./pages/docs/DropdownDoc").then((m) => ({ default: m.DropdownDoc })))
@@ -78,7 +79,7 @@ function Loading() {
 export function SiteApp() {
   return (
     <App
-      brand={{ name: "prui", mark: "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20x%3D%226%22%20y%3D%225%22%20width%3D%225.4%22%20height%3D%2222%22%20rx%3D%222.7%22%20fill%3D%22%237c9cff%22/%3E%3Crect%20x%3D%2214.2%22%20y%3D%225%22%20width%3D%229.6%22%20height%3D%228.4%22%20rx%3D%222.5%22%20fill%3D%22%237c9cff%22/%3E%3Crect%20x%3D%2214.2%22%20y%3D%2215.4%22%20width%3D%227%22%20height%3D%228.4%22%20rx%3D%222.5%22%20fill%3D%22%237c9cff%22%20opacity%3D%22.55%22/%3E%3C/svg%3E", href: "/" }}
+      brand={{ name: "prui", mark: "/favicon.svg", href: "/" }}
       nav={nav}
       search={{ enabled: true, hotkey: "/", placeholder: "Search the system" }}
       theme={{ default: "control", persist: true }}
@@ -94,6 +95,7 @@ export function SiteApp() {
           <Route path="/components/modal" element={<ModalDoc />} />
           <Route path="/components/select" element={<SelectDoc />} />
           <Route path="/components/switch" element={<SwitchDoc />} />
+          <Route path="/components/interactions" element={<InteractionsDoc />} />
           <Route path="/components/tabs" element={<TabsDoc />} />
           <Route path="/components/badge" element={<BadgeDoc />} />
           <Route path="/components/dropdown" element={<DropdownDoc />} />

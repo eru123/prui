@@ -42,6 +42,7 @@ export const nav: NavItem[] = [
       { label: "Form field", href: "/components/form-field" },
       { label: "Select", href: "/components/select" },
       { label: "Switch", href: "/components/switch" },
+      { label: "Interactions", href: "/components/interactions" },
       { label: "Tabs", href: "/components/tabs" },
       { label: "Badge", href: "/components/badge" },
       { label: "Card", href: "/components/card" },
