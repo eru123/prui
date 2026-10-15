@@ -145,6 +145,66 @@ body.modal-open { overflow: hidden; }
 @keyframes prui-slide-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes prui-skeleton-wave { from { opacity: 0.55; } to { opacity: 1; } }
 @keyframes prui-progress-indeterminate { 0% { margin-inline-start: -33%; } 100% { margin-inline-start: 100%; } }
+
+/* Avatar media clip + presence dot (skin in CSS keeps the JS chunk lean) */
+.prui-avatar-media {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.prui-avatar-presence {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 2px var(--prui-surface);
+}
+.prui-avatar[data-size="lg"] .prui-avatar-presence {
+  width: 12px;
+  height: 12px;
+}
+
+/* FloatingLabel: the label floats on focus or filled (data-driven) */
+.prui-float-label {
+  position: absolute;
+  inset-inline-start: 0.75rem;
+  top: 50%;
+  translate: 0 -50%;
+  scale: 1 1;
+  transform-origin: left center;
+  color: var(--prui-dim);
+  pointer-events: none;
+  transition:
+    top var(--prui-duration-fast) var(--prui-ease-out),
+    translate var(--prui-duration-fast) var(--prui-ease-out),
+    scale var(--prui-duration-fast) var(--prui-ease-out),
+    color var(--prui-duration-fast) var(--prui-ease-out);
+}
+.prui-floating-label:focus-within .prui-float-label,
+.prui-floating-label[data-filled] .prui-float-label {
+  top: 0.3rem;
+  translate: 0 0;
+  scale: 0.72;
+  color: var(--prui-brand);
+}
+
+/* press-feedback kit (Ripple / PressDepth / LikeBurst) */
+@keyframes prui-ripple { from { transform: scale(0); opacity: 1; } to { transform: scale(1); opacity: 0; } }
+.prui-ripple-dot { animation: prui-ripple 450ms var(--prui-ease-out) forwards; }
+.prui-press-depth { transition-property: transform; transition-duration: 100ms; transition-timing-function: var(--prui-ease-out); }
+.prui-press-depth:active { transform: scale(0.97); }
+@keyframes prui-burst {
+  from { transform: translateY(-0.4rem) scale(0.6); opacity: 1; }
+  to { transform: translateY(-1.5rem) scale(0); opacity: 0; }
+}
+.prui-burst-particle { animation: prui-burst 500ms var(--prui-ease-out) forwards; }
+
 .prui-anim-fade { animation: prui-fade-in var(--prui-duration-base) var(--prui-ease-out); }
 .prui-anim-slide { animation: prui-slide-in var(--prui-duration-slow) var(--prui-ease-out); }
 .prui-skeleton { background-color: var(--prui-raise); animation: prui-skeleton-wave 1.4s var(--prui-ease-in-out) infinite alternate; }
@@ -165,6 +225,9 @@ body.modal-open { overflow: hidden; }
   .prui-toast,
   .prui-skeleton,
   .prui-progress-indeterminate,
+  .prui-ripple-dot,
+  .prui-burst-particle,
+  .prui-press-depth,
   .prui-shell,
   .prui-anim-fade,
   .prui-anim-scale,

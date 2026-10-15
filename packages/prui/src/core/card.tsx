@@ -148,6 +148,15 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
    * two initials ("Ada Lovelace" -> "AL") so full strings never render. */
   fallback?: string
   size?: "sm" | "md" | "lg"
+  /** Presence dot: online (ok), busy (danger), away (warn), offline (dim). */
+  presence?: "online" | "busy" | "away" | "offline"
+}
+
+const presenceDotTone: Record<NonNullable<AvatarProps["presence"]>, string> = {
+  online: "bg-ok",
+  busy: "bg-danger",
+  away: "bg-warn",
+  offline: "bg-dim",
 }
 
 const avatarSizes = {
@@ -170,7 +179,7 @@ function initialsOf(name?: string): string {
 }
 
 export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
-  ({ className, src, alt, fallback, size = "md", ...props }, ref) => {
+  ({ className, src, alt, fallback, size = "md", presence, ...props }, ref) => {
     const [failed, setFailed] = React.useState(false)
     const showImg = src && !failed
     // both the fallback and alt paths parse to initials: a raw name string
@@ -179,8 +188,9 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
     return (
       <span
         ref={ref}
+        data-size={size}
         className={cn(
-          "prui-avatar relative inline-flex shrink-0 select-none items-center justify-center overflow-hidden",
+          "prui-avatar relative inline-flex shrink-0 select-none items-center justify-center",
           "whitespace-nowrap leading-none",
           "rounded-full bg-raise text-dim font-medium",
           avatarSizes[size],
@@ -188,11 +198,21 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         )}
         {...props}
       >
-        {showImg ? (
-          <img src={src} alt={alt ?? ""} className="h-full w-full object-cover" onError={() => setFailed(true)} />
-        ) : (
-          initials
-        )}
+        <span className="prui-avatar-media">
+          {showImg ? (
+            <img src={src} alt={alt ?? ""} className="h-full w-full object-cover" onError={() => setFailed(true)} />
+          ) : (
+            initials
+          )}
+        </span>
+        {presence ? (
+          <span
+            role="img"
+            aria-label={presence}
+            data-presence={presence}
+            className={cn("prui-avatar-presence", presenceDotTone[presence])}
+          />
+        ) : null}
       </span>
     )
   },

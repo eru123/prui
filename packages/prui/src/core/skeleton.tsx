@@ -64,3 +64,40 @@ export const skeletonPropsMeta: PropsMeta = {
     { name: "bg", type: "string (CSS background)", default: "shimmer token", control: "text" },
   ],
 }
+
+/* ---------------- SkeletonSwap ---------------- */
+
+export interface SkeletonSwapProps {
+  /** While true (and past the delay) the skeleton renders. */
+  loading: boolean
+  /** Real content, swapped in when loading ends. */
+  children: React.ReactNode
+  /** Placeholder layout, shown only after `delay` ms of continuous loading. */
+  skeleton: React.ReactNode
+  /** Grace period before the skeleton appears, to prevent flashing on
+   * fast loads. Default 150. */
+  delay?: number
+}
+
+/**
+ * SkeletonSwap: the anti-flash swap between a skeleton layout and real
+ * content. Loads that resolve inside the delay never show a skeleton;
+ * slower loads fade the skeleton in, then swap the content in place.
+ */
+export function SkeletonSwap({ loading, children, skeleton, delay = 150 }: SkeletonSwapProps) {
+  const [showSkeleton, setShowSkeleton] = React.useState(false)
+
+  React.useEffect(() => {
+    if (!loading) {
+      setShowSkeleton(false)
+      return
+    }
+    const t = window.setTimeout(() => setShowSkeleton(true), delay)
+    return () => window.clearTimeout(t)
+  }, [loading, delay])
+
+  if (loading && showSkeleton) return <>{skeleton}</>
+  if (loading) return null
+  return <>{children}</>
+}
+

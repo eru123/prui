@@ -143,7 +143,8 @@ describe("Badge / Card / Avatar", () => {
   it("Avatar text stays on one line regardless of input", () => {
     render(<Avatar fallback="Ada Lovelace" data-testid="av-nw" />)
     expect(screen.getByTestId("av-nw").className).toContain("whitespace-nowrap")
-    expect(screen.getByTestId("av-nw").className).toContain("overflow-hidden")
+    // clipping lives on the media wrapper so the presence dot can overflow
+    expect(screen.getByTestId("av-nw").firstElementChild?.className).toContain("prui-avatar-media")
   })
 })
 

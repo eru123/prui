@@ -9,7 +9,16 @@ import type { PropsMeta } from "./props-meta"
  * no scroll lock): Escape (topmost overlay only) hides it, focus stays on
  * the trigger, and it repositions/flips against the viewport. Shows after
  * a short delay, hides immediately; reduced motion skips the fade.
+ *
+ * Group timing: once any tooltip has shown, tooltips opened within the
+ * group window skip the delay — hopping between labeled controls feels
+ * instant instead of making the user wait per trigger.
  */
+
+/** Tooltips opening within this window of the last one skip their delay. */
+const TOOLTIP_GROUP_WINDOW_MS = 800
+let tooltipGroupLastShownAt = 0
+
 
 export interface TooltipProps {
   /** Tooltip content (plain text recommended). */
@@ -39,20 +48,24 @@ export const Tooltip = React.forwardRef<HTMLSpanElement, TooltipProps>(function 
 
   const { ref: floatingRef, position } = useAnchoredPosition({ active: open, anchorRef, side, align, offsetHeight: 32 })
 
-  const show = () => {
+  const clearTimer = () => {
     if (timer.current != null) window.clearTimeout(timer.current)
-    timer.current = window.setTimeout(() => setOpen(true), delay)
+    timer.current = null
+  }
+
+  const show = () => {
+    clearTimer()
+    const immediate = Date.now() - tooltipGroupLastShownAt < TOOLTIP_GROUP_WINDOW_MS
+    timer.current = window.setTimeout(() => {
+      tooltipGroupLastShownAt = Date.now()
+      setOpen(true)
+    }, immediate ? 0 : delay)
   }
   const hide = () => {
-    if (timer.current != null) window.clearTimeout(timer.current)
+    clearTimer()
     setOpen(false)
   }
-  React.useEffect(
-    () => () => {
-      if (timer.current != null) window.clearTimeout(timer.current)
-    },
-    [],
-  )
+  React.useEffect(() => clearTimer, [])
 
   // trigger: clone a provided element or wrap plain content in a span
   let triggerNode: React.ReactNode

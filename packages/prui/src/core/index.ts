@@ -158,10 +158,26 @@ export {
 
 /* Feedback primitives */
 export { Spinner, spinnerPropsMeta, type SpinnerProps, type SpinnerSize } from "./spinner"
-export { Skeleton, skeletonPropsMeta, type SkeletonProps } from "./skeleton"
+export { Skeleton, SkeletonSwap, skeletonPropsMeta, type SkeletonProps, type SkeletonSwapProps } from "./skeleton"
 export { Alert, alertPropsMeta, type AlertProps, type AlertVariant } from "./alert"
 export { Progress, progressPropsMeta, type ProgressProps } from "./progress"
 export { Toaster, toast, dismissAllToasts, toasterPropsMeta, toastPropsMeta, type ToasterProps, type ToastOptions, type ToastVariant, type ToastHandle } from "./toast"
+
+/* Interaction kit (interior.dev-inspired micro-interactions, MIT-adapted) */
+export { CopyButton, copyText, copyButtonPropsMeta, type CopyButtonProps } from "./copy-button"
+export { HoldToConfirm, holdToConfirmPropsMeta, type HoldToConfirmProps } from "./hold-to-confirm"
+export { useLongPress, type UseLongPressOptions, type LongPressResult } from "./use-long-press"
+export { IconMorph, type IconMorphProps } from "./icon-morph"
+export { OTPInput, otpInputPropsMeta, type OTPInputProps } from "./otp-input"
+export { PasswordStrength, scorePassword, PASSWORD_STRENGTH_LABELS, passwordStrengthPropsMeta, type PasswordStrengthProps, type PasswordScore } from "./password-strength"
+export { FloatingLabel, floatingLabelPropsMeta, type FloatingLabelProps } from "./floating-label"
+export { ExpandingSearch, expandingSearchPropsMeta, type ExpandingSearchProps } from "./expanding-search"
+export { SegmentedControl, segmentedControlPropsMeta, type SegmentedControlProps, type SegmentedOption } from "./segmented-control"
+export { Slider, sliderPropsMeta, type SliderProps } from "./slider"
+export { WizardSteps, wizardStepsPropsMeta, type WizardStepsProps, type WizardStep } from "./wizard-steps"
+export { ContextMenu, contextMenuPropsMeta, type ContextMenuProps } from "./context-menu"
+export { Lightbox, lightboxPropsMeta, type LightboxProps, type LightboxImage } from "./lightbox"
+export { Ripple, PressDepth, LikeBurst, pressKitPropsMeta, type RippleProps, type PressDepthProps, type LikeBurstProps } from "./press"
 
 /* Overlays */
 export { Tooltip, tooltipPropsMeta, type TooltipProps } from "./tooltip"
