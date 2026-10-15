@@ -1,3 +1,6 @@
+allowBuilds:
+  esbuild: set this to true or false
+  workerd: set this to true or false
 # demos track the latest release; a global release-age gate would refuse
 # brand-new versions and break installs right after each release
 minimumReleaseAge: 0
