@@ -4,7 +4,7 @@ import { ComponentDoc } from "../../components/ComponentDoc"
 import {
   CopyButton, HoldToConfirm, OTPInput, PasswordStrength, FloatingLabel, ExpandingSearch,
   SegmentedControl, Slider, WizardSteps, ContextMenu, Lightbox, LikeBurst, Ripple, PressDepth, Skeleton, SkeletonSwap,
-} from "@skiddph/prui/core"
+} from "prui/core"
 
 /**
  * /components/interactions: the micro-interaction kit — behaviors inspired
