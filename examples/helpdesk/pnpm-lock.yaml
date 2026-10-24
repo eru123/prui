@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@skiddph/prui':
-        specifier: ^0.23.0
-        version: 0.23.0(lucide-react@1.54.0(@types/react@19.3.0)(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: ^0.24.0
+        version: 0.24.0(lucide-react@1.54.0(@types/react@19.3.0)(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       lucide-react:
         specifier: latest
         version: 1.54.0(@types/react@19.3.0)(react@19.3.0)
@@ -832,8 +832,8 @@ packages:
     resolution: {integrity: sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw==}
     engines: {node: '>=18'}
 
-  '@skiddph/prui@0.23.0':
-    resolution: {integrity: sha512-r5aCjlsmgR9bewEj3I4v7aidloQwLW0gyFTSWOUMNrc8pZhVPkboCLvRdAT2tFAiYiQzhKVznPMaRDmstv2TAw==}
+  '@skiddph/prui@0.24.0':
+    resolution: {integrity: sha512-GGA2nlavB4NOYJFuod9Cvb0Mj+Wb2K2g9GrM9dWFR6ENb/rqZAoMg4lYryFfj6q5kxyE5RwAG3F0CnGqllVuSw==}
     engines: {node: '>=18'}
     peerDependencies:
       lucide-react: ^0.525.0
@@ -1712,7 +1712,7 @@ snapshots:
 
   '@sindresorhus/is@7.2.0': {}
 
-  '@skiddph/prui@0.23.0(lucide-react@1.54.0(@types/react@19.3.0)(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@skiddph/prui@0.24.0(lucide-react@1.54.0(@types/react@19.3.0)(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       clsx: 2.1.1
       lucide-react: 1.54.0(@types/react@19.3.0)(react@19.3.0)
