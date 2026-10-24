@@ -57,7 +57,7 @@ export default function InteractionsDoc() {
               <HoldToConfirm onConfirm={() => setSwapping((s) => !s)} duration={800}>
                 <Trash2 className="h-4 w-4" aria-hidden /> Hold to delete
               </HoldToConfirm>
-              <span className="text-sm text-dim">state: {swapping ? "alive" : "deleted"}</span>
+              <span className="text-sm text-[var(--prui-dim)]">state: {swapping ? "alive" : "deleted"}</span>
             </DemoHolder>
           ),
           code: `<HoldToConfirm onConfirm={deleteThing} duration={800}>
@@ -117,7 +117,7 @@ export default function InteractionsDoc() {
                 detents={[25, 50, 75]}
                 formatValue={(v) => `${v}%`}
               />
-              <div className="mt-1 text-xs text-dim">{volume}%</div>
+              <div className="mt-1 text-xs text-[var(--prui-dim)]">{volume}%</div>
             </div>
           ),
           code: `<Slider ariaLabel="Volume" value={v} onChange={setV} detents={[25, 50, 75]} />`,
@@ -146,7 +146,7 @@ export default function InteractionsDoc() {
                   { label: "Delete", danger: true, separatorBefore: true, onSelect: () => void 0 },
                 ]}
               >
-                <div className="rounded-prui border border-line bg-surface px-4 py-3 text-sm text-fg">
+                <div className="rounded-[var(--prui-radius)] border border-[var(--prui-line)] bg-[var(--prui-surface)] px-4 py-3 text-sm text-[var(--prui-fg)]">
                   Right-click me
                 </div>
               </ContextMenu>
@@ -188,7 +188,7 @@ export default function InteractionsDoc() {
           render: (
             <DemoHolder>
               <SkeletonSwap loading={swapping} skeleton={<Skeleton lines={2} className="w-48" />}>
-                <div className="w-48 text-sm text-fg">Real content is here.</div>
+                <div className="w-48 text-sm text-[var(--prui-fg)]">Real content is here.</div>
               </SkeletonSwap>
               <CopyButton value="toggle" variant="ghost" size="sm" onClick={() => setSwapping((s) => !s)}>
                 Toggle loading

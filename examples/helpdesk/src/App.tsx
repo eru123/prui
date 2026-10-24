@@ -233,7 +233,8 @@ function TicketPanel({ ticketId, onPatch }: { ticketId: string; onPatch: Patch }
 function Sla() {
   const [tickets] = useLocal<Ticket[]>(KEYS.tickets, seedTickets)
   const live = tickets.filter((t) => t.status !== "resolved")
-  const now = Date.now()
+  // one-time capture: lazy initializers are the sanctioned spot for impure reads
+  const [now] = React.useState(() => Date.now())
 
   return (
     <div className="page">
